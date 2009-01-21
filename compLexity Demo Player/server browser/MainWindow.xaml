@@ -1,0 +1,240 @@
+﻿<Window x:Class="Server_Browser.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Server_Browser"
+    xmlns:demoplayer="clr-namespace:compLexity_Demo_Player"
+    Initialized="Window_Initialized" Loaded="Window_Loaded" StateChanged="Window_StateChanged" Closed="Window_Closed"
+    Title="compLexity Demo Player - HLTV/SourceTV Server Browser" Width="750" Height="500" WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow">
+    <Window.Resources>
+        <x:Array Type="{x:Type local:GotfragGame}" x:Key="gotfragGames">
+            <local:GotfragGame Name="Counter-Strike 1.6" Folder="cstrike" SourceEngine="False" ScoreboardUrl="http://www.gotfrag.com/cs/scores/" />
+            <local:GotfragGame Name="Counter-Strike: Source" Folder="cstrike" SourceEngine="True" ScoreboardUrl="http://www.gotfrag.com/css/scores/" />
+            <local:GotfragGame Name="Team Fortress 2" Folder="tf" SourceEngine="True" ScoreboardUrl="http://www.gotfrag.com/tf2/scores/" />
+            <local:GotfragGame Name="Day of Defeat" Folder="dod" SourceEngine="False" ScoreboardUrl="http://www.gotfrag.com/dod/scores/" />
+            <local:GotfragGame Name="Day of Defeat: Source" Folder="dod" SourceEngine="True" ScoreboardUrl="http://www.gotfrag.com/dods/scores/" />
+        </x:Array>
+        <x:Array Type="{x:Type local:ProcessPriority}" x:Key="gameProcessPriority">
+            <local:ProcessPriority Name="Idle" Value="Idle" />
+            <local:ProcessPriority Name="Below Normal" Value="BelowNormal" />
+            <local:ProcessPriority Name="Normal" Value="Normal" />
+            <local:ProcessPriority Name="Above Normal" Value="AboveNormal" />
+            <local:ProcessPriority Name="High" Value="High" />
+            <local:ProcessPriority Name="Realtime" Value="RealTime" />
+        </x:Array>
+        <demoplayer:NullConverter x:Key="nullConverter" />
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1.5*"  />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <TabControl Margin="4" Name="uiServerBrowserTabControl">
+            
+            <!-- Favourites -->
+            <TabItem Name="uiFavouritesTabItem">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="..\data\favourite.png" Margin="0,0,4,0" />
+                        <TextBlock VerticalAlignment="Center">Favourites</TextBlock>
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <demoplayer:ExtendedListView Margin="0,0,0,4" x:Name="uiFavouritesListView" SelectionMode="Single" VirtualizingStackPanel.IsVirtualizing="False">
+                        <ListView.View>
+                            <GridView>
+                                <demoplayer:ExtendedGridViewColumn Header="Address" SortPropertyName="Address" IsDefaultSortColumn="True">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Image Grid.Column="0" Width="16" Height="16" Margin="0,0,2,0" VerticalAlignment="Center" Source="{Binding Path=StateImagePath}" />
+                                                <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding Path=Address}" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </demoplayer:ExtendedGridViewColumn>
+                                <demoplayer:ExtendedGridViewColumn Header="Status/Name" SortPropertyName="Title"  DisplayMemberBinding="{Binding Path=Title}" IsLowPriority="True" />
+                            </GridView>
+                        </ListView.View>
+                    </demoplayer:ExtendedListView>
+                    <StackPanel Grid.Row="1" Orientation="Horizontal">
+                        <Button Padding="16,0,16,0" Margin="0,0,8,0" Name="uiFavouritesRefreshServerListButton" Click="uiFavouritesRefreshServerListButton_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Image VerticalAlignment="Center" Source="..\data\refresh.png" Margin="0,0,4,0" />
+                                <TextBlock VerticalAlignment="Center">Refresh Server List</TextBlock>
+                            </StackPanel>
+                        </Button>
+                        <Button Padding="16,0,16,0" Margin="0,0,8,0" Name="uiFavouritesAddButton" Click="uiFavouritesAddButton_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Image VerticalAlignment="Center" Source="..\data\add.png" Margin="0,0,4,0" />
+                                <TextBlock VerticalAlignment="Center">Add...</TextBlock>
+                            </StackPanel>
+                        </Button>
+                        <Button Padding="16,0,16,0" Margin="0,0,8,0" Name="uiFavouritesRemoveButton" Click="uiFavouritesRemoveButton_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Image VerticalAlignment="Center" Source="..\data\remove.png" Margin="0,0,4,0" />
+                                <TextBlock VerticalAlignment="Center">Remove</TextBlock>
+                            </StackPanel>
+                        </Button>
+                        <Button Padding="16,0,16,0" Margin="0,0,8,0" Name="uiFavouritesRefreshButton" Click="uiFavouritesRefreshButton_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Image VerticalAlignment="Center" Source="..\data\refresh.png" Margin="0,0,4,0" />
+                                <TextBlock VerticalAlignment="Center">Refresh</TextBlock>
+                            </StackPanel>
+                        </Button>
+                        <Button Padding="16,0,16,0" Name="uiFavouritesConnectButton" Click="uiFavouritesConnectButton_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Image VerticalAlignment="Center" Source="..\data\connect.png" Margin="0,0,4,0" />
+                                <TextBlock VerticalAlignment="Center">Connect</TextBlock>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            
+            <!-- Gotfrag Scoreboard -->
+            <TabItem Name="uiGotfragTabItem">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="..\data\gotfrag.png" Margin="0,0,4,0" Width="16" Height="16" />
+                        <TextBlock VerticalAlignment="Center">Gotfrag Scoreboard</TextBlock>
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <demoplayer:ExtendedListView Margin="0,0,0,4" x:Name="uiGotfragListView" SelectionMode="Single" VirtualizingStackPanel.IsVirtualizing="False">
+                        <ListView.View>
+                            <GridView>
+                                <demoplayer:ExtendedGridViewColumn Header="Status/Name" SortPropertyName="Title" IsLowPriority="True">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Image Grid.Column="0" Width="16" Height="16" Margin="0,0,2,0" VerticalAlignment="Center" Source="{Binding Path=StateImagePath}" />
+                                                <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding Path=Title}" ToolTipService.ToolTip="{Binding Path=Title}" TextTrimming="CharacterEllipsis" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </demoplayer:ExtendedGridViewColumn>
+                                <demoplayer:ExtendedGridViewColumn Header="Event" SortPropertyName="Event" IsDefaultSortColumn="True" DisplayMemberBinding="{Binding Event}" />
+                                <demoplayer:ExtendedGridViewColumn Header="Teams" SortPropertyName="Teams" DisplayMemberBinding="{Binding Teams}" />
+                                <demoplayer:ExtendedGridViewColumn Header="Start Time" SortPropertyName="StartTime" DisplayMemberBinding="{Binding StartTime}" />
+                            </GridView>
+                        </ListView.View>
+                    </demoplayer:ExtendedListView>
+                    <Label Name="uiGotfragStatusLabel" Visibility="Hidden" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <StackPanel Grid.Row="1" Orientation="Horizontal">
+                        <Button Padding="16,0,16,0" Margin="0,0,8,0" Name="uiGotfragUpdateServerListButton" Click="uiGotfragUpdateServerListButton_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Image VerticalAlignment="Center" Source="..\data\download.png" Margin="0,0,4,0" />
+                                <TextBlock VerticalAlignment="Center">Update Server List</TextBlock>
+                            </StackPanel>
+                        </Button>
+                        <Button Padding="16,0,16,0" Margin="0,0,8,0" Name="uiGotfragRefreshServerListButton" Click="uiGotfragRefreshServerListButton_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Image VerticalAlignment="Center" Source="..\data\refresh.png" Margin="0,0,4,0" />
+                                <TextBlock VerticalAlignment="Center">Refresh Server List</TextBlock>
+                            </StackPanel>
+                        </Button>
+                        <Button Padding="16,0,16,0" Margin="0,0,8,0" Name="uiGotfragAddToFavouritesButton" Click="uiGotfragAddToFavouritesButton_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Image VerticalAlignment="Center" Source="..\data\favourite.png" Margin="0,0,4,0" />
+                                <TextBlock VerticalAlignment="Center">Add to Favourites</TextBlock>
+                            </StackPanel>
+                        </Button>
+                        <Button Padding="16,0,16,0" Margin="0,0,8,0" Name="uiGotfragRefreshButton" Click="uiGotfragRefreshButton_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Image VerticalAlignment="Center" Source="..\data\refresh.png" Margin="0,0,4,0" />
+                                <TextBlock VerticalAlignment="Center">Refresh</TextBlock>
+                            </StackPanel>
+                        </Button>
+                        <Button Padding="16,0,16,0" Name="uiGotfragConnectButton" Click="uiGotfragConnectButton_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Image VerticalAlignment="Center" Source="..\data\connect.png" Margin="0,0,4,0" />
+                                <TextBlock VerticalAlignment="Center">Connect</TextBlock>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            
+            <!-- Options -->
+            <TabItem Header="Options">
+                <StackPanel Margin="8">
+                    <GroupBox Header="Server">
+                        <StackPanel Margin="8">
+                            <CheckBox Margin="0,0,0,8" Name="uiOptionsConvertTimeZoneCheckBox" Checked="uiOptionsConvertTimeZoneCheckBox_CheckedChanged" Unchecked="uiOptionsConvertTimeZoneCheckBox_CheckedChanged">Convert times to local timezone [.NET Framework 3.5 required]</CheckBox>
+                            <CheckBox Margin="0,0,0,8" Name="uiOptionsStartListenServerCheckBox" Checked="uiOptionsStartListenServerCheckBox_CheckedChanged" Unchecked="uiOptionsStartListenServerCheckBox_CheckedChanged">Start Listen Server [HLTV]</CheckBox>
+                            <CheckBox Margin="0,0,0,8" Name="uiOptionsCloseWhenFinishedCheckBox" Checked="uiOptionsCloseWhenFinishedCheckBox_CheckedChanged" Unchecked="uiOptionsCloseWhenFinishedCheckBox_CheckedChanged">Close when finished</CheckBox>
+                        </StackPanel>
+                    </GroupBox>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+        
+        <!-- Gotfrag Game ComboBox -->
+        <ComboBox Visibility="Hidden" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,4,6,0" Width="200" Height="20" Name="uiGotfragGameComboBox" ItemsSource="{Binding Source={StaticResource gotfragGames}}" DisplayMemberPath="Name" IsReadOnly="True" SelectionChanged="uiGotfragGameComboBox_SelectionChanged" />
+        
+        <!-- Server Details -->
+        <GroupBox Grid.Row="1" Header="Server Details" Name="uiServerInfoGroupBox" Margin="4" Padding="4">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <StackPanel Margin="0,0,0,8">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,20,2" Name="uiServerInfoAddressStackPanel">
+                        <TextBlock FontWeight="Bold" Margin="0,0,8,0">Address:</TextBlock>
+                        <TextBox IsReadOnly="True" Background="Transparent" BorderThickness="0" Padding="0" Text="{Binding Path=Address, Converter={StaticResource nullConverter}}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,20,2">
+                        <TextBlock FontWeight="Bold" Margin="0,0,8,0">Game:</TextBlock>
+                        <TextBox IsReadOnly="True" Background="Transparent" BorderThickness="0" Padding="0" Text="{Binding Path=Game, Converter={StaticResource nullConverter}}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,20,2">
+                        <TextBlock FontWeight="Bold" Margin="0,0,8,0">Map:</TextBlock>
+                        <TextBox IsReadOnly="True" Background="Transparent" BorderThickness="0" Padding="0" Text="{Binding Path=Map, Converter={StaticResource nullConverter}}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,20,2">
+                        <TextBlock FontWeight="Bold" Margin="0,0,8,0">Players:</TextBlock>
+                        <TextBox IsReadOnly="True" Background="Transparent" BorderThickness="0" Padding="0" Text="{Binding Path=NumPlayers, Mode=OneWay, Converter={StaticResource nullConverter}}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,20,2">
+                        <TextBlock FontWeight="Bold" Margin="0,0,8,0">Spectators:</TextBlock>
+                        <TextBox IsReadOnly="True" Background="Transparent" BorderThickness="0" Padding="0" Text="{Binding Path=Spectators, Mode=OneWay, Converter={StaticResource nullConverter}}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,20,2">
+                        <TextBlock FontWeight="Bold" Margin="0,0,8,0">Ping:</TextBlock>
+                        <TextBox IsReadOnly="True" Background="Transparent" BorderThickness="0" Padding="0" Text="{Binding Path=Ping, Converter={StaticResource nullConverter}}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,20,2">
+                        <TextBlock FontWeight="Bold" Margin="0,0,8,0">Password Protected:</TextBlock>
+                        <TextBox IsReadOnly="True" Background="Transparent" BorderThickness="0" Padding="0" Text="{Binding Path=PasswordProtected, Converter={StaticResource nullConverter}}" />
+                    </StackPanel>
+                </StackPanel>
+                <demoplayer:ExtendedListView Grid.Column="1" Margin="0,0,0,8" x:Name="uiServerInfoPlayers" ItemsSource="{Binding Path=Players}">
+                    <ListView.View>
+                        <GridView>
+                            <demoplayer:ExtendedGridViewColumn Header="Player" SortPropertyName="Name" IsDefaultSortColumn="True" DisplayMemberBinding="{Binding Path=Name}" IsLowPriority="True" />
+                            <demoplayer:ExtendedGridViewColumn Header="Score" SortPropertyName="Score" DisplayMemberBinding="{Binding Path=Score}" />
+                            <demoplayer:ExtendedGridViewColumn Header="Connected" SortPropertyName="Time" DisplayMemberBinding="{Binding Path=Time}" />
+                        </GridView>
+                    </ListView.View>
+                </demoplayer:ExtendedListView>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</Window>

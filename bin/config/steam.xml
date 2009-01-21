@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SteamGameInfoListing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GoldSrc>
+    <SteamGameInfo appId="10" folder="cstrike" gameFolderExtended="counter-strike" name="Counter-Strike" />
+    <SteamGameInfo appId="20" folder="tfc" gameFolderExtended="team fortress classic" name="Team Fortress Classic" />
+    <SteamGameInfo appId="30" folder="dod" gameFolderExtended="day of defeat" name="Day of Defeat" />
+    <SteamGameInfo appId="40" folder="dmc" gameFolderExtended="deathmatch classic" name="Deathmatch Classic" />
+    <SteamGameInfo appId="50" folder="op4" gameFolderExtended="opposing force" name="Half-Life: Opposing Force" />
+    <SteamGameInfo appId="60" folder="ricochet" gameFolderExtended="ricochet" name="Ricochet" />
+    <SteamGameInfo appId="70" folder="valve" gameFolderExtended="half-life" name="Half-Life" />
+    <SteamGameInfo appId="80" folder="czero" gameFolderExtended="condition zero" name="Counter-Strike: Condition Zero" />
+    <SteamGameInfo appId="100" folder="czerodeleted" gameFolderExtended="condition zero deleted scenes" name="Counter-Strike: Condition Zero Deleted Scenes" />
+    <SteamGameInfo appId="130" folder="bshift" gameFolderExtended="half-life blue shift" name="Half-Life: Blue Shift" />
+  </GoldSrc>
+  <Source>
+    <SteamGameInfo appId="220" folder="hl2" gameFolderExtended="half-life 2" name="Half-Life 2" />
+    <SteamGameInfo appId="240" folder="cstrike" gameFolderExtended="counter-strike source" name="Counter-Strike: Source" />
+    <SteamGameInfo appId="280" folder="hls" gameFolderExtended="half-life source" name="Half-Life: Source" />
+    <SteamGameInfo appId="300" folder="dod" gameFolderExtended="day of defeat source" name="Day of Defeat: Source" />
+    <SteamGameInfo appId="340" folder="lostcoast" gameFolderExtended="half-life 2 lostcoast" name="Half-Life 2: Lost Coast" />
+    <SteamGameInfo appId="360" folder="hlsdm" gameFolderExtended="half-life source deathmatch" name="Half-Life: Source Deathmatch" />
+    <SteamGameInfo appId="380" folder="hl2e1" gameFolderExtended="half-life 2 episode one" name="Half-Life 2: Episode One" />
+    <SteamGameInfo appId="400" folder="portal" gameFolderExtended="portal" name="Portal" />
+    <SteamGameInfo appId="440" folder="tf" gameFolderExtended="team fortress 2" name="Team Fortress 2" />
+	<SteamGameInfo appId="500" folder="left4dead" gameFolderExtended="left 4 dead" name="Left 4 Dead" />
+    <SteamGameInfo appId="4000" folder="hl2gmod" gameFolderExtended="garrysmod" name="Garry's Mod" />
+  </Source>
+</SteamGameInfoListing>

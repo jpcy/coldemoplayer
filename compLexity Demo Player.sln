@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C# Express 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "compLexity Demo Player", "compLexity Demo Player\compLexity Demo Player.csproj", "{4EA53E6E-0DBD-4639-923A-3788E6370D75}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Update Manifest Generator", "Update Manifest Generator\Update Manifest Generator.csproj", "{CAB8D914-8061-47EF-BE07-DB3688237537}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Update", "Update\Update.csproj", "{F5B95BA7-D490-4FBF-875C-7D43B575374E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4EA53E6E-0DBD-4639-923A-3788E6370D75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EA53E6E-0DBD-4639-923A-3788E6370D75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EA53E6E-0DBD-4639-923A-3788E6370D75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EA53E6E-0DBD-4639-923A-3788E6370D75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAB8D914-8061-47EF-BE07-DB3688237537}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAB8D914-8061-47EF-BE07-DB3688237537}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAB8D914-8061-47EF-BE07-DB3688237537}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAB8D914-8061-47EF-BE07-DB3688237537}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5B95BA7-D490-4FBF-875C-7D43B575374E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5B95BA7-D490-4FBF-875C-7D43B575374E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5B95BA7-D490-4FBF-875C-7D43B575374E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5B95BA7-D490-4FBF-875C-7D43B575374E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

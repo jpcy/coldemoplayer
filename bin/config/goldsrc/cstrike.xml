@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Versions>
+	<Version name="1.0" checksum="7C8346EFE2629D87A50A94BEF682034D" />
+	<Version name="1.1" checksum="0CB78BC0BABD01EC70A3F77C06B81451" />
+	<Version name="1.3" checksum="17D045FCA9CB9F05C8256669AF1EC615" />
+	<Version name="1.3" checksum="1AC2D44ADD55B290EF101278204E160D" />
+	<Version name="1.4" checksum="6307A9352235181AABC5F214ACFD7382" />
+	<Version name="1.5" checksum="08E0280AFDE2B21A69801FECBA4D986D" />
+	<Version name="1.6" checksum="default" />
+  </Versions>
+  <Maps>
+	<Map name="as_oilrig" checksum="3821752478" />
+	<Map name="cs_747" checksum="3607774082" />
+	<Map name="cs_assault" checksum="777915923" />
+	<Map name="cs_backalley" checksum="1796905299" />
+	<Map name="cs_estate" checksum="432085670" />
+	<Map name="cs_havana" checksum="2942753384" />
+	<Map name="cs_italy" checksum="111715122" />
+	<Map name="cs_militia" checksum="1276908704" />
+	<Map name="cs_office" checksum="4122088746" />
+	<Map name="cs_siege" checksum="2084496279" />
+	<Map name="de_airstrip" checksum="479146630" />
+	<Map name="de_aztec" checksum="621664725" />
+	<Map name="de_cbble" checksum="2364605520" />
+	<Map name="de_chateau" checksum="2904230962" />
+	<Map name="de_dust" checksum="2653660231" />
+	<Map name="de_dust2" checksum="1159425449" />
+	<Map name="de_inferno" checksum="2982211295" />
+	<Map name="de_nuke" checksum="2537589255" />
+	<Map name="de_piranesi" checksum="1071393113" />
+	<Map name="de_prodigy" checksum="3399721876" />
+	<Map name="de_storm" checksum="1505422460" />
+	<Map name="de_survivor" checksum="3854077324" />
+	<Map name="de_torn" checksum="913254441" />
+	<Map name="de_train" checksum="3631264936" />
+	<Map name="de_vertigo" checksum="1292176643" />
+  </Maps>
+</GameConfig>
