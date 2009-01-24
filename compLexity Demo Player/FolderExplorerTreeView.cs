@@ -359,11 +359,19 @@ namespace compLexity_Demo_Player
 
             if (info.hIcon != IntPtr.Zero)
             {
-                BitmapSource bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(info.hIcon, new Int32Rect(0, 0, 16, 16), BitmapSizeOptions.FromEmptyOptions());
-
-                DestroyIcon(info.hIcon);
-
-                return bs;
+                try
+                {
+                    return System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(info.hIcon, new Int32Rect(0, 0, 16, 16), BitmapSizeOptions.FromEmptyOptions());
+                }
+                catch (ArgumentException)
+                {
+                    // Ugly fix for dodgy HRESULT, see http://code.google.com/p/coldemoplayer/issues/detail?id=1
+                    return null;
+                }
+                finally
+                {
+                    DestroyIcon(info.hIcon);
+                }
             }
 
             return null;
