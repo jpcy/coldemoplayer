@@ -268,7 +268,7 @@ namespace compLexity_Demo_Player
             tvi.Header = panel;
 
             Image image = new Image();
-            image.Source = ExtractIcons.GetIcon(folderItem.Path, false);
+            image.Source = ExtractIcons.GetIcon(folderItem.Path, false, (folderItem.Type == "3½-Inch Floppy Disk"));
             image.Margin = new Thickness(0, 0, 4, 0);
 
             TextBlock text = new TextBlock();
@@ -288,7 +288,7 @@ namespace compLexity_Demo_Player
             StackPanel panel = (StackPanel)tvi.Header;
 
             Image image = new Image();
-            image.Source = ExtractIcons.GetIcon(folderItem.Path, open);
+            image.Source = ExtractIcons.GetIcon(folderItem.Path, open, false);
             image.Margin = new Thickness(0, 0, 4, 0);
 
             panel.Children.RemoveAt(0);
@@ -339,22 +339,30 @@ namespace compLexity_Demo_Player
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern bool DestroyIcon(IntPtr handle);
 
-        public static BitmapSource GetIcon(String path, Boolean open)
+        public static BitmapSource GetIcon(String path, Boolean open, bool floppy)
         {
+            if (floppy)
+            {
+                BitmapImage image = new BitmapImage();
+                image.BeginInit();
+                image.UriSource = new Uri("data\\floppy.png", UriKind.Relative);
+                image.EndInit();
+                return image;
+            }
+
             /*
              * Passing in the file attributes to SHGetFileInfo is noticebly faster.
              * See http://www.codeguru.com/cpp/com-tech/shell/article.php/c4511/
              */
             UInt32 fileAttributes = GetFileAttributes(path);
-
-            SHFILEINFO info = new SHFILEINFO();
-            SHGFI flags = SHGFI.SHGFI_USEFILEATTRIBUTES | SHGFI.SHGFI_ICON | SHGFI.SHGFI_SMALLICON;
+            SHGFI flags = SHGFI.SHGFI_ICON | SHGFI.SHGFI_SMALLICON | SHGFI.SHGFI_USEFILEATTRIBUTES;
 
             if (open)
             {
                 flags |= SHGFI.SHGFI_OPENICON;
             }
 
+            SHFILEINFO info = new SHFILEINFO();
             SHGetFileInfo(path, fileAttributes, out info, (uint)Marshal.SizeOf(info), flags);
 
             if (info.hIcon != IntPtr.Zero)

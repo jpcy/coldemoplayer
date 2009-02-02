@@ -240,6 +240,7 @@ namespace compLexity_Demo_Player
 
         static public void AssociateWithDemFiles()
         {
+#if !DEBUG
             Boolean refreshIcon = false;
 
             // create ".dem" entry
@@ -283,6 +284,7 @@ namespace compLexity_Demo_Player
                 IntPtr p = new IntPtr();
                 SHChangeNotify(0x08000000, 0, p, p);
             }
+#endif
         }
 
         public static void AddHlswProtocolAssociation()

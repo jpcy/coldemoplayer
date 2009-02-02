@@ -309,11 +309,6 @@ namespace compLexity_Demo_Player
                 return false;
             }
 
-            if (Perspective == PerspectiveEnum.Pov)
-            {
-                return (BuildNumber >= 2511);
-            }
-
             // may be beta Steam HLTV
             // can only determine this via client dll checksum (i.e. this is mod specific)
             if (GameFolderName == "cstrike")
