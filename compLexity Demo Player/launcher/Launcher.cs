@@ -66,16 +66,16 @@ namespace compLexity_Demo_Player
 
             // see if the game has a config file
             // FIXME: engine name - assuming goldsrc for now (see above)
-            GameConfig gameConfig = GameConfigList.Find(Demo.GameFolderName, "goldsrc");
+            Game game = GameManager.Find(Demo);
 
-            if (gameConfig == null)
+            if (game == null || game.HasConfig == false)
             {
                 // can't determine what maps are built-in for the game - can't handle map versions
                 return;
             }
 
             // see if the map is built-in
-            if (gameConfig.MapExists(Demo.MapChecksum, Demo.MapName))
+            if (game.BuiltInMapExists(Demo.MapChecksum, Demo.MapName))
             {
                 // ok, suitable map found
                 return;

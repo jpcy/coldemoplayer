@@ -437,7 +437,31 @@ namespace compLexity_Demo_Player
             // skip map
             parser.BitBuffer.ReadString();
 
-            if (demo.NetworkProtocol != 45)
+            if (demo.NetworkProtocol == 45)
+            {
+                Byte extraInfo = parser.BitBuffer.ReadByte();
+                parser.Seek(-1);
+
+                if (extraInfo != (Byte)HalfLifeDemoParser.MessageId.svc_sendextrainfo)
+                {
+                    parser.BitBuffer.ReadString(); // skip mapcycle
+
+                    if (parser.BitBuffer.ReadByte() > 0)
+                    {
+                        parser.Seek(-1);
+                        parser.BitBuffer.RemoveBytes(36);
+                    }
+                }
+                else
+                {
+                    // insert blank mapcycle
+                    if (demo.ConvertNetworkProtocol())
+                    {
+                        parser.BitBuffer.InsertBytes(new Byte[] { 0 });
+                    }
+                }
+            }
+            else
             {
                 parser.BitBuffer.ReadString(); // skip mapcycle
 
@@ -452,17 +476,7 @@ namespace compLexity_Demo_Player
 
                         parser.Seek(-1);
                         parser.BitBuffer.RemoveBytes(21 + 1);
-                        parser.BitBuffer.InsertBytes(new Byte[] { 0 });
-                        return;
                     }
-                }
-            }
-            else
-            {
-                // insert blank mapcycle
-                if (demo.ConvertNetworkProtocol())
-                {
-                    parser.BitBuffer.InsertBytes(new Byte[] { 0 });
                 }
             }
 

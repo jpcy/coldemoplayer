@@ -266,14 +266,16 @@ namespace compLexity_Demo_Player
             }
             else
             {
-                // check that steam.exe path is set and that the demo has a SteamGameInfo entry
-                if (!File.Exists(Config.Settings.SteamExeFullPath) || demo.SteamGameInfo == null)
+                // check that steam.exe path is set and that the demo has corresponding steam app information
+                Game game = GameManager.Find(demo);
+
+                if (!File.Exists(Config.Settings.SteamExeFullPath) || game == null)
                 {
                     return unknownIcon;
                 }
 
                 // try Steam\steam\games\x.ico, where x is the game name. e.g. counter-strike
-                icon = LoadIcon(System.IO.Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\steam\\games\\" + demo.SteamGameInfo.GameFolderExtended + ".ico");
+                icon = LoadIcon(System.IO.Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\steam\\games\\" + game.FolderExtended + ".ico");
 
                 if (icon != null)
                 {
@@ -281,7 +283,7 @@ namespace compLexity_Demo_Player
                 }
 
                 // try game folder, game.ico. e.g. counter-strike\cstrike\game.ico
-                icon = LoadIcon(System.IO.Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\" + Config.Settings.SteamAccountFolder + "\\" + demo.SteamGameInfo.GameFolderExtended + "\\" + demo.GameFolderName + "\\game.ico");
+                icon = LoadIcon(System.IO.Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\" + Config.Settings.SteamAccountFolder + "\\" + game.FolderExtended + "\\" + demo.GameFolderName + "\\game.ico");
 
                 if (icon != null)
                 {
@@ -289,7 +291,7 @@ namespace compLexity_Demo_Player
                 }
 
                 // try game folder, resource\game.ico.
-                icon = LoadIcon(System.IO.Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\" + Config.Settings.SteamAccountFolder + "\\" + demo.SteamGameInfo.GameFolderExtended + "\\" + demo.GameFolderName + "\\resource\\game.ico");
+                icon = LoadIcon(System.IO.Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\" + Config.Settings.SteamAccountFolder + "\\" + game.FolderExtended + "\\" + demo.GameFolderName + "\\resource\\game.ico");
 
                 if (icon != null)
                 {

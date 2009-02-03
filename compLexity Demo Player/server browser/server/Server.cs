@@ -86,17 +86,17 @@ namespace Server_Browser
         }
 
 
-        public String Game
+        public String GameName
         {
             get
             {
-                return game;
+                return gameName;
             }
 
             set
             {
-                game = value;
-                OnPropertyChanged("Game");
+                gameName = value;
+                OnPropertyChanged("GameName");
             }
         }
 
@@ -207,7 +207,7 @@ namespace Server_Browser
         private String address;
         private String title = "Idle";
         private Int32? ping;
-        private String game;
+        private String gameName;
         private String map;
         private Byte? numSpectators;
         private Byte? maxSpectators;
@@ -271,7 +271,7 @@ namespace Server_Browser
 
                 // reset properties
                 mainWindowInterface.SetServerProperty(this, "Ping", null);
-                mainWindowInterface.SetServerProperty(this, "Game", null);
+                mainWindowInterface.SetServerProperty(this, "GameName", null);
                 mainWindowInterface.SetServerProperty(this, "Map", null);
                 mainWindowInterface.SetServerProperty(this, "NumSpectators", null);
                 mainWindowInterface.SetServerProperty(this, "MaxSpectators", null);
@@ -455,7 +455,7 @@ namespace Server_Browser
             mainWindowInterface.SetServerProperty(this, "Map", bitBuffer.ReadString()); // map
             String gameFolder = bitBuffer.ReadString();
             mainWindowInterface.SetServerProperty(this, "GameFolder", gameFolder); // game folder
-            String game = bitBuffer.ReadString(); // game name
+            String gameName = bitBuffer.ReadString(); // game name
 
             if (sourceEngine)
             {
@@ -470,15 +470,15 @@ namespace Server_Browser
             mainWindowInterface.SetServerProperty(this, "PasswordProtected", (bitBuffer.ReadByte() == 1));
 
             // determine game name
-            SteamGameInfo sgi = Steam.GetGameInfo(sourceEngine, gameFolder);
+            Game game = GameManager.Find((sourceEngine ? Game.Engines.Source : Game.Engines.HalfLife), gameFolder);
 
-            if (sgi == null)
+            if (game == null)
             {
-                mainWindowInterface.SetServerProperty(this, "Game", String.Format("Unknown ({0})", game));
+                mainWindowInterface.SetServerProperty(this, "GameName", gameName);
             }
             else
             {
-                mainWindowInterface.SetServerProperty(this, "Game", sgi.GameName);
+                mainWindowInterface.SetServerProperty(this, "GameName", game.Name);
             }
         }
 

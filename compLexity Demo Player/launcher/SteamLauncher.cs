@@ -24,22 +24,22 @@ namespace compLexity_Demo_Player
                 throw new ApplicationException("Steam account folder \"" + gameFullPath + "\"doesn't exist. Go to Options\\Preferences and select a valid Steam account folder.");
             }
 
-            // verify there is steam app info for this server/demo (if it's a steam demo)
-            SteamGameInfo steamGameInfo;
+            // verify there is steam app info for this server/demo
+            Game game = null;
             String gameFolderName;
 
             if (JoiningServer)
             {
-                steamGameInfo = Steam.GetGameInfo(ServerSourceEngine, ServerGameFolderName);
+                game = GameManager.Find((ServerSourceEngine ? Game.Engines.Source : Game.Engines.HalfLife), ServerGameFolderName);
                 gameFolderName = ServerGameFolderName;
             }
             else
             {
-                steamGameInfo = Demo.SteamGameInfo;
+                game = GameManager.Find(Demo);
                 gameFolderName = Demo.GameFolderName;
             }
 
-            if (steamGameInfo == null && (JoiningServer || Demo.Engine != Demo.EngineEnum.HalfLife))
+            if (game == null)
             {
                 String s = String.Format("No Steam information can be found for the game \"{0}\".", gameFolderName);
 
@@ -56,11 +56,11 @@ namespace compLexity_Demo_Player
             }
 
             // verify that the game folder exists
-            gameFullPath = steamAccountFullPath + "\\" + steamGameInfo.GameFolderExtended + "\\" + gameFolderName;
+            gameFullPath = steamAccountFullPath + "\\" + game.FolderExtended + "\\" + gameFolderName;
 
             if (!Directory.Exists(gameFullPath))
             {
-                throw new ApplicationException("The game \"" + steamGameInfo.GameName + "\" doesn't seem to be installed.\n\nGame folder \"" + gameFullPath + "\" doesn't exist.\n\nCheck that the correct Steam account is selected in Options\\Preferences.");
+                throw new ApplicationException("The game \"" + game.Name + "\" doesn't seem to be installed.\n\nGame folder \"" + gameFullPath + "\" doesn't exist.\n\nCheck that the correct Steam account is selected in Options\\Preferences.");
             }
 
             // hlae: verify the exe path is set
@@ -91,19 +91,19 @@ namespace compLexity_Demo_Player
             }
 
             // verify that the game is not running
-            SteamGameInfo steamGameInfo;
+            Game game = null;
 
             if (JoiningServer)
             {
-                steamGameInfo = Steam.GetGameInfo(ServerSourceEngine, ServerGameFolderName);
+                game = GameManager.Find((ServerSourceEngine ? Game.Engines.Source : Game.Engines.HalfLife), ServerGameFolderName);
             }
             else
             {
-                steamGameInfo = Demo.SteamGameInfo;
+                game = GameManager.Find(Demo);
             }
 
             // even if HLAE is being used, still need to check that game isn't already running
-            processExeFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\" + Config.Settings.SteamAccountFolder + "\\" + steamGameInfo.GameFolderExtended + "\\";
+            processExeFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\" + Config.Settings.SteamAccountFolder + "\\" + game.FolderExtended + "\\";
 
             if ((JoiningServer && ServerSourceEngine) || (!JoiningServer && Demo.Engine == Demo.EngineEnum.Source))
             {
@@ -116,7 +116,7 @@ namespace compLexity_Demo_Player
 
             if (Common.FindProcess(Path.GetFileNameWithoutExtension(processExeFullPath), processExeFullPath) != null)
             {
-                throw new ApplicationException("Cannot play a demo while \"" + steamGameInfo.GameName + "\" is already running. Exit the game and try again.");
+                throw new ApplicationException("Cannot play a demo while \"" + game.Name + "\" is already running. Exit the game and try again.");
             }
 
             if (UseHlae)
@@ -127,22 +127,22 @@ namespace compLexity_Demo_Player
 
         protected override void LaunchProgram()
         {
-            SteamGameInfo steamGameInfo;
+            Game game;
             String mapName;
 
             if (JoiningServer)
             {
-                steamGameInfo = Steam.GetGameInfo(ServerSourceEngine, ServerGameFolderName);
+                game = GameManager.Find((ServerSourceEngine ? Game.Engines.Source : Game.Engines.HalfLife), ServerGameFolderName);
                 mapName = ServerMapName;
             }
             else
             {
-                steamGameInfo = Demo.SteamGameInfo;
+                game = GameManager.Find(Demo);
                 mapName = Demo.MapName;
             }
 
             // calculate launch parameters
-            launchParameters = (UseHlae ? "" : "-applaunch " + steamGameInfo.AppId + " ");
+            launchParameters = (UseHlae ? "" : "-applaunch " + game.AppId + " ");
 
             if ((JoiningServer && Config.Settings.ServerBrowserStartListenServer && !ServerSourceEngine) || (!JoiningServer && (Config.Settings.PlaybackStartListenServer || Demo.GameFolderName == "tfc") && Demo.Engine != Demo.EngineEnum.Source))
             {

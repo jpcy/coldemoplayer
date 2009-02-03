@@ -445,9 +445,24 @@ namespace compLexity_Demo_Player
 
             String mapName = parser.BitBuffer.ReadString();
 
-            if (demo.NetworkProtocol != 45)
+            if (demo.NetworkProtocol == 45)
             {
-                parser.BitBuffer.ReadString(); // mapcycle
+                Byte extraInfo = parser.BitBuffer.ReadByte();
+                parser.Seek(-1);
+
+                if (extraInfo != (Byte)HalfLifeDemoParser.MessageId.svc_sendextrainfo)
+                {
+                    parser.BitBuffer.ReadString(); // skip mapcycle
+
+                    if (parser.BitBuffer.ReadByte() > 0)
+                    {
+                        parser.Seek(36);
+                    }
+                }
+            }
+            else
+            {
+                parser.BitBuffer.ReadString(); // skip mapcycle
 
                 if (demo.NetworkProtocol > 43)
                 {

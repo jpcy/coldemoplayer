@@ -545,6 +545,7 @@ namespace compLexity_Demo_Player
     }
 
     // Func
+    public delegate TResult Function<TResult>();
     public delegate TResult Function<T, TResult>(T arg);
     public delegate TResult Function<T1, T2, TResult>(T1 arg1, T2 arg2);
     public delegate TResult Function<T1, T2, T3, TResult>(T1 arg1, T2 arg2, T3 arg3);

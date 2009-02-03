@@ -193,6 +193,13 @@
     <Compile Include="ExtendedListView.cs" />
     <Compile Include="FileOperation.cs" />
     <Compile Include="FileOperationList.cs" />
+    <Compile Include="game\GameConfig.cs" />
+    <Compile Include="game\GameFactory.cs" />
+    <Compile Include="game\GameManager.cs" />
+    <Compile Include="game\Game.cs" />
+    <Compile Include="game\games\CounterStrike.cs" />
+    <Compile Include="game\games\CounterStrikeSource.cs" />
+    <Compile Include="game\SteamGameInfo.cs" />
     <Compile Include="Hlae.cs" />
     <Compile Include="launcher\LauncherInterface.cs" />
     <Compile Include="launcher\SteamLauncher.cs" />
@@ -219,7 +226,6 @@
     <Compile Include="server browser\server\GotfragServer.cs" />
     <Compile Include="server browser\server\Server.cs" />
     <Compile Include="server browser\TimedUdpClient.cs" />
-    <Compile Include="Steam.cs" />
     <Compile Include="SystemTrayIcon.cs" />
     <Compile Include="UpdateCheckWindow.xaml.cs">
       <DependentUpon>UpdateCheckWindow.xaml</DependentUpon>
@@ -236,7 +242,6 @@
     <Compile Include="demo\HalfLifeDemoWriter.cs" />
     <Compile Include="demo\SourceDemo.cs" />
     <Compile Include="FolderExplorerTreeView.cs" />
-    <Compile Include="GameConfig.cs" />
     <Compile Include="HalfLifeMapChecksum.cs" />
     <Compile Include="HyperlinkControl.xaml.cs">
       <DependentUpon>HyperlinkControl.xaml</DependentUpon>

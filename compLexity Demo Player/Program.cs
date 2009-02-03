@@ -90,22 +90,11 @@ namespace compLexity_Demo_Player
             // read steam.xml
             try
             {
-                Steam.Initialise(Config.Settings.ProgramPath + "\\config");
+                GameManager.Initialise(Config.Settings.ProgramPath + "\\config");
             }
             catch (Exception ex)
             {
                 Common.Message(null, "Error reading from \"steam.xml\". Reinstalling may fix the problem.", ex, MessageWindow.Flags.Error);
-                return;
-            }
-
-            // read game configs
-            try
-            {
-                GameConfigList.Initialise();
-            }
-            catch (Exception ex)
-            {
-                Common.Message(null, "Error reading game configuration files. Reinstalling may fix the problem.", ex, MessageWindow.Flags.Error);
                 return;
             }
 

@@ -18,43 +18,25 @@ namespace compLexity_Demo_Player
 {
     public partial class MapPoolWindow : Window
     {
-        private class Game : NotifyPropertyChangedItem
+        private class GameListItem : NotifyPropertyChangedItem
         {
             public String Text
             {
                 get
                 {
-                    return gameInfo.GameName + " (" + gameInfo.GameFolder + ")";
+                    return Game.Name + " (" + Game.Folder + ")";
                 }
             }
 
-            public SteamGameInfo SteamGameInfo
-            {
-                get
-                {
-                    return gameInfo;
-                }
-            }
+            public Game Game { get; private set; }
 
-            public GameConfig GameConfig
+            public GameListItem(Game game)
             {
-                get
-                {
-                    return gameConfig;
-                }
-            }
-
-            private SteamGameInfo gameInfo;
-            private GameConfig gameConfig;
-
-            public Game(SteamGameInfo gameInfo, GameConfig gameConfig)
-            {
-                this.gameInfo = gameInfo;
-                this.gameConfig = gameConfig;
+                Game = game;
             }
         }
 
-        private class Map : NotifyPropertyChangedItem
+        private class MapListItem : NotifyPropertyChangedItem
         {
             public Boolean BuiltIn
             {
@@ -72,13 +54,13 @@ namespace compLexity_Demo_Player
                 }
             }
 
-            public String Name { get; set; }
-            public String Checksum { get; set; }
-            public String WadFiles { get; set; }
+            public String Name { get; private set; }
+            public String Checksum { get; private set; }
+            public String WadFiles { get; private set; }
 
             private Boolean builtIn;
 
-            public Map(Boolean builtIn, String name, String checksum, String wadFiles)
+            public MapListItem(Boolean builtIn, String name, String checksum, String wadFiles)
             {
                 this.builtIn = builtIn;
                 Name = name;
@@ -87,23 +69,17 @@ namespace compLexity_Demo_Player
             }
         }
 
-        private ObservableCollection<Game> gameCollection;
-        private ObservableCollection<Map> mapCollection;
+        private ObservableCollection<GameListItem> gameCollection;
+        private ObservableCollection<MapListItem> mapCollection;
 
         public MapPoolWindow()
         {
-            gameCollection = new ObservableCollection<Game>();
-            mapCollection = new ObservableCollection<Map>();
+            gameCollection = new ObservableCollection<GameListItem>();
+            mapCollection = new ObservableCollection<MapListItem>();
 
-            foreach (GameConfig gameConfig in GameConfigList.GoldSrcGameTable.Values)
+            foreach (Game game in GameManager.ListAll(g => g.HasConfig))
             {
-                // look for a matching SteamGameInfo entry
-                SteamGameInfo gameInfo = Steam.GetGameInfo(false, gameConfig.GameFolder);
-
-                if (gameInfo != null)
-                {
-                    gameCollection.Add(new Game(gameInfo, gameConfig));
-                }
+                gameCollection.Add(new GameListItem(game));
             }
 
             InitializeComponent();
@@ -113,9 +89,9 @@ namespace compLexity_Demo_Player
         {
             mapCollection.Clear();
 
-            Game game = (Game)uiGameComboBox.SelectedItem;
+            GameListItem gameListItem = (GameListItem)uiGameComboBox.SelectedItem;
 
-            if (game == null)
+            if (gameListItem == null)
             {
                 return;
             }
@@ -124,13 +100,20 @@ namespace compLexity_Demo_Player
             //String engine = (game.Engine == Demo.EngineEnum.Source ? "source" : "goldsrc");
 
             // add all the "built in" maps listed in the game config
-            foreach (GameConfig.Map map in game.GameConfig.Maps)
+            foreach (KeyValuePair<UInt32, String> map in gameListItem.Game.Maps)
             {
-                mapCollection.Add(new Map(true, map.Name, String.Format("{0}", map.Checksum), ""));
+                mapCollection.Add(new MapListItem(true, map.Value, String.Format("{0}", map.Key), ""));
             }
 
             // enumerate all folders in maps\\*engine*\\*game folder* and assume they are checksums
-            foreach (String directory in Directory.GetDirectories(Config.Settings.ProgramPath + String.Format("\\maps\\{0}\\{1}", engine, game.SteamGameInfo.GameFolder)))
+            String path = Config.Settings.ProgramPath + String.Format("\\maps\\{0}\\{1}", engine, gameListItem.Game.Folder);
+
+            if (!Directory.Exists(path))
+            {
+                return;
+            }
+
+            foreach (String directory in Directory.GetDirectories(path))
             {
                 String checksum = directory.Remove(0, directory.LastIndexOf('\\') + 1);
 
@@ -154,7 +137,7 @@ namespace compLexity_Demo_Player
                         wadFiles += System.IO.Path.GetFileName(wadFile) + ";";
                     }
 
-                    mapCollection.Add(new Map(false, System.IO.Path.GetFileName(bspFile), checksum, wadFiles));
+                    mapCollection.Add(new MapListItem(false, System.IO.Path.GetFileName(bspFile), checksum, wadFiles));
                 }
             }
         }
@@ -179,9 +162,9 @@ namespace compLexity_Demo_Player
         private void uiAddButton_Click(object sender, RoutedEventArgs e)
         {
             // get selected game
-            Game game = (Game)uiGameComboBox.SelectedItem;
+            GameListItem gameListItem = (GameListItem)uiGameComboBox.SelectedItem;
 
-            if (game == null)
+            if (gameListItem == null)
             {
                 Common.Message(this, "Select a game first.");
                 return;
@@ -215,7 +198,7 @@ namespace compLexity_Demo_Player
             }
 
             // see if map is built-in
-            if (game.GameConfig.MapExists(checksum, System.IO.Path.GetFileNameWithoutExtension(mapFileName)))
+            if (gameListItem.Game.BuiltInMapExists(checksum, System.IO.Path.GetFileNameWithoutExtension(mapFileName)))
             {
                 Common.Message(this, String.Format("The map \"{0}\" with the checksum \"{1}\" is a built-in map. It does not need to be added to the map pool.", mapFileName, checksum));
                 return;
@@ -224,7 +207,7 @@ namespace compLexity_Demo_Player
             // see if the game map folder already exists
             //String engine = (game.Engine == Demo.EngineEnum.Source ? "source" : "goldsrc");
             String engine = "goldsrc";
-            String gameMapFolder = Config.Settings.ProgramPath + String.Format("\\maps\\{0}\\{1}", engine, game.SteamGameInfo.GameFolder);
+            String gameMapFolder = Config.Settings.ProgramPath + String.Format("\\maps\\{0}\\{1}", engine, gameListItem.Game.Folder);
 
             if (!Directory.Exists(gameMapFolder))
             {
@@ -259,16 +242,16 @@ namespace compLexity_Demo_Player
         private void uiRemoveButton_Click(object sender, RoutedEventArgs e)
         {
             // get selected game
-            Game game = (Game)uiGameComboBox.SelectedItem;
+            GameListItem gameListItem = (GameListItem)uiGameComboBox.SelectedItem;
 
-            if (game == null)
+            if (gameListItem == null)
             {
                 Common.Message(this, "Select a game first.");
                 return;
             }
 
             // get selected map
-            Map map = (Map)uiMapListView.SelectedItem;
+            MapListItem map = (MapListItem)uiMapListView.SelectedItem;
 
             if (map == null)
             {
@@ -291,7 +274,7 @@ namespace compLexity_Demo_Player
             // delete the checksum folder and all contents
             //String engine = (game.Engine == Demo.EngineEnum.Source ? "source" : "goldsrc");
             String engine = "goldsrc";
-            String checksumFolder = Config.Settings.ProgramPath + String.Format("\\maps\\{0}\\{1}\\{2}", engine, game.SteamGameInfo.GameFolder, map.Checksum);
+            String checksumFolder = Config.Settings.ProgramPath + String.Format("\\maps\\{0}\\{1}\\{2}", engine, gameListItem.Game.Folder, map.Checksum);
 
             Directory.Delete(checksumFolder, true);
 

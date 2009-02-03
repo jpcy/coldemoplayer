@@ -210,50 +210,30 @@ namespace compLexity_Demo_Player
             }
         }
 
-        public SteamGameInfo SteamGameInfo
-        {
-            get
-            {
-                return Steam.GetGameInfo((engineType == EngineEnum.Source), gameFolderName);
-            }
-        }
-
         public String GameName
         {
             get
             {
-                // try to get game name from config\steam.xml
-                SteamGameInfo info = this.SteamGameInfo;
+                Game game = GameManager.Find(this);
 
-                if (info == null)
+                if (game == null)
                 {
                     return "Unknown (" + gameFolderName + ")";
                 }
 
-                // try to get game version from config\*engine*\*game folder*.xml
-                String engineName = "goldsrc";
+                String result = game.Name;
 
-                if (engineType == EngineEnum.Source)
+                // Try and get the game version.
+                String version = game.FindVersion(clientDllChecksum);
+
+                if (version != null)
                 {
-                    engineName = "source";
+                    result += " " + version;
                 }
 
-                GameConfig gameConfig = GameConfigList.Find(gameFolderName, engineName);
-
-                if (gameConfig != null)
-                {
-                    String version = gameConfig.FindVersion(clientDllChecksum);
-
-                    if (version != null)
-                    {
-                        return info.GameName + " " + version;
-                    }
-                }
-
-                return info.GameName;
+                return result;
             }
         }
-
         #endregion
 
         public Demo()

@@ -637,11 +637,27 @@ namespace compLexity_Demo_Player
                 bitBuffer.ReadString(); // server name                
             }
 
-            bitBuffer.ReadString(); // map
+            // skip map
+            bitBuffer.ReadString();
 
-            if (demo.NetworkProtocol != 45)
+            if (demo.NetworkProtocol == 45)
             {
-                bitBuffer.ReadString(); // map cycle
+                Byte extraInfo = bitBuffer.ReadByte();
+                Seek(-1);
+
+                if (extraInfo != (Byte)HalfLifeDemoParser.MessageId.svc_sendextrainfo)
+                {
+                    bitBuffer.ReadString(); // skip mapcycle
+
+                    if (bitBuffer.ReadByte() > 0)
+                    {
+                        Seek(36);
+                    }
+                }
+            }
+            else
+            {
+                bitBuffer.ReadString(); // skip mapcycle
 
                 if (demo.NetworkProtocol > 43)
                 {

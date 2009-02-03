@@ -202,7 +202,7 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,0,20,2">
                         <TextBlock FontWeight="Bold" Margin="0,0,8,0">Game:</TextBlock>
-                        <TextBox IsReadOnly="True" Background="Transparent" BorderThickness="0" Padding="0" Text="{Binding Path=Game, Converter={StaticResource nullConverter}}" />
+                        <TextBox IsReadOnly="True" Background="Transparent" BorderThickness="0" Padding="0" Text="{Binding Path=GameName, Converter={StaticResource nullConverter}}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,0,20,2">
                         <TextBlock FontWeight="Bold" Margin="0,0,8,0">Map:</TextBlock>

@@ -612,14 +612,14 @@ namespace compLexity_Demo_Player
                 return;
             }
 
-            GameConfig gameConfig = GameConfigList.Find(GameFolderName, "goldsrc");
+            Game game = GameManager.Find(this);
 
-            if (gameConfig == null)
+            if (game == null)
             {
                 return;
             }
 
-            String versionName = gameConfig.FindVersion(clientDllChecksum);
+            String versionName = game.FindVersion(clientDllChecksum);
 
             // FIXME: this is pretty awful
             if (versionName == "1.0")
@@ -827,7 +827,22 @@ namespace compLexity_Demo_Player
             // skip map
             parser.BitBuffer.ReadString();
 
-            if (NetworkProtocol != 45)
+            if (NetworkProtocol == 45)
+            {
+                Byte extraInfo = parser.BitBuffer.ReadByte();
+                parser.Seek(-1);
+
+                if (extraInfo != (Byte)HalfLifeDemoParser.MessageId.svc_sendextrainfo)
+                {
+                    parser.BitBuffer.ReadString(); // skip mapcycle
+
+                    if (parser.BitBuffer.ReadByte() > 0)
+                    {
+                        parser.Seek(36);
+                    }
+                }
+            }
+            else
             {
                 parser.BitBuffer.ReadString(); // skip mapcycle
 
@@ -949,7 +964,22 @@ namespace compLexity_Demo_Player
             // skip map
             parser.BitBuffer.ReadString();
 
-            if (NetworkProtocol != 45)
+            if (NetworkProtocol == 45)
+            {
+                Byte extraInfo = parser.BitBuffer.ReadByte();
+                parser.Seek(-1);
+
+                if (extraInfo != (Byte)HalfLifeDemoParser.MessageId.svc_sendextrainfo)
+                {
+                    parser.BitBuffer.ReadString(); // skip mapcycle
+
+                    if (parser.BitBuffer.ReadByte() > 0)
+                    {
+                        parser.Seek(36);
+                    }
+                }
+            }
+            else
             {
                 parser.BitBuffer.ReadString(); // skip mapcycle
 
