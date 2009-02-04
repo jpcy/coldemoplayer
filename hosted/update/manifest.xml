@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <Entries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Entry FileName="compLexity Demo Player.exe" Hash="69C3BCF97E8537047F9B459EB45C2DEF" />
+  <Entry FileName="compLexity Demo Player.exe" Hash="36306E6D06162230A6D7C87190ABEDFC" />
   <Entry FileName="compLexity Demo Player.exe.config" Hash="02072B1290CCB2F8281B465D52ADABEE" />
   <Entry FileName="HtmlAgilityPack.dll" Hash="A4AD2875A563A22495662430D9245470" />
   <Entry FileName="ICSharpCode.SharpZipLib.dll" Hash="0B3B4E8D1DE31F844E466D61CF7937B5" />
-  <Entry FileName="Interop.Shell32.dll" Hash="14A85BBCFFF8AA92E1FD2FD25466F5E4" />
-  <Entry FileName="readme.txt" Hash="19FE468A6F0AAB0D93FF7353094BDE45" />
+  <Entry FileName="Interop.Shell32.dll" Hash="DD7182E0F4B7CBE101103F9439F508DA" />
+  <Entry FileName="readme.txt" Hash="C4DCE65A4DCD23D89FEB50E63DD922E8" />
   <Entry FileName="ZedGraph.dll" Hash="E93C6E344EE87FF9EDA48D4A06D75EBE" />
-  <Entry FileName="config\steam.xml" Hash="33D02BF550CD9333EB656ADF5D70AF7E" />
+  <Entry FileName="config\steam.xml" Hash="72BEF8AA1DD3834591494FF195270155" />
   <Entry FileName="config\goldsrc\cstrike.xml" Hash="EE4764846A6306F6C23CC197DDF42F65" />
   <Entry FileName="icons\unknown.ico" Hash="D15C8C03974304146B594ED4F77E3959" />
   <Entry FileName="icons\goldsrc\cstrike.ico" Hash="4335BD4014D837B4C94896CE8833BE2A" />

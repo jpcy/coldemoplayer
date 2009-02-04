@@ -449,12 +449,24 @@ namespace compLexity_Demo_Player
                     if (parser.BitBuffer.ReadByte() > 0)
                     {
                         parser.Seek(-1);
-                        parser.BitBuffer.RemoveBytes(36);
+                        parser.BitBuffer.RemoveBytes(34);
+                        
+                        // insert blank extra flag
+                        if (demo.ConvertNetworkProtocol())
+                        {
+                            parser.BitBuffer.InsertBytes(new Byte[] { 0 });
+                        }
                     }
                 }
                 else
                 {
                     // insert blank mapcycle
+                    if (demo.ConvertNetworkProtocol())
+                    {
+                        parser.BitBuffer.InsertBytes(new Byte[] { 0 });
+                    }
+
+                    // insert blank extra flag
                     if (demo.ConvertNetworkProtocol())
                     {
                         parser.BitBuffer.InsertBytes(new Byte[] { 0 });
@@ -476,14 +488,14 @@ namespace compLexity_Demo_Player
 
                         parser.Seek(-1);
                         parser.BitBuffer.RemoveBytes(21 + 1);
+
+                        // insert blank extra flag
+                        if (demo.ConvertNetworkProtocol())
+                        {
+                            parser.BitBuffer.InsertBytes(new Byte[] { 0 });
+                        }
                     }
                 }
-            }
-
-            // insert blank extra flag
-            if (demo.ConvertNetworkProtocol())
-            {
-                parser.BitBuffer.InsertBytes(new Byte[] { 0 });
             }
         }
 

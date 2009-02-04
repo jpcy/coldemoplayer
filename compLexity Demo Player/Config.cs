@@ -26,7 +26,7 @@ namespace compLexity_Demo_Player
         [XmlIgnore]
         public readonly Int32 ProgramVersionMinor = 1;
         [XmlIgnore]
-        public readonly Int32 ProgramVersionUpdate = 3;
+        public readonly Int32 ProgramVersionUpdate = 4;
         [XmlIgnore]
         public String ProgramVersion
         {

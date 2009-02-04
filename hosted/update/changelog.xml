@@ -1,4 +1,19 @@
 <FlowDocument xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" FontSize="12" PagePadding="5">
+	<Paragraph><Bold><Underline>1.1.4</Underline></Bold></Paragraph>
+	<List>
+		<ListItem>
+			<Paragraph>Fixed incorrect svc_serverinfo parsing.</Paragraph>
+		</ListItem>
+		<ListItem>
+			<Paragraph>Fixed a problem where some protocol 46 CS 1.5 demos were incorrectly identified as 1.6, and vice-versa.</Paragraph>
+		</ListItem>
+		<ListItem>
+			<Paragraph>Fixed floppy drive seeking on startup.</Paragraph>
+		</ListItem>
+		<ListItem>
+			<Paragraph>Added a workaround for foreign language versions of Windows Vista failing to retrieve system icons.</Paragraph>
+		</ListItem>
+	</List>
 	<Paragraph><Bold><Underline>1.1.3</Underline></Bold></Paragraph>
 	<List>
 		<ListItem>
