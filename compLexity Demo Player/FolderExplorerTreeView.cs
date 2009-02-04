@@ -268,7 +268,7 @@ namespace compLexity_Demo_Player
             tvi.Header = panel;
 
             Image image = new Image();
-            image.Source = ExtractIcons.GetIcon(folderItem.Path, false, (folderItem.Type == "3½-Inch Floppy Disk"));
+            image.Source = ExtractIcons.GetIcon(folderItem.Path, false, (folderItem.Type == "3½-Inch Floppy Disk" || folderItem.Type == "Floppy Disk Drive"));
             image.Margin = new Thickness(0, 0, 4, 0);
 
             TextBlock text = new TextBlock();
