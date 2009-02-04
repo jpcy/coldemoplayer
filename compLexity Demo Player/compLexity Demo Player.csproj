@@ -194,7 +194,6 @@
     <Compile Include="FileOperation.cs" />
     <Compile Include="FileOperationList.cs" />
     <Compile Include="game\GameConfig.cs" />
-    <Compile Include="game\GameFactory.cs" />
     <Compile Include="game\GameManager.cs" />
     <Compile Include="game\Game.cs" />
     <Compile Include="game\games\CounterStrike.cs" />

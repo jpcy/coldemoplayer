@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfSteamGameInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <SteamGameInfo engine="HalfLife" appId="10" folder="cstrike" gameFolderExtended="counter-strike" name="Counter-Strike" />
     <SteamGameInfo engine="HalfLife" appId="20" folder="tfc" gameFolderExtended="team fortress classic" name="Team Fortress Classic" />
     <SteamGameInfo engine="HalfLife" appId="30" folder="dod" gameFolderExtended="day of defeat" name="Day of Defeat" />
     <SteamGameInfo engine="HalfLife" appId="40" folder="dmc" gameFolderExtended="deathmatch classic" name="Deathmatch Classic" />
@@ -11,7 +10,6 @@
     <SteamGameInfo engine="HalfLife" appId="100" folder="czerodeleted" gameFolderExtended="condition zero deleted scenes" name="Counter-Strike: Condition Zero Deleted Scenes" />
     <SteamGameInfo engine="HalfLife" appId="130" folder="bshift" gameFolderExtended="half-life blue shift" name="Half-Life: Blue Shift" />
     <SteamGameInfo engine="Source" appId="220" folder="hl2" gameFolderExtended="half-life 2" name="Half-Life 2" />
-    <SteamGameInfo engine="Source" appId="240" folder="cstrike" gameFolderExtended="counter-strike source" name="Counter-Strike: Source" />
     <SteamGameInfo engine="Source" appId="280" folder="hls" gameFolderExtended="half-life source" name="Half-Life: Source" />
     <SteamGameInfo engine="Source" appId="300" folder="dod" gameFolderExtended="day of defeat source" name="Day of Defeat: Source" />
     <SteamGameInfo engine="Source" appId="340" folder="lostcoast" gameFolderExtended="half-life 2 lostcoast" name="Half-Life 2: Lost Coast" />

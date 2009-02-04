@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
+using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -15,15 +15,19 @@ namespace compLexity_Demo_Player
             Source
         }
 
-        public Engines Engine { get; private set; }
-        public Int32 AppId { get; private set; }
-        public String Folder { get; private set; }
-        public String FolderExtended { get; private set; }
-        public String Name { get; private set; }
+        public Engines Engine { get; protected set; }
+        public Int32 AppId { get; protected set; }
+        public String Folder { get; protected set; }
+        public String FolderExtended { get; protected set; }
+        public String Name { get; protected set; }
 
         public Boolean HasConfig { get; private set; }
         public Dictionary<UInt32, String> Maps { get; private set; }
         protected Dictionary<String, String> versions;
+
+        public Game()
+        {
+        }
 
         public Game(SteamGameInfo sgi)
         {
@@ -34,10 +38,17 @@ namespace compLexity_Demo_Player
             this.Name = sgi.GameName;
         }
 
-        public void ReadConfig(GameConfig config)
+        protected void ReadConfig()
         {
-            HasConfig = true;
+            String configFileName = Config.Settings.ProgramPath + "\\config\\" + (Engine == Engines.HalfLife ? "goldsrc" : "source") + "\\" + Folder + ".xml";
 
+            if (!File.Exists(configFileName))
+            {
+                return;
+            }
+
+            GameConfig config = (GameConfig)Common.XmlFileDeserialize(configFileName, typeof(GameConfig));
+            HasConfig = true;
             versions = new Dictionary<String, String>(config.Versions.Length);
 
             foreach (GameConfig.Version version in config.Versions)
@@ -55,6 +66,11 @@ namespace compLexity_Demo_Player
 
         public String FindVersion(String checksum)
         {
+            if (versions == null)
+            {
+                return null;
+            }
+
             if (versions.ContainsKey(checksum))
             {
                 return (String)versions[checksum];
@@ -65,6 +81,11 @@ namespace compLexity_Demo_Player
 
         public Boolean BuiltInMapExists(UInt32 checksum, String name)
         {
+            if (Maps == null)
+            {
+                return false;
+            }
+
             if (!Maps.ContainsKey(checksum))
             {
                 return false;

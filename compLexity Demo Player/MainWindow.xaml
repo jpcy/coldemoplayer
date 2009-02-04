@@ -147,13 +147,13 @@
                 </GroupBox>
                 <GroupBox Header="Operations" Name="uiOperationsGroupBox" Margin="4" Padding="4">
                     <StackPanel>
-                        <Button Name="uiPlayButton" Click="uiPlayButton_Click" Margin="0,0,0,2" HorizontalContentAlignment="Left" Padding="0,0,15,0" VerticalAlignment="Top">
+                        <Button Name="uiPlayButton" Click="uiPlayButton_Click" Margin="0,0,0,2" HorizontalContentAlignment="Left" Padding="0,0,15,0" VerticalAlignment="Top" IsEnabled="False">
                             <StackPanel Orientation="Horizontal">
                                 <Image VerticalAlignment="Center" Source="data\control_play_blue.png" Margin="0,0,4,0" />
                                 <TextBlock VerticalAlignment="Center">Play</TextBlock>
                             </StackPanel>
                         </Button>
-                        <Button Name="uiAnalyseButton" Click="uiAnalyseButton_Click" HorizontalContentAlignment="Left" Padding="0,0,15,0">
+                        <Button Name="uiAnalyseButton" Click="uiAnalyseButton_Click" HorizontalContentAlignment="Left" Padding="0,0,15,0" IsEnabled="False">
                             <StackPanel Orientation="Horizontal">
                                 <Image VerticalAlignment="Center" Source="data\chart_line.png" Margin="0,0,4,0" />
                                 <TextBlock VerticalAlignment="Center">Analyse</TextBlock>

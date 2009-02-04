@@ -12,35 +12,20 @@ namespace compLexity_Demo_Player
 
         public static void Initialise(String configPath)
         {
+            games.Add(new Games.CounterStrike());
+            games.Add(new Games.CounterStrikeSource());
+
             // Read from steam.xml.
             SteamGameInfo[] steamGames = (SteamGameInfo[])Common.XmlFileDeserialize(configPath + "\\" + steamConfigFileName, typeof(SteamGameInfo[]));
 
             foreach (SteamGameInfo sgi in steamGames)
             {
-                games.Add(GameFactory.Create(sgi));
+                // Make sure the game hasn't already been added.
+                if (games.Find(game => game.Engine == sgi.Engine && game.Folder == sgi.GameFolder) == null)
+                {
+                    games.Add(new Game(sgi));
+                }
             }
-
-            // Read game configs.
-            Procedure<Game.Engines> enumerateConfigFolder = delegate(Game.Engines engine)
-            {
-                String engineName = (engine == Game.Engines.Source ? "source" : "goldsrc");
-                DirectoryInfo directoryInfo = new DirectoryInfo(Config.Settings.ProgramPath + "\\config\\" + engineName);
-
-                if (!directoryInfo.Exists)
-                {
-                    return;
-                }
-
-                foreach (FileInfo fi in directoryInfo.GetFiles("*.xml", SearchOption.TopDirectoryOnly))
-                {
-                    String gameFolder = Path.GetFileNameWithoutExtension(fi.Name);
-                    Game game = Find(engine, gameFolder);
-                    game.ReadConfig((GameConfig)Common.XmlFileDeserialize(fi.FullName, typeof(GameConfig)));
-                }
-            };
-
-            enumerateConfigFolder(Game.Engines.HalfLife);
-            enumerateConfigFolder(Game.Engines.Source);
         }
 
         public static Game Find(Game.Engines engine, String folder)
@@ -78,6 +63,11 @@ namespace compLexity_Demo_Player
 
         public static Boolean CanAnalyse(Demo demo)
         {
+            if (demo == null)
+            {
+                return false;
+            }
+
             Game game = Find(demo);
 
             if (game == null)

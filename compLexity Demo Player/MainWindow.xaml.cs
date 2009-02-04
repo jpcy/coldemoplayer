@@ -819,14 +819,7 @@ namespace compLexity_Demo_Player
 
             // operations
             uiPlayButton.IsEnabled = true;
-
-            if (demo.GameFolderName == "cstrike")
-            {
-                if (demo.Engine != Demo.EngineEnum.Source || (demo.Engine == Demo.EngineEnum.Source && demo.DemoProtocol == 3 && demo.NetworkProtocol == 7))
-                {
-                    uiAnalyseButton.IsEnabled = true;
-                }
-            }
+            uiAnalyseButton.IsEnabled = GameManager.CanAnalyse(demo);
         }
 
         private void uiPlaybackType_Changed(object sender, RoutedEventArgs e)
