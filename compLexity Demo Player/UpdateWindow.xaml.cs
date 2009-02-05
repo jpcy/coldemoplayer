@@ -106,9 +106,8 @@ namespace compLexity_Demo_Player
             }
             catch (Exception ex)
             {
-                // FIXME: bad, log exception or something
+                Common.LogException(ex);
                 UpdateComplete(ex.Message);
-                //UpdateComplete("Could not connect to update server.");
                 return;
             }
 
@@ -127,6 +126,7 @@ namespace compLexity_Demo_Player
             }
             catch (Exception ex)
             {
+                Common.LogException(ex);
                 errorMessage = ex.Message;
             }
             finally

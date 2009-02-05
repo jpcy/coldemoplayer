@@ -11,7 +11,7 @@
         </Grid.RowDefinitions>
         <GroupBox Header="Status" Margin="4" Padding="4">
             <StackPanel>
-                <TextBlock Margin="0,0,0,4" Name="uiStatusTextBlock" />
+                <TextBlock Margin="0,0,0,4" Name="uiStatusTextBlock" TextWrapping="WrapWithOverflow" />
                 <ProgressBar Height="20" Name="uiStatusProgressBar" />
             </StackPanel>
         </GroupBox>

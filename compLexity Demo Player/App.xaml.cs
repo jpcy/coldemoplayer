@@ -14,33 +14,7 @@ namespace compLexity_Demo_Player
     {
         private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            String logsFullFolderPath = Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) +"\\logs";
-
-            if (!Directory.Exists(logsFullFolderPath))
-            {
-                Directory.CreateDirectory(logsFullFolderPath);
-            }
-            
-            using (TextWriter writer = new StreamWriter(logsFullFolderPath + "\\" + Path.GetRandomFileName() + ".log"))
-            {
-                Procedure<Exception> logException = null;
-                
-                logException = ex =>
-                {
-                    if (ex.InnerException != null)
-                    {
-                        logException(ex.InnerException);
-                    }
-
-                    writer.WriteLine(ex.Message);
-                    writer.WriteLine(ex.Source);
-                    writer.WriteLine(ex.StackTrace);
-                    writer.WriteLine();
-                };
-
-                logException(e.Exception);
-            }
-
+            Common.LogException(e.Exception);
             Common.Message(null, "Unhandled exception.", e.Exception, MessageWindow.Flags.Error);
         }
     }

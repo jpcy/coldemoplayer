@@ -46,46 +46,38 @@ namespace compLexity_Demo_Player
             return (UInt32)(FlipBytes32(BitConverter.ToUInt32(temp, 0)) ^ (~z));
         }
 
-        public static void WebDownloadBinaryFile(String address, String outputFileName, Procedure<Int32> downloadProgress)
+        public static void WebDownloadBinaryFile(String address, String outputFileName, Action<Int32> downloadProgress)
         {
             const Int32 bufferSize = 1024;
 
             WebRequest request = WebRequest.Create(address);
             using (WebResponse response = request.GetResponse())
+            using (Stream input = response.GetResponseStream())
+            using (FileStream output = File.Create(outputFileName))
+            using (BinaryReader reader = new BinaryReader(input))
+            using (BinaryWriter writer = new BinaryWriter(output))
             {
-                using (Stream input = response.GetResponseStream())
+                Int64 fileLength = response.ContentLength;
+                Int32 bytesRead = 0;
+
+                while (true)
                 {
-                    using (FileStream output = File.Create(outputFileName))
+                    Byte[] buffer = reader.ReadBytes(bufferSize);
+
+                    bytesRead += buffer.Length;
+
+                    if (downloadProgress != null)
                     {
-                        using (BinaryReader reader = new BinaryReader(input))
-                        {
-                            using (BinaryWriter writer = new BinaryWriter(output))
-                            {
-                                Int64 fileLength = response.ContentLength;
-                                Int32 bytesRead = 0;
+                        downloadProgress((Int32)(bytesRead / (Single)fileLength * 100.0f));
+                    }
 
-                                while (true)
-                                {
-                                    Byte[] buffer = reader.ReadBytes(bufferSize);
-
-                                    bytesRead += buffer.Length;
-
-                                    if (downloadProgress != null)
-                                    {
-                                        downloadProgress((Int32)(bytesRead / (Single)fileLength * 100.0f));
-                                    }
-
-                                    if (buffer.Length > 0)
-                                    {
-                                        writer.Write(buffer);
-                                    }
-                                    else
-                                    {
-                                        break;
-                                    }
-                                }
-                            }
-                        }
+                    if (buffer.Length > 0)
+                    {
+                        writer.Write(buffer);
+                    }
+                    else
+                    {
+                        break;
                     }
                 }
             }
@@ -503,6 +495,36 @@ namespace compLexity_Demo_Player
             }
 
             return default(TSource);
+        }
+
+        public static void LogException(Exception e)
+        {
+            String logsFullFolderPath = Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\logs";
+
+            if (!Directory.Exists(logsFullFolderPath))
+            {
+                Directory.CreateDirectory(logsFullFolderPath);
+            }
+
+            using (TextWriter writer = new StreamWriter(logsFullFolderPath + "\\" + DateTime.Now.ToShortTimeString() + DateTime.Now.ToShortDateString() + Path.GetRandomFileName() + ".log"))
+            {
+                Procedure<Exception> logException = null;
+
+                logException = delegate(Exception ex)
+                {
+                    if (ex.InnerException != null)
+                    {
+                        logException(ex.InnerException);
+                    }
+
+                    writer.WriteLine(ex.Message);
+                    writer.WriteLine(ex.Source);
+                    writer.WriteLine(ex.StackTrace);
+                    writer.WriteLine();
+                };
+
+                logException(e);
+            }
         }
     }
 
