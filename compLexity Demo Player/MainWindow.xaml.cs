@@ -100,9 +100,9 @@ namespace compLexity_Demo_Player
         /// <summary>
         /// Displays the window that handles downloading program updates.
         /// </summary>
-        private void ShowUpdateWindow()
+        private void ShowUpdateWindow(String updateVersion)
         {
-            UpdateWindow window = new UpdateWindow();
+            UpdateWindow window = new UpdateWindow(updateVersion);
             window.Owner = this;
 
             try

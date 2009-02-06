@@ -32,9 +32,9 @@ namespace compLexity_Demo_Player
 
         private State state;
         private UpdateCheck updateCheck;
-        private Procedure downloadUpdate;
+        private Procedure<String> downloadUpdate;
 
-        public UpdateCheckWindow(Procedure downloadUpdate, UpdateCheck updateCheck)
+        public UpdateCheckWindow(Procedure<String> downloadUpdate, UpdateCheck updateCheck)
         {
             InitializeComponent();
 
@@ -52,7 +52,7 @@ namespace compLexity_Demo_Player
             }
         }
 
-        public UpdateCheckWindow(Procedure downloadUpdate)
+        public UpdateCheckWindow(Procedure<String> downloadUpdate)
             : this(downloadUpdate, null)
         {
         }
@@ -75,7 +75,7 @@ namespace compLexity_Demo_Player
         private void uiYesButton_Click(object sender, RoutedEventArgs e)
         {
             Close();
-            downloadUpdate();
+            downloadUpdate(updateCheck.AvailableVersion);
         }
 
         private void uiNoButton_Click(object sender, RoutedEventArgs e)

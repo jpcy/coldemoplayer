@@ -442,61 +442,35 @@ namespace compLexity_Demo_Player
                 Byte extraInfo = parser.BitBuffer.ReadByte();
                 parser.Seek(-1);
 
-                if (extraInfo != (Byte)HalfLifeDemoParser.MessageId.svc_sendextrainfo)
+                if (extraInfo == (Byte)HalfLifeDemoParser.MessageId.svc_sendextrainfo)
                 {
-                    parser.BitBuffer.ReadString(); // skip mapcycle
-
-                    if (parser.BitBuffer.ReadByte() > 0)
-                    {
-                        parser.Seek(-1);
-                        parser.BitBuffer.RemoveBytes(34);
-                        
-                        // insert blank extra flag
-                        if (demo.ConvertNetworkProtocol())
-                        {
-                            parser.BitBuffer.InsertBytes(new Byte[] { 0 });
-                        }
-                    }
+                    goto InsertMapCycle;
                 }
-                else
-                {
-                    // insert blank mapcycle
-                    if (demo.ConvertNetworkProtocol())
-                    {
-                        parser.BitBuffer.InsertBytes(new Byte[] { 0 });
-                    }
+            }
 
-                    // insert blank extra flag
-                    if (demo.ConvertNetworkProtocol())
-                    {
-                        parser.BitBuffer.InsertBytes(new Byte[] { 0 });
-                    }
-                }
+            parser.BitBuffer.ReadString(); // skip mapcycle
+
+            if (demo.NetworkProtocol <= 43)
+            {
+                goto InsertExtraFlag;
+            }
+
+            if (parser.BitBuffer.ReadByte() > 0)
+            {
+                parser.Seek(-1);
+                parser.BitBuffer.RemoveBytes(demo.NetworkProtocol == 45 ? 34 : 22);
+                goto InsertExtraFlag;
             }
             else
             {
-                parser.BitBuffer.ReadString(); // skip mapcycle
-
-                if (demo.NetworkProtocol > 43)
-                {
-                    if (parser.BitBuffer.ReadByte() > 0)
-                    {
-                        // 21 bytes:
-                        // byte: always 4
-                        // 4 bytes: server ip?
-                        // 16 bytes: ?
-
-                        parser.Seek(-1);
-                        parser.BitBuffer.RemoveBytes(21 + 1);
-
-                        // insert blank extra flag
-                        if (demo.ConvertNetworkProtocol())
-                        {
-                            parser.BitBuffer.InsertBytes(new Byte[] { 0 });
-                        }
-                    }
-                }
+                return;
             }
+
+            InsertMapCycle:
+                parser.BitBuffer.InsertBytes(new Byte[] { 0 });
+
+            InsertExtraFlag:
+                parser.BitBuffer.InsertBytes(new Byte[] { 0 });
         }
 
         private void MessageUpdateUserInfo()

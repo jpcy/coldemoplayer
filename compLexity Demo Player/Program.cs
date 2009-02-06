@@ -101,7 +101,7 @@ namespace compLexity_Demo_Player
             // read fileoperationslog.xml
             try
             {
-                FileOperationList.Initialise(Config.Settings.ProgramPath, "fileoperationslog.xml");
+                FileOperationList.Initialise(Config.Settings.ProgramDataPath, "fileoperationslog.xml");
                 FileOperationList.Execute();
             }
             catch (Exception ex)

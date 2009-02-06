@@ -499,14 +499,14 @@ namespace compLexity_Demo_Player
 
         public static void LogException(Exception e)
         {
-            String logsFullFolderPath = Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\logs";
+            String logsFullFolderPath = Config.Settings.ProgramDataPath + "\\logs";
 
             if (!Directory.Exists(logsFullFolderPath))
             {
                 Directory.CreateDirectory(logsFullFolderPath);
             }
 
-            using (TextWriter writer = new StreamWriter(logsFullFolderPath + "\\" + DateTime.Now.ToShortTimeString() + DateTime.Now.ToShortDateString() + Path.GetRandomFileName() + ".log"))
+            using (TextWriter writer = new StreamWriter(logsFullFolderPath + "\\" + DateTime.Now.ToShortDateString().Replace('/', '-') + "_" + Path.ChangeExtension(Path.GetRandomFileName(), ".log")))
             {
                 Procedure<Exception> logException = null;
 

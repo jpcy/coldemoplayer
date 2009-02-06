@@ -211,7 +211,7 @@ namespace compLexity_Demo_Player
             }
             catch (UnauthorizedAccessException)
             {
-                Common.Message(this, "Can't associate with *.dem files, your Windows user account is not authorized to write registry keys.");
+                Common.Message(this, "Can't associate with *.dem files, your Windows user account is not authorized to write registry keys. Try running this program as an administrator.");
                 uiDemAssociateCheckBox.IsChecked = false;
             }
 
@@ -231,7 +231,7 @@ namespace compLexity_Demo_Player
             }
             catch (UnauthorizedAccessException)
             {
-                Common.Message(this, "Can't associate with the HLSW protocol, your Windows user account is not authorized to write registry keys.");
+                Common.Message(this, "Can't associate with the HLSW protocol, your Windows user account is not authorized to write registry keys. Try running this program as an administrator.");
                 uiHlswAssociateCheckBox.IsChecked = false;
             }
 

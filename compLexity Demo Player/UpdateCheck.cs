@@ -91,8 +91,7 @@ namespace compLexity_Demo_Player
             }
             catch (Exception ex)
             {
-                // FIXME: bad, log the exception details or something
-                //errorMessage = "Could not connect to update servers.";
+                Common.LogException(ex);
                 errorMessage = ex.Message;
                 updateCheckInterface.UpdateCheckComplete();
                 return;

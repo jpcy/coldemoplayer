@@ -95,7 +95,7 @@ namespace compLexity_Demo_Player
             }
 
             // see if we have a map in the map pool matching the checksum
-            String mapSourcePath = Config.Settings.ProgramPath + "\\maps\\goldsrc\\" + String.Format("{0}\\{1}", Demo.GameFolderName, Demo.MapChecksum);
+            String mapSourcePath = Config.Settings.ProgramDataPath + "\\maps\\goldsrc\\" + String.Format("{0}\\{1}", Demo.GameFolderName, Demo.MapChecksum);
             String mapSourceFileName = mapSourcePath + "\\" + Demo.MapName + ".bsp";
 
             if (!File.Exists(mapSourceFileName))

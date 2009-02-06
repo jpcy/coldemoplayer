@@ -106,7 +106,7 @@ namespace compLexity_Demo_Player
             }
 
             // enumerate all folders in maps\\*engine*\\*game folder* and assume they are checksums
-            String path = Config.Settings.ProgramPath + String.Format("\\maps\\{0}\\{1}", engine, gameListItem.Game.Folder);
+            String path = Config.Settings.ProgramDataPath + String.Format("\\maps\\{0}\\{1}", engine, gameListItem.Game.Folder);
 
             if (!Directory.Exists(path))
             {
@@ -207,7 +207,7 @@ namespace compLexity_Demo_Player
             // see if the game map folder already exists
             //String engine = (game.Engine == Demo.EngineEnum.Source ? "source" : "goldsrc");
             String engine = "goldsrc";
-            String gameMapFolder = Config.Settings.ProgramPath + String.Format("\\maps\\{0}\\{1}", engine, gameListItem.Game.Folder);
+            String gameMapFolder = Config.Settings.ProgramDataPath + String.Format("\\maps\\{0}\\{1}", engine, gameListItem.Game.Folder);
 
             if (!Directory.Exists(gameMapFolder))
             {
@@ -274,7 +274,7 @@ namespace compLexity_Demo_Player
             // delete the checksum folder and all contents
             //String engine = (game.Engine == Demo.EngineEnum.Source ? "source" : "goldsrc");
             String engine = "goldsrc";
-            String checksumFolder = Config.Settings.ProgramPath + String.Format("\\maps\\{0}\\{1}\\{2}", engine, gameListItem.Game.Folder, map.Checksum);
+            String checksumFolder = Config.Settings.ProgramDataPath + String.Format("\\maps\\{0}\\{1}\\{2}", engine, gameListItem.Game.Folder, map.Checksum);
 
             Directory.Delete(checksumFolder, true);
 

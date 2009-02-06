@@ -31,8 +31,8 @@ namespace compLexity_Demo_Player
         private readonly String[] statusText =
         {
             "Connecting...",
-            "Downloading update program...",
-            "Update program download complete. Click \"OK\" to continue.",
+            "Downloading changelog...",
+            "Click \"OK\" to download the installer.",
             ""
         };
 
@@ -44,15 +44,15 @@ namespace compLexity_Demo_Player
             "Close"
         };
 
-        private readonly String updateProgramFileName = "update.exe";
-        private readonly String updateProgramConfigFileName = "update.exe.config";
         private readonly String changeLogFileName = "changelog.xml";
 
         private Status status;
         private Thread thread;
+        private String updateVersion; // in the format xyz, where x is major, y is minor, z is update
 
-        public UpdateWindow()
+        public UpdateWindow(String updateVersion)
         {
+            this.updateVersion = updateVersion.Replace(".", "");
             InitializeComponent();
         }
 
@@ -78,14 +78,15 @@ namespace compLexity_Demo_Player
 
             if (status == Status.Complete)
             {
-                // run update.exe
-                Process.Start(Config.Settings.ProgramPath + "\\" + updateProgramFileName);
+                Process.Start(String.Format("http://coldemoplayer.googlecode.com/files/coldemoplayer{0}_install.exe", updateVersion));
                 Application.Current.Shutdown();
             }
         }
 
         private void ThreadWorker()
         {
+            String errorMessage = null;
+
             // download changelog
             try
             {
@@ -103,26 +104,6 @@ namespace compLexity_Demo_Player
                         SetChangeLogDocument(ms);
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Common.LogException(ex);
-                UpdateComplete(ex.Message);
-                return;
-            }
-
-            // download update program
-            SetStatus(Status.DownloadingUpdateProgram);
-            String errorMessage = null;
-
-            try
-            {
-                Common.WebDownloadBinaryFile(Config.Settings.UpdateUrl + updateProgramFileName, Config.Settings.ProgramPath + "\\" + updateProgramFileName, SetUpdateProgress);
-                Common.WebDownloadBinaryFile(Config.Settings.UpdateUrl + updateProgramConfigFileName, Config.Settings.ProgramPath + "\\" + updateProgramConfigFileName, null);
-            }
-            catch (ThreadAbortException)
-            {
-                throw;
             }
             catch (Exception ex)
             {

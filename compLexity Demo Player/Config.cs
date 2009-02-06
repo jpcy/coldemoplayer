@@ -26,7 +26,7 @@ namespace compLexity_Demo_Player
         [XmlIgnore]
         public readonly Int32 ProgramVersionMinor = 1;
         [XmlIgnore]
-        public readonly Int32 ProgramVersionUpdate = 4;
+        public readonly Int32 ProgramVersionUpdate = 5;
         [XmlIgnore]
         public String ProgramVersion
         {
@@ -47,9 +47,11 @@ namespace compLexity_Demo_Player
         public String ProgramExeFullPath = "";
         [XmlIgnore]
         public String ProgramPath = "";
+        [XmlIgnore]
+        public String ProgramDataPath = "";
 
         // updating, on-demand map downloading
-        public String UpdateUrl = "http://coldemoplayer.gittodachoppa.com/update/";
+        public String UpdateUrl = "http://coldemoplayer.gittodachoppa.com/update115/";
         public String MapsUrl = "http://coldemoplayer.gittodachoppa.com/maps/";
         public Boolean AutoUpdate = true;
 
@@ -115,7 +117,7 @@ namespace compLexity_Demo_Player
         [DllImport("shell32.dll")]
         private static extern void SHChangeNotify(int eventId, uint flags, IntPtr item1, IntPtr item2);
 
-        private const String fileName = "config\\config.xml";
+        private const String fileName = "config.xml";
         public static ProgramSettings Settings = null;
 
         /// <summary>
@@ -125,22 +127,11 @@ namespace compLexity_Demo_Player
         public static Boolean Read()
         {
             Boolean result = true;
-            String workingDirectory = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
-
-#if DEBUG
-            // BLEH: this is what happens when you can't use macros in setting the debug working directory.
-            for (Int32 i = 0; i < 3; i++)
-            {
-                Int32 lastSeparatorIndex = workingDirectory.LastIndexOf("\\");
-                workingDirectory = workingDirectory.Remove(lastSeparatorIndex, workingDirectory.Length - lastSeparatorIndex);
-            }
-
-            workingDirectory += "\\bin";
-#endif
             Settings = new ProgramSettings();
             
             // XmlIgnore doesn't seem to apply to deserialization...
-            String configFullPath = workingDirectory + "\\" + fileName;
+            String programDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\" + Settings.ProgramName;
+            String configFullPath = programDataPath + "\\" + fileName;
 
             if (File.Exists(configFullPath))
             {
@@ -153,15 +144,29 @@ namespace compLexity_Demo_Player
                 ReadFromRegistry();
             }
 
+            Settings.ProgramDataPath = programDataPath;
             Settings.ProgramExeFullPath = Common.SanitisePath(Environment.GetCommandLineArgs()[0]);
-            Settings.ProgramPath = workingDirectory;
+#if DEBUG
+            // BLEH: this is what happens when you can't use macros in setting the debug working directory.
+            Settings.ProgramPath = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
+
+            for (Int32 i = 0; i < 3; i++)
+            {
+                Int32 lastSeparatorIndex = Settings.ProgramPath.LastIndexOf("\\");
+                Settings.ProgramPath = Settings.ProgramPath.Remove(lastSeparatorIndex, Settings.ProgramPath.Length - lastSeparatorIndex);
+            }
+
+            Settings.ProgramPath += "\\bin";
+#else
+            Settings.ProgramPath = Path.GetDirectoryName(Settings.ProgramExeFullPath);
+#endif
 
             return result;
         }
 
         public static void Write()
         {
-            Common.XmlFileSerialize(Settings.ProgramPath + "\\" + fileName, Settings, typeof(ProgramSettings));
+            Common.XmlFileSerialize(Settings.ProgramDataPath + "\\" + fileName, Settings, typeof(ProgramSettings));
         }
 
         /// <summary>
