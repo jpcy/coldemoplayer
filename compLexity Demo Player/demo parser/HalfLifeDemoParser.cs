@@ -533,7 +533,7 @@ namespace compLexity_Demo_Player
         {
             if (demo.NetworkProtocol <= 43)
             {
-                bitBuffer.SetEndian(BitBuffer.Endian.Big);
+                bitBuffer.Endian = BitBuffer.EndianType.Big;
             }
 
             UInt32 nEvents = bitBuffer.ReadUnsignedBits(5);
@@ -565,14 +565,14 @@ namespace compLexity_Demo_Player
             }
 
             bitBuffer.SkipRemainingBits();
-            bitBuffer.SetEndian(BitBuffer.Endian.Little);
+            bitBuffer.Endian = BitBuffer.EndianType.Little;
         }
 
         public void MessageSound()
         {
             if (demo.NetworkProtocol <= 43)
             {
-                bitBuffer.SetEndian(BitBuffer.Endian.Big);
+                bitBuffer.Endian = BitBuffer.EndianType.Big;
             }
 
             UInt32 flags = bitBuffer.ReadUnsignedBits(9);
@@ -607,7 +607,7 @@ namespace compLexity_Demo_Player
             }
 
             bitBuffer.SkipRemainingBits();
-            bitBuffer.SetEndian(BitBuffer.Endian.Little);
+            bitBuffer.Endian = BitBuffer.EndianType.Little;
         }
 
         private void MessagePrint()
@@ -692,7 +692,7 @@ namespace compLexity_Demo_Player
 
             if (demo.NetworkProtocol == 43)
             {
-                bitBuffer.SetEndian(BitBuffer.Endian.Big);
+                bitBuffer.Endian = BitBuffer.EndianType.Big;
             }
 
             UInt32 nEntries = bitBuffer.ReadUnsignedBits(16);
@@ -711,7 +711,7 @@ namespace compLexity_Demo_Player
             }
 
             bitBuffer.SkipRemainingBits();
-            bitBuffer.SetEndian(BitBuffer.Endian.Little);
+            bitBuffer.Endian = BitBuffer.EndianType.Little;
         }
 
         public void MessageClientData()
@@ -723,7 +723,7 @@ namespace compLexity_Demo_Player
 
             if (demo.NetworkProtocol <= 43)
             {
-                bitBuffer.SetEndian(BitBuffer.Endian.Big);
+                bitBuffer.Endian = BitBuffer.EndianType.Big;
             }
 
             Boolean deltaSequence = bitBuffer.ReadBoolean();
@@ -750,14 +750,14 @@ namespace compLexity_Demo_Player
             }
 
             bitBuffer.SkipRemainingBits();
-            bitBuffer.SetEndian(BitBuffer.Endian.Little);
+            bitBuffer.Endian = BitBuffer.EndianType.Little;
         }
 
         public void MessagePings()
         {
             if (demo.NetworkProtocol <= 43)
             {
-                bitBuffer.SetEndian(BitBuffer.Endian.Big);
+                bitBuffer.Endian = BitBuffer.EndianType.Big;
             }
 
             while (bitBuffer.ReadBoolean())
@@ -766,7 +766,7 @@ namespace compLexity_Demo_Player
             }
 
             bitBuffer.SkipRemainingBits();
-            bitBuffer.SetEndian(BitBuffer.Endian.Little);
+            bitBuffer.Endian = BitBuffer.EndianType.Little;
         }
 
         private void MessageSpawnStatic()
@@ -784,7 +784,7 @@ namespace compLexity_Demo_Player
         {
             if (demo.NetworkProtocol <= 43)
             {
-                bitBuffer.SetEndian(BitBuffer.Endian.Big);
+                bitBuffer.Endian = BitBuffer.EndianType.Big;
             }
 
             bitBuffer.SeekBits(10); // event index
@@ -799,14 +799,14 @@ namespace compLexity_Demo_Player
             }
 
             bitBuffer.SkipRemainingBits();
-            bitBuffer.SetEndian(BitBuffer.Endian.Little);
+            bitBuffer.Endian = BitBuffer.EndianType.Little;
         }
 
         public void MessageSpawnBaseline()
         {
             if (demo.NetworkProtocol <= 43)
             {
-                bitBuffer.SetEndian(BitBuffer.Endian.Big);
+                bitBuffer.Endian = BitBuffer.EndianType.Big;
             }
 
             while (true)
@@ -854,7 +854,7 @@ namespace compLexity_Demo_Player
                 GetDeltaStructure("entity_state_t").ReadDelta(bitBuffer, null);
             }
 
-            bitBuffer.SetEndian(BitBuffer.Endian.Little);
+            bitBuffer.Endian = BitBuffer.EndianType.Little;
             bitBuffer.SkipRemainingBits();
         }
 
@@ -1136,7 +1136,7 @@ namespace compLexity_Demo_Player
 
             if (demo.NetworkProtocol <= 43)
             {
-                bitBuffer.SetEndian(BitBuffer.Endian.Big);
+                bitBuffer.Endian = BitBuffer.EndianType.Big;
             }
 
             UInt32 entityNumber = 0;
@@ -1202,7 +1202,7 @@ namespace compLexity_Demo_Player
             }
 
             bitBuffer.SkipRemainingBits();
-            bitBuffer.SetEndian(BitBuffer.Endian.Little);
+            bitBuffer.Endian = BitBuffer.EndianType.Little;
         }
 
         public void MessageDeltaPacketEntities()
@@ -1212,7 +1212,7 @@ namespace compLexity_Demo_Player
 
             if (demo.NetworkProtocol <= 43)
             {
-                bitBuffer.SetEndian(BitBuffer.Endian.Big);
+                bitBuffer.Endian = BitBuffer.EndianType.Big;
 
             }
 
@@ -1273,14 +1273,14 @@ namespace compLexity_Demo_Player
             }
 
             bitBuffer.SkipRemainingBits();
-            bitBuffer.SetEndian(BitBuffer.Endian.Little);
+            bitBuffer.Endian = BitBuffer.EndianType.Little;
         }
 
         private void MessageResourceList()
         {
             if (demo.NetworkProtocol <= 43)
             {
-                bitBuffer.SetEndian(BitBuffer.Endian.Big);
+                bitBuffer.Endian = BitBuffer.EndianType.Big;
             }
 
             UInt32 nEntries = bitBuffer.ReadUnsignedBits(12);
@@ -1317,7 +1317,7 @@ namespace compLexity_Demo_Player
             }
 
             bitBuffer.SkipRemainingBits();
-            bitBuffer.SetEndian(BitBuffer.Endian.Little);
+            bitBuffer.Endian = BitBuffer.EndianType.Little;
         }
 
         private void MessageNewMoveVars()

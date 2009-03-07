@@ -524,7 +524,7 @@ namespace compLexity_Demo_Player
         {
             if (demo.NetworkProtocol <= 43)
             {
-                parser.BitBuffer.SetEndian(BitBuffer.Endian.Big);
+                parser.BitBuffer.Endian = BitBuffer.EndianType.Big;
             }
 
             while (parser.BitBuffer.ReadBoolean())
@@ -542,14 +542,14 @@ namespace compLexity_Demo_Player
             }
 
             parser.BitBuffer.SkipRemainingBits();
-            parser.BitBuffer.SetEndian(BitBuffer.Endian.Little);
+            parser.BitBuffer.Endian = BitBuffer.EndianType.Little;
         }
 
         private void MessageEventReliable()
         {
             if (demo.NetworkProtocol <= 43)
             {
-                parser.BitBuffer.SetEndian(BitBuffer.Endian.Big);
+                parser.BitBuffer.Endian = BitBuffer.EndianType.Big;
             }
 
             // read message
@@ -563,7 +563,7 @@ namespace compLexity_Demo_Player
             }
 
             parser.BitBuffer.SkipRemainingBits();
-            parser.BitBuffer.SetEndian(BitBuffer.Endian.Little);
+            parser.BitBuffer.Endian = BitBuffer.EndianType.Little;
 
             // check if new round has started
             if (((HalfLifeDemo)demo).GameVersion == HalfLifeDemo.GameVersionEnum.CounterStrike16)

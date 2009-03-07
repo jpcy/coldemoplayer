@@ -7,9 +7,17 @@ using System.IO;
 
 namespace compLexity_Demo_Player
 {
+    [Serializable]
+    public class BitBufferOutOfRangeException : Exception
+    {
+        public BitBufferOutOfRangeException()
+        {
+        }
+    }
+
     public class BitBuffer
     {
-        public enum Endian
+        public enum EndianType
         {
             Little,
             Big
@@ -39,7 +47,7 @@ namespace compLexity_Demo_Player
         {
             get
             {
-                return (currentBit + 7) / 8;
+                return (currentBit - (currentBit % 8)) / 8;
             }
         }
 
@@ -66,21 +74,26 @@ namespace compLexity_Demo_Player
                 return data.ToArray();
             }
         }
+
+        public EndianType Endian
+        {
+            get;
+            set;
+        }
         #endregion
 
         private List<Byte> data = null;
         private Int32 currentBit = 0;
-        private Endian endian = Endian.Little;
 
         public BitBuffer(Byte[] data)
         {
-            Debug.Assert(data != null);
-            this.data = new List<Byte>(data);
-        }
+            if (data == null)
+            {
+                throw new ArgumentNullException("data", "Value cannot be null.");
+            }
 
-        public void SetEndian(Endian e)
-        {
-            endian = e;
+            this.data = new List<Byte>(data);
+            Endian = EndianType.Little;
         }
 
         public void SeekBits(Int32 count)
@@ -103,7 +116,10 @@ namespace compLexity_Demo_Player
                 currentBit = (data.Count * 8) - offset;
             }
 
-            Debug.Assert(currentBit >= 0 && currentBit <= data.Count * 8);
+            if (currentBit < 0 || currentBit > data.Count * 8)
+            {
+                throw new BitBufferOutOfRangeException();
+            }
         }
 
         public void SeekBytes(Int32 count)
@@ -132,13 +148,16 @@ namespace compLexity_Demo_Player
         // HL 1.1.0.6 bit reading (big endian byte and bit order)
         private UInt32 ReadUnsignedBitsBigEndian(Int32 nBits)
         {
+            if (nBits <= 0 || nBits > 32)
+            {
+                throw new ArgumentException("Value must be a positive integer between 1 and 32 inclusive.", "nBits");
+            }
+
             // check for overflow
             if (currentBit + nBits > data.Count * 8)
             {
-                throw new ApplicationException("BitReader overflow.");
+                throw new BitBufferOutOfRangeException();
             }
-
-            Debug.Assert(nBits >= 0 && nBits <= 32);
 
             Int32 currentByte = currentBit / 8;
             Int32 bitOffset = currentBit - (currentByte * 8);
@@ -169,13 +188,16 @@ namespace compLexity_Demo_Player
 
         private UInt32 ReadUnsignedBitsLittleEndian(Int32 nBits)
         {
+            if (nBits <= 0 || nBits > 32)
+            {
+                throw new ArgumentException("Value must be a positive integer between 1 and 32 inclusive.", "nBits");
+            }
+
             // check for overflow
             if (currentBit + nBits > data.Count * 8)
             {
-                throw new ApplicationException("BitReader overflow.");
+                throw new BitBufferOutOfRangeException();
             }
-
-            Debug.Assert(nBits >= 0 && nBits <= 32);
 
             Int32 currentByte = currentBit / 8;
             Int32 bitOffset = currentBit - (currentByte * 8);
@@ -206,7 +228,7 @@ namespace compLexity_Demo_Player
 
         public UInt32 ReadUnsignedBits(Int32 nBits)
         {
-            if (endian == Endian.Little)
+            if (Endian == EndianType.Little)
             {
                 return ReadUnsignedBitsLittleEndian(nBits);
             }
@@ -234,10 +256,10 @@ namespace compLexity_Demo_Player
             // check for overflow
             if (currentBit + 1 > data.Count * 8)
             {
-                throw new ApplicationException("BitReader overflow.");
+                throw new BitBufferOutOfRangeException();
             }
 
-            Boolean result = (data[currentBit / 8] & ((endian == Endian.Little ? 1 << currentBit % 8 : 128 >> currentBit % 8))) == 0 ? false : true;
+            Boolean result = (data[currentBit / 8] & ((Endian == EndianType.Little ? 1 << currentBit % 8 : 128 >> currentBit % 8))) == 0 ? false : true;
             currentBit++;
             return result;
         }
@@ -302,9 +324,9 @@ namespace compLexity_Demo_Player
         }
 
         /// <summary>
-        /// Read a string, then skip any remaining bytes to make up length bytes.
+        /// Read a null-terminated string, then skip any remaining bytes to make up length bytes.
         /// </summary>
-        /// <param name="length"></param>
+        /// <param name="length">The total number of bytes to read.</param>
         /// <returns></returns>
         public String ReadString(Int32 length)
         {
@@ -486,7 +508,7 @@ namespace compLexity_Demo_Player
 
             if (CurrentByte + count > this.Length)
             {
-                throw new ApplicationException("BitReader overflow.");
+                throw new BitBufferOutOfRangeException();
             }
 
             data.RemoveRange(CurrentByte, count);

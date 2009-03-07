@@ -286,7 +286,7 @@ namespace compLexity_Demo_Player
             Int32 messageStartOffset = parser.BitBuffer.CurrentByte;
 
             // read message
-            parser.BitBuffer.SetEndian(BitBuffer.Endian.Big);
+            parser.BitBuffer.Endian = BitBuffer.EndianType.Big;
 
             BitWriter bitWriter = new BitWriter();
             HalfLifeDeltaStructure eventStructure = parser.GetDeltaStructure("event_t");
@@ -339,7 +339,7 @@ namespace compLexity_Demo_Player
             }
 
             parser.BitBuffer.SkipRemainingBits();
-            parser.BitBuffer.SetEndian(BitBuffer.Endian.Little);
+            parser.BitBuffer.Endian = BitBuffer.EndianType.Little;
 
             // insert new message
             ReWriteMessage(messageStartOffset, bitWriter.Data);
@@ -356,7 +356,7 @@ namespace compLexity_Demo_Player
             Int32 messageStartOffset = parser.BitBuffer.CurrentByte;
 
             // read message
-            parser.BitBuffer.SetEndian(BitBuffer.Endian.Big);
+            parser.BitBuffer.Endian = BitBuffer.EndianType.Big;
 
             BitWriter bitWriter = new BitWriter();
 
@@ -393,7 +393,7 @@ namespace compLexity_Demo_Player
             }
 
             parser.BitBuffer.SkipRemainingBits();
-            parser.BitBuffer.SetEndian(BitBuffer.Endian.Little);
+            parser.BitBuffer.Endian = BitBuffer.EndianType.Little;
 
             // insert new message
             ReWriteMessage(messageStartOffset, bitWriter.Data);
@@ -493,7 +493,7 @@ namespace compLexity_Demo_Player
             }
 
             Int32 messageStartOffset = parser.BitBuffer.CurrentByte;
-            parser.BitBuffer.SetEndian(BitBuffer.Endian.Big);
+            parser.BitBuffer.Endian = BitBuffer.EndianType.Big;
             BitWriter bitWriter = new BitWriter();
 
             // read/write message
@@ -518,7 +518,7 @@ namespace compLexity_Demo_Player
             }
 
             parser.BitBuffer.SkipRemainingBits();
-            parser.BitBuffer.SetEndian(BitBuffer.Endian.Little);
+            parser.BitBuffer.Endian = BitBuffer.EndianType.Little;
 
             // insert new message
             ReWriteMessage(messageStartOffset, bitWriter.Data);
@@ -542,7 +542,7 @@ namespace compLexity_Demo_Player
 
             if (demo.NetworkProtocol <= 43)
             {
-                parser.BitBuffer.SetEndian(BitBuffer.Endian.Big);
+                parser.BitBuffer.Endian = BitBuffer.EndianType.Big;
             }
 
             BitWriter bitWriter = new BitWriter();
@@ -587,7 +587,7 @@ namespace compLexity_Demo_Player
             bitWriter.WriteBoolean(false);
 
             parser.BitBuffer.SkipRemainingBits();
-            parser.BitBuffer.SetEndian(BitBuffer.Endian.Little);
+            parser.BitBuffer.Endian = BitBuffer.EndianType.Little;
 
             // insert new message
             ReWriteMessage(messageStartOffset, bitWriter.Data);
@@ -604,7 +604,7 @@ namespace compLexity_Demo_Player
             // read into new message
             Int32 messageStartOffset = parser.BitBuffer.CurrentByte;
             BitWriter bitWriter = new BitWriter();
-            parser.BitBuffer.SetEndian(BitBuffer.Endian.Big);
+            parser.BitBuffer.Endian = BitBuffer.EndianType.Big;
 
             while (parser.BitBuffer.ReadBoolean())
             {
@@ -617,7 +617,7 @@ namespace compLexity_Demo_Player
             bitWriter.WriteBoolean(false);
 
             parser.BitBuffer.SkipRemainingBits();
-            parser.BitBuffer.SetEndian(BitBuffer.Endian.Little);
+            parser.BitBuffer.Endian = BitBuffer.EndianType.Little;
 
             // insert new message
             ReWriteMessage(messageStartOffset, bitWriter.Data);
@@ -635,7 +635,7 @@ namespace compLexity_Demo_Player
             BitWriter bitWriter = new BitWriter();
 
             // read message into new message
-            parser.BitBuffer.SetEndian(BitBuffer.Endian.Big);
+            parser.BitBuffer.Endian = BitBuffer.EndianType.Big;
 
             while (true)
             {
@@ -719,7 +719,7 @@ namespace compLexity_Demo_Player
                 entityStateStructure.WriteDelta(bitWriter, delta, bitmaskBytes);
             }
 
-            parser.BitBuffer.SetEndian(BitBuffer.Endian.Little);
+            parser.BitBuffer.Endian = BitBuffer.EndianType.Little;
             parser.BitBuffer.SkipRemainingBits();
 
             // insert new message
@@ -795,7 +795,7 @@ namespace compLexity_Demo_Player
             // read message into new message
             bitWriter.WriteUInt16(parser.BitBuffer.ReadUInt16()); // nEntities/maxEntities
 
-            parser.BitBuffer.SetEndian(BitBuffer.Endian.Big);
+            parser.BitBuffer.Endian = BitBuffer.EndianType.Big;
 
             UInt32 entityNumber = 0;
 
@@ -890,7 +890,7 @@ namespace compLexity_Demo_Player
             }
 
             parser.BitBuffer.SkipRemainingBits();
-            parser.BitBuffer.SetEndian(BitBuffer.Endian.Little);
+            parser.BitBuffer.Endian = BitBuffer.EndianType.Little;
 
             // insert new message
             ReWriteMessage(messageStartOffset, bitWriter.Data);
@@ -912,7 +912,7 @@ namespace compLexity_Demo_Player
 
             if (demo.NetworkProtocol <= 43)
             {
-                parser.BitBuffer.SetEndian(BitBuffer.Endian.Big);
+                parser.BitBuffer.Endian = BitBuffer.EndianType.Big;
             }
 
             bitWriter.WriteByte(parser.BitBuffer.ReadByte()); // delta sequence number
@@ -1015,7 +1015,7 @@ namespace compLexity_Demo_Player
             }
 
             parser.BitBuffer.SkipRemainingBits();
-            parser.BitBuffer.SetEndian(BitBuffer.Endian.Little);
+            parser.BitBuffer.Endian = BitBuffer.EndianType.Little;
 
             // insert new message
             ReWriteMessage(messageStartOffset, bitWriter.Data);
@@ -1062,7 +1062,7 @@ namespace compLexity_Demo_Player
             // read message
             if (demo.NetworkProtocol <= 43)
             {
-                parser.BitBuffer.SetEndian(BitBuffer.Endian.Big);
+                parser.BitBuffer.Endian = BitBuffer.EndianType.Big;
             }
 
             UInt32 nEntries = parser.BitBuffer.ReadUnsignedBits(12);
@@ -1123,7 +1123,7 @@ namespace compLexity_Demo_Player
             }
 
             parser.BitBuffer.SkipRemainingBits();
-            parser.BitBuffer.SetEndian(BitBuffer.Endian.Little);
+            parser.BitBuffer.Endian = BitBuffer.EndianType.Little;
 
             // TODO: wrong map fix
             // check for bsp extension (check r.type first? cuts down on string compares)
