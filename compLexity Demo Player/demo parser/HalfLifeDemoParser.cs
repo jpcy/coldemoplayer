@@ -716,7 +716,7 @@ namespace compLexity_Demo_Player
 
         public void MessageClientData()
         {
-            if (demo.Perspective == Demo.PerspectiveEnum.Hltv)
+            if (demo.Perspective == Demo.Perspectives.Hltv)
             {
                 return;
             }

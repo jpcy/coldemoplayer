@@ -60,7 +60,7 @@ namespace compLexity_Demo_Player
         {
             fileFullPath = fileName;
 
-            engineType = EngineEnum.Source;
+            engineType = Engines.Source;
             status = StatusEnum.Ok;
 
             playerList = new List<Player>();
@@ -214,11 +214,11 @@ namespace compLexity_Demo_Player
 
             if (recorderName == "SourceTV Demo")
             {
-                perspective = PerspectiveEnum.SourceTv;
+                perspective = Perspectives.SourceTv;
             }
             else
             {
-                perspective = PerspectiveEnum.Pov;
+                perspective = Perspectives.Pov;
             }
         }
 
@@ -245,7 +245,7 @@ namespace compLexity_Demo_Player
         {
             String s = parser.BitBuffer.ReadString();
 
-            if (perspective == PerspectiveEnum.SourceTv)
+            if (perspective == Perspectives.SourceTv)
             {
                 return;
             }

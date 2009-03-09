@@ -75,7 +75,7 @@ namespace compLexity_Demo_Player
             return gvc;
         }
 
-        private void SetPlayerListGridView(Demo.EngineEnum engine)
+        private void SetPlayerListGridView(Demo.Engines engine)
         {
             GridView gv = new GridView();
 
@@ -84,7 +84,7 @@ namespace compLexity_Demo_Player
             nameColumn.IsLowPriority = true;
             gv.Columns.Add(nameColumn);
 
-            if (engine == Demo.EngineEnum.Source)
+            if (engine == Demo.Engines.Source)
             {
                 gv.Columns.Add(CreateGridViewColumn("Steam ID", "SteamId"));
             }
@@ -144,30 +144,27 @@ namespace compLexity_Demo_Player
             // work out which checkboxes should be enabled
             uiOptionsCloseWhenFinishedCheckBox.IsEnabled = true;
 
-            if (demo.Engine != Demo.EngineEnum.Source)
+            if (demo.Engine != Demo.Engines.Source)
             {
-                if (demo.Perspective == Demo.PerspectiveEnum.Pov)
+                if (demo.Perspective == Demo.Perspectives.Pov)
                 {
                     uiOptionsRemoveShowscoresCheckBox.IsEnabled = true;
                 }
 
-                if (demo.GameFolderName == "cstrike" && demo.NetworkProtocol >= 43 && demo.NetworkProtocol <= 46 && !((HalfLifeDemo)demo).IsBetaSteam())
+                if (GameManager.CanConvertNetworkProtocol(demo))
                 {
                     uiOptionsConvertNetworkProtocolCheckBox.IsEnabled = true;
                 }
             }
 
-            if ((demo.Engine == Demo.EngineEnum.HalfLifeSteam && demo.GameFolderName != "tfc") || (demo.Engine == Demo.EngineEnum.HalfLife && uiOptionsConvertNetworkProtocolCheckBox.IsEnabled && (Boolean)uiOptionsConvertNetworkProtocolCheckBox.IsChecked))
+            if ((demo.Engine == Demo.Engines.HalfLifeSteam && demo.GameFolderName != "tfc") || (demo.Engine == Demo.Engines.HalfLife && uiOptionsConvertNetworkProtocolCheckBox.IsEnabled && (Boolean)uiOptionsConvertNetworkProtocolCheckBox.IsChecked))
             {
                 uiOptionsStartListenServerCheckBox.IsEnabled = true;
             }
 
-            if (demo.GameFolderName == "cstrike" && demo.Perspective == Demo.PerspectiveEnum.Pov)
+            if (GameManager.CanRemoveFadeToBlack(demo))
             {
-                if (demo.Engine != Demo.EngineEnum.Source || (demo.Engine == Demo.EngineEnum.Source && demo.DemoProtocol == 3 && demo.NetworkProtocol == 7))
-                {
-                    uiOptionsRemoveFtbCheckBox.IsEnabled = true;
-                }
+                uiOptionsRemoveFtbCheckBox.IsEnabled = true;
             }
 
             if (CanUseHlae(demo))
@@ -178,7 +175,7 @@ namespace compLexity_Demo_Player
 
         private Boolean CanUseHlae(Demo demo)
         {
-            if (demo.Engine == Demo.EngineEnum.HalfLifeSteam || (demo.Engine == Demo.EngineEnum.HalfLife && ((HalfLifeDemo)demo).ConvertNetworkProtocol()))
+            if (demo.Engine == Demo.Engines.HalfLifeSteam || (demo.Engine == Demo.Engines.HalfLife && ((HalfLifeDemo)demo).ConvertNetworkProtocol()))
             {
                 return true;
             }
@@ -738,7 +735,7 @@ namespace compLexity_Demo_Player
 
             // map tab
             uiMapTextBlock.Text = demo.MapName;
-            String engineFolder = (demo.Engine == Demo.EngineEnum.Source ? "source" : "goldsrc");
+            String engineFolder = (demo.Engine == Demo.Engines.Source ? "source" : "goldsrc");
             String imagePartialPath = "\\" + engineFolder + "\\" + demo.GameFolderName + "\\" + demo.MapName + ".jpg";
             try
             {
@@ -768,11 +765,11 @@ namespace compLexity_Demo_Player
                 uiDetailsStatusTextBox.Text = "Corrupt directory entries";
             }
 
-            uiDetailsSteamTextBox.Text = (demo.Engine == Demo.EngineEnum.HalfLife ? "No" : "Yes");
+            uiDetailsSteamTextBox.Text = (demo.Engine == Demo.Engines.HalfLife ? "No" : "Yes");
             uiDetailsServerNameTextBox.Text = demo.ServerName;
             uiDetailsServerSlotsTextBox.Text = String.Format("{0}", demo.MaxClients);
 
-            if (demo.Perspective == Demo.PerspectiveEnum.Pov)
+            if (demo.Perspective == Demo.Perspectives.Pov)
             {
                 uiDetailsRecordedByTextBox.Text = demo.RecorderName;
             }
@@ -784,7 +781,7 @@ namespace compLexity_Demo_Player
             uiDetailsEngineVersionTextBox.Text = demo.EngineName;
             uiDetailsGameFolderTextBox.Text = demo.GameFolderName;
 
-            if (demo.Perspective == Demo.PerspectiveEnum.Pov)
+            if (demo.Perspective == Demo.Perspectives.Pov)
             {
                 uiDetailsBuildNumberTextBox.Text = String.Format("{0}", demo.BuildNumber);
             }
@@ -800,7 +797,7 @@ namespace compLexity_Demo_Player
             SetPlayerListGridView(demo.Engine);
             uiPlayersListView.Initialise();
 
-            if (demo.Engine == Demo.EngineEnum.Source)
+            if (demo.Engine == Demo.Engines.Source)
             {
                 foreach (SourceDemo.Player player in ((SourceDemo)demo).PlayerList)
                 {
@@ -819,7 +816,7 @@ namespace compLexity_Demo_Player
 
             // operations
             uiPlayButton.IsEnabled = true;
-            uiAnalyseButton.IsEnabled = GameManager.CanAnalyse(demo);
+            uiAnalyseButton.IsEnabled = (demo == null ? false : GameManager.CanAnalyse(demo));
         }
 
         private void uiPlaybackType_Changed(object sender, RoutedEventArgs e)

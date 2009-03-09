@@ -39,12 +39,14 @@ namespace compLexity_Demo_Player
         private Single currentTimestamp = 0.0f;
         private Hashtable titleTable;
         private Boolean reconnecting = false; // reconnecting after the server changed maps
+        private readonly Int32 newRoundEventId;
 
         public HalfLifeDemoAnalyser(HalfLifeDemo demo, IAnalysisWindow analysisWindowInterface, IProgressWindow progressWindowInterface)
         {
             this.demo = demo;
             this.analysisWindowInterface = analysisWindowInterface;
             this.progressWindowInterface = progressWindowInterface;
+            newRoundEventId = GameManager.NewRoundEventId(demo);
 
             gameState = new HalfLifeGameState();
             NewRound();
@@ -320,18 +322,15 @@ namespace compLexity_Demo_Player
         /// <returns></returns>
         private SolidColorBrush PlayerGetTeamColour(Player player)
         {
+            SolidColorBrush result = null;
+
             if (player != null)
             {
-                if (demo.GameFolderName == "cstrike")
+                result = GameManager.TeamColour(demo, player.Team);
+
+                if (result != null)
                 {
-                    if (player.Team == "CT")
-                    {
-                        return Brushes.Blue;
-                    }
-                    else if (player.Team == "TERRORIST")
-                    {
-                        return Brushes.Red;
-                    }
+                    return result;
                 }
             }
 
@@ -566,19 +565,9 @@ namespace compLexity_Demo_Player
             parser.BitBuffer.Endian = BitBuffer.EndianType.Little;
 
             // check if new round has started
-            if (((HalfLifeDemo)demo).GameVersion == HalfLifeDemo.GameVersionEnum.CounterStrike16)
+            if (id == newRoundEventId)
             {
-                if (id == 29)
-                {
-                    NewRound();
-                }
-            }
-            else
-            {
-                if (id == 26)
-                {
-                    NewRound();
-                }
+                NewRound();
             }
         }
 

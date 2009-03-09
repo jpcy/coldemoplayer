@@ -5,6 +5,9 @@ using System.Xml.Serialization;
 
 namespace compLexity_Demo_Player
 {
+    /// <summary>
+    /// Represents a single entry deserialized from steam.xml.
+    /// </summary>
     public class SteamGameInfo
     {
         [XmlAttribute("engine")]

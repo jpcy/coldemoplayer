@@ -29,18 +29,7 @@ namespace compLexity_Demo_Player
             }
         }
 
-        public enum GameVersionEnum
-        {
-            Unknown,
-            CounterStrike10,
-            CounterStrike11,
-            CounterStrike13,
-            CounterStrike14,
-            CounterStrike15,
-            CounterStrike16
-        }
-
-        public enum EngineVersionEnum
+        public enum EngineVersions
         {
             Unknown,
             HalfLife1104,
@@ -62,15 +51,11 @@ namespace compLexity_Demo_Player
         private Int64 fileLengthInBytes;
         private Byte recorderSlot;
         private List<Player> playerList;
-        private EngineVersionEnum engineVersion = EngineVersionEnum.Unknown;
-        private GameVersionEnum gameVersion = GameVersionEnum.Unknown;
+        private EngineVersions engineVersion = EngineVersions.Unknown;
         private UInt32 mungedMapChecksum;
 
         private HalfLifeDemoParser parser;
         private Single currentTimestamp = 0.0f;
-
-        // network protocol conversion
-        private Hashtable compatibleUserMessageTable; // CS 1.6 user messages. when converting 1.3-1.5 demos to 1.6, user messages must use id's that are compatible with the mod dll's
 
         // duplicate loading segments bug
         private Int32 currentFrameIndex;
@@ -89,39 +74,39 @@ namespace compLexity_Demo_Player
                 
                 switch (engineVersion)
                 {
-                    case EngineVersionEnum.HalfLife1104:
+                    case EngineVersions.HalfLife1104:
                         s += "1.1.0.4";
                         break;
 
-                    case EngineVersionEnum.HalfLife1106:
+                    case EngineVersions.HalfLife1106:
                         s += "1.1.0.6";
                         break;
 
-                    case EngineVersionEnum.HalfLife1107:
+                    case EngineVersions.HalfLife1107:
                         s += "1.1.0.7";
                         break;
 
-                    case EngineVersionEnum.HalfLife1108:
+                    case EngineVersions.HalfLife1108:
                         s += "1.1.0.8";
                         break;
 
-                    case EngineVersionEnum.HalfLife1109:
+                    case EngineVersions.HalfLife1109:
                         s += "1.1.0.9";
                         break;
 
-                    case EngineVersionEnum.HalfLife1108or1109:
+                    case EngineVersions.HalfLife1108or1109:
                         s += "1.1.0.8 or v1.1.0.9";
                         break;
 
-                    case EngineVersionEnum.HalfLife1110:
+                    case EngineVersions.HalfLife1110:
                         s += "1.1.1.0";
                         break;
 
-                    case EngineVersionEnum.HalfLife1111:
+                    case EngineVersions.HalfLife1111:
                         s += "1.1.1.1";
                         break;
 
-                    case EngineVersionEnum.HalfLife1110or1111:
+                    case EngineVersions.HalfLife1110or1111:
                         s += "1.1.1.0 or v1.1.1.1";
                         break;
 
@@ -140,15 +125,6 @@ namespace compLexity_Demo_Player
                 return playerList;
             }
         }
-
-        public GameVersionEnum GameVersion
-        {
-            get
-            {
-                return gameVersion;
-            }
-        }
-
         #endregion
 
         public HalfLifeDemo(String fileName)
@@ -160,92 +136,7 @@ namespace compLexity_Demo_Player
             // initialise variables not guaranteed to be initialised by reading the file
             recorderName = "";
             status = StatusEnum.Ok;
-            perspective = PerspectiveEnum.Pov;
-
-            // TODO: read this in from an XML file, and store it in a static class
-            compatibleUserMessageTable = new Hashtable();
-            compatibleUserMessageTable.Add("HudTextArgs", (Byte?)145);
-            compatibleUserMessageTable.Add("ShowTimer", (Byte?)144);
-            compatibleUserMessageTable.Add("Fog", (Byte?)143);
-            compatibleUserMessageTable.Add("Brass", (Byte?)142);
-            compatibleUserMessageTable.Add("BotProgress", (Byte?)141);
-            compatibleUserMessageTable.Add("Location", (Byte?)140);
-            compatibleUserMessageTable.Add("ItemStatus", (Byte?)139);
-            compatibleUserMessageTable.Add("BarTime2", (Byte?)138);
-            compatibleUserMessageTable.Add("SpecHealth2", (Byte?)137);
-            compatibleUserMessageTable.Add("BuyClose", (Byte?)136);
-            compatibleUserMessageTable.Add("BotVoice", (Byte?)135);
-            compatibleUserMessageTable.Add("Scenario", (Byte?)134);
-            compatibleUserMessageTable.Add("TaskTime", (Byte?)133);
-            compatibleUserMessageTable.Add("ShadowIdx", (Byte?)132);
-            compatibleUserMessageTable.Add("CZCareerHUD", (Byte?)131);
-            compatibleUserMessageTable.Add("CZCareer", (Byte?)130);
-            compatibleUserMessageTable.Add("ReceiveW", (Byte?)129);
-            compatibleUserMessageTable.Add("ADStop", (Byte?)128);
-            compatibleUserMessageTable.Add("ForceCam", (Byte?)127);
-            compatibleUserMessageTable.Add("SpecHealth", (Byte?)126);
-            compatibleUserMessageTable.Add("HLTV", (Byte?)125);
-            compatibleUserMessageTable.Add("HostageK", (Byte?)124);
-            compatibleUserMessageTable.Add("HostagePos", (Byte?)123);
-            compatibleUserMessageTable.Add("ClCorpse", (Byte?)122);
-            compatibleUserMessageTable.Add("BombPickup", (Byte?)121);
-            compatibleUserMessageTable.Add("BombDrop", (Byte?)120);
-            compatibleUserMessageTable.Add("AllowSpec", (Byte?)119);
-            compatibleUserMessageTable.Add("TutorClose", (Byte?)118);
-            compatibleUserMessageTable.Add("TutorState", (Byte?)117);
-            compatibleUserMessageTable.Add("TutorLine", (Byte?)116);
-            compatibleUserMessageTable.Add("TutorText", (Byte?)115);
-            compatibleUserMessageTable.Add("VGUIMenu", (Byte?)114);
-            compatibleUserMessageTable.Add("Spectator", (Byte?)113);
-            compatibleUserMessageTable.Add("Radar", (Byte?)112);
-            compatibleUserMessageTable.Add("NVGToggle", (Byte?)111);
-            compatibleUserMessageTable.Add("Crosshair", (Byte?)110);
-            compatibleUserMessageTable.Add("ReloadSound", (Byte?)109);
-            compatibleUserMessageTable.Add("BarTime", (Byte?)108);
-            compatibleUserMessageTable.Add("StatusIcon", (Byte?)107);
-            compatibleUserMessageTable.Add("StatusText", (Byte?)106);
-            compatibleUserMessageTable.Add("StatusValue", (Byte?)105);
-            compatibleUserMessageTable.Add("BlinkAcct", (Byte?)104);
-            compatibleUserMessageTable.Add("ArmorType", (Byte?)103);
-            compatibleUserMessageTable.Add("Money", (Byte?)102);
-            compatibleUserMessageTable.Add("RoundTime", (Byte?)101);
-            compatibleUserMessageTable.Add("SendAudio", (Byte?)100);
-            compatibleUserMessageTable.Add("AmmoX", (Byte?)99);
-            compatibleUserMessageTable.Add("ScreenFade", (Byte?)98);
-            compatibleUserMessageTable.Add("ScreenShake", (Byte?)97);
-            compatibleUserMessageTable.Add("ShowMenu", (Byte?)96);
-            compatibleUserMessageTable.Add("SetFOV", (Byte?)95);
-            compatibleUserMessageTable.Add("HideWeapon", (Byte?)94);
-            compatibleUserMessageTable.Add("ItemPickup", (Byte?)93);
-            compatibleUserMessageTable.Add("WeapPickup", (Byte?)92);
-            compatibleUserMessageTable.Add("AmmoPickup", (Byte?)91);
-            compatibleUserMessageTable.Add("ServerName", (Byte?)90);
-            compatibleUserMessageTable.Add("MOTD", (Byte?)89);
-            compatibleUserMessageTable.Add("GameMode", (Byte?)88);
-            compatibleUserMessageTable.Add("TeamScore", (Byte?)87);
-            compatibleUserMessageTable.Add("TeamInfo", (Byte?)86);
-            compatibleUserMessageTable.Add("ScoreInfo", (Byte?)85);
-            compatibleUserMessageTable.Add("ScoreAttrib", (Byte?)84);
-            compatibleUserMessageTable.Add("DeathMsg", (Byte?)83);
-            compatibleUserMessageTable.Add("GameTitle", (Byte?)82);
-            compatibleUserMessageTable.Add("ViewMode", (Byte?)81);
-            compatibleUserMessageTable.Add("InitHUD", (Byte?)80);
-            compatibleUserMessageTable.Add("ResetHUD", (Byte?)79);
-            compatibleUserMessageTable.Add("WeaponList", (Byte?)78);
-            compatibleUserMessageTable.Add("TextMsg", (Byte?)77);
-            compatibleUserMessageTable.Add("SayText", (Byte?)76);
-            compatibleUserMessageTable.Add("HudText", (Byte?)75);
-            compatibleUserMessageTable.Add("HudTextPro", (Byte?)74);
-            compatibleUserMessageTable.Add("Train", (Byte?)73);
-            compatibleUserMessageTable.Add("Battery", (Byte?)72);
-            compatibleUserMessageTable.Add("Damage", (Byte?)71);
-            compatibleUserMessageTable.Add("Health", (Byte?)70);
-            compatibleUserMessageTable.Add("FlashBat", (Byte?)69);
-            compatibleUserMessageTable.Add("Flashlight", (Byte?)68);
-            compatibleUserMessageTable.Add("Geiger", (Byte?)67);
-            compatibleUserMessageTable.Add("CurWeapon", (Byte?)66);
-            compatibleUserMessageTable.Add("ReqState", (Byte?)65);
-            compatibleUserMessageTable.Add("VoiceMask", (Byte?)64);
+            perspective = Perspectives.Pov;
         }
 
         #region Misc
@@ -276,23 +167,7 @@ namespace compLexity_Demo_Player
 
         public Boolean ConvertToCurrentNetworkProtocol()
         {
-            if (ConvertNetworkProtocol())
-            {
-                return true;
-            }
-
-            // FIXME: does the update only apply to these games or all hl1 engine games?
-            /*if (NetworkProtocol == 47 && (GameFolderName == "cstrike" || GameFolderName == "czero" || GameFolderName == "czerodeleted" || GameFolderName == "tfc" || GameFolderName == "dmc" || GameFolderName == "ricochet" || GameFolderName == "valve" || GameFolderName == "dod"))
-            {
-                return true;
-            }*/
-
-            if (NetworkProtocol == 47)
-            {
-                return true;
-            }
-
-            return false;
+            return (ConvertNetworkProtocol() || NetworkProtocol == 47);
         }
 
         public Boolean IsBetaSteam()
@@ -301,7 +176,7 @@ namespace compLexity_Demo_Player
             {
                 // workaround for johnny r pov on inferno against ocrana
                 // newer protocol than usual beta demos but same messed up usermessage indicies...
-                if (NetworkProtocol == 47 && Perspective == PerspectiveEnum.Pov && BuildNumber <= 2573)
+                if (NetworkProtocol == 47 && Perspective == Perspectives.Pov && BuildNumber <= 2573)
                 {
                     return true;
                 }
@@ -309,15 +184,8 @@ namespace compLexity_Demo_Player
                 return false;
             }
 
-            // may be beta Steam HLTV
-            // can only determine this via client dll checksum (i.e. this is mod specific)
-            if (GameFolderName == "cstrike")
-            {
-                return (GameVersion == GameVersionEnum.CounterStrike16);
-            }
-
-            // all other mods: assume it's not beta
-            return false;
+            // May be beta Steam HLTV. This can only determine via the client.dll checksum (i.e. this is mod specific).
+            return Game.IsBetaSteamHltvDemo(this);
         }
         #endregion
 
@@ -438,7 +306,7 @@ namespace compLexity_Demo_Player
             }
 
             // get demo recorder's name
-            if (perspective == PerspectiveEnum.Pov)
+            if (perspective == Perspectives.Pov)
             {
                 foreach (Player p in playerList)
                 {
@@ -523,128 +391,69 @@ namespace compLexity_Demo_Player
         /// </summary>
         private void CalculateEngineVersionAndType()
         {
-            engineVersion = EngineVersionEnum.Unknown;
-            engineType = EngineEnum.HalfLife;
+            engineVersion = EngineVersions.Unknown;
+            engineType = Engines.HalfLife;
 
             if (networkProtocol == 43)
             {
                 if (buildNumber >= 1712)
                 {
-                    engineVersion = EngineVersionEnum.HalfLife1107;
+                    engineVersion = EngineVersions.HalfLife1107;
                 }
                 else if (buildNumber >= 1600)
                 {
-                    engineVersion = EngineVersionEnum.HalfLife1106;
+                    engineVersion = EngineVersions.HalfLife1106;
                 }
                 else if (buildNumber >= 1460)
                 {
-                    engineVersion = EngineVersionEnum.HalfLife1104;
+                    engineVersion = EngineVersions.HalfLife1104;
                 }
             }
             else if (networkProtocol == 45)
             {
-                if (Perspective == PerspectiveEnum.Hltv)
+                if (Perspective == Perspectives.Hltv)
                 {
-                    if (GameVersion == GameVersionEnum.CounterStrike13)
-                    {
-                        engineVersion = EngineVersionEnum.HalfLife1108;
-                    }
-                    else if (GameVersion == GameVersionEnum.CounterStrike14)
-                    {
-                        engineVersion = EngineVersionEnum.HalfLife1109;
-                    }
-                    else
-                    {
-                        engineVersion = EngineVersionEnum.HalfLife1108or1109;
-                    }
+                    engineVersion = EngineVersions.HalfLife1108or1109;
                 }
                 else if (buildNumber >= 2006)
                 {
-                    engineVersion = EngineVersionEnum.HalfLife1109;
+                    engineVersion = EngineVersions.HalfLife1109;
                 }
                 else
                 {
-                    engineVersion = EngineVersionEnum.HalfLife1108;
+                    engineVersion = EngineVersions.HalfLife1108;
                 }
             }
             else if (networkProtocol == 46)
             {
-                if (IsBetaSteam()) // fucking Valve...
+                if (IsBetaSteam())
                 {
-                    engineVersion = EngineVersionEnum.HalfLife1111;
-                    engineType = EngineEnum.HalfLifeSteam;
+                    engineVersion = EngineVersions.HalfLife1111;
+                    engineType = Engines.HalfLifeSteam;
                 }
-                else if (Perspective == PerspectiveEnum.Hltv)
+                else if (Perspective == Perspectives.Hltv)
                 {
-                    if (GameVersion == GameVersionEnum.CounterStrike15)
-                    {
-                        engineVersion = EngineVersionEnum.HalfLife1110;
-                    }
-                    else if (GameVersion == GameVersionEnum.CounterStrike16)
-                    {
-                        engineVersion = EngineVersionEnum.HalfLife1111;
-                    }
-                    else
-                    {
-                        engineVersion = EngineVersionEnum.HalfLife1110or1111;
-                    }
+                    engineVersion = EngineVersions.HalfLife1110or1111;
                 }
                 else
                 {
-                    engineVersion = EngineVersionEnum.HalfLife1110;
+                    engineVersion = EngineVersions.HalfLife1110;
                 }
             }
             else if (networkProtocol >= 47)
             {
-                engineVersion = EngineVersionEnum.HalfLife1111;
-                engineType = EngineEnum.HalfLifeSteam;
+                engineVersion = EngineVersions.HalfLife1111;
+                engineType = Engines.HalfLifeSteam;
             }
         }
 
-        /// <summary>
-        /// Calculates the game version string based on the client dll checksum.
-        /// </summary>
-        /// <remarks>Currently only Counter-Strike versions are calculated.</remarks>
-        private void CalculateGameVersion()
+        private void CalculateGameAndGameVersion()
         {
-            if (GameFolderName != "cstrike")
-            {
-                return;
-            }
+            Game = GameManager.Find(this);
 
-            Game game = GameManager.Find(this);
-
-            if (game == null)
+            if (Game != null)
             {
-                return;
-            }
-
-            String versionName = game.FindVersion(clientDllChecksum);
-
-            // FIXME: this is pretty awful
-            if (versionName == "1.0")
-            {
-                gameVersion = GameVersionEnum.CounterStrike10;
-            }
-            else if (versionName == "1.1")
-            {
-                gameVersion = GameVersionEnum.CounterStrike11;
-            }
-            else if (versionName == "1.3")
-            {
-                gameVersion = GameVersionEnum.CounterStrike13;
-            }
-            else if (versionName == "1.4")
-            {
-                gameVersion = GameVersionEnum.CounterStrike14;
-            }
-            else if (versionName == "1.5")
-            {
-                gameVersion = GameVersionEnum.CounterStrike15;
-            }
-            else
-            {
-                gameVersion = GameVersionEnum.CounterStrike16;
+                GameVersion = Game.FindVersion(clientDllChecksum);
             }
         }
         #endregion
@@ -739,22 +548,6 @@ namespace compLexity_Demo_Player
 
             writeProgressWindowInterface.CloseWithResult(true);
         }
-
-        private Byte UserMessageCallback(Byte messageId)
-        {
-            String name = parser.FindMessageIdString(messageId);
-
-            Byte? newMessageId = (Byte?)compatibleUserMessageTable[name];
-
-            if (newMessageId == null)
-            {
-                // shouldn't happen, must be a bad message
-                // let the parser handle it
-                newMessageId = messageId;
-            }
-
-            return (Byte)newMessageId;
-        }
         #endregion
 
         #region Read Message Handlers
@@ -774,7 +567,7 @@ namespace compLexity_Demo_Player
 
             // get build number
             // FIXME: use regex?
-            if (perspective == PerspectiveEnum.Pov && s.Contains("BUILD"))
+            if (perspective == Perspectives.Pov && s.Contains("BUILD"))
             {
                 s = s.Remove(0, 2);
                 s = s.Replace("BUILD ", "");
@@ -804,7 +597,7 @@ namespace compLexity_Demo_Player
             clientDllChecksum = sb.ToString();
 
             // determine engine and game versions
-            CalculateGameVersion();
+            CalculateGameAndGameVersion();
             CalculateEngineVersionAndType();
 
             maxClients = parser.BitBuffer.ReadByte();
@@ -918,7 +711,7 @@ namespace compLexity_Demo_Player
 
         private void ReadMessageHltv()
         {
-            perspective = PerspectiveEnum.Hltv;
+            perspective = Perspectives.Hltv;
 
             /*
             #define HLTV_ACTIVE				0	// tells client that he's an spectator and will get director commands

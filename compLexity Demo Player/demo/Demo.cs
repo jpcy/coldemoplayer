@@ -14,14 +14,14 @@ namespace compLexity_Demo_Player
             CorruptDirEntries
         }
 
-        public enum EngineEnum
+        public enum Engines
         {
             HalfLife,
             HalfLifeSteam,
             Source
         }
 
-        public enum PerspectiveEnum
+        public enum Perspectives
         {
             Pov,
             Hltv,
@@ -32,8 +32,8 @@ namespace compLexity_Demo_Player
         protected String fileFullPath;
 
         protected StatusEnum status;
-        protected EngineEnum engineType;
-        protected PerspectiveEnum perspective;
+        protected Engines engineType;
+        protected Perspectives perspective;
         
         protected UInt32 demoProtocol;
         protected UInt32 networkProtocol;
@@ -51,7 +51,38 @@ namespace compLexity_Demo_Player
         protected IDemoListView demoListViewInterface;
         protected IProgressWindow writeProgressWindowInterface;
 
+        private Dictionary<string, uint> resources = new Dictionary<string, uint>();
+
         #region Properties
+        /// <summary>
+        /// A collection of resources indicies keyed by name. Used by demo conversion to store resources that need to be identified by index later on.
+        /// </summary>
+        public Dictionary<string, uint> Resources
+        {
+            get
+            {
+                return resources;
+            }
+        }
+
+        public Game Game
+        {
+            get;
+            protected set;
+        }
+
+        /// <summary>
+        /// Corresponds to an enumeration in the demos corresponding game class derived from Game.
+        /// </summary>
+        /// <remarks>
+        /// This removes the need to constantly determine the version of the game the demo was recorded with by comparing the client.dll checksum to pre-defined values.
+        /// </remarks>
+        public Int32 GameVersion
+        {
+            get;
+            protected set;
+        }
+
         public String Name
         {
             get
@@ -76,7 +107,7 @@ namespace compLexity_Demo_Player
             }
         }
 
-        public EngineEnum Engine
+        public Engines Engine
         {
             get
             {
@@ -92,7 +123,7 @@ namespace compLexity_Demo_Player
             }
         }
 
-        public PerspectiveEnum Perspective
+        public Perspectives Perspective
         {
             get
             {
@@ -106,13 +137,13 @@ namespace compLexity_Demo_Player
             {
                 switch (perspective)
                 {
-                    case PerspectiveEnum.Pov:
+                    case Perspectives.Pov:
                         return "POV";
 
-                    case PerspectiveEnum.Hltv:
+                    case Perspectives.Hltv:
                         return "HLTV";
 
-                    case PerspectiveEnum.SourceTv:
+                    case Perspectives.SourceTv:
                         return "Source TV";
                 }
 
@@ -214,17 +245,15 @@ namespace compLexity_Demo_Player
         {
             get
             {
-                Game game = GameManager.Find(this);
-
-                if (game == null)
+                if (Game == null)
                 {
                     return "Unknown (" + gameFolderName + ")";
                 }
 
-                String result = game.Name;
+                String result = Game.Name;
 
                 // Try and get the game version.
-                String version = game.FindVersion(clientDllChecksum);
+                String version = Game.FindVersionName(clientDllChecksum);
 
                 if (version != null)
                 {

@@ -210,7 +210,7 @@ namespace compLexity_Demo_Player
         {
             String engineTypeName = "";
 
-            if (demo.Engine == Demo.EngineEnum.Source)
+            if (demo.Engine == Demo.Engines.Source)
             {
                 engineTypeName = "source";
             }
@@ -229,7 +229,7 @@ namespace compLexity_Demo_Player
                 return icon;
             }
 
-            if (demo.Engine == Demo.EngineEnum.HalfLife)
+            if (demo.Engine == Demo.Engines.HalfLife)
             {
                 // check that hl.exe path is set
                 if (!File.Exists(Config.Settings.HlExeFullPath))

@@ -105,7 +105,7 @@ namespace compLexity_Demo_Player
             // even if HLAE is being used, still need to check that game isn't already running
             processExeFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\" + Config.Settings.SteamAccountFolder + "\\" + game.FolderExtended + "\\";
 
-            if ((JoiningServer && ServerSourceEngine) || (!JoiningServer && Demo.Engine == Demo.EngineEnum.Source))
+            if ((JoiningServer && ServerSourceEngine) || (!JoiningServer && Demo.Engine == Demo.Engines.Source))
             {
                 processExeFullPath += "hl2.exe";
             }
@@ -144,7 +144,7 @@ namespace compLexity_Demo_Player
             // calculate launch parameters
             launchParameters = (UseHlae ? "" : "-applaunch " + game.AppId + " ");
 
-            if ((JoiningServer && Config.Settings.ServerBrowserStartListenServer && !ServerSourceEngine) || (!JoiningServer && (Config.Settings.PlaybackStartListenServer || Demo.GameFolderName == "tfc") && Demo.Engine != Demo.EngineEnum.Source))
+            if ((JoiningServer && Config.Settings.ServerBrowserStartListenServer && !ServerSourceEngine) || (!JoiningServer && (Config.Settings.PlaybackStartListenServer || Demo.GameFolderName == "tfc") && Demo.Engine != Demo.Engines.Source))
             {
                 launchParameters += "-nomaster +maxplayers 10 +sv_lan 1 +map " + mapName;
             }

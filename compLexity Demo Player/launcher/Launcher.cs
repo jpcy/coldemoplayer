@@ -59,7 +59,7 @@ namespace compLexity_Demo_Player
             // FIXME:
             // not really needed, just don't call this
             // remove me when source map checksum stuff is figured out
-            if (Demo.Engine == Demo.EngineEnum.Source)
+            if (Demo.Engine == Demo.Engines.Source)
             {
                 return;
             }
@@ -274,7 +274,7 @@ namespace compLexity_Demo_Player
         {
             String configFileFullPath = gameFullPath;
 
-            if ((JoiningServer && ServerSourceEngine) || (!JoiningServer && Demo.Engine == Demo.EngineEnum.Source))
+            if ((JoiningServer && ServerSourceEngine) || (!JoiningServer && Demo.Engine == Demo.Engines.Source))
             {
                 configFileFullPath += "\\cfg";
             }
@@ -301,7 +301,7 @@ namespace compLexity_Demo_Player
                 }
                 else
                 {
-                    if (Demo.Engine == Demo.EngineEnum.Source)
+                    if (Demo.Engine == Demo.Engines.Source)
                     {
                         stream.WriteLine("alias +col_ff_slow \"demo_timescale 2\"");
                         stream.WriteLine("alias -col_ff_slow \"demo_timescale 1\"");
@@ -328,7 +328,7 @@ namespace compLexity_Demo_Player
                         stream.WriteLine("gamma 3");
                         stream.WriteLine("wait10");
 
-                        if (Demo.Engine == Demo.EngineEnum.HalfLifeSteam || ((HalfLifeDemo)Demo).ConvertNetworkProtocol())
+                        if (Demo.Engine == Demo.Engines.HalfLifeSteam || ((HalfLifeDemo)Demo).ConvertNetworkProtocol())
                         {
                             stream.WriteLine("sv_voicecodec voice_speex");
                             stream.WriteLine("sv_voicequality 5");
@@ -343,7 +343,7 @@ namespace compLexity_Demo_Player
 
                     String playbackType;
 
-                    if (Demo.Engine != Demo.EngineEnum.Source)
+                    if (Demo.Engine != Demo.Engines.Source)
                     {
                         playbackType = (Config.Settings.PlaybackType == ProgramSettings.Playback.Playdemo ? "playdemo" : "viewdemo");
                     }
@@ -354,14 +354,14 @@ namespace compLexity_Demo_Player
 
                     stream.WriteLine("{0} {1}", playbackType, Config.Settings.LaunchDemoFileName);
 
-                    if (Demo.Engine != Demo.EngineEnum.Source)
+                    if (Demo.Engine != Demo.Engines.Source)
                     {
                         stream.WriteLine("wait10");
                         stream.WriteLine("slot1");
 
                         // workaround for converted CS 1.3 HLTV gayness
                         // TODO: remove this, replace with a resethud message (if it works)
-                        if (Demo.Perspective == Demo.PerspectiveEnum.Hltv)
+                        if (Demo.Perspective == Demo.Perspectives.Hltv)
                         {
                             stream.WriteLine("wait10");
                             stream.WriteLine("spec_menu 0");

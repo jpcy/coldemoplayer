@@ -5,6 +5,13 @@ using System.IO;
 
 namespace compLexity_Demo_Player
 {
+    public class NoFreeUserMessageException : Exception
+    {
+        public NoFreeUserMessageException()
+        {
+        }
+    }
+
     public class HalfLifeDemoConverter : IHalfLifeDemoWriter
     {
         // a svc_resourcelist entry
@@ -22,103 +29,32 @@ namespace compLexity_Demo_Player
 
         private HalfLifeDemo demo;
         private HalfLifeDemoParser parser;
-
-        // network protocol conversion
-        private Dictionary<String, Byte> compatibleUserMessages; // CS 1.6 user messages. when converting 1.3-1.5 demos to 1.6, user messages must use id's that are compatible with the mod dll's
-
-        // FIXME: initialise to one above highest ID in compatibleUserMessages (then when assigning, check for overflow and if that happens, iterate through compatibleUserMessages for an available ID).
-        private Byte freeUserMessage = 150; // the first freely available user message (so non-CS 1.6 user messages don't end up clashing with CS 1.6 id's)
-
-        private UInt32 createSmokeEventIndex; // for CS 1.0-1.1 demos - different smoke event iparam1
+        private Byte firstFreeUserMessage;
 
         public HalfLifeDemoConverter(HalfLifeDemo demo)
         {
             this.demo = demo;
 
-            // TODO: read this in from an XML file, and store it in a static class
-            compatibleUserMessages = new Dictionary<String, Byte>();
-            compatibleUserMessages.Add("HudTextArgs", 145);
-            compatibleUserMessages.Add("ShowTimer", 144);
-            compatibleUserMessages.Add("Fog", 143);
-            compatibleUserMessages.Add("Brass", 142);
-            compatibleUserMessages.Add("BotProgress", 141);
-            compatibleUserMessages.Add("Location", 140);
-            compatibleUserMessages.Add("ItemStatus", 139);
-            compatibleUserMessages.Add("BarTime2", 138);
-            compatibleUserMessages.Add("SpecHealth2", 137);
-            compatibleUserMessages.Add("BuyClose", 136);
-            compatibleUserMessages.Add("BotVoice", 135);
-            compatibleUserMessages.Add("Scenario", 134);
-            compatibleUserMessages.Add("TaskTime", 133);
-            compatibleUserMessages.Add("ShadowIdx", 132);
-            compatibleUserMessages.Add("CZCareerHUD", 131);
-            compatibleUserMessages.Add("CZCareer", 130);
-            compatibleUserMessages.Add("ReceiveW", 129);
-            compatibleUserMessages.Add("ADStop", 128);
-            compatibleUserMessages.Add("ForceCam", 127);
-            compatibleUserMessages.Add("SpecHealth", 126);
-            compatibleUserMessages.Add("HLTV", 125);
-            compatibleUserMessages.Add("HostageK", 124);
-            compatibleUserMessages.Add("HostagePos", 123);
-            compatibleUserMessages.Add("ClCorpse", 122);
-            compatibleUserMessages.Add("BombPickup", 121);
-            compatibleUserMessages.Add("BombDrop", 120);
-            compatibleUserMessages.Add("AllowSpec", 119);
-            compatibleUserMessages.Add("TutorClose", 118);
-            compatibleUserMessages.Add("TutorState", 117);
-            compatibleUserMessages.Add("TutorLine", 116);
-            compatibleUserMessages.Add("TutorText", 115);
-            compatibleUserMessages.Add("VGUIMenu", 114);
-            compatibleUserMessages.Add("Spectator", 113);
-            compatibleUserMessages.Add("Radar", 112);
-            compatibleUserMessages.Add("NVGToggle", 111);
-            compatibleUserMessages.Add("Crosshair", 110);
-            compatibleUserMessages.Add("ReloadSound", 109);
-            compatibleUserMessages.Add("BarTime", 108);
-            compatibleUserMessages.Add("StatusIcon", 107);
-            compatibleUserMessages.Add("StatusText", 106);
-            compatibleUserMessages.Add("StatusValue", 105);
-            compatibleUserMessages.Add("BlinkAcct", 104);
-            compatibleUserMessages.Add("ArmorType", 103);
-            compatibleUserMessages.Add("Money", 102);
-            compatibleUserMessages.Add("RoundTime", 101);
-            compatibleUserMessages.Add("SendAudio", 100);
-            compatibleUserMessages.Add("AmmoX", 99);
-            compatibleUserMessages.Add("ScreenFade", 98);
-            compatibleUserMessages.Add("ScreenShake", 97);
-            compatibleUserMessages.Add("ShowMenu", 96);
-            compatibleUserMessages.Add("SetFOV", 95);
-            compatibleUserMessages.Add("HideWeapon", 94);
-            compatibleUserMessages.Add("ItemPickup", 93);
-            compatibleUserMessages.Add("WeapPickup", 92);
-            compatibleUserMessages.Add("AmmoPickup", 91);
-            compatibleUserMessages.Add("ServerName", 90);
-            compatibleUserMessages.Add("MOTD", 89);
-            compatibleUserMessages.Add("GameMode", 88);
-            compatibleUserMessages.Add("TeamScore", 87);
-            compatibleUserMessages.Add("TeamInfo", 86);
-            compatibleUserMessages.Add("ScoreInfo", 85);
-            compatibleUserMessages.Add("ScoreAttrib", 84);
-            compatibleUserMessages.Add("DeathMsg", 83);
-            compatibleUserMessages.Add("GameTitle", 82);
-            compatibleUserMessages.Add("ViewMode", 81);
-            compatibleUserMessages.Add("InitHUD", 80);
-            compatibleUserMessages.Add("ResetHUD", 79);
-            compatibleUserMessages.Add("WeaponList", 78);
-            compatibleUserMessages.Add("TextMsg", 77);
-            compatibleUserMessages.Add("SayText", 76);
-            compatibleUserMessages.Add("HudText", 75);
-            compatibleUserMessages.Add("HudTextPro", 74);
-            compatibleUserMessages.Add("Train", 73);
-            compatibleUserMessages.Add("Battery", 72);
-            compatibleUserMessages.Add("Damage", 71);
-            compatibleUserMessages.Add("Health", 70);
-            compatibleUserMessages.Add("FlashBat", 69);
-            compatibleUserMessages.Add("Flashlight", 68);
-            compatibleUserMessages.Add("Geiger", 67);
-            compatibleUserMessages.Add("CurWeapon", 66);
-            compatibleUserMessages.Add("ReqState", 65);
-            compatibleUserMessages.Add("VoiceMask", 64);
+            // Find the first free user message.
+            if (demo.Game != null && demo.Game.UserMessages != null)
+            {
+                Byte highestUserMessage = 0;
+
+                foreach (KeyValuePair<String, Byte> userMessage in demo.Game.UserMessages)
+                {
+                    if (userMessage.Value > highestUserMessage)
+                    {
+                        highestUserMessage = userMessage.Value;
+                    }
+                }
+
+                if (highestUserMessage == 255)
+                {
+                    throw new NoFreeUserMessageException();
+                }
+
+                firstFreeUserMessage = (Byte)(highestUserMessage + 1);
+            }
         }
 
         #region Interface
@@ -173,7 +109,7 @@ namespace compLexity_Demo_Player
 
         public Boolean ShouldParseGameDataMessages(Byte frameType)
         {
-            return (demo.ConvertNetworkProtocol() || frameType == 0 || (demo.GameFolderName == "cstrike" && demo.Perspective == Demo.PerspectiveEnum.Pov && Config.Settings.PlaybackRemoveFtb));
+            return (demo.ConvertNetworkProtocol() || frameType == 0 || (GameManager.CanRemoveFadeToBlack(demo) && demo.Perspective == Demo.Perspectives.Pov && Config.Settings.PlaybackRemoveFtb));
         }
 
         public Boolean ShouldWriteClientCommand(String command)
@@ -199,16 +135,21 @@ namespace compLexity_Demo_Player
                 return messageId;
             }
 
+            if (demo.Game == null || demo.Game.UserMessages == null)
+            {
+                return messageId;
+            }
+
             String name = parser.FindMessageIdString(messageId);
 
-            if (!compatibleUserMessages.ContainsKey(name))
+            if (!demo.Game.UserMessages.ContainsKey(name))
             {
                 // shouldn't happen, must be a bad message
                 // let the parser handle it
                 return messageId;
             }
 
-            return compatibleUserMessages[name];
+            return demo.Game.UserMessages[name];
         }
 
         public void WriteDemoInfo(Byte[] demoInfo, MemoryStream ms)
@@ -248,36 +189,10 @@ namespace compLexity_Demo_Player
             parser.BitBuffer.InsertBytes(data);
         }
 
-        private void ConvertSequenceNumber(ref UInt32? sequence)
-        {
-            if (demo.GameVersion == HalfLifeDemo.GameVersionEnum.CounterStrike10)
-            {
-                if (sequence <= 6) // 0 to 6 map to 1 to 7
-                {
-                    sequence++; // no dummy in CS 1.0
-                }
-                else if (sequence >= 7 && sequence <= 79) // 7+ maps to 10+ until 79
-                {
-                    sequence += 3; // no dummy (as above) and no swim or treadwater sequences
-                }
-                else
-                {
-                    sequence += 19; // no shield sequences
-                }
-            }
-            else // 1.1-1.5
-            {
-                if (sequence >= 83)
-                {
-                    sequence += 16;
-                }
-            }
-        }
-
         #region Message Handlers
         private void MessageEvent()
         {
-            if (!demo.ConvertNetworkProtocol() || demo.NetworkProtocol > 43)
+            if (!demo.ConvertNetworkProtocol())
             {
                 parser.MessageEvent();
                 return;
@@ -286,7 +201,10 @@ namespace compLexity_Demo_Player
             Int32 messageStartOffset = parser.BitBuffer.CurrentByte;
 
             // read message
-            parser.BitBuffer.Endian = BitBuffer.EndianType.Big;
+            if (demo.NetworkProtocol <= 43)
+            {
+                parser.BitBuffer.Endian = BitBuffer.EndianType.Big;
+            }
 
             BitWriter bitWriter = new BitWriter();
             HalfLifeDeltaStructure eventStructure = parser.GetDeltaStructure("event_t");
@@ -315,14 +233,9 @@ namespace compLexity_Demo_Player
                         Byte[] bitmaskBytes;
                         eventStructure.ReadDelta(parser.BitBuffer, delta, out bitmaskBytes);
 
-                        // smoke fix for CS 1.0-1.1 demos
-                        if (eventIndex == createSmokeEventIndex)
+                        if (demo.Game != null)
                         {
-                            if (delta.FindEntryValue("iparam1") != null)
-                            {
-                                Random r = new Random();
-                                delta.SetEntryValue("iparam1", r.Next(128, 300)); // FIXME: random guess
-                            }
+                            demo.Game.ConvertEventCallback(demo, delta, eventIndex);
                         }
 
                         eventStructure.WriteDelta(bitWriter, delta, bitmaskBytes);
@@ -526,7 +439,7 @@ namespace compLexity_Demo_Player
 
         private void MessageClientData()
         {
-            if (demo.Perspective == Demo.PerspectiveEnum.Hltv)
+            if (demo.Perspective == Demo.Perspectives.Hltv)
             {
                 return;
             }
@@ -625,7 +538,7 @@ namespace compLexity_Demo_Player
 
         private void MessageSpawnBaseline()
         {
-            if (!demo.ConvertNetworkProtocol() || demo.NetworkProtocol > 43)
+            if (!demo.ConvertNetworkProtocol())
             {
                 parser.MessageSpawnBaseline();
                 return;
@@ -635,7 +548,10 @@ namespace compLexity_Demo_Player
             BitWriter bitWriter = new BitWriter();
 
             // read message into new message
-            parser.BitBuffer.Endian = BitBuffer.EndianType.Big;
+            if (demo.NetworkProtocol <= 43)
+            {
+                parser.BitBuffer.Endian = BitBuffer.EndianType.Big;
+            }
 
             while (true)
             {
@@ -673,26 +589,9 @@ namespace compLexity_Demo_Player
                 Byte[] bitmaskBytes;
                 deltaStructure.ReadDelta(parser.BitBuffer, delta, out bitmaskBytes);
 
-                if (demo.GameVersion >= HalfLifeDemo.GameVersionEnum.CounterStrike10 && demo.GameVersion <= HalfLifeDemo.GameVersionEnum.CounterStrike15)
+                if (demo.Game != null)
                 {
-                    if (entityTypeString == "entity_state_player_t")
-                    {
-                        UInt32? sequence = (UInt32?)delta.FindEntryValue("sequence");
-
-                        if (sequence != null)
-                        {
-                            ConvertSequenceNumber(ref sequence);
-                            delta.SetEntryValue("sequence", sequence);
-                        }
-
-                        UInt32? gaitSequence = (UInt32?)delta.FindEntryValue("gaitsequence");
-
-                        if (gaitSequence != null)
-                        {
-                            ConvertSequenceNumber(ref gaitSequence);
-                            delta.SetEntryValue("gaitsequence", gaitSequence);
-                        }
-                    }
+                    demo.Game.ConvertPacketEntititiesCallback(delta, entityTypeString, demo.GameVersion);
                 }
 
                 deltaStructure.WriteDelta(bitWriter, delta, bitmaskBytes);
@@ -743,11 +642,16 @@ namespace compLexity_Demo_Player
                 return;
             }
 
+            if (demo.Game == null || demo.Game.UserMessages == null)
+            {
+                return;
+            }
+
             Byte newId;
 
-            if (compatibleUserMessages.ContainsKey(name))
+            if (demo.Game.UserMessages.ContainsKey(name))
             {
-                newId = compatibleUserMessages[name];
+                newId = demo.Game.UserMessages[name];
             }
             else
             {
@@ -766,10 +670,16 @@ namespace compLexity_Demo_Player
                 // user message doesn't exist in CS 1.6. shouldn't happen, but meh...
                 // TODO: use an id unused by compatibleUserMessageTable
                 //newId = (Byte?)id;
-                newId = freeUserMessage;
-                freeUserMessage++;
+                newId = firstFreeUserMessage;
 
-                compatibleUserMessages.Add(name, newId);
+                if (firstFreeUserMessage == 255)
+                {
+                    throw new NoFreeUserMessageException();
+                }
+
+                firstFreeUserMessage++;
+
+                demo.Game.UserMessages.Add(name, newId);
             }
 
             BitWriter bitWriter = new BitWriter();
@@ -783,7 +693,7 @@ namespace compLexity_Demo_Player
 
         private void MessagePacketEntities()
         {
-            if (!demo.ConvertNetworkProtocol() || demo.NetworkProtocol > 43)
+            if (!demo.ConvertNetworkProtocol())
             {
                 parser.MessagePacketEntities();
                 return;
@@ -795,7 +705,10 @@ namespace compLexity_Demo_Player
             // read message into new message
             bitWriter.WriteUInt16(parser.BitBuffer.ReadUInt16()); // nEntities/maxEntities
 
-            parser.BitBuffer.Endian = BitBuffer.EndianType.Big;
+            if (demo.NetworkProtocol <= 43)
+            {
+                parser.BitBuffer.Endian = BitBuffer.EndianType.Big;
+            }
 
             UInt32 entityNumber = 0;
 
@@ -864,26 +777,9 @@ namespace compLexity_Demo_Player
                 Byte[] bitmaskBytes;
                 entityStateStructure.ReadDelta(parser.BitBuffer, delta, out bitmaskBytes);
 
-                if (demo.GameVersion >= HalfLifeDemo.GameVersionEnum.CounterStrike10 && demo.GameVersion <= HalfLifeDemo.GameVersionEnum.CounterStrike15)
+                if (demo.Game != null)
                 {
-                    if (entityType == "entity_state_player_t")
-                    {
-                        UInt32? sequence = (UInt32?)delta.FindEntryValue("sequence");
-
-                        if (sequence != null)
-                        {
-                            ConvertSequenceNumber(ref sequence);
-                            delta.SetEntryValue("sequence", sequence);
-                        }
-
-                        UInt32? gaitSequence = (UInt32?)delta.FindEntryValue("gaitsequence");
-
-                        if (gaitSequence != null)
-                        {
-                            ConvertSequenceNumber(ref gaitSequence);
-                            delta.SetEntryValue("gaitsequence", gaitSequence);
-                        }
-                    }
+                    demo.Game.ConvertPacketEntititiesCallback(delta, entityType, demo.GameVersion);
                 }
 
                 entityStateStructure.WriteDelta(bitWriter, delta, bitmaskBytes);
@@ -979,35 +875,9 @@ namespace compLexity_Demo_Player
                     HalfLifeDelta deltaEntity = deltaDecoder.CreateDelta();
                     deltaDecoder.ReadDelta(parser.BitBuffer, deltaEntity, out bitmaskBytes);
 
-                    if (demo.GameVersion >= HalfLifeDemo.GameVersionEnum.CounterStrike10 && demo.GameVersion <= HalfLifeDemo.GameVersionEnum.CounterStrike15)
+                    if (demo.Game != null)
                     {
-                        if (entityType == "entity_state_player_t")
-                        {
-                            UInt32? sequence = (UInt32?)deltaEntity.FindEntryValue("sequence");
-
-                            if (sequence != null)
-                            {
-                                ConvertSequenceNumber(ref sequence);
-                                deltaEntity.SetEntryValue("sequence", sequence);
-                            }
-
-                            UInt32? gaitSequence = (UInt32?)deltaEntity.FindEntryValue("gaitsequence");
-
-                            if (gaitSequence != null)
-                            {
-                                ConvertSequenceNumber(ref gaitSequence);
-                                deltaEntity.SetEntryValue("gaitsequence", gaitSequence);
-                            }
-                        }
-
-                        // all entities: zero out animtime
-                        if (demo.GameVersion == HalfLifeDemo.GameVersionEnum.CounterStrike10 || demo.GameVersion == HalfLifeDemo.GameVersionEnum.CounterStrike11)
-                        {
-                            if (deltaEntity.FindEntryValue("animtime") != null)
-                            {
-                                deltaEntity.SetEntryValue("animtime", 0.0f);
-                            }
-                        }
+                        demo.Game.ConvertPacketEntititiesCallback(deltaEntity, entityType, demo.GameVersion);
                     }
 
                     deltaDecoder.WriteDelta(bitWriter, deltaEntity, bitmaskBytes);
@@ -1023,40 +893,6 @@ namespace compLexity_Demo_Player
 
         private void MessageResourceList()
         {
-            Boolean shadowSpriteFound = false;
-            const String shadowSpriteName = "sprites/shadow_circle.spr";
-
-            // black list
-            // TODO: same deal as compatiable user messages - read from xml file and put in static class
-
-            // for .net framework 3.0 backward compatibility: no HashSet or Set collections exist
-            //HashSet<String> resourceBlackList = new HashSet<String>();
-            System.Collections.Hashtable resourceBlackList = new System.Collections.Hashtable();
-            resourceBlackList.Add("sprites/top.spr", 1);
-            resourceBlackList.Add("sprites/top2.spr", 1);
-            resourceBlackList.Add("sprites/top3.spr", 1);
-            resourceBlackList.Add("sprites/top_left.spr", 1);
-            resourceBlackList.Add("sprites/top_left2.spr", 1);
-            resourceBlackList.Add("sprites/top_left3.spr", 1);
-            resourceBlackList.Add("sprites/top_right.spr", 1);
-            resourceBlackList.Add("sprites/top_right2.spr", 1);
-            resourceBlackList.Add("sprites/top_right3.spr", 1);
-            resourceBlackList.Add("sprites/bottom.spr", 1);
-            resourceBlackList.Add("sprites/bottom2.spr", 1);
-            resourceBlackList.Add("sprites/bottom3.spr", 1);
-            resourceBlackList.Add("sprites/bottom_left.spr", 1);
-            resourceBlackList.Add("sprites/bottom_left2.spr", 1);
-            resourceBlackList.Add("sprites/bottom_left3.spr", 1);
-            resourceBlackList.Add("sprites/bottom_right.spr", 1);
-            resourceBlackList.Add("sprites/bottom_right2.spr", 1);
-            resourceBlackList.Add("sprites/bottom_right3.spr", 1);
-            resourceBlackList.Add("sprites/left3.spr", 1);
-            resourceBlackList.Add("sprites/right.spr", 1);
-            resourceBlackList.Add("sprites/right2.spr", 1);
-            resourceBlackList.Add("sprites/right3.spr", 1);
-            resourceBlackList.Add("sprites/horizontal.spr", 1);
-            resourceBlackList.Add("sprites/vertical.spr", 1);
-
             Int32 startByteIndex = parser.BitBuffer.CurrentByte;
 
             // read message
@@ -1090,24 +926,9 @@ namespace compLexity_Demo_Player
                     r.reservedData = parser.BitBuffer.ReadBytes(32);
                 }
 
-                if (r.name.EndsWith("_r.mdl"))
-                {
-                    r.name = r.name.Replace("_r.mdl", ".mdl"); // seems to work fine...
-                }
-
-                if (resourceBlackList.Contains(r.name) == false)
+                if (demo.Game == null || demo.Game.ConvertResourceListCallback(demo, r.type, r.index, ref r.name))
                 {
                     resourceList.Add(r);
-                }
-
-                if (r.type == 5 && r.name == "events/createsmoke.sc")
-                {
-                    createSmokeEventIndex = r.index;
-                }
-
-                if (r.type == 2 && r.name == shadowSpriteName)
-                {
-                    shadowSpriteFound = true;
                 }
             }
 
@@ -1125,12 +946,8 @@ namespace compLexity_Demo_Player
             parser.BitBuffer.SkipRemainingBits();
             parser.BitBuffer.Endian = BitBuffer.EndianType.Little;
 
-            // TODO: wrong map fix
-            // check for bsp extension (check r.type first? cuts down on string compares)
-            // need to remove brush entities too... (check r.type as well?) do brush entities always precede bsp file?
-
             // stop now if we're not converting network protocols
-            if (!demo.ConvertNetworkProtocol() || demo.IsBetaSteam())
+            if (!demo.ConvertNetworkProtocol())
             {
                 return;
             }
@@ -1138,7 +955,7 @@ namespace compLexity_Demo_Player
             // create new message
             BitWriter bitWriter = new BitWriter();
 
-            bitWriter.WriteUnsignedBits((UInt32)(resourceList.Count + (shadowSpriteFound ? 0 : 1)), 12);
+            bitWriter.WriteUnsignedBits((UInt32)resourceList.Count, 12);
 
             foreach (Resource r in resourceList)
             {
@@ -1159,17 +976,6 @@ namespace compLexity_Demo_Player
                 {
                     bitWriter.WriteBytes(r.reservedData);
                 }
-            }
-
-            // insert shadow sprite if it doesn't exist
-            if (!shadowSpriteFound)
-            {
-                bitWriter.WriteUnsignedBits(2, 4); // type
-                bitWriter.WriteString(shadowSpriteName); // name
-                bitWriter.WriteUnsignedBits(0, 12); // index
-                bitWriter.WriteBits(4926, 24); // file size
-                bitWriter.WriteUnsignedBits(1, 3); // flags
-                bitWriter.WriteBoolean(false); // has reserved data
             }
 
             bitWriter.WriteBoolean(false); // consistency list
@@ -1281,6 +1087,5 @@ namespace compLexity_Demo_Player
             }
         }
         #endregion
-
     }
 }

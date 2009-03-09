@@ -38,7 +38,7 @@ namespace compLexity_Demo_Player
             {
                 switch (demo.Engine)
                 {
-                    case Demo.EngineEnum.HalfLife:
+                    case Demo.Engines.HalfLife:
                         if (((HalfLifeDemo)demo).ConvertNetworkProtocol())
                         {
                             launcher = new HalfLifeSteamLauncher();
@@ -49,11 +49,11 @@ namespace compLexity_Demo_Player
                         }
                         break;
 
-                    case Demo.EngineEnum.HalfLifeSteam:
+                    case Demo.Engines.HalfLifeSteam:
                         launcher = new HalfLifeSteamLauncher();
                         break;
 
-                    case Demo.EngineEnum.Source:
+                    case Demo.Engines.Source:
                         launcher = new SourceLauncher();
                         break;
                 }

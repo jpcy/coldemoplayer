@@ -12,12 +12,12 @@ namespace compLexity_Demo_Player
 
             switch (demo.Engine)
             {
-                case Demo.EngineEnum.HalfLife:
-                case Demo.EngineEnum.HalfLifeSteam:
+                case Demo.Engines.HalfLife:
+                case Demo.Engines.HalfLifeSteam:
                     window = new HalfLifeAnalysisWindow(demo);
                     break;
 
-                case Demo.EngineEnum.Source:
+                case Demo.Engines.Source:
                     window = new SourceAnalysisWindow(demo);
                     break;
             }
