@@ -19,109 +19,176 @@ namespace compLexity_Demo_Player
             Viewdemo
         }
 
-        [XmlIgnore]
-        public readonly String ProgramName = "compLexity Demo Player";
-        [XmlIgnore]
-        public readonly Int32 ProgramVersionMajor = 1;
-        [XmlIgnore]
-        public readonly Int32 ProgramVersionMinor = 1;
-        [XmlIgnore]
-        public readonly Int32 ProgramVersionUpdate = 5;
-        [XmlIgnore]
-        public String ProgramVersion
+        // updating, on-demand map downloading
+        public String UpdateUrl { get; set; }
+        public String MapsUrl { get; set; }
+        public Boolean AutoUpdate { get; set; }
+
+        // last path/file
+        public String LastPath { get; set; }
+        public String LastFileName { get; set; }
+
+        // window state
+        public System.Windows.WindowState WindowState { get; set; }
+        public Double WindowWidth { get; set; }
+        public Double WindowHeight { get; set; }
+        public Double ExplorerPaneWidth { get; set; }
+        public Double DemoListPaneHeight { get; set; }
+
+        // steam
+        public String SteamExeFullPath { get; set; }
+        public String SteamAccountFolder { get; set; }
+        public String SteamAdditionalLaunchParameters { get; set; }
+
+        // half-life
+        public String HlExeFullPath { get; set; }
+        public String HlAdditionalLaunchParameters { get; set; }
+
+        // hlae
+        public String HlaeExeFullPath { get; set; }
+
+        // file/protocol association
+        public Boolean AssociateWithDemFiles { get; set; }
+        public Boolean AssociateWithHlswProtocol { get; set; }
+
+        // playback
+        public Playback PlaybackType { get; set; }
+        public Boolean PlaybackRemoveShowscores { get; set; }
+        public Boolean PlaybackRemoveFtb { get; set; }
+        public Boolean PlaybackStartListenServer { get; set; }
+        public Boolean PlaybackConvertNetworkProtocol { get; set; }
+        public Boolean PlaybackCloseWhenFinished { get; set; }
+        public Boolean PlaybackUseHlae { get; set; }
+
+        // analysis
+        public System.Windows.WindowState AnalysisWindowState { get; set; }
+
+        // logging
+        public Boolean LogMessageParsingErrors { get; set; }
+
+        // tray
+        public Boolean MinimizeToTray { get; set; }
+
+        // game process priority
+        public ProcessPriorityClass GameProcessPriority { get; set; }
+
+        // server browser
+        public System.Windows.WindowState ServerBrowserWindowState { get; set; }
+        public Boolean ServerBrowserConvertTimeZone { get; set; }
+        public Boolean ServerBrowserStartListenServer { get; set; }
+        public Boolean ServerBrowserCloseWhenFinished { get; set; }
+        public String ServerBrowserLastGotfragGame { get; set; }
+        public String[] ServerBrowserFavourites { get; set; }
+
+        public ProgramSettings()
+        {
+            UpdateUrl = "http://coldemoplayer.gittodachoppa.com/update115/";
+            MapsUrl = "http://coldemoplayer.gittodachoppa.com/maps/";
+            AutoUpdate = true;
+            WindowState = System.Windows.WindowState.Normal;
+            WindowWidth = 800.0;
+            WindowHeight = 600.0;
+            ExplorerPaneWidth = 320.0;
+            DemoListPaneHeight = 150.0;
+            AssociateWithDemFiles = true;
+            AssociateWithHlswProtocol = false;
+            PlaybackType = Playback.Playdemo;
+            PlaybackRemoveShowscores = true;
+            PlaybackRemoveFtb = true;
+            PlaybackStartListenServer = true;
+            PlaybackConvertNetworkProtocol = true;
+            PlaybackCloseWhenFinished = false;
+            PlaybackUseHlae = false;
+            AnalysisWindowState = System.Windows.WindowState.Normal;
+            LogMessageParsingErrors = false;
+            MinimizeToTray = false;
+            GameProcessPriority = ProcessPriorityClass.Normal;
+            ServerBrowserWindowState = System.Windows.WindowState.Normal;
+            ServerBrowserConvertTimeZone = true;
+            ServerBrowserStartListenServer = false;
+            ServerBrowserCloseWhenFinished = false;
+            ServerBrowserLastGotfragGame = "Counter-Strike 1.6";
+        }
+    }
+
+    public static class Config
+    {
+        public static String ProgramName
+        {
+            get
+            {
+                return "compLexity Demo Player";
+            }
+        }
+
+        public static Int32 ProgramVersionMajor
+        {
+            get
+            {
+                return 1;
+            }
+        }
+
+        public static Int32 ProgramVersionMinor
+        {
+            get
+            {
+                return 1;
+            }
+        }
+
+        public static Int32 ProgramVersionUpdate
+        {
+            get
+            {
+                return 5;
+            }
+        }
+
+        public static String ProgramVersion
         {
             get
             {
                 return String.Format("{0}.{1}.{2}", ProgramVersionMajor, ProgramVersionMinor, ProgramVersionUpdate);
             }
         }
-        [XmlIgnore]
-        public readonly String ComplexityUrl = "http://www.complexitygaming.com/";
 
-        [XmlIgnore]
-        public readonly String LaunchConfigFileName = "coldemoplayer.cfg";
-        [XmlIgnore]
-        public readonly String LaunchDemoFileName = "coldemoplayer.dem";
+        public static String ComplexityUrl
+        {
+            get
+            {
+                return "http://www.complexitygaming.com/";
+            }
+        }
 
-        [XmlIgnore]
-        public String ProgramExeFullPath = "";
-        [XmlIgnore]
-        public String ProgramPath = "";
-        [XmlIgnore]
-        public String ProgramDataPath = "";
+        public static String LaunchConfigFileName
+        {
+            get
+            {
+                return "coldemoplayer.cfg";
+            }
+        }
 
-        // updating, on-demand map downloading
-        public String UpdateUrl = "http://coldemoplayer.gittodachoppa.com/update115/";
-        public String MapsUrl = "http://coldemoplayer.gittodachoppa.com/maps/";
-        public Boolean AutoUpdate = true;
+        public static String LaunchDemoFileName
+        {
+            get
+            {
+                return "coldemoplayer.dem";
+            }
+        }
 
-        // last path/file
-        public String LastPath = "";
-        public String LastFileName = "";
+        public static String ProgramExeFullPath { get; private set; }
+        public static String ProgramPath { get; private set; }
+        public static String ProgramDataPath { get; private set; }
 
-        // window state
-        public System.Windows.WindowState WindowState = System.Windows.WindowState.Normal;
-        public Double WindowWidth = 800.0;
-        public Double WindowHeight = 600.0;
-        public Double ExplorerPaneWidth = 320.0;
-        public Double DemoListPaneHeight = 150.0;
+        public static ProgramSettings Settings { get; private set; }
 
-        // steam
-        public String SteamExeFullPath = "";
-        public String SteamAccountFolder = "";
-        public String SteamAdditionalLaunchParameters = "";
-
-        // half-life
-        public String HlExeFullPath = "";
-        public String HlAdditionalLaunchParameters = "";
-
-        // hlae
-        public String HlaeExeFullPath = "";
-
-        // file/protocol association
-        public Boolean AssociateWithDemFiles = true;
-        public Boolean AssociateWithHlswProtocol = false;
-
-        // playback
-        public Playback PlaybackType = Playback.Playdemo;
-        public Boolean PlaybackRemoveShowscores = true;
-        public Boolean PlaybackRemoveFtb = true;
-        public Boolean PlaybackStartListenServer = true;
-        public Boolean PlaybackConvertNetworkProtocol = true;
-        public Boolean PlaybackCloseWhenFinished = false;
-        public Boolean PlaybackUseHlae = false;
-
-        // analysis
-        public System.Windows.WindowState AnalysisWindowState = System.Windows.WindowState.Normal;
-
-        // logging
-        public Boolean LogMessageParsingErrors = false;
-
-        // tray
-        public Boolean MinimizeToTray = false;
-
-        // game process priority
-        public ProcessPriorityClass GameProcessPriority = ProcessPriorityClass.Normal;
-
-        // server browser
-        public System.Windows.WindowState ServerBrowserWindowState = System.Windows.WindowState.Normal;
-        public Boolean ServerBrowserConvertTimeZone = true;
-        public Boolean ServerBrowserStartListenServer = false;
-        public Boolean ServerBrowserCloseWhenFinished = false;
-        public String ServerBrowserLastGotfragGame = "Counter-Strike 1.6";
-        public String[] ServerBrowserFavourites = null;
-    }
-
-    public static class Config
-    {
         [DllImport("shell32.dll")]
         private static extern void SHChangeNotify(int eventId, uint flags, IntPtr item1, IntPtr item2);
-
         private const String fileName = "config.xml";
-        public static ProgramSettings Settings = null;
 
         /// <summary>
-        /// 
+        /// Reads the program configuration from the configuration file, if it exists. Otherwise, default values and information from the registry are used.
         /// </summary>
         /// <returns>True if the config file exists, False if it doesn't.</returns>
         public static Boolean Read()
@@ -130,7 +197,7 @@ namespace compLexity_Demo_Player
             Settings = new ProgramSettings();
             
             // XmlIgnore doesn't seem to apply to deserialization...
-            String programDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\" + Settings.ProgramName;
+            String programDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\" + ProgramName;
             String configFullPath = programDataPath + "\\" + fileName;
 
             if (File.Exists(configFullPath))
@@ -144,33 +211,36 @@ namespace compLexity_Demo_Player
                 ReadFromRegistry();
             }
 
-            Settings.ProgramDataPath = programDataPath;
-            Settings.ProgramExeFullPath = Common.SanitisePath(Environment.GetCommandLineArgs()[0]);
+            ProgramDataPath = programDataPath;
+            ProgramExeFullPath = Common.SanitisePath(Environment.GetCommandLineArgs()[0]);
 #if DEBUG
             // BLEH: this is what happens when you can't use macros in setting the debug working directory.
-            Settings.ProgramPath = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
+            ProgramPath = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
 
             for (Int32 i = 0; i < 3; i++)
             {
-                Int32 lastSeparatorIndex = Settings.ProgramPath.LastIndexOf("\\");
-                Settings.ProgramPath = Settings.ProgramPath.Remove(lastSeparatorIndex, Settings.ProgramPath.Length - lastSeparatorIndex);
+                Int32 lastSeparatorIndex = ProgramPath.LastIndexOf("\\");
+                ProgramPath = ProgramPath.Remove(lastSeparatorIndex, ProgramPath.Length - lastSeparatorIndex);
             }
 
-            Settings.ProgramPath += "\\bin";
+            ProgramPath += "\\bin";
 #else
-            Settings.ProgramPath = Path.GetDirectoryName(Settings.ProgramExeFullPath);
+            ProgramPath = Path.GetDirectoryName(ProgramExeFullPath);
 #endif
 
             return result;
         }
 
+        /// <summary>
+        /// Writes the current program configuration to disk.
+        /// </summary>
         public static void Write()
         {
-            Common.XmlFileSerialize(Settings.ProgramDataPath + "\\" + fileName, Settings, typeof(ProgramSettings));
+            Common.XmlFileSerialize(ProgramDataPath + "\\" + fileName, Settings, typeof(ProgramSettings));
         }
 
         /// <summary>
-        /// Called by Read if config file doesn't exist. Tries to fill in as much information as possible such as Steam and Half-Life's install paths, by reading from the registry.
+        /// Reads as much useful information as possible from the registry, such as Steam and Half-Life's install paths.
         /// </summary>
         private static void ReadFromRegistry()
         {
@@ -260,11 +330,11 @@ namespace compLexity_Demo_Player
                 // set icon
                 using (RegistryKey subkey = key.CreateSubKey("DefaultIcon"))
                 {
-                    if ((String)subkey.GetValue("") != Config.Settings.ProgramExeFullPath)
+                    if ((String)subkey.GetValue("") != Config.ProgramExeFullPath)
                     {
                         refreshIcon = true;
                     }
-                    subkey.SetValue("", Config.Settings.ProgramExeFullPath);
+                    subkey.SetValue("", Config.ProgramExeFullPath);
                 }
 
                 // set open text
@@ -276,7 +346,7 @@ namespace compLexity_Demo_Player
                 // set open command
                 using (RegistryKey subkey = key.CreateSubKey("Shell\\open\\command"))
                 {
-                    String openCommand = "\"" + Config.Settings.ProgramExeFullPath + "\" \"%1\"";
+                    String openCommand = "\"" + Config.ProgramExeFullPath + "\" \"%1\"";
                     subkey.SetValue("", openCommand);
                 }
             }
@@ -304,12 +374,12 @@ namespace compLexity_Demo_Player
 
                 using (RegistryKey subkey = key.CreateSubKey("DefaultIcon"))
                 {
-                    subkey.SetValue("", Settings.ProgramExeFullPath);
+                    subkey.SetValue("", ProgramExeFullPath);
                 }
 
                 using (RegistryKey subkey = key.CreateSubKey("Shell\\open\\command"))
                 {
-                    String s = Settings.ProgramExeFullPath + " \"%1\"";
+                    String s = ProgramExeFullPath + " \"%1\"";
                     subkey.SetValue("", s);
                 }
             }

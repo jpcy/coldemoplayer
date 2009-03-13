@@ -18,7 +18,7 @@ namespace compLexity_Demo_Player
         {
             InitializeComponent();
 
-            uiProgramDescriptionTextBlock.Text = Config.Settings.ProgramName + " - " + Config.Settings.ProgramVersion;
+            uiProgramDescriptionTextBlock.Text = Config.ProgramName + " - " + Config.ProgramVersion;
         }
 
         private void uiCloseButton_Click(object sender, RoutedEventArgs e)

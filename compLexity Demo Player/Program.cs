@@ -46,7 +46,7 @@ namespace compLexity_Demo_Player
             }
 
             // look for already running process with same name and path
-            Process process = Common.FindProcess(Path.GetFileNameWithoutExtension(Config.Settings.ProgramExeFullPath), Config.Settings.ProgramExeFullPath, Process.GetCurrentProcess().Id);
+            Process process = Common.FindProcess(Path.GetFileNameWithoutExtension(Config.ProgramExeFullPath), Config.ProgramExeFullPath, Process.GetCurrentProcess().Id);
 
             if (process != null)
             {
@@ -90,7 +90,7 @@ namespace compLexity_Demo_Player
             // read steam.xml
             try
             {
-                GameManager.Initialise(Config.Settings.ProgramPath + "\\config");
+                GameManager.Initialise(Config.ProgramPath + "\\config");
             }
             catch (Exception ex)
             {
@@ -101,7 +101,7 @@ namespace compLexity_Demo_Player
             // read fileoperationslog.xml
             try
             {
-                FileOperationList.Initialise(Config.Settings.ProgramDataPath, "fileoperationslog.xml");
+                FileOperationList.Initialise(Config.ProgramDataPath, "fileoperationslog.xml");
                 FileOperationList.Execute();
             }
             catch (Exception ex)

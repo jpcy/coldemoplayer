@@ -95,7 +95,7 @@ namespace compLexity_Demo_Player
             }
 
             // see if we have a map in the map pool matching the checksum
-            String mapSourcePath = Config.Settings.ProgramDataPath + "\\maps\\goldsrc\\" + String.Format("{0}\\{1}", Demo.GameFolderName, Demo.MapChecksum);
+            String mapSourcePath = Config.ProgramDataPath + "\\maps\\goldsrc\\" + String.Format("{0}\\{1}", Demo.GameFolderName, Demo.MapChecksum);
             String mapSourceFileName = mapSourcePath + "\\" + Demo.MapName + ".bsp";
 
             if (!File.Exists(mapSourceFileName))
@@ -279,7 +279,7 @@ namespace compLexity_Demo_Player
                 configFileFullPath += "\\cfg";
             }
 
-            configFileFullPath += "\\" + Config.Settings.LaunchConfigFileName;
+            configFileFullPath += "\\" + Config.LaunchConfigFileName;
             StreamWriter stream = File.CreateText(configFileFullPath);
 
             try
@@ -352,7 +352,7 @@ namespace compLexity_Demo_Player
                         playbackType = "playdemo";
                     }
 
-                    stream.WriteLine("{0} {1}", playbackType, Config.Settings.LaunchDemoFileName);
+                    stream.WriteLine("{0} {1}", playbackType, Config.LaunchDemoFileName);
 
                     if (Demo.Engine != Demo.Engines.Source)
                     {
@@ -378,7 +378,7 @@ namespace compLexity_Demo_Player
 
                     stream.WriteLine("echo \"\"");
                     stream.WriteLine("echo \"==========================\"");
-                    stream.WriteLine("echo \"{0}\"", Config.Settings.ProgramName);
+                    stream.WriteLine("echo \"{0}\"", Config.ProgramName);
                     stream.WriteLine("echo \"==========================\"");
                     stream.WriteLine("echo \"Aliases:\"");
                     stream.WriteLine("echo \"  +col_ff_slow (Fast Forward)\"");

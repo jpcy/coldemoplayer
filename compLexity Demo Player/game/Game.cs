@@ -44,7 +44,7 @@ namespace compLexity_Demo_Player
 
         protected void ReadConfig()
         {
-            String configFileName = Config.Settings.ProgramPath + "\\config\\" + (Engine == Engines.HalfLife ? "goldsrc" : "source") + "\\" + Folder + ".xml";
+            String configFileName = Config.ProgramPath + "\\config\\" + (Engine == Engines.HalfLife ? "goldsrc" : "source") + "\\" + Folder + ".xml";
 
             if (!File.Exists(configFileName))
             {

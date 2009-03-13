@@ -179,7 +179,7 @@ namespace compLexity_Demo_Player
             if (Config.Settings.LogMessageParsingErrors)
             {
                 Random r = new Random((Int32)DateTime.Now.Ticks);
-                FileStream fs = File.Create(Config.Settings.ProgramPath + String.Format("\\{0}_{1}.bin", demo.Name, r.Next()));
+                FileStream fs = File.Create(Config.ProgramPath + String.Format("\\{0}_{1}.bin", demo.Name, r.Next()));
                 BinaryWriter writer = new BinaryWriter(fs);
 
                 try

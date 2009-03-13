@@ -67,7 +67,7 @@ namespace compLexity_Demo_Player
             ItemsSource = demoCollection;
 
             iconList = new List<BitmapImage>();
-            unknownIcon = new BitmapImage(new Uri(Config.Settings.ProgramPath + "\\icons\\unknown.ico"));
+            unknownIcon = new BitmapImage(new Uri(Config.ProgramPath + "\\icons\\unknown.ico"));
 
             threadPool = new List<Thread>();
             threadPoolCountLock = new Object();
@@ -222,7 +222,7 @@ namespace compLexity_Demo_Player
             BitmapImage icon = null;
 
             // try icons\engine\game folder.ico
-            icon = LoadIcon(Config.Settings.ProgramPath + "\\icons\\" + engineTypeName + "\\" + demo.GameFolderName + ".ico");
+            icon = LoadIcon(Config.ProgramPath + "\\icons\\" + engineTypeName + "\\" + demo.GameFolderName + ".ico");
 
             if (icon != null)
             {

@@ -102,7 +102,7 @@ namespace compLexity_Demo_Player
                     uiCloseButton.Visibility = Visibility.Collapsed;
                     uiYesButton.Visibility = Visibility.Visible;
                     uiNoButton.Visibility = Visibility.Visible;
-                    uiStatusTextBlock.Text = String.Format("An update is available. Current version: {0}, available version: {1}. Do you want to download and install it now?", Config.Settings.ProgramVersion, updateCheck.AvailableVersion);
+                    uiStatusTextBlock.Text = String.Format("An update is available. Current version: {0}, available version: {1}. Do you want to download and install it now?", Config.ProgramVersion, updateCheck.AvailableVersion);
                     break;
 
                 case State.NotFound:

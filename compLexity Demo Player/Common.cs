@@ -18,66 +18,6 @@ namespace compLexity_Demo_Player
 {
     public static class Common
     {
-        public static void WebDownloadBinaryFile(String address, String outputFileName, Action<Int32> downloadProgress)
-        {
-            const Int32 bufferSize = 1024;
-
-            WebRequest request = WebRequest.Create(address);
-            using (WebResponse response = request.GetResponse())
-            using (Stream input = response.GetResponseStream())
-            using (FileStream output = File.Create(outputFileName))
-            using (BinaryReader reader = new BinaryReader(input))
-            using (BinaryWriter writer = new BinaryWriter(output))
-            {
-                Int64 fileLength = response.ContentLength;
-                Int32 bytesRead = 0;
-
-                while (true)
-                {
-                    Byte[] buffer = reader.ReadBytes(bufferSize);
-
-                    bytesRead += buffer.Length;
-
-                    if (downloadProgress != null)
-                    {
-                        downloadProgress((Int32)(bytesRead / (Single)fileLength * 100.0f));
-                    }
-
-                    if (buffer.Length > 0)
-                    {
-                        writer.Write(buffer);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-            }
-        }
-
-        public static String WebDownloadTextFile(String url)
-        {
-            String s = null;
-
-            try
-            {
-                using (WebClient client = new WebClient())
-                {
-                    s = client.DownloadString(url);
-                }
-            }
-            catch (System.Threading.ThreadAbortException)
-            {
-                throw;
-            }
-            catch (Exception)
-            {
-                // we want to return null if an error occurs
-            }
-
-            return s;
-        }
-
         public static void XmlFileSerialize(String fileName, Object o, Type type)
         {
             XmlFileSerialize(fileName, o, type, null);
@@ -259,110 +199,6 @@ namespace compLexity_Demo_Player
             return new String(chars.ToArray());
         }
 
-        public static Boolean ZipFileExists(String zipFileName, String fileFullPath)
-        {
-            using (FileStream fileStream = File.OpenRead(zipFileName))
-            {
-                using (ZipInputStream stream = new ZipInputStream(fileStream))
-                {
-                    String path = Path.GetDirectoryName(fileFullPath);
-                    String fileName = Path.GetFileName(fileFullPath);
-
-                    ZipEntry entry;
-
-                    while ((entry = stream.GetNextEntry()) != null)
-                    {
-                        if (Path.GetDirectoryName(entry.Name) == path && Path.GetFileName(entry.Name) == fileName)
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        public static Boolean ZipFolderExists(String zipFileName, String folderPath)
-        {
-            using (FileStream fileStream = File.OpenRead(zipFileName))
-            {
-                using (ZipInputStream stream = new ZipInputStream(fileStream))
-                {
-                    ZipEntry entry;
-
-                    while ((entry = stream.GetNextEntry()) != null)
-                    {
-                        if (Path.GetDirectoryName(entry.Name) == folderPath)
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Extracts all files within a ZIP file folder that match the extension wildcard. If a destination file already exists then the file isn't extracted.
-        /// </summary>
-        /// <param name="zipFileName"></param>
-        /// <param name="sourcePath"></param>
-        /// <param name="fileExtension"></param>
-        /// <param name="destinationPath"></param>
-        /// <example>ZipExtractFileType("movies.zip", "myfolder", "avi", "C:\\Movies");</example>
-        public static void ZipExtractFileType(String zipFileName, String sourcePath, String fileExtension, String destinationPath)
-        {
-            using (FileStream fileStream = File.OpenRead(zipFileName))
-            {
-                using (ZipInputStream stream = new ZipInputStream(fileStream))
-                {
-                    ZipEntry entry;
-
-                    while ((entry = stream.GetNextEntry()) != null)
-                    {
-                        if (Path.GetDirectoryName(entry.Name) == sourcePath && Path.GetExtension(entry.Name) == ("." + fileExtension))
-                        {
-                            String fileName = destinationPath + "\\" + Path.GetFileName(entry.Name);
-
-                            if (File.Exists(fileName))
-                            {
-                                // don't overwrite
-                                continue;
-                            }
-
-                            ZipStreamWriteFile(stream, fileName);
-                        }
-                    }
-                }
-            }
-        }
-
-        public static void ZipExtractFile(String zipFileName, String fileFullPath, String destinationPath)
-        {
-            String path = Path.GetDirectoryName(fileFullPath);
-            String fileName = Path.GetFileName(fileFullPath);
-
-            using (FileStream fileStream = File.OpenRead(zipFileName))
-            {
-                using (ZipInputStream stream = new ZipInputStream(fileStream))
-                {
-                    ZipEntry entry;
-
-                    while ((entry = stream.GetNextEntry()) != null)
-                    {
-                        if (Path.GetDirectoryName(entry.Name) == path && Path.GetFileName(entry.Name) == fileName)
-                        {
-                            ZipStreamWriteFile(stream, destinationPath + "\\" + fileName);
-                            stream.Close();
-                            return;
-                        }
-                    }
-                }
-            }
-        }
-
         public static void ZipExtractFolder(String zipFileName, String folderPath, String destinationPath)
         {
             using (FileStream fileStream = File.OpenRead(zipFileName))
@@ -471,7 +307,7 @@ namespace compLexity_Demo_Player
 
         public static void LogException(Exception e)
         {
-            String logsFullFolderPath = Config.Settings.ProgramDataPath + "\\logs";
+            String logsFullFolderPath = Config.ProgramDataPath + "\\logs";
 
             if (!Directory.Exists(logsFullFolderPath))
             {

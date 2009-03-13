@@ -41,7 +41,7 @@ namespace compLexity_Demo_Player
 
         protected override void LaunchProgram()
         {
-            String launchParameters = "-console -toconsole -game " + Demo.GameFolderName + " +exec " + Config.Settings.LaunchConfigFileName;
+            String launchParameters = "-console -toconsole -game " + Demo.GameFolderName + " +exec " + Config.LaunchConfigFileName;
 
             // start hl.exe
             Process.Start(Config.Settings.HlExeFullPath, launchParameters + " " + Config.Settings.HlAdditionalLaunchParameters);

@@ -347,7 +347,7 @@ namespace compLexity_Demo_Player
             // if running for the first time, prompt the user to setup their Steam account details
             if (Program.FirstRun)
             {
-                Common.Message(this, Config.Settings.ProgramName + " is being run for the first time. Please set your Steam path and select your Steam account folder.");
+                Common.Message(this, Config.ProgramName + " is being run for the first time. Please set your Steam path and select your Steam account folder.");
                 ShowPreferencesWindow(true);
             }
 
@@ -559,7 +559,7 @@ namespace compLexity_Demo_Player
         {
             try
             {
-                Process.Start(Config.Settings.ProgramPath + "\\readme.txt");
+                Process.Start(Config.ProgramPath + "\\readme.txt");
             }
             catch (Exception)
             {
@@ -584,7 +584,7 @@ namespace compLexity_Demo_Player
 
         private void uiBannerGrid_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Process.Start(Config.Settings.ComplexityUrl);
+            Process.Start(Config.ComplexityUrl);
         }
 
         private void uiPlayButton_Click(object sender, RoutedEventArgs e)
@@ -623,14 +623,14 @@ namespace compLexity_Demo_Player
             }
 
             // make sure source and destination filenames don't match (dickhead insurance)
-            if (String.Equals(demo.FileFullPath, launcher.GameFullPath + "\\" + Config.Settings.LaunchDemoFileName, StringComparison.CurrentCultureIgnoreCase))
+            if (String.Equals(demo.FileFullPath, launcher.GameFullPath + "\\" + Config.LaunchDemoFileName, StringComparison.CurrentCultureIgnoreCase))
             {
                 Common.Message(this, "Source and destination filenames are the same. Rename or move the source file and try again.");
                 return;
             }
 
             // add the demo file path to the file operation manager
-            FileOperationList.Add(new FileDeleteOperation(launcher.GameFullPath + "\\" + Config.Settings.LaunchDemoFileName));
+            FileOperationList.Add(new FileDeleteOperation(launcher.GameFullPath + "\\" + Config.LaunchDemoFileName));
 
             // stop the user from being able to open a new demo now
             canOpenDemo = false;
@@ -638,7 +638,7 @@ namespace compLexity_Demo_Player
             // write the demo
             ProgressWindow writeDemoProgressWindow = new ProgressWindow() { Owner = this };
             writeDemoProgressWindow.Thread = demo.Write((IProgressWindow)writeDemoProgressWindow);
-            writeDemoProgressWindow.ThreadParameter = launcher.GameFullPath + "\\" + Config.Settings.LaunchDemoFileName;
+            writeDemoProgressWindow.ThreadParameter = launcher.GameFullPath + "\\" + Config.LaunchDemoFileName;
             if (writeDemoProgressWindow.ShowDialog() == false)
             {
                 // user aborted writing
@@ -739,7 +739,7 @@ namespace compLexity_Demo_Player
             String imagePartialPath = "\\" + engineFolder + "\\" + demo.GameFolderName + "\\" + demo.MapName + ".jpg";
             try
             {
-                uiMapPreviewImage.Source = new BitmapImage(new Uri(Config.Settings.ProgramPath + "\\previews" + imagePartialPath));
+                uiMapPreviewImage.Source = new BitmapImage(new Uri(Config.ProgramPath + "\\previews" + imagePartialPath));
             }
             catch 
             {
@@ -747,7 +747,7 @@ namespace compLexity_Demo_Player
 
             try
             {
-                uiMapOverviewImage.Source = new BitmapImage(new Uri(Config.Settings.ProgramPath + "\\overviews" + imagePartialPath));
+                uiMapOverviewImage.Source = new BitmapImage(new Uri(Config.ProgramPath + "\\overviews" + imagePartialPath));
             }
             catch
             {

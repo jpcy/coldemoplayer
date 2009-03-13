@@ -149,7 +149,7 @@ namespace compLexity_Demo_Player
                 launchParameters += "-nomaster +maxplayers 10 +sv_lan 1 +map " + mapName;
             }
 
-            launchParameters += " +exec " + Config.Settings.LaunchConfigFileName + " " + Config.Settings.SteamAdditionalLaunchParameters;
+            launchParameters += " +exec " + Config.LaunchConfigFileName + " " + Config.Settings.SteamAdditionalLaunchParameters;
 
             // launch the program process
             if (UseHlae)

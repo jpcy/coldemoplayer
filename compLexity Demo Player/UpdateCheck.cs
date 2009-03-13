@@ -98,9 +98,9 @@ namespace compLexity_Demo_Player
             }
 
             // see if found version number is greater than current version
-            Int32 deltaMajor = version.Major - Config.Settings.ProgramVersionMajor;
-            Int32 deltaMinor = version.Minor - Config.Settings.ProgramVersionMinor;
-            Int32 deltaUpdate = version.Update - Config.Settings.ProgramVersionUpdate;
+            Int32 deltaMajor = version.Major - Config.ProgramVersionMajor;
+            Int32 deltaMinor = version.Minor - Config.ProgramVersionMinor;
+            Int32 deltaUpdate = version.Update - Config.ProgramVersionUpdate;
 
             if (deltaMajor > 0 || (deltaMajor == 0 && deltaMinor > 0) || (deltaMajor == 0 && deltaMinor == 0 && deltaUpdate > 0))
             {
