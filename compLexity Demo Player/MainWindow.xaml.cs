@@ -24,9 +24,21 @@ namespace compLexity_Demo_Player
         {
             public PlayerListViewData(HalfLifeDemo.Player player)
             {
-                Name = player.InfoKeys.FindNewestValue("name");
-                UpdateRate = player.InfoKeys.FindNewestValue("cl_updaterate");
-                Rate = player.InfoKeys.FindNewestValue("rate");
+                Name = player.InfoKeys["name"];
+                UpdateRate = player.InfoKeys["cl_updaterate"];
+                Rate = player.InfoKeys["rate"];
+
+                String sid = player.InfoKeys["*sid"];
+
+                // "*sid" only exists in protocol 48 Half-Life demos. And even then it's common for people to "convert" protocol 47 demos to 48, so it's best to make sure the infokey value exists.
+                if (sid != null)
+                {
+                    SteamId = Common.CalculateSteamId(sid);
+                }
+                else
+                {
+                    SteamId = "-";
+                }
             }
 
             public PlayerListViewData(SourceDemo.Player player)
@@ -35,14 +47,14 @@ namespace compLexity_Demo_Player
                 SteamId = player.SteamId;
             }
 
-            public String Name { get; set; }
+            public String Name { get; private set; }
             
             // goldsrc
-            public String UpdateRate { get; set; }
-            public String Rate { get; set; }
+            public String UpdateRate { get; private set; }
+            public String Rate { get; private set; }
 
             // source
-            public String SteamId { get; set; }
+            public String SteamId { get; private set; }
         }
 
         private class GameProcessInformation
@@ -75,7 +87,7 @@ namespace compLexity_Demo_Player
             return gvc;
         }
 
-        private void SetPlayerListGridView(Demo.Engines engine)
+        private void SetPlayerListGridView(Demo demo)
         {
             GridView gv = new GridView();
 
@@ -84,14 +96,15 @@ namespace compLexity_Demo_Player
             nameColumn.IsLowPriority = true;
             gv.Columns.Add(nameColumn);
 
-            if (engine == Demo.Engines.Source)
-            {
-                gv.Columns.Add(CreateGridViewColumn("Steam ID", "SteamId"));
-            }
-            else
+            if (demo.Engine != Demo.Engines.Source)
             {
                 gv.Columns.Add(CreateGridViewColumn("cl__updaterate", "UpdateRate"));
                 gv.Columns.Add(CreateGridViewColumn("rate", "Rate"));                
+            }
+
+            if (demo.Engine == Demo.Engines.Source || demo.NetworkProtocol >= 48)
+            {
+                gv.Columns.Add(CreateGridViewColumn("Steam ID", "SteamId"));
             }
 
             uiPlayersListView.View = gv;
@@ -794,7 +807,7 @@ namespace compLexity_Demo_Player
             }
 
             // players tab
-            SetPlayerListGridView(demo.Engine);
+            SetPlayerListGridView(demo);
             uiPlayersListView.Initialise();
 
             if (demo.Engine == Demo.Engines.Source)

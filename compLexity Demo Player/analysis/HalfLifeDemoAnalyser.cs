@@ -238,10 +238,7 @@ namespace compLexity_Demo_Player
                 // convert steam id
                 if (key == "*sid")
                 {
-                    UInt64 authId = UInt64.Parse(value) - 76561197960265728;
-                    Int32 serverId = ((authId % 2) == 0 ? 0 : 1);
-                    authId = (authId - (UInt64)serverId) / 2;
-                    AddInfoKey(player, "SteamId", String.Format("STEAM_0:{0}:{1}", serverId, authId));
+                    AddInfoKey(player, "SteamId", Common.CalculateSteamId(value));
                 }
             }
         }

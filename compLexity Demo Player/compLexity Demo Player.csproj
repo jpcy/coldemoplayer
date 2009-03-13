@@ -247,7 +247,6 @@
     <Compile Include="HyperlinkControl.xaml.cs">
       <DependentUpon>HyperlinkControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="InfoKey.cs" />
     <Compile Include="launcher\HalfLifeLauncher.cs" />
     <Compile Include="launcher\HalfLifeSteamLauncher.cs" />
     <Compile Include="launcher\Launcher.cs" />

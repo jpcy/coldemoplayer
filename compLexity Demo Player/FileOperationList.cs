@@ -8,9 +8,12 @@ using System.Collections;
 
 namespace compLexity_Demo_Player
 {
+    /// <summary>
+    /// Handles logging of file operations that should be performed on program startup after a crash has occured.
+    /// </summary>
     static public class FileOperationList
     {
-        static private ArrayList operations;
+        static private List<FileOperation> operations;
         static private String programPath;
         static private String fileName;
 
@@ -29,7 +32,7 @@ namespace compLexity_Demo_Player
             {
                 try
                 {
-                    ((FileOperation)operations[i]).Execute();
+                    operations[i].Execute();
                 }
                 catch (Exception)
                 {
@@ -46,7 +49,7 @@ namespace compLexity_Demo_Player
             programPath = _programPath;
             fileName = _fileName;
 
-            operations = new ArrayList();
+            operations = new List<FileOperation>();
 
             String configFullPath = programPath + "\\" + fileName;
 
@@ -56,7 +59,7 @@ namespace compLexity_Demo_Player
             }
 
             // deserialize
-            operations = (ArrayList)Common.XmlFileDeserialize(configFullPath, typeof(ArrayList), new Type[] { typeof(FileMoveOperation), typeof(ExtractZipFolderOperation) });
+            operations = (List<FileOperation>)Common.XmlFileDeserialize(configFullPath, typeof(ArrayList), new Type[] { typeof(FileMoveOperation), typeof(ExtractZipFolderOperation) });
         }
     }
 }

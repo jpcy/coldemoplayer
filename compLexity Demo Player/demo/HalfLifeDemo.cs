@@ -4,6 +4,7 @@ using System.Text;
 using System.IO;
 using System.Collections; // ArrayList
 using System.Threading;
+using System.Collections.Specialized;
 
 namespace compLexity_Demo_Player
 {
@@ -11,21 +12,15 @@ namespace compLexity_Demo_Player
     {
         public class Player
         {
-            public Byte Slot;
-            public Int32 Id;
-            public InfoKeyList InfoKeys;
+            public Byte Slot { get; set; } // svc_updateuserinfo messages can change a player's slot.
+            public Int32 Id { get; private set; }
+            public StringDictionary InfoKeys { get; private set; }
 
-            public String Name
+            public Player(Byte slot, Int32 id)
             {
-                get
-                {
-                    return InfoKeys.FindNewestValue("name");
-                }
-            }
-
-            public Player()
-            {
-                InfoKeys = new InfoKeyList();
+                Slot = slot;
+                Id = id;
+                InfoKeys = new StringDictionary();
             }
         }
 
@@ -50,12 +45,11 @@ namespace compLexity_Demo_Player
 
         private Int64 fileLengthInBytes;
         private Byte recorderSlot;
-        private List<Player> playerList;
+        private List<Player> playerList = new List<Player>();
         private EngineVersions engineVersion = EngineVersions.Unknown;
         private UInt32 mungedMapChecksum;
 
         private HalfLifeDemoParser parser;
-        private Single currentTimestamp = 0.0f;
 
         // duplicate loading segments bug
         private Int32 currentFrameIndex;
@@ -130,8 +124,6 @@ namespace compLexity_Demo_Player
         public HalfLifeDemo(String fileName)
         {
             fileFullPath = fileName;
-
-            playerList = new List<Player>();
 
             // initialise variables not guaranteed to be initialised by reading the file
             recorderName = "";
@@ -304,8 +296,6 @@ namespace compLexity_Demo_Player
                     {
                         HalfLifeDemoParser.GameDataFrameHeader gameDataFrameHeader = parser.ReadGameDataFrameHeader();
 
-                        currentTimestamp = frameHeader.Timestamp;
-
                         if (gameDataFrameHeader.Length > 0)
                         {
                             Byte[] frameData = parser.Reader.ReadBytes((Int32)gameDataFrameHeader.Length);
@@ -342,7 +332,7 @@ namespace compLexity_Demo_Player
                 {
                     if (p.Slot == recorderSlot)
                     {
-                        recorderName = p.InfoKeys.FindNewestValue("name");
+                        recorderName = p.InfoKeys["name"];
                     }
                 }
             }
@@ -715,10 +705,7 @@ namespace compLexity_Demo_Player
             // create player if it doesn't exist
             if (player == null)
             {
-                player = new Player();
-                player.Id = id;
-                player.Slot = slot;
-
+                player = new Player(slot, id);
                 playerList.Add(player);
             }
 
@@ -735,7 +722,15 @@ namespace compLexity_Demo_Player
 
             for (Int32 i = 0; i < infoKeyTokens.Length; i += 2)
             {
-                player.InfoKeys.Add(infoKeyTokens[i], infoKeyTokens[i + 1], currentTimestamp);
+                String key = infoKeyTokens[i];
+
+                // If the key already exists, overwrite it.
+                if (player.InfoKeys.ContainsKey(key))
+                {
+                    player.InfoKeys.Remove(key);
+                }
+
+                player.InfoKeys.Add(key, infoKeyTokens[i + 1]);
             }
         }
 
