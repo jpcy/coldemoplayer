@@ -18,34 +18,6 @@ namespace compLexity_Demo_Player
 {
     public static class Common
     {
-        private static Byte[] MungeTable3 =
-        {
-            0x20, 0x07, 0x13, 0x61,
-            0x03, 0x45, 0x17, 0x72,
-            0x0A, 0x2D, 0x48, 0x0C,
-            0x4A, 0x12, 0xA9, 0xB5
-        };
-
-        private static UInt32 FlipBytes32(UInt32 value)
-        {
-            return (((value & 0xFF000000) >> 24) | ((value & 0x00FF0000) >> 8) | ((value & 0x0000FF00) << 8) | ((value & 0x000000FF) << 24));
-        }
-
-        public static UInt32 UnMunge3(UInt32 value, Int32 z) 
-        {
-            z = (0xFF - z) & 0xFF;
-            value = (UInt32)(value ^ z);
-
-            Byte[] temp = BitConverter.GetBytes(value);
-
-            for (Int32 i = 0; i < 4; i++)
-            {
-                temp[i] ^= (Byte)((((Int32)MungeTable3[i & 0x0F] | i << i) | i) | 0xA5);
-            }
-
-            return (UInt32)(FlipBytes32(BitConverter.ToUInt32(temp, 0)) ^ (~z));
-        }
-
         public static void WebDownloadBinaryFile(String address, String outputFileName, Action<Int32> downloadProgress)
         {
             const Int32 bufferSize = 1024;
