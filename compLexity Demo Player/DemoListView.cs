@@ -58,7 +58,7 @@ namespace compLexity_Demo_Player
         private Int32 threadPoolCount; // so the Demo class doesn't have to keep track of its own loading thread
         private readonly Object threadPoolCountLock;
 
-        private List<BitmapImage> iconList;
+        private List<BitmapImage> iconCache;
         private BitmapImage unknownIcon;
 
         public DemoListView()
@@ -66,8 +66,9 @@ namespace compLexity_Demo_Player
             demoCollection = new ObservableCollection<DemoListViewData>();
             ItemsSource = demoCollection;
 
-            iconList = new List<BitmapImage>();
+            iconCache = new List<BitmapImage>();
             unknownIcon = new BitmapImage(new Uri(Config.ProgramPath + "\\icons\\unknown.ico"));
+            unknownIcon.Freeze();
 
             threadPool = new List<Thread>();
             threadPoolCountLock = new Object();
@@ -205,7 +206,10 @@ namespace compLexity_Demo_Player
             }
         }
 
-        // FIXME: this method looks like it was written by a fucking retard
+        /// <summary>
+        /// Try to find the games' icon.
+        /// </summary>
+        /// <returns>The games' icon on success, a generic "unknown" icon on failure.</returns>
         private BitmapImage FindIcon(Demo demo)
         {
             String engineTypeName = "";
@@ -219,54 +223,42 @@ namespace compLexity_Demo_Player
                 engineTypeName = "goldsrc";
             }
 
-            BitmapImage icon = null;
-
-            // try icons\engine\game folder.ico
-            icon = LoadIcon(Config.ProgramPath + "\\icons\\" + engineTypeName + "\\" + demo.GameFolderName + ".ico");
+            // Locally stored icon: "icons\engine\game folder.ico"
+            BitmapImage icon = LoadIcon(Config.ProgramPath + "\\icons\\" + engineTypeName + "\\" + demo.GameFolderName + ".ico");
 
             if (icon != null)
             {
                 return icon;
             }
 
+            // Queue up a bunch of different icon paths to try.
+            Queue<String> iconPaths = new Queue<string>();
+
             if (demo.Engine == Demo.Engines.HalfLife)
             {
-                // check that hl.exe path is set
+                // Can't do anything if the hl.exe path is not set.
                 if (!File.Exists(Config.Settings.HlExeFullPath))
                 {
                     return unknownIcon;
                 }
 
-                icon = LoadIcon(System.IO.Path.GetDirectoryName(Config.Settings.HlExeFullPath) + "\\" + demo.GameFolderName + "\\" + demo.GameFolderName + ".ico");
+                // e.g. Half-Life\cstrike\cstrike.ico
+                iconPaths.Enqueue(System.IO.Path.GetDirectoryName(Config.Settings.HlExeFullPath) + "\\" + demo.GameFolderName + "\\" + demo.GameFolderName + ".ico");
 
-                if (icon != null)
-                {
-                    return icon;
-                }
-
-                // special cases
                 if (demo.GameFolderName == "tfc")
                 {
-                    icon = LoadIcon(System.IO.Path.GetDirectoryName(Config.Settings.HlExeFullPath) + "\\TeamFortressClassic.ico");
-
-                    if (icon != null)
-                    {
-                        return icon;
-                    }
+                    // Special case: TFC.
+                    iconPaths.Enqueue(System.IO.Path.GetDirectoryName(Config.Settings.HlExeFullPath) + "\\TeamFortressClassic.ico");
                 }
                 else if (demo.GameFolderName == "valve")
                 {
-                    icon = LoadIcon(System.IO.Path.GetDirectoryName(Config.Settings.HlExeFullPath) + "\\valve.ico");
-
-                    if (icon != null)
-                    {
-                        return icon;
-                    }
+                    // Special case: HL.
+                    iconPaths.Enqueue(System.IO.Path.GetDirectoryName(Config.Settings.HlExeFullPath) + "\\valve.ico");
                 }
             }
             else
             {
-                // check that steam.exe path is set and that the demo has corresponding steam app information
+                // Check that steam.exe path is set and that the demo has corresponding Steam app information.
                 Game game = GameManager.Find(demo);
 
                 if (!File.Exists(Config.Settings.SteamExeFullPath) || game == null)
@@ -274,24 +266,20 @@ namespace compLexity_Demo_Player
                     return unknownIcon;
                 }
 
-                // try Steam\steam\games\x.ico, where x is the game name. e.g. counter-strike
-                icon = LoadIcon(System.IO.Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\steam\\games\\" + game.FolderExtended + ".ico");
+                // Steam\steam\games\x.ico, where x is the game name. e.g. counter-strike.
+                iconPaths.Enqueue(System.IO.Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\steam\\games\\" + game.FolderExtended + ".ico");
 
-                if (icon != null)
-                {
-                    return icon;
-                }
+                // e.g. counter-strike\cstrike\game.ico
+                iconPaths.Enqueue(System.IO.Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\" + Config.Settings.SteamAccountFolder + "\\" + game.FolderExtended + "\\" + demo.GameFolderName + "\\game.ico");
 
-                // try game folder, game.ico. e.g. counter-strike\cstrike\game.ico
-                icon = LoadIcon(System.IO.Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\" + Config.Settings.SteamAccountFolder + "\\" + game.FolderExtended + "\\" + demo.GameFolderName + "\\game.ico");
+                // e.g. counter-strike\cstrike\resource\game.ico.
+                iconPaths.Enqueue(System.IO.Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\" + Config.Settings.SteamAccountFolder + "\\" + game.FolderExtended + "\\" + demo.GameFolderName + "\\resource\\game.ico");
+            }
 
-                if (icon != null)
-                {
-                    return icon;
-                }
-
-                // try game folder, resource\game.ico.
-                icon = LoadIcon(System.IO.Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\" + Config.Settings.SteamAccountFolder + "\\" + game.FolderExtended + "\\" + demo.GameFolderName + "\\resource\\game.ico");
+            // Try all the queued paths.
+            foreach (String iconFullPath in iconPaths)
+            {
+                icon = LoadIcon(iconFullPath);
 
                 if (icon != null)
                 {
@@ -305,7 +293,7 @@ namespace compLexity_Demo_Player
         private BitmapImage LoadIcon(String fileName)
         {
             // search cache for matching icon
-            foreach (BitmapImage bi in iconList)
+            foreach (BitmapImage bi in iconCache)
             {
                 if (bi.UriSource.Equals(new Uri(fileName)))
                 {
@@ -327,7 +315,7 @@ namespace compLexity_Demo_Player
 
             // add icon to cache
             icon.Freeze();
-            iconList.Add(icon);
+            iconCache.Add(icon);
 
             return icon;
         }
