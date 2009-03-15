@@ -106,7 +106,7 @@ namespace compLexity_Demo_Player
             }
             catch (Exception ex)
             {
-                Common.Message(null, "FileOperationList error.", ex, MessageWindow.Flags.Error);
+                Common.Message(null, "FileOperationList error. Try deleting \"fileoperationslog.xml\" from \"C:\\Documents and Settings\\<Username>\\Local Settings\\Application Data\\compLexity Demo Player\" if the problem persists.", ex, MessageWindow.Flags.Error);
                 return;
             }
 

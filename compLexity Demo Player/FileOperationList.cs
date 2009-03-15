@@ -22,7 +22,7 @@ namespace compLexity_Demo_Player
             operations.Add(op);
 
             // serialize
-            Common.XmlFileSerialize(programPath + "\\" + fileName, operations, typeof(ArrayList), new Type[] { typeof(FileMoveOperation), typeof(FileDeleteOperation), typeof(ExtractZipFolderOperation) });
+            Common.XmlFileSerialize(programPath + "\\" + fileName, operations, typeof(List<FileOperation>), new Type[] { typeof(FileMoveOperation), typeof(FileDeleteOperation), typeof(ExtractZipFolderOperation) });
         }
 
         static public void Execute()
