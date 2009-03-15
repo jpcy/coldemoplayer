@@ -12,9 +12,9 @@ namespace compLexity_Demo_Player
         public enum MessageId : byte
         {
             svc_nop = 1,
-            //svc_disconnect = 2, // disconnect command?
+            svc_disconnect = 2,
             svc_event = 3,
-            //svc_version = 4,
+            svc_version = 4,
             svc_setview = 5,
             svc_sound = 6,
             svc_time = 7,
@@ -26,9 +26,9 @@ namespace compLexity_Demo_Player
             svc_updateuserinfo = 13,
             svc_deltadescription = 14,
             svc_clientdata = 15,
-            //svc_stopsound = 16,
+            svc_stopsound = 16,
             svc_pings = 17,
-            svc_particle = 18, // obsolete?
+            svc_particle = 18,
             //svc_damage = 19,
             svc_spawnstatic = 20,
             svc_event_reliable = 21,
@@ -66,7 +66,9 @@ namespace compLexity_Demo_Player
             svc_voicedata = 53,
             svc_sendextrainfo = 54,
             svc_timescale = 55,
-            svc_resourcelocation = 56
+            svc_resourcelocation = 56,
+            svc_sendcvarvalue = 57,
+            svc_sendcvarvalue2 = 58
         }
 
         private class UserMessage
@@ -146,7 +148,9 @@ namespace compLexity_Demo_Player
 
             // message handlers
             AddMessageHandler((Byte)MessageId.svc_nop, 0);
+            AddMessageHandler((Byte)MessageId.svc_disconnect, MessageDisconnect);
             AddMessageHandler((Byte)MessageId.svc_event, MessageEvent);
+            AddMessageHandler((Byte)MessageId.svc_version, MessageVersion);
             AddMessageHandler((Byte)MessageId.svc_setview, 2);
             AddMessageHandler((Byte)MessageId.svc_sound, MessageSound);
             AddMessageHandler((Byte)MessageId.svc_time, 4);
@@ -158,6 +162,7 @@ namespace compLexity_Demo_Player
             AddMessageHandler((Byte)MessageId.svc_updateuserinfo, MessageUpdateUserInfo);
             AddMessageHandler((Byte)MessageId.svc_deltadescription, MessageDeltaDescription);
             AddMessageHandler((Byte)MessageId.svc_clientdata, MessageClientData);
+            AddMessageHandler((Byte)MessageId.svc_stopsound, 2);
             AddMessageHandler((Byte)MessageId.svc_pings, MessagePings);
             AddMessageHandler((Byte)MessageId.svc_particle, 11);
             AddMessageHandler((Byte)MessageId.svc_spawnstatic, MessageSpawnStatic);
@@ -192,6 +197,8 @@ namespace compLexity_Demo_Player
             AddMessageHandler((Byte)MessageId.svc_sendextrainfo, MessageSendExtraInfo);
             AddMessageHandler((Byte)MessageId.svc_timescale, 4);
             AddMessageHandler((Byte)MessageId.svc_resourcelocation, MessageResourceLocation);
+            AddMessageHandler((Byte)MessageId.svc_sendcvarvalue, MessageSendCvarValue);
+            AddMessageHandler((Byte)MessageId.svc_sendcvarvalue2, MessageSendCvarValue2);
 
             // user messages
             userMessageTable = new Hashtable();
@@ -529,6 +536,11 @@ namespace compLexity_Demo_Player
         }
 
         #region Engine Messages
+        private void MessageDisconnect()
+        {
+            bitBuffer.ReadString(); // Disconnect reason?
+        }
+
         public void MessageEvent()
         {
             if (demo.NetworkProtocol <= 43)
@@ -566,6 +578,11 @@ namespace compLexity_Demo_Player
 
             bitBuffer.SkipRemainingBits();
             bitBuffer.Endian = BitBuffer.EndianType.Little;
+        }
+
+        private void MessageVersion()
+        {
+            Seek(4); // uint: server network protocol number.
         }
 
         public void MessageSound()
@@ -1454,6 +1471,17 @@ namespace compLexity_Demo_Player
         {
             // string: location?
             bitBuffer.ReadString();
+        }
+
+        private void MessageSendCvarValue2()
+        {
+            bitBuffer.ReadString(); // The cvar.
+        }
+
+        private void MessageSendCvarValue2()
+        {
+            Seek(4); // unsigned int
+            bitBuffer.ReadString(); // The cvar.
         }
         #endregion
     }
