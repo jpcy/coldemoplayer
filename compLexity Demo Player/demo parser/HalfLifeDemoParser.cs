@@ -434,77 +434,82 @@ namespace compLexity_Demo_Player
             bitBuffer = new BitBuffer(frameData);
             readingGameData = true;
 
-            BeginMessageLog(gameDataStartOffset, frameData);
-
-            // start parsing messages
-            while (true)
+            try
             {
-                Int32 messageFrameOffset = bitBuffer.CurrentByte;
-                Byte messageId = bitBuffer.ReadByte();
-                String messageName = Enum.GetName(typeof(MessageId), messageId);
+                BeginMessageLog(gameDataStartOffset, frameData);
 
-                if (messageName == null) // a user message, presumably
+                // start parsing messages
+                while (true)
                 {
-                    messageName = FindMessageIdString(messageId);
-                }
+                    Int32 messageFrameOffset = bitBuffer.CurrentByte;
+                    Byte messageId = bitBuffer.ReadByte();
+                    String messageName = Enum.GetName(typeof(MessageId), messageId);
 
-                LogMessage(messageId, messageName, messageFrameOffset);
-
-                MessageHandler messageHandler = FindMessageHandler(messageId);
-
-                // Handle the conversion of user message id's.
-                // Used by demo writing to convert to the current network protocol.
-                if (messageId > 64 && userMessageCallback != null)
-                {
-                    Byte newMessageId = userMessageCallback(messageId);
-
-                    if (newMessageId != messageId)
+                    if (messageName == null) // a user message, presumably
                     {
-                        // write the new id to the bitbuffer
-                        bitBuffer.SeekBytes(-1);
-                        bitBuffer.RemoveBytes(1);
-                        bitBuffer.InsertBytes(new Byte[] { newMessageId });
+                        messageName = FindMessageIdString(messageId);
                     }
-                }
 
-                // unknown message
-                if (messageHandler == null)
-                {
-                    throw new ApplicationException(String.Format("Cannot find message handler for message id \"[{0}] {1}\"", messageId, messageName));
-                }
+                    LogMessage(messageId, messageName, messageFrameOffset);
 
-                // callback takes priority over length
-                if (messageHandler.Callback != null)
-                {
-                    messageHandler.Callback();
-                }
-                else if (messageHandler.Length != -1)
-                {
-                    Seek(messageHandler.Length);
-                }
-                else
-                {
-                    // user messages
-                    if (messageId > 64)
+                    MessageHandler messageHandler = FindMessageHandler(messageId);
+
+                    // Handle the conversion of user message id's.
+                    // Used by demo writing to convert to the current network protocol.
+                    if (messageId > 64 && userMessageCallback != null)
                     {
-                        // All non-engine user messages start with a byte that is the number of bytes in the message remaining.
-                        Byte length = bitBuffer.ReadByte();
-                        Seek(length);
+                        Byte newMessageId = userMessageCallback(messageId);
+
+                        if (newMessageId != messageId)
+                        {
+                            // write the new id to the bitbuffer
+                            bitBuffer.SeekBytes(-1);
+                            bitBuffer.RemoveBytes(1);
+                            bitBuffer.InsertBytes(new Byte[] { newMessageId });
+                        }
+                    }
+
+                    // unknown message
+                    if (messageHandler == null)
+                    {
+                        throw new ApplicationException(String.Format("Cannot find message handler for message id \"[{0}] {1}\"", messageId, messageName));
+                    }
+
+                    // callback takes priority over length
+                    if (messageHandler.Callback != null)
+                    {
+                        messageHandler.Callback();
+                    }
+                    else if (messageHandler.Length != -1)
+                    {
+                        Seek(messageHandler.Length);
                     }
                     else
                     {
-                        throw new ApplicationException(String.Format("Unknown message id \"{0}\"", messageId));
+                        // user messages
+                        if (messageId > 64)
+                        {
+                            // All non-engine user messages start with a byte that is the number of bytes in the message remaining.
+                            Byte length = bitBuffer.ReadByte();
+                            Seek(length);
+                        }
+                        else
+                        {
+                            throw new ApplicationException(String.Format("Unknown message id \"{0}\"", messageId));
+                        }
+                    }
+
+                    // Check if we've reached the end of the frame, or if any of the messages have called SkipGameDataFrame (readingGameData will be false).
+                    if (bitBuffer.CurrentByte == bitBuffer.Length || !readingGameData)
+                    {
+                        break;
                     }
                 }
-
-                // Check if we've reached the end of the frame, or if any of the messages have called SkipGameDataFrame (readingGameData will be false).
-                if (bitBuffer.CurrentByte == bitBuffer.Length || !readingGameData)
-                {
-                    break;
-                }
             }
-
-            readingGameData = false;
+            finally
+            {
+                readingGameData = false;
+            }
         }
 
         public void SkipGameDataFrame()
@@ -1473,7 +1478,7 @@ namespace compLexity_Demo_Player
             bitBuffer.ReadString();
         }
 
-        private void MessageSendCvarValue2()
+        private void MessageSendCvarValue()
         {
             bitBuffer.ReadString(); // The cvar.
         }
