@@ -59,7 +59,7 @@ namespace compLexity_Demo_Player
             }
 
             // deserialize
-            operations = (List<FileOperation>)Common.XmlFileDeserialize(configFullPath, typeof(ArrayList), new Type[] { typeof(FileMoveOperation), typeof(ExtractZipFolderOperation) });
+            operations = (List<FileOperation>)Common.XmlFileDeserialize(configFullPath, typeof(List<FileOperation>), new Type[] { typeof(FileMoveOperation), typeof(FileDeleteOperation), typeof(ExtractZipFolderOperation) });
         }
     }
 }
