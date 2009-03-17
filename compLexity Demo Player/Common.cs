@@ -338,11 +338,18 @@ namespace compLexity_Demo_Player
         /// <summary>
         /// Calculates a Steam ID from a "*sid" Half-Life infokey value.
         /// </summary>
-        /// <param name="sid">The "*sid" infokey value.</param>
+        /// <param name="sidInfoKeyValue">The "*sid" infokey value.</param>
         /// <returns>A Steam ID in the format "STEAM_0:x:y".</returns>
-        public static String CalculateSteamId(String sid)
+        public static String CalculateSteamId(String sidInfoKeyValue)
         {
-            UInt64 authId = UInt64.Parse(sid) - 76561197960265728;
+            UInt64 sid = UInt64.Parse(sidInfoKeyValue);
+
+            if (sid == 0)
+            {
+                return "HLTV";
+            }
+
+            UInt64 authId = sid - 76561197960265728;
             Int32 serverId = ((authId % 2) == 0 ? 0 : 1);
             authId = (authId - (UInt64)serverId) / 2;
             return String.Format("STEAM_0:{0}:{1}", serverId, authId);
