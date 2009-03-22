@@ -1,4 +1,16 @@
 <FlowDocument xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" FontSize="12" PagePadding="5">
+	<Paragraph><Bold><Underline>1.1.6</Underline></Bold></Paragraph>
+	<List>
+		<ListItem>
+			<Paragraph>Steam IDs are now displayed in the player list for protocol 48 Half-Life engine demos.</Paragraph>
+		</ListItem>
+		<ListItem>
+			<Paragraph>Fixed a bug in the handling of corrupt demos.</Paragraph>
+		</ListItem>
+		<ListItem>
+			<Paragraph>Added message handlers for the Half-Life engine messages svc_sendcvarvalue and svc_sendcvarvalue2.</Paragraph>
+		</ListItem>		
+	</List>
 	<Paragraph><Bold><Underline>1.1.5</Underline></Bold></Paragraph>
 	<List>
 		<ListItem>

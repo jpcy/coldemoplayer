@@ -7,8 +7,8 @@
 ;General
 
   ;Name and file
-  Name "compLexity Demo Player 1.1.5"
-  OutFile "coldemoplayer115_install.exe"
+  Name "compLexity Demo Player 1.1.6"
+  OutFile "coldemoplayer116_install.exe"
 
   ;Default installation folder
   InstallDir "$PROGRAMFILES\compLexity Demo Player"
