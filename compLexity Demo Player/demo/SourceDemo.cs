@@ -13,12 +13,6 @@ namespace compLexity_Demo_Player
         {
             public String Name { get; set; }
             public String SteamId { get; set; }
-
-            /*public Player(String name, String steamId)
-            {
-                Name = name;
-                SteamId = steamId;
-            }*/
         }
 
         public const Int32 HeaderSizeInBytes = 1072;
@@ -220,6 +214,8 @@ namespace compLexity_Demo_Player
             {
                 perspective = Perspectives.Pov;
             }
+
+            Game = GameManager.Find(this);
         }
 
         private void ParseUserInfo()
