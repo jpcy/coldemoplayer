@@ -487,7 +487,7 @@ namespace compLexity_Demo_Player
                     else
                     {
                         // user messages
-                        if (messageId > 64)
+                        if (messageId >= 64)
                         {
                             // All non-engine user messages start with a byte that is the number of bytes in the message remaining.
                             Byte length = bitBuffer.ReadByte();
