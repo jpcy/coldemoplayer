@@ -782,8 +782,9 @@ namespace compLexity_Demo_Player
 
             while (bytesRead < length)
             {
+                Int32 currentByte = parser.BitBuffer.CurrentByte;
                 String s = parser.BitBuffer.ReadString();
-                bytesRead += s.Length + 1;
+                bytesRead += parser.BitBuffer.CurrentByte - currentByte;
 
                 // remove newlines and 'special' half-life characters from string (SOH etc.)
                 List<Int32> removeCharIndexList = new List<Int32>();
