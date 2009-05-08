@@ -307,6 +307,12 @@ namespace compLexity_Demo_Player
         }
         public void ReadMessageCreateStringTable()
         {
+            if (NetworkProtocol >= 15)
+            {
+                parser.MessageCreateStringTable();
+                return;
+            }
+
             String tableName = parser.BitBuffer.ReadString();
             Int32 maxEntries = (Int32)parser.BitBuffer.ReadUnsignedBits(16); // TODO: sanity check on maxEntries?
             Int32 entriesBits = Common.LogBase2(maxEntries) + 1;

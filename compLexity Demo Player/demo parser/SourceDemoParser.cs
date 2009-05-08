@@ -441,6 +441,11 @@ namespace compLexity_Demo_Player
             }
 
             bitBuffer.SeekBits((Int32)nBits);
+
+            if (demo.NetworkProtocol >= 15)
+            {
+                bitBuffer.SeekBits(1);
+            }
         }
 
         public void MessageUpdateStringTable()
