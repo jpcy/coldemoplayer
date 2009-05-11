@@ -142,6 +142,16 @@ namespace compLexity_Demo_Player
             return false;
         }
 
+        public virtual Boolean CanRemoveHltvAds(Demo demo)
+        {
+            return false;
+        }
+
+        public virtual Boolean CanRemoveHltvSlowMotion(Demo demo)
+        {
+            return false;
+        }
+
         public virtual SolidColorBrush TeamColour(String team)
         {
             return Brushes.Gray;

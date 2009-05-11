@@ -1430,9 +1430,6 @@ namespace compLexity_Demo_Player
 
         private void MessageDirector()
         {
-            // byte: length
-            // ???
-
             Byte length = bitBuffer.ReadByte();
             Seek(length);
         }

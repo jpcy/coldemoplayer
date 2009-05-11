@@ -75,7 +75,9 @@ namespace compLexity_Demo_Player
             parser.AddMessageHandler((Byte)HalfLifeDemoParser.MessageId.svc_deltapacketentities, MessageDeltaPacketEntities);
             parser.AddMessageHandler((Byte)HalfLifeDemoParser.MessageId.svc_resourcelist, MessageResourceList);
             parser.AddMessageHandler((Byte)HalfLifeDemoParser.MessageId.svc_hltv, MessageHltv);
+            parser.AddMessageHandler((Byte)HalfLifeDemoParser.MessageId.svc_director, MessageDirector);
             parser.AddMessageHandler((Byte)HalfLifeDemoParser.MessageId.svc_voiceinit, MessageVoiceInit);
+            parser.AddMessageHandler((Byte)HalfLifeDemoParser.MessageId.svc_timescale, MessageTimeScale);
             parser.AddUserMessageHandler("ScreenFade", MessageScreenFade);
             parser.AddUserMessageHandler("SendAudio", MessageSendAudio);
 
@@ -109,7 +111,7 @@ namespace compLexity_Demo_Player
 
         public Boolean ShouldParseGameDataMessages(Byte frameType)
         {
-            return (demo.ConvertNetworkProtocol() || frameType == 0 || (GameManager.CanRemoveFadeToBlack(demo) && demo.Perspective == Demo.Perspectives.Pov && Config.Settings.PlaybackRemoveFtb));
+            return (demo.ConvertNetworkProtocol() || frameType == 0 || (GameManager.CanRemoveFadeToBlack(demo) && demo.Perspective == Demo.Perspectives.Pov && Config.Settings.PlaybackRemoveFtb) || (GameManager.CanRemoveHltvAds(demo) && Config.Settings.PlaybackRemoveHltvAds) || (GameManager.CanRemoveHltvSlowMotion(demo) && Config.Settings.PlaybackRemoveHltvSlowMotion));
         }
 
         public Boolean ShouldWriteClientCommand(String command)
@@ -1017,6 +1019,25 @@ namespace compLexity_Demo_Player
             }
         }
 
+        private void MessageDirector()
+        {
+            // see HL SDK common/hltv.h
+            const int DRC_CMD_MESSAGE = 6;
+
+            Int32 startByteIndex = parser.BitBuffer.CurrentByte;
+            Byte length = parser.BitBuffer.ReadByte();
+            Byte type = parser.BitBuffer.ReadByte();
+
+            if (Config.Settings.PlaybackRemoveHltvAds && type == DRC_CMD_MESSAGE)
+            {
+                parser.Seek(startByteIndex - 1, SeekOrigin.Begin);
+                parser.BitBuffer.RemoveBytes(1 + 1 + length);
+            }
+            else
+            {
+                parser.Seek(startByteIndex + 1 + length, SeekOrigin.Begin);
+            }
+        }
 
         private void MessageVoiceInit()
         {
@@ -1032,6 +1053,17 @@ namespace compLexity_Demo_Player
             else
             {
                 parser.BitBuffer.InsertBytes(new Byte[] { 5 });
+            }
+        }
+
+        private void MessageTimeScale()
+        {
+            float value = parser.BitBuffer.ReadSingle();
+
+            if (Config.Settings.PlaybackRemoveHltvSlowMotion && value < 1.0f)
+            {
+                parser.Seek(-5);
+                parser.BitBuffer.RemoveBytes(5);
             }
         }
 

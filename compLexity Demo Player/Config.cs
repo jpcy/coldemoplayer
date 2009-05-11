@@ -55,6 +55,8 @@ namespace compLexity_Demo_Player
         public Playback PlaybackType { get; set; }
         public Boolean PlaybackRemoveShowscores { get; set; }
         public Boolean PlaybackRemoveFtb { get; set; }
+        public Boolean PlaybackRemoveHltvAds { get; set; }
+        public Boolean PlaybackRemoveHltvSlowMotion { get; set; }
         public Boolean PlaybackStartListenServer { get; set; }
         public Boolean PlaybackConvertNetworkProtocol { get; set; }
         public Boolean PlaybackCloseWhenFinished { get; set; }
@@ -95,6 +97,8 @@ namespace compLexity_Demo_Player
             PlaybackType = Playback.Playdemo;
             PlaybackRemoveShowscores = true;
             PlaybackRemoveFtb = true;
+            PlaybackRemoveHltvAds = false;
+            PlaybackRemoveHltvSlowMotion = false;
             PlaybackStartListenServer = true;
             PlaybackConvertNetworkProtocol = true;
             PlaybackCloseWhenFinished = false;

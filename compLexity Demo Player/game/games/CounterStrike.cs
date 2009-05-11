@@ -64,6 +64,16 @@ namespace compLexity_Demo_Player.Games
             return true;
         }
 
+        public override bool CanRemoveHltvAds(Demo demo)
+        {
+            return true;
+        }
+
+        public override bool CanRemoveHltvSlowMotion(Demo demo)
+        {
+            return true;
+        }
+
         public override SolidColorBrush TeamColour(string team)
         {
             if (team == "CT")

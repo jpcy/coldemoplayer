@@ -119,6 +119,38 @@ namespace compLexity_Demo_Player
         }
 
         /// <summary>
+        /// Determines whether a demo supports the removal of HLTV ads.
+        /// </summary>
+        /// <param name="demo"></param>
+        public static bool CanRemoveHltvAds(Demo demo)
+        {
+            Game game = Find(demo);
+
+            if (game == null)
+            {
+                return false;
+            }
+
+            return game.CanRemoveHltvAds(demo);
+        }
+
+        /// <summary>
+        /// Determines whether a demo supports the removal of HLTV slow motion.
+        /// </summary>
+        /// <param name="demo"></param>
+        public static bool CanRemoveHltvSlowMotion(Demo demo)
+        {
+            Game game = Find(demo);
+
+            if (game == null)
+            {
+                return false;
+            }
+
+            return game.CanRemoveHltvSlowMotion(demo);
+        }
+
+        /// <summary>
         /// Calculate team colours.
         /// </summary>
         /// <returns>A colour, or null if no game information can be found.</returns>

@@ -136,6 +136,8 @@ namespace compLexity_Demo_Player
             // copy checkbox state into config settings
             Config.Settings.PlaybackRemoveShowscores = (Boolean)uiOptionsRemoveShowscoresCheckBox.IsChecked;
             Config.Settings.PlaybackRemoveFtb = (Boolean)uiOptionsRemoveFtbCheckBox.IsChecked;
+            Config.Settings.PlaybackRemoveHltvAds = (Boolean)uiOptionsRemoveHltvAds.IsChecked;
+            Config.Settings.PlaybackRemoveHltvSlowMotion = (Boolean)uiOptionsRemoveHltvSlowMotion.IsChecked;
             Config.Settings.PlaybackStartListenServer = (Boolean)uiOptionsStartListenServerCheckBox.IsChecked;
             Config.Settings.PlaybackConvertNetworkProtocol = (Boolean)uiOptionsConvertNetworkProtocolCheckBox.IsChecked;
             Config.Settings.PlaybackCloseWhenFinished = (Boolean)uiOptionsCloseWhenFinishedCheckBox.IsChecked;
@@ -144,6 +146,8 @@ namespace compLexity_Demo_Player
             // disable all checkboxes
             uiOptionsRemoveShowscoresCheckBox.IsEnabled = false;
             uiOptionsRemoveFtbCheckBox.IsEnabled = false;
+            uiOptionsRemoveHltvAds.IsEnabled = false;
+            uiOptionsRemoveHltvSlowMotion.IsEnabled = false;
             uiOptionsStartListenServerCheckBox.IsEnabled = false;
             uiOptionsConvertNetworkProtocolCheckBox.IsEnabled = false;
             uiOptionsCloseWhenFinishedCheckBox.IsEnabled = false;
@@ -178,6 +182,16 @@ namespace compLexity_Demo_Player
             if (GameManager.CanRemoveFadeToBlack(demo))
             {
                 uiOptionsRemoveFtbCheckBox.IsEnabled = true;
+            }
+
+            if (GameManager.CanRemoveHltvAds(demo))
+            {
+                uiOptionsRemoveHltvAds.IsEnabled = true;
+            }
+
+            if (GameManager.CanRemoveHltvSlowMotion(demo))
+            {
+                uiOptionsRemoveHltvSlowMotion.IsEnabled = true;
             }
 
             if (CanUseHlae(demo))
@@ -327,6 +341,8 @@ namespace compLexity_Demo_Player
             // options
             uiOptionsRemoveShowscoresCheckBox.IsChecked = Config.Settings.PlaybackRemoveShowscores;
             uiOptionsRemoveFtbCheckBox.IsChecked = Config.Settings.PlaybackRemoveFtb;
+            uiOptionsRemoveHltvAds.IsChecked = Config.Settings.PlaybackRemoveHltvAds;
+            uiOptionsRemoveHltvSlowMotion.IsChecked = Config.Settings.PlaybackRemoveHltvSlowMotion;
             uiOptionsStartListenServerCheckBox.IsChecked = Config.Settings.PlaybackStartListenServer;
             uiOptionsConvertNetworkProtocolCheckBox.IsChecked = Config.Settings.PlaybackConvertNetworkProtocol;
             uiOptionsCloseWhenFinishedCheckBox.IsChecked = Config.Settings.PlaybackCloseWhenFinished;
@@ -336,6 +352,10 @@ namespace compLexity_Demo_Player
             uiOptionsRemoveShowscoresCheckBox.Unchecked += new RoutedEventHandler(uiOptions_Changed);
             uiOptionsRemoveFtbCheckBox.Checked += new RoutedEventHandler(uiOptions_Changed);
             uiOptionsRemoveFtbCheckBox.Unchecked += new RoutedEventHandler(uiOptions_Changed);
+            uiOptionsRemoveHltvAds.Checked += new RoutedEventHandler(uiOptions_Changed);
+            uiOptionsRemoveHltvAds.Unchecked += new RoutedEventHandler(uiOptions_Changed);
+            uiOptionsRemoveHltvSlowMotion.Checked += new RoutedEventHandler(uiOptions_Changed);
+            uiOptionsRemoveHltvSlowMotion.Unchecked += new RoutedEventHandler(uiOptions_Changed);
             uiOptionsStartListenServerCheckBox.Checked += new RoutedEventHandler(uiOptions_Changed);
             uiOptionsStartListenServerCheckBox.Unchecked += new RoutedEventHandler(uiOptions_Changed);
             uiOptionsConvertNetworkProtocolCheckBox.Checked += new RoutedEventHandler(uiOptions_Changed);

@@ -128,14 +128,18 @@
                     <local:ExtendedListView Margin="4" x:Name="uiPlayersListView" SelectionMode="Single" VirtualizingStackPanel.IsVirtualizing="False" />
                 </TabItem>
                 <TabItem Header="Options">
-                    <StackPanel Margin="4">
-                        <CheckBox Name="uiOptionsUseHlaeCheckBox" Margin="4">Use HLAE</CheckBox>
-                        <CheckBox Name="uiOptionsConvertNetworkProtocolCheckBox" Margin="4">Play Counter-Strike 1.0 to 1.5 demos with 1.6</CheckBox>
-                        <CheckBox Name="uiOptionsStartListenServerCheckBox" Margin="4">Start Listen Server</CheckBox>
-                        <CheckBox Name="uiOptionsCloseWhenFinishedCheckBox" Margin="4">Close when finished</CheckBox>
-                        <CheckBox Name="uiOptionsRemoveShowscoresCheckBox" Margin="4">Remove Showscores</CheckBox>
-                        <CheckBox Name="uiOptionsRemoveFtbCheckBox" Margin="4">Remove Fade To Black</CheckBox>
-                    </StackPanel>
+                    <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="4">
+                            <CheckBox Name="uiOptionsUseHlaeCheckBox" Margin="4">Use HLAE</CheckBox>
+                            <CheckBox Name="uiOptionsConvertNetworkProtocolCheckBox" Margin="4">Play Counter-Strike 1.0 to 1.5 demos with 1.6</CheckBox>
+                            <CheckBox Name="uiOptionsStartListenServerCheckBox" Margin="4">Start Listen Server</CheckBox>
+                            <CheckBox Name="uiOptionsCloseWhenFinishedCheckBox" Margin="4">Close when finished</CheckBox>
+                            <CheckBox Name="uiOptionsRemoveShowscoresCheckBox" Margin="4">Remove Showscores</CheckBox>
+                            <CheckBox Name="uiOptionsRemoveFtbCheckBox" Margin="4">Remove Fade To Black</CheckBox>
+                            <CheckBox Name="uiOptionsRemoveHltvAds" Margin="4">Remove HLTV Advertisements</CheckBox>
+                            <CheckBox Name="uiOptionsRemoveHltvSlowMotion" Margin="4">Remove HLTV Slow Motion</CheckBox>
+                        </StackPanel>
+                    </ScrollViewer>
                 </TabItem>
             </TabControl>
             <StackPanel Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Orientation="Horizontal">
