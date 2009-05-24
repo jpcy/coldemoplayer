@@ -8,6 +8,7 @@ namespace compLexity_Demo_Player
     {
         void AddMessageHandlers(HalfLifeDemoParser parser);
         void ProcessHeader(ref Byte[] header);
+        void ProcessFirstGameDataFrame(ref Byte[] frameData);
         Boolean ShouldParseGameDataMessages(Byte frameType);
         Boolean ShouldWriteClientCommand(String command);
         Byte GetNewUserMessageId(Byte messageId);

@@ -359,8 +359,7 @@ namespace compLexity_Demo_Player
                         stream.WriteLine("wait10");
                         stream.WriteLine("slot1");
 
-                        // workaround for converted CS 1.3 HLTV gayness
-                        // TODO: remove this, replace with a resethud message (if it works)
+                        // TODO: remove this, figure out why the spec menu it's initalised correctly with old converted HLTV demos.
                         if (Demo.Perspective == Demo.Perspectives.Hltv)
                         {
                             stream.WriteLine("wait10");

@@ -30,6 +30,7 @@ namespace compLexity_Demo_Player
         private HalfLifeDemo demo;
         private HalfLifeDemoParser parser;
         private Byte firstFreeUserMessage;
+        private Boolean haveParsedDirectorMessage = false;
 
         public HalfLifeDemoConverter(HalfLifeDemo demo)
         {
@@ -107,6 +108,37 @@ namespace compLexity_Demo_Player
             {
                 header[12] = HalfLifeDemo.CurrentNetworkProtocol;
             }
+        }
+
+        public void ProcessFirstGameDataFrame(ref Byte[] frameData)
+        {
+            // A svc_director message preceeds svc_spawnbaseline in newer HLTV demos. The director message is used to initialise and reset the HUD. Since old HLTV demos omit this message, it can be added here (and set the perspective to first-person too).
+            if (haveParsedDirectorMessage)
+            {
+                return;
+            }
+
+            const Byte DRC_CMD_START = 1;
+            const Byte DRC_CMD_MODE = 3;
+            const Byte OBS_IN_EYE = 4;
+
+            // Create a svc_director message to initialise the HUD.
+            BitWriter directorMessage = new BitWriter();
+            directorMessage.WriteByte((Byte)HalfLifeDemoParser.MessageId.svc_director);
+            directorMessage.WriteByte(1); // length
+            directorMessage.WriteByte(DRC_CMD_START);
+
+            // Create a svc_director message to set the perspective to first-person.
+            directorMessage.WriteByte((Byte)HalfLifeDemoParser.MessageId.svc_director);
+            directorMessage.WriteByte(2); // length
+            directorMessage.WriteByte(DRC_CMD_MODE);
+            directorMessage.WriteByte(OBS_IN_EYE);
+
+            // Insert the new messages.
+            BitBuffer bitBuffer = new BitBuffer(frameData);
+            bitBuffer.InsertBytes(directorMessage.Data);
+
+            frameData = bitBuffer.Data;
         }
 
         public Boolean ShouldParseGameDataMessages(Byte frameType)
@@ -1021,6 +1053,8 @@ namespace compLexity_Demo_Player
 
         private void MessageDirector()
         {
+            haveParsedDirectorMessage = true;
+
             // see HL SDK common/hltv.h
             const int DRC_CMD_MESSAGE = 6;
 

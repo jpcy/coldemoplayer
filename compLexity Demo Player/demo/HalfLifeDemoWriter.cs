@@ -218,6 +218,12 @@ namespace compLexity_Demo_Player
                         throw new ApplicationException("Gamedata frame length doesn't match header.");
                     }
 
+                    // Give the writer interface a chance to insert any new messages into the first gamedata frame.
+                    if (frameHeader.Type == 1 && !foundPlaybackOffset)
+                    {
+                        demoWriterInterface.ProcessFirstGameDataFrame(ref frameData);
+                    }
+
                     // parse frame messages
                     try
                     {
