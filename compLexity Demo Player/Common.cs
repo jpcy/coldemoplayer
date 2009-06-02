@@ -326,7 +326,9 @@ namespace compLexity_Demo_Player
                     }
 
                     writer.WriteLine(ex.Message);
-                    writer.WriteLine(ex.Source);
+                    writer.WriteLine("Type: " + e.GetType().ToString());
+                    writer.WriteLine("Source: " + ex.Source);
+                    writer.WriteLine("Inner Exception: " + (e != ex).ToString());
                     writer.WriteLine(ex.StackTrace);
                     writer.WriteLine();
                 };
