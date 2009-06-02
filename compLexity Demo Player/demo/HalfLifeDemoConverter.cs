@@ -113,7 +113,7 @@ namespace compLexity_Demo_Player
         public void ProcessFirstGameDataFrame(ref Byte[] frameData)
         {
             // A svc_director message preceeds svc_spawnbaseline in newer HLTV demos. The director message is used to initialise and reset the HUD. Since old HLTV demos omit this message, it can be added here (and set the perspective to first-person too).
-            if (haveParsedDirectorMessage)
+            if (demo.Perspective != Demo.Perspectives.Hltv || haveParsedDirectorMessage)
             {
                 return;
             }
