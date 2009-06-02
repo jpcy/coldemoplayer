@@ -307,6 +307,11 @@ namespace compLexity_Demo_Player
 
         public static void LogException(Exception e)
         {
+            LogException(e, false);
+        }
+
+        public static void LogException(Exception e, bool warning)
+        {
             String logsFullFolderPath = Config.ProgramDataPath + "\\logs";
 
             if (!Directory.Exists(logsFullFolderPath))
@@ -314,7 +319,7 @@ namespace compLexity_Demo_Player
                 Directory.CreateDirectory(logsFullFolderPath);
             }
 
-            using (TextWriter writer = new StreamWriter(logsFullFolderPath + "\\" + DateTime.Now.ToShortDateString().Replace('/', '-') + "_" + Path.ChangeExtension(Path.GetRandomFileName(), ".log")))
+            using (TextWriter writer = new StreamWriter(logsFullFolderPath + "\\" + DateTime.Now.ToShortDateString().Replace('/', '-') + "_" + (warning == true ? "warning_" : String.Empty) + Path.ChangeExtension(Path.GetRandomFileName(), ".log")))
             {
                 Procedure<Exception> logException = null;
 
