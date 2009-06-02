@@ -197,25 +197,7 @@ namespace compLexity_Demo_Player
         /// <returns>True if the config file exists, False if it doesn't.</returns>
         public static Boolean Read()
         {
-            Boolean result = true;
-            Settings = new ProgramSettings();
-            
-            // XmlIgnore doesn't seem to apply to deserialization...
-            String programDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\" + ProgramName;
-            String configFullPath = programDataPath + "\\" + fileName;
-
-            if (File.Exists(configFullPath))
-            {
-                // deserialize
-                Settings = (ProgramSettings)Common.XmlFileDeserialize(configFullPath, typeof(ProgramSettings));
-            }
-            else
-            {
-                result = false;
-                ReadFromRegistry();
-            }
-
-            ProgramDataPath = programDataPath;
+            ProgramDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\" + ProgramName;
             ProgramExeFullPath = Common.SanitisePath(Environment.GetCommandLineArgs()[0]);
 #if DEBUG
             // BLEH: this is what happens when you can't use macros in setting the debug working directory.
@@ -231,6 +213,33 @@ namespace compLexity_Demo_Player
 #else
             ProgramPath = Path.GetDirectoryName(ProgramExeFullPath);
 #endif
+
+            Settings = null;
+            Boolean result = true;
+            String configFullPath = ProgramDataPath + "\\" + fileName;
+
+            if (File.Exists(configFullPath))
+            {
+                // deserialize
+                try
+                {
+                    Settings = (ProgramSettings)Common.XmlFileDeserialize(configFullPath, typeof(ProgramSettings));
+                }
+                catch (InvalidOperationException ex)
+                {
+                    // Assume the file has been corrupted by the user or some other external influence. Log the exception as a warning, delete the file and use default config values.
+                    Common.LogException(ex, true);
+                    File.Delete(configFullPath);
+                    Settings = null;
+                }
+            }
+
+            if (Settings == null)
+            {
+                Settings = new ProgramSettings();
+                result = false;
+                ReadFromRegistry();
+            }
 
             return result;
         }
