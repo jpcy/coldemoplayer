@@ -41,7 +41,7 @@ namespace compLexity_Demo_Player
             }
             catch (Exception ex)
             {
-                Common.Message(null, "Error reading from the configuration file. Try deleting \"config\\config.xml\" from the installation folder.", ex, MessageWindow.Flags.Error);
+                Common.Message(null, "Error reading from the configuration file. Try deleting \"config.xml\" from  \"" + Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\" + Config.ProgramName + "\".", ex, MessageWindow.Flags.Error);
                 return;
             }
 
@@ -106,7 +106,7 @@ namespace compLexity_Demo_Player
             }
             catch (Exception ex)
             {
-                Common.Message(null, "FileOperationList error. Try deleting \"fileoperationslog.xml\" from \"C:\\Documents and Settings\\<Username>\\Local Settings\\Application Data\\compLexity Demo Player\" if the problem persists.", ex, MessageWindow.Flags.Error);
+                Common.Message(null, "FileOperationList error. Try deleting \"fileoperationslog.xml\" from \"" + Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\" + Config.ProgramName + "\" if the problem persists.", ex, MessageWindow.Flags.Error);
                 return;
             }
 
