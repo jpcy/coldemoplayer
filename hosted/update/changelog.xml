@@ -1,4 +1,16 @@
 <FlowDocument xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" FontSize="12" PagePadding="5">
+	<Paragraph><Bold><Underline>1.1.7</Underline></Bold></Paragraph>
+	<List>
+		<ListItem>
+			<Paragraph>Added optional HLTV demo advertisement and slow motion removal.</Paragraph>
+		</ListItem>
+		<ListItem>
+			<Paragraph>Fixed stuck HUD problems when playing some converted HLTV demos.</Paragraph>
+		</ListItem>
+		<ListItem>
+			<Paragraph>Fixed TF2 demo reading errors.</Paragraph>
+		</ListItem>
+	</List>
 	<Paragraph><Bold><Underline>1.1.6</Underline></Bold></Paragraph>
 	<List>
 		<ListItem>
