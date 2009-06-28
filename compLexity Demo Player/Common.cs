@@ -13,6 +13,7 @@ using System.Xml.Serialization;
 using System.Net;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace compLexity_Demo_Player
 {
@@ -360,6 +361,63 @@ namespace compLexity_Demo_Player
             Int32 serverId = ((authId % 2) == 0 ? 0 : 1);
             authId = (authId - (UInt64)serverId) / 2;
             return String.Format("STEAM_0:{0}:{1}", serverId, authId);
+        }
+
+        /// <summary>
+        /// Copies the column values of the selected rows in the given ListView to the clipboard. Column values are comma separated, each row is on a new line.
+        /// </summary>
+        /// <remarks>A column's value is read from the first TextBlock element in the column.</remarks>
+        public static void ListViewCopySelectedRowsToClipboard(ListView listView)
+        {
+            if (listView.SelectedItems.Count == 0)
+            {
+                return;
+            }
+
+            StringBuilder sb = new StringBuilder();
+            Action<DependencyObject> enumerateVisual = null;
+            bool prependComma = false;
+
+            enumerateVisual = dobj =>
+            {
+                for (int j = 0; j < VisualTreeHelper.GetChildrenCount(dobj); j++)
+                {
+                    DependencyObject child = VisualTreeHelper.GetChild(dobj, j);
+                    TextBlock textBlock = child as TextBlock;
+
+                    if (textBlock != null)
+                    {
+                        if (prependComma)
+                        {
+                            sb.Append(", ");
+                        }
+                        else
+                        {
+                            prependComma = true;
+                        }
+
+                        sb.Append(textBlock.Text);
+                        return;
+                    }
+
+                    enumerateVisual(child);
+                }
+            };
+
+            foreach (object o in listView.SelectedItems)
+            {
+                prependComma = false;
+                enumerateVisual(listView.ItemContainerGenerator.ContainerFromItem(o));
+                sb.Append(Environment.NewLine);
+            }
+
+            try
+            {
+                Clipboard.SetText(sb.ToString());
+            }
+            catch (System.Runtime.InteropServices.COMException)
+            {
+            }
         }
     }
 

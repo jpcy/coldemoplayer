@@ -26,7 +26,7 @@
                         <ColumnDefinition Width="0.4*" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <local:ExtendedListView Grid.Column="0" Grid.RowSpan="2" Margin="4" x:Name="uiScoreboardRoundsListView" VirtualizingStackPanel.IsVirtualizing="False">
+                    <local:ExtendedListView Grid.Column="0" Grid.RowSpan="2" Margin="4" x:Name="uiScoreboardRoundsListView" VirtualizingStackPanel.IsVirtualizing="False" Style="{StaticResource ListViewCopyStyle}">
                         <ListView.View>
                             <GridView>
                                 <local:ExtendedGridViewColumn Header="Round" DisplayMemberBinding="{Binding Path=Number}" SortPropertyName="Number" IsDefaultSortColumn="True" />
@@ -34,7 +34,7 @@
                             </GridView>
                         </ListView.View>
                     </local:ExtendedListView>
-                    <local:ExtendedListView Grid.Column="1" Grid.Row="0" Margin="4" x:Name="uiScoreboardTeamScoresListView" VirtualizingStackPanel.IsVirtualizing="False">
+                    <local:ExtendedListView Grid.Column="1" Grid.Row="0" Margin="4" x:Name="uiScoreboardTeamScoresListView" VirtualizingStackPanel.IsVirtualizing="False" Style="{StaticResource ListViewCopyStyle}">
                         <ListView.View>
                             <GridView>
                                 <local:ExtendedGridViewColumn Header="Team" SortPropertyName="Name" IsDefaultSortColumn="True" IsLowPriority="True">
@@ -48,7 +48,7 @@
                             </GridView>
                         </ListView.View>
                     </local:ExtendedListView>
-                    <local:ExtendedListView Grid.Column="1" Grid.Row="1" Margin="4" x:Name="uiScoreboardPlayerScoresListView" VirtualizingStackPanel.IsVirtualizing="False">
+                    <local:ExtendedListView Grid.Column="1" Grid.Row="1" Margin="4" x:Name="uiScoreboardPlayerScoresListView" VirtualizingStackPanel.IsVirtualizing="False" Style="{StaticResource ListViewCopyStyle}">
                         <ListView.View>
                             <GridView>
                                 <local:ExtendedGridViewColumn Header="Team" DisplayMemberBinding="{Binding Path=TeamName}" SortPropertyName="TeamName" IsDefaultSortColumn="True" IsLowPriority="True" />
@@ -75,7 +75,7 @@
                         <ColumnDefinition Width="0.75*" />
                         <ColumnDefinition Width="0.75*" />
                     </Grid.ColumnDefinitions>
-                    <local:ExtendedListView Grid.Column="0" Margin="4" x:Name="uiPlayersListView" VirtualizingStackPanel.IsVirtualizing="False">
+                    <local:ExtendedListView Grid.Column="0" Margin="4" x:Name="uiPlayersListView" VirtualizingStackPanel.IsVirtualizing="False" Style="{StaticResource ListViewCopyStyle}">
                         <ListView.View>
                             <GridView>
                                 <local:ExtendedGridViewColumn Header="Name" SortPropertyName="Name" IsDefaultSortColumn="True" IsLowPriority="True">
@@ -90,7 +90,7 @@
                             </GridView>
                         </ListView.View>
                     </local:ExtendedListView>
-                    <local:ExtendedListView Grid.Column="1" Margin="4" x:Name="uiPlayerInfoKeysListView" VirtualizingStackPanel.IsVirtualizing="False">
+                    <local:ExtendedListView Grid.Column="1" Margin="4" x:Name="uiPlayerInfoKeysListView" VirtualizingStackPanel.IsVirtualizing="False" Style="{StaticResource ListViewCopyStyle}">
                         <ListView.View>
                             <GridView>
                                 <local:ExtendedGridViewColumn Header="Key" DisplayMemberBinding="{Binding Path=Key}" SortPropertyName="Key" IsDefaultSortColumn="True" />
@@ -104,7 +104,7 @@
                             </GridView>
                         </ListView.View>
                     </local:ExtendedListView>
-                    <local:ExtendedListView Grid.Column="2" Margin="4" x:Name="uiPlayerInfoKeyTimestampsListView" VirtualizingStackPanel.IsVirtualizing="False">
+                    <local:ExtendedListView Grid.Column="2" Margin="4" x:Name="uiPlayerInfoKeyTimestampsListView" VirtualizingStackPanel.IsVirtualizing="False" Style="{StaticResource ListViewCopyStyle}">
                         <ListView.View>
                             <GridView>
                                 <local:ExtendedGridViewColumn Header="Value" SortPropertyName="Value" IsLowPriority="True">
@@ -131,7 +131,7 @@
                     <WindowsFormsHost Grid.Column="0" Name="uiNetworkGraphWindowsFormHost">
                         <z:ZedGraphControl x:Name="uiNetworkGraph" />
                     </WindowsFormsHost>
-                    <local:ExtendedListView Grid.Column="1" Margin="4" x:Name="uiNetworkGraphPlayersListView" VirtualizingStackPanel.IsVirtualizing="False">
+                    <local:ExtendedListView Grid.Column="1" Margin="4" x:Name="uiNetworkGraphPlayersListView" VirtualizingStackPanel.IsVirtualizing="False" Style="{StaticResource ListViewCopyStyle}">
                         <ListView.View>
                             <GridView>
                                 <local:ExtendedGridViewColumn Header="Player Name" SortPropertyName="Name" IsDefaultSortColumn="True" IsLowPriority="True">

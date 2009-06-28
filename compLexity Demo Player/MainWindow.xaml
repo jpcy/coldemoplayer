@@ -125,7 +125,7 @@
                     </WrapPanel>
                 </TabItem>
                 <TabItem Header="Players">
-                    <local:ExtendedListView Margin="4" x:Name="uiPlayersListView" SelectionMode="Single" VirtualizingStackPanel.IsVirtualizing="False" />
+                    <local:ExtendedListView Margin="4" x:Name="uiPlayersListView" VirtualizingStackPanel.IsVirtualizing="False" Style="{StaticResource ListViewCopyStyle}" />
                 </TabItem>
                 <TabItem Header="Options">
                     <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">

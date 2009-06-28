@@ -31,6 +31,13 @@
               Data = "M 5,5 L 10,10 L 15,5 L 5,5"/>
             </DockPanel>
         </DataTemplate>
+        <ContextMenu x:Key="CopyContextMenu">
+            <MenuItem Header="Copy" Command="ApplicationCommands.Copy" InputGestureText="Ctrl+C" />
+        </ContextMenu>
+        <Style x:Key="ListViewCopyStyle" TargetType="{x:Type ListView}">
+            <Setter Property="ContextMenu" Value="{StaticResource CopyContextMenu}" />
+            <EventSetter Event="Loaded" Handler="ListViewCopyStyle_Loaded" />
+        </Style>
         <!--
         <ControlTemplate x:Key="ListViewItemTemplate" TargetType="{x:Type ListViewItem}">
             <GridViewRowPresenter />
