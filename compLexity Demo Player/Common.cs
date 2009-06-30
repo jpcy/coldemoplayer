@@ -350,9 +350,9 @@ namespace compLexity_Demo_Player
         /// <returns>A Steam ID in the format "STEAM_0:x:y".</returns>
         public static String CalculateSteamId(String sidInfoKeyValue)
         {
-            UInt64 sid = UInt64.Parse(sidInfoKeyValue);
+            UInt64 sid;
 
-            if (sid == 0)
+            if (!UInt64.TryParse(sidInfoKeyValue, out sid) || sid == 0)
             {
                 return "HLTV";
             }
