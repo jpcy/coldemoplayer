@@ -397,7 +397,6 @@ namespace compLexity_Demo_Player
                         }
 
                         sb.Append(textBlock.Text);
-                        return;
                     }
 
                     enumerateVisual(child);
