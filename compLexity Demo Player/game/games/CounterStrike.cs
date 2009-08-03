@@ -188,6 +188,31 @@ namespace compLexity_Demo_Player.Games
             }
         }
 
+        public override void ConvertClCorpseMessageCallback(Int32 gameVersion, BitBuffer bitBuffer)
+        {
+            if (gameVersion >= (Int32)Versions.CounterStrike16)
+            {
+                return;
+            }
+
+            // Convert the model sequence number.
+            // string, 3x long, 3x short, long, byte (sequence number), byte, byte, byte (CS 1.6 only).
+            bitBuffer.ReadString(); // model name
+            bitBuffer.SeekBytes(22);
+
+            Byte sequence = bitBuffer.ReadByte();
+            UInt32? newSequence = sequence;
+            ConvertSequenceNumber(gameVersion, ref newSequence);
+            
+            if (newSequence != sequence)
+            {
+                // Sequence number has changed, replace the old one with the new one.
+                bitBuffer.SeekBytes(-1);
+                bitBuffer.RemoveBytes(1);
+                bitBuffer.InsertBytes(new Byte[] { (Byte)newSequence });
+            }
+        }
+
         private void ConvertSequenceNumber(Int32 gameVersion, ref UInt32? sequence)
         {
             if (gameVersion == (Int32)Versions.CounterStrike16)

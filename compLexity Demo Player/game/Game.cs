@@ -178,5 +178,10 @@ namespace compLexity_Demo_Player
         public virtual void ConvertPacketEntititiesCallback(HalfLifeDelta delta, String entityType, Int32 gameVersion)
         {
         }
+
+        // Counter-Strike and DOD specific.
+        public virtual void ConvertClCorpseMessageCallback(Int32 gameVersion, BitBuffer bitBuffer)
+        {
+        }
     }
 }

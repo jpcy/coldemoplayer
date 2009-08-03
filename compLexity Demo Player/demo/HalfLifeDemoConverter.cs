@@ -79,6 +79,7 @@ namespace compLexity_Demo_Player
             parser.AddMessageHandler((Byte)HalfLifeDemoParser.MessageId.svc_director, MessageDirector);
             parser.AddMessageHandler((Byte)HalfLifeDemoParser.MessageId.svc_voiceinit, MessageVoiceInit);
             parser.AddMessageHandler((Byte)HalfLifeDemoParser.MessageId.svc_timescale, MessageTimeScale);
+            parser.AddUserMessageHandler("ClCorpse", MessageClCorpse);
             parser.AddUserMessageHandler("ScreenFade", MessageScreenFade);
             parser.AddUserMessageHandler("SendAudio", MessageSendAudio);
 
@@ -1098,6 +1099,31 @@ namespace compLexity_Demo_Player
             {
                 parser.Seek(-5);
                 parser.BitBuffer.RemoveBytes(5);
+            }
+        }
+
+        private void MessageClCorpse()
+        {
+            Byte length = parser.BitBuffer.ReadByte();
+            Int32 messageDataOffset = parser.BitBuffer.CurrentByte;
+
+            if (demo.ConvertNetworkProtocol() && demo.Game != null)
+            {
+                // Get the message data and create a BitBuffer for it.
+                byte[] messageData = parser.BitBuffer.ReadBytes(length);
+                BitBuffer messageBitBuffer = new BitBuffer(messageData);
+
+                // Have the game handler convert the message.
+                demo.Game.ConvertClCorpseMessageCallback(demo.GameVersion, messageBitBuffer);
+
+                // Remove the old message data and insert the new converted message data.
+                parser.Seek(messageDataOffset, SeekOrigin.Begin);
+                parser.BitBuffer.RemoveBytes(length);
+                parser.BitBuffer.InsertBytes(messageBitBuffer.Data);
+            }
+            else
+            {
+                parser.Seek(length);
             }
         }
 
