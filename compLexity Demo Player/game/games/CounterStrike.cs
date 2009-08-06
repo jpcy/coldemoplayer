@@ -133,13 +133,8 @@ namespace compLexity_Demo_Player.Games
 
         public override void ConvertEventCallback(Demo demo, HalfLifeDelta delta, uint eventIndex)
         {
-            if (demo.GameVersion != (Int32)Versions.CounterStrike10 && demo.GameVersion != (Int32)Versions.CounterStrike11)
-            {
-                return;
-            }
-
             // Smoke fix for CS 1.0-1.1 demos.
-            if (demo.Resources.ContainsKey("events/createsmoke.sc"))
+            if ((demo.GameVersion == (Int32)Versions.CounterStrike10 || demo.GameVersion == (Int32)Versions.CounterStrike11) && demo.Resources.ContainsKey("events/createsmoke.sc"))
             {
                 if (eventIndex == demo.Resources["events/createsmoke.sc"])
                 {
@@ -147,6 +142,21 @@ namespace compLexity_Demo_Player.Games
                     {
                         Random r = new Random();
                         delta.SetEntryValue("iparam1", r.Next(128, 300)); // FIXME: random guess
+                    }
+                }
+            }
+
+            // See ConvertDeltaDescriptionCallback.
+            if (demo.GameVersion == (Int32)Versions.CounterStrike13)
+            {
+                for (int i = 1; i <= 2; i++)
+                {
+                    String paramName = "iparam" + i.ToString();
+                    Int32? value = (Int32?)delta.FindEntryValue(paramName);
+
+                    if (value != null)
+                    {
+                        delta.SetEntryValue(paramName, value / 8192);
                     }
                 }
             }
@@ -186,6 +196,19 @@ namespace compLexity_Demo_Player.Games
                     delta.SetEntryValue("animtime", 0.0f);
                 }
             }
+        }
+
+        public override void ConvertDeltaDescriptionCallback(Int32 gameVersion, String deltaStructureName, HalfLifeDelta delta)
+        {
+            // CS 1.3 has a different event_t delta description for parameters iparam1 and iparam2.
+            // Without this fix, bullets fly off in random directions in HLTV demos. No noticeable affect in POV demos.
+            if (gameVersion != (Int32)Versions.CounterStrike13 || deltaStructureName != "event_t" || !((String)delta.FindEntryValue("name")).StartsWith("iparam"))
+            {
+                return;
+            }
+
+            delta.SetEntryValue("nBits", (UInt32)18);
+            delta.SetEntryValue("divisor", 1.0f);
         }
 
         public override void ConvertClCorpseMessageCallback(Int32 gameVersion, BitBuffer bitBuffer)

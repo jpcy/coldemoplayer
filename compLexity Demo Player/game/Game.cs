@@ -179,6 +179,10 @@ namespace compLexity_Demo_Player
         {
         }
 
+        public virtual void ConvertDeltaDescriptionCallback(Int32 gameVersion, String deltaStructureName, HalfLifeDelta delta)
+        {
+        }
+
         // Counter-Strike and DOD specific.
         public virtual void ConvertClCorpseMessageCallback(Int32 gameVersion, BitBuffer bitBuffer)
         {

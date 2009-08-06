@@ -461,6 +461,12 @@ namespace compLexity_Demo_Player
                 HalfLifeDelta delta = deltaDescription.CreateDelta();
                 Byte[] bitmaskBytes;
                 deltaDescription.ReadDelta(parser.BitBuffer, delta, out bitmaskBytes);
+
+                if (demo.Game != null)
+                {
+                    demo.Game.ConvertDeltaDescriptionCallback(demo.GameVersion, structureName, delta);
+                }
+
                 deltaDescription.WriteDelta(bitWriter, delta, bitmaskBytes);
                 newDeltaStructure.AddEntry(delta);
             }
