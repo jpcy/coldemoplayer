@@ -1,4 +1,19 @@
 <FlowDocument xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" FontSize="12" PagePadding="5">
+	<Paragraph><Bold><Underline>1.1.8</Underline></Bold></Paragraph>
+	<List>
+		<ListItem>
+			<Paragraph>Added a right-click context menu to certain ListViews, allowing the selected row(s) to be copied to the clipboard as plain text.</Paragraph>
+		</ListItem>
+		<ListItem>
+			<Paragraph>Fixed several issues with calculating player Steam IDs.</Paragraph>
+		</ListItem>
+		<ListItem>
+			<Paragraph>Fixed CS 1.3 HLTV weapon recoil when playing converted demos.</Paragraph>
+		</ListItem>
+		<ListItem>
+			<Paragraph>Fixed a corpse animation sequence bug that affected converted CS demos.</Paragraph>
+		</ListItem>
+	</List>
 	<Paragraph><Bold><Underline>1.1.7</Underline></Bold></Paragraph>
 	<List>
 		<ListItem>
