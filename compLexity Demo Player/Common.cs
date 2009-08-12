@@ -354,7 +354,8 @@ namespace compLexity_Demo_Player
 
             if (!UInt64.TryParse(sidInfoKeyValue, out sid) || sid == 0)
             {
-                return "HLTV";
+                // HLTV proxy or LAN dedicated server.
+                return null;
             }
 
             UInt64 authId = sid - 76561197960265728;

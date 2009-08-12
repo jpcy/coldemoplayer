@@ -234,11 +234,19 @@ namespace compLexity_Demo_Player
 
                 // add new value to infokey values
                 infoKey.Values.Add(infoKeyValue);
+            }
 
-                // convert steam id
-                if (key == "*sid")
+            // create a Steam ID key if the player isn't a HLTV proxy.
+            InfoKey hltv = Common.FirstOrDefault(player.InfoKeys, ik => ik.Key == "*hltv");
+            InfoKey sid = Common.FirstOrDefault(player.InfoKeys, ik => ik.Key == "*sid");
+
+            if (hltv == null && sid != null)
+            {
+                String steamId = Common.CalculateSteamId(sid.NewestValueValue);
+
+                if (steamId != null)
                 {
-                    AddInfoKey(player, "SteamId", Common.CalculateSteamId(value));
+                    AddInfoKey(player, "SteamId", steamId);
                 }
             }
         }

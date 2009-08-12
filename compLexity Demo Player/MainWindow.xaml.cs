@@ -31,9 +31,18 @@ namespace compLexity_Demo_Player
                 String sid = player.InfoKeys["*sid"];
 
                 // "*sid" only exists in protocol 48 Half-Life demos. And even then it's common for people to "convert" protocol 47 demos to 48, so it's best to make sure the infokey value exists.
-                if (sid != null)
+                if (player.InfoKeys["*hltv"] != null)
+                {
+                    SteamId = "HLTV";
+                }
+                else if (sid != null)
                 {
                     SteamId = Common.CalculateSteamId(sid);
+
+                    if (SteamId == null)
+                    {
+                        SteamId = "-";
+                    }
                 }
                 else
                 {
