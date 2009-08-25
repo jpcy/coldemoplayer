@@ -1,0 +1,162 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:t="clr-namespace:QuickZip.Tools">    
+    
+    <t:FileToIconConverter x:Key="fti" />
+    <t:BoolToVisibilityConverter x:Key="btv" />
+    <t:BoolToVisibilityHiddenConverter x:Key="btvh" />
+    <t:FlipBoolToVisibilityConverter x:Key="fbtv" />
+    <t:InvertSignConverter x:Key="is" />
+    <t:PathToDirNameConverter x:Key="ptd" />
+
+
+    <Geometry x:Key="NormalArrow">M0,0 L4,3.5 0,7 z</Geometry>
+    <Geometry x:Key="ExpandedArrow">M0,3 L7,3 3.5,7 z</Geometry>
+    <Geometry x:Key="ExpanderArrow">M6,1 L2,4 L6,7 M11,1 L7,4 L11,7</Geometry>
+
+    <ControlTemplate x:Key="BasicArrowButton" TargetType="{x:Type ToggleButton}" >
+        <Border x:Name="border"
+                Padding="2,0" Background="Transparent" 
+                BorderBrush="Transparent" BorderThickness="1"
+				MinHeight="20" MinWidth ="12" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+            <Path x:Name="path" Fill="#FF000000"
+                    Data="{StaticResource NormalArrow}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center" 
+                    Margin="{TemplateBinding Padding}" IsHitTestVisible="True" />
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Data" TargetName="path" Value="{StaticResource ExpandedArrow}"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Data" TargetName="path" Value="{StaticResource ExpandedArrow}"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+    
+    <ControlTemplate x:Key="ExpanderArrowButton" TargetType="{x:Type ToggleButton}" >
+        <Border x:Name="border" 
+                Padding="2,0" Background="Transparent" 
+                BorderBrush="Transparent" BorderThickness="1"
+				MinHeight="20" MinWidth ="12" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">            
+            <Path x:Name="path"  Stroke="Black" StrokeThickness="1.2"
+                    Data="{StaticResource ExpanderArrow}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center" 
+                    Margin="{TemplateBinding Padding}" IsHitTestVisible="True" />            
+        </Border>
+        <!--<ControlTemplate.Triggers>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Data" TargetName="path" Value="{StaticResource ExpandedArrow}"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Data" TargetName="path" Value="{StaticResource ExpandedArrow}"/>
+            </Trigger>
+        </ControlTemplate.Triggers>-->
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="BaseBreadcrumbButton" TargetType="{x:Type ButtonBase}">
+        <Border x:Name="border"
+                Padding="2,0"
+				Background="Transparent" 
+				BorderBrush="Transparent"
+                BorderThickness="1"				
+				SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Stretch" />
+        </Border>
+    </ControlTemplate>
+
+    <Style x:Key="ItemBaseStyle" TargetType="ComboBox" >
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBox">
+
+                    <Grid Name="MainGrid" SnapsToDevicePixels="True" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="0"  />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel x:Name="basePanel" SnapsToDevicePixels="True" Orientation="Horizontal" Grid.Column="0" Margin="0">
+                            <Border x:Name="borderCurrent" BorderThickness="0" Padding="1" BorderBrush="{TemplateBinding BorderBrush}"
+                                    Visibility="{Binding ShowDisplayPath, Converter={StaticResource btv}}" 
+                                    >
+                                <Button x:Name="buttonCurrent"                                          
+                                        Height="{TemplateBinding ActualHeight}" Template="{StaticResource BaseBreadcrumbButton}" >
+                                    <Button.Content>
+                                        <TextBlock Text="{Binding DisplayPath, Converter={StaticResource ptd}}" TextTrimming="CharacterEllipsis" />                                        
+                                    </Button.Content>
+                                </Button>
+
+                            </Border>
+                            <Border x:Name="borderToggle" BorderThickness="0" Padding="1,1,1,1" BorderBrush="{TemplateBinding BorderBrush}"
+                                    Visibility="{Binding HasSubFolders, Converter={StaticResource btv}}" >
+                                <Grid>
+                                    <ToggleButton IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" 
+                                              x:Name="buttonExpand"  Width="10" Template="{StaticResource BasicArrowButton}" 
+                                              MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" VerticalAlignment="Stretch"
+                                              KeyboardNavigation.IsTabStop="False" Focusable="False" 
+                                              Visibility="{Binding IsExpander, Converter={StaticResource fbtv}}"
+                                               />
+                                    <ToggleButton x:Name="buttonExpander" IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" 
+                                              Width="10" Template="{StaticResource ExpanderArrowButton}" 
+                                              MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" VerticalAlignment="Stretch"
+                                              KeyboardNavigation.IsTabStop="False" Focusable="False" 
+                                              Visibility="{Binding IsExpander, Converter={StaticResource btv}}"
+                                               />
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+
+                        <Popup IsOpen="{TemplateBinding ComboBox.IsDropDownOpen}" 
+                               Placement="Bottom"    PlacementTarget="{Binding ElementName=buttonExpand}"
+                                       MinWidth="{Binding ElementName=basePanel, Path=ActualWidth}"
+                                       PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}"                                               
+                                       AllowsTransparency="True" x:Name="PART_Popup" Margin="1,1,1,1"  Grid.ColumnSpan="2">
+                            <Border BorderThickness="1,1,1,1" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" 
+                                            Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" Name="DropDownBorder">
+                                <ScrollViewer CanContentScroll="True">
+                                    <ItemsPresenter x:Name="itemList" 
+                                                     SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}"                                                      
+                                                     MaxHeight="200"  
+                                                     KeyboardNavigation.DirectionalNavigation="None" />
+                                </ScrollViewer>
+
+
+                            </Border>
+                        </Popup>
+
+                    </Grid>
+                    <ControlTemplate.Triggers>                         
+                        <Trigger Property="ItemsControl.HasItems" Value="False">
+                            <Setter TargetName="DropDownBorder" Property="FrameworkElement.Height" Value="95"/>
+                        </Trigger>
+                        <Trigger SourceName="buttonExpand" Property="IsMouseOver" Value="True">
+                            <Setter TargetName="basePanel" Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                            <Setter TargetName="borderCurrent" Property="BorderThickness" Value="1" />
+                            <Setter TargetName="borderCurrent" Property="Padding" Value="0" />
+                            <Setter TargetName="borderToggle" Property="BorderThickness" Value="1,1,1,1" />
+                            <Setter TargetName="borderToggle" Property="Padding" Value="0" />
+                        </Trigger>
+                        <Trigger SourceName="buttonExpander" Property="IsMouseOver" Value="True">
+                            <Setter TargetName="basePanel" Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                            <Setter TargetName="borderToggle" Property="BorderThickness" Value="1,1,1,1" />
+                            <Setter TargetName="borderToggle" Property="Padding" Value="0" />
+                        </Trigger>
+                        
+                        <Trigger SourceName="buttonCurrent" Property="IsMouseOver" Value="True">
+                            <Setter TargetName="borderCurrent" Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                            <Setter TargetName="borderCurrent" Property="BorderThickness" Value="1" />
+                            <Setter TargetName="borderCurrent" Property="Padding" Value="0" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

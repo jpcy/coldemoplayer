@@ -1,0 +1,6 @@
+﻿<UserControl x:Class="CDP.View.Address"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:qz="clr-namespace:QuickZip;assembly=QuickZip">
+    <qz:BreadcrumbControl x:Name="breadcrumbBar" Margin="4" SelectedFolder="{Binding SelectedFolder, Mode=TwoWay}" />
+</UserControl>

@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0894ACFD-ABA2-402B-AD4A-59764D621A8F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>QuickZip</RootNamespace>
+    <AssemblyName>QuickZip</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="PresentationFramework">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BreadcrumbControl.xaml.cs">
+      <DependentUpon>BreadcrumbControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Framework\IExpandItemView.cs" />
+    <Compile Include="Framework\IItemView.cs" />
+    <Compile Include="Framework\ItemPresenterBase.cs" />
+    <Compile Include="Framework\Notifier.cs" />
+    <Compile Include="Framework\PresenterBase.cs" />
+    <Compile Include="Framework\ViewBase.cs" />
+    <Compile Include="Presenter\Controls\AutoCompleteTextBoxPresenter.cs" />
+    <Compile Include="Presenter\Controls\BreadcrumbCorePresenter.cs" />
+    <Compile Include="Presenter\Controls\ExpandPresenter.cs" />
+    <Compile Include="Presenter\FolderPresenter.cs" />
+    <Compile Include="Presenter\MyComputerPresenter.cs" />
+    <Compile Include="Presenter\TypedPresenter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tools\BreacrumbCorePanel.cs" />
+    <Compile Include="Tools\Converter\BoolToVisibility.cs" />
+    <Compile Include="Tools\Converter\BoolToVisibilityHidden.cs" />
+    <Compile Include="Tools\Converter\FileToIcon.cs" />
+    <Compile Include="Tools\Converter\FlipBoolToVisibility.cs" />
+    <Compile Include="Tools\Converter\InvertSign.cs" />
+    <Compile Include="Tools\Converter\PathToDirName.cs" />
+    <Compile Include="Tools\Converter\SysImageList.cs" />
+    <Compile Include="View\Controls\AutoCompleteTextBoxView.xaml.cs">
+      <DependentUpon>AutoCompleteTextBoxView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Controls\BreadcrumbCoreView.xaml.cs">
+      <DependentUpon>BreadcrumbCoreView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\FolderView.xaml.cs">
+      <DependentUpon>FolderView.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="BreadcrumbControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\BreadcrumbResources.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Brushes.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Controls\AutoCompleteTextBoxView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Controls\BreadcrumbCoreView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\FolderView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\computer.jpg" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

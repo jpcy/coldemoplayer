@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="QuickZip.BreadcrumbControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:t="clr-namespace:QuickZip.Tools"
+    xmlns:v="clr-namespace:QuickZip.View"             
+    x:Name="rootControl" 
+    >
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/BreadcrumbResources.xaml" />
+                <ResourceDictionary Source="Resources/Brushes.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <StackPanel>
+        <Border BorderBrush="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" BorderThickness="1">
+            <Grid>
+                <ProgressBar Background="Transparent" Foreground="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}"
+                             IsIndeterminate="{Binding ElementName=rootControl, Path=IsIndeterminate}" 
+                             Value="{Binding ElementName=rootControl, Path=Progress}" />
+                <DockPanel>
+                    <Label Content="_D" Target="{Binding ElementName=toggleTextBox}" Width="0" />
+                    <ToggleButton x:Name="toggleTextBox" IsChecked="False" DockPanel.Dock="Left" 
+                                  IsEnabled="{Binding ElementName=rootControl, Path=IsTextBoxEnabled}"
+                                  Background="{Binding ElementName=rootControl, Path=Background}"
+                                  Focusable="False" BorderBrush="{Binding ElementName=rootControl, Path=Background}" 
+                                  BorderThickness="0" >
+                        <Image Width="16" Height="16" Margin="5,0,0,0"  Source="{Binding  ElementName=rootControl, Path=Icon}" />
+                    </ToggleButton>
+                    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="Transparent"  MouseDown="Grid_MouseDown" >
+                        <ContentControl x:Name="bc"
+                                    Visibility="{Binding ElementName=toggleTextBox, Path=IsChecked, Converter={StaticResource fbtv}}"/>
+                        <ContentControl x:Name="tb" Visibility="{Binding ElementName=toggleTextBox, Path=IsChecked, Converter={StaticResource btv}}" />                                        
+                    </Grid>
+                </DockPanel>
+            </Grid>
+        </Border>
+
+    </StackPanel>
+</UserControl>

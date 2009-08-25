@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="CDP.View.Demos"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ListView Margin="8" SelectionMode="Single" ItemsSource="{Binding Items}" SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}">
+        <ListView.View>
+            <GridView>
+                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
+                <GridViewColumn Header="Game" />
+                <GridViewColumn Header="Map" DisplayMemberBinding="{Binding MapName}" />
+                <GridViewColumn Header="Perspective" DisplayMemberBinding="{Binding Perspective}" />
+                <GridViewColumn Header="Duration" DisplayMemberBinding="{Binding Duration}" />
+            </GridView>
+        </ListView.View>
+    </ListView>
+</UserControl>

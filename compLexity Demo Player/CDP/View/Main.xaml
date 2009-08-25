@@ -1,0 +1,15 @@
+﻿<Page x:Class="CDP.View.Main"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:view="clr-namespace:CDP.View">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <view:Address Grid.Row="0" DataContext="{Binding Address}" />
+        <view:Demos Grid.Row="1" DataContext="{Binding Demos}" />
+        <view:Demo Grid.Row="2" DataContext="{Binding Demo}" />
+    </Grid>
+</Page>
