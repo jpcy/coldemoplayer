@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Xml.Serialization;
 
 namespace CDP.HalfLifeDemo
 {
@@ -23,12 +24,28 @@ namespace CDP.HalfLifeDemo
             get { return new string[] { "dem" }; }
         }
 
+        private readonly Core.Config config;
+        private readonly Core.Adapters.IPath pathAdapter;
         private readonly byte[] magic = { 0x48, 0x4C, 0x44, 0x45, 0x4D, 0x4F }; // HLDEMO
-        private Dictionary<byte, Type> frames = new Dictionary<byte, Type>();
-        private Dictionary<byte, Type> engineMessages = new Dictionary<byte, Type>();
-        private Dictionary<string, Type> userMessages = new Dictionary<string, Type>();
+        private readonly Dictionary<byte, Type> frames = new Dictionary<byte, Type>();
+        private readonly Dictionary<byte, Type> engineMessages = new Dictionary<byte, Type>();
+        private readonly Dictionary<string, Type> userMessages = new Dictionary<string, Type>();
+        private Core.SteamGame[] games;
 
         public Handler()
+            : this(Core.Config.Instance, new Core.Adapters.Path())
+        {
+        }
+
+        public Handler(Core.Config config, Core.Adapters.IPath pathAdapter)
+        {
+            this.config = config;
+            this.pathAdapter = pathAdapter;
+            RegisterMessages();
+            ReadGameConfig();
+        }
+
+        protected virtual void RegisterMessages()
         {
             // Register frames.
             RegisterFrame(typeof(Frames.Loading));
@@ -74,6 +91,21 @@ namespace CDP.HalfLifeDemo
             RegisterEngineMessage(typeof(Messages.SvcTimeScale));
 
             // Register user messages.
+        }
+
+        protected virtual void ReadGameConfig()
+        {
+            // Read config/goldsrc/games.xml
+            using (StreamReader stream = new StreamReader(pathAdapter.Combine(config.ProgramPath, "config", "goldsrc", "games.xml")))
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(Core.SteamGame[]));
+                games = (Core.SteamGame[])serializer.Deserialize(stream);
+            }
+        }
+
+        public virtual Core.SteamGame FindGame(string gameFolder)
+        {
+            return games.FirstOrDefault(sg => sg.DemoGameFolders.Contains(gameFolder));
         }
 
         public override bool IsValidDemo(Stream stream)

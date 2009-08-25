@@ -5,7 +5,7 @@
         <ListView.View>
             <GridView>
                 <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
-                <GridViewColumn Header="Game" />
+                <GridViewColumn Header="Game" DisplayMemberBinding="{Binding GameName}" />
                 <GridViewColumn Header="Map" DisplayMemberBinding="{Binding MapName}" />
                 <GridViewColumn Header="Perspective" DisplayMemberBinding="{Binding Perspective}" />
                 <GridViewColumn Header="Duration" DisplayMemberBinding="{Binding Duration}" />

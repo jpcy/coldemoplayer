@@ -22,6 +22,10 @@ namespace CDP.Core.Tests
         // LoadDemo uses Activator to instantiate a type with a base type of Demo. Can't use a Moq mock.
         public class DemoStub : Demo
         {
+            public override string GameName
+            {
+                get { throw new NotImplementedException(); }
+            }
             public override string MapName { get; protected set; }
             public override string Perspective { get; protected set; }
             public override TimeSpan Duration { get; protected set; }

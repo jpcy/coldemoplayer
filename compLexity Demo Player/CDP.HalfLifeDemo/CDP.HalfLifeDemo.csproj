@@ -57,7 +57,6 @@
     <Compile Include="Frames\PlaySound.cs" />
     <Compile Include="Frames\Unknown.cs" />
     <Compile Include="Frames\WeaponChange.cs" />
-    <Compile Include="Game.cs" />
     <Compile Include="DeltaStructure.cs" />
     <Compile Include="EngineMessage.cs" />
     <Compile Include="IMessage.cs" />

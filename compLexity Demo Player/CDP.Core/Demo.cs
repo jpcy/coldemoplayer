@@ -80,6 +80,7 @@ namespace CDP.Core
             }
         }
 
+        public abstract string GameName { get; }
         public abstract string MapName { get; protected set; }
         public abstract string Perspective { get; protected set; }
         public abstract IList<Detail> Details { get; protected set; }

@@ -38,6 +38,20 @@ namespace CDP.HalfLifeDemo
             get { return 58; }
         }
 
+        public override string GameName
+        {
+            get
+            {
+                if (game == null)
+                {
+                    return string.Format("Unknown ({0})", GameFolderName);
+                }
+
+                string version = game.GetVersionName(clientDllChecksum);
+                return game.Name + version ?? string.Empty;
+            }
+        }
+
         public override string MapName { get; protected set; }
         public override string Perspective { get; protected set; }
         public override TimeSpan Duration { get; protected set; }
@@ -51,6 +65,8 @@ namespace CDP.HalfLifeDemo
         public bool IsCorrupt { get; private set; }
 
         private Handler handler;
+        private Core.SteamGame game;
+        private string clientDllChecksum;
         private readonly List<MessageCallback> messageCallbacks;
         private readonly Dictionary<string, DeltaStructure> deltaStructures;
         private readonly List<UserMessageDefinition> userMessageDefinitions;
@@ -103,6 +119,7 @@ namespace CDP.HalfLifeDemo
                     AddDetail("Game Folder", GameFolderName);
                     AddDetail("Map Checksum", MapChecksum);
                     AddDetail("Map Name", MapName);
+                    game = handler.FindGame(GameFolderName);
 
                     // Read directory entries.
                     try
@@ -366,6 +383,14 @@ namespace CDP.HalfLifeDemo
         #region Load message callbacks
         private void Load_ServerInfo(Messages.SvcServerInfo message)
         {
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < message.ClientDllChecksum.Length; i++)
+            {
+                sb.Append(message.ClientDllChecksum[i].ToString("X2"));
+            }
+
+            clientDllChecksum = sb.ToString();
             MaxClients = message.MaxClients;
             AddDetail("Server Slots", MaxClients);
             AddDetail("Server Name", message.ServerName);

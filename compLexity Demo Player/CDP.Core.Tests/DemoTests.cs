@@ -10,6 +10,11 @@ namespace CDP.Core.Tests
     {
         private class DummyDemo : Demo
         {
+            public override string GameName
+            {
+                get { throw new NotImplementedException(); }
+            }
+
             public override string MapName { get; protected set; }
             public override string Perspective { get; protected set; }
             public override IList<Demo.Detail> Details { get; protected set; }
