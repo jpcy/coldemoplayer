@@ -17,19 +17,11 @@ namespace CDP.CounterStrikeDemo
             get { return "cstrike"; }
         }
 
-        private readonly Core.Config config;
-        private readonly Core.Adapters.IPath pathAdapter;
         private Game game;
 
         public Handler()
-            : this(Core.Config.Instance, new Core.Adapters.Path())
+            : base(Core.Config.Instance, new Core.Adapters.Path())
         {
-        }
-
-        public Handler(Core.Config config, Core.Adapters.IPath pathAdapter)
-        {
-            this.config = config;
-            this.pathAdapter = pathAdapter;
         }
 
         protected override void RegisterMessages()

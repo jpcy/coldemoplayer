@@ -24,8 +24,8 @@ namespace CDP.HalfLifeDemo
             get { return new string[] { "dem" }; }
         }
 
-        private readonly Core.Config config;
-        private readonly Core.Adapters.IPath pathAdapter;
+        protected readonly Core.Config config;
+        protected readonly Core.Adapters.IPath pathAdapter;
         private readonly byte[] magic = { 0x48, 0x4C, 0x44, 0x45, 0x4D, 0x4F }; // HLDEMO
         private readonly Dictionary<byte, Type> frames = new Dictionary<byte, Type>();
         private readonly Dictionary<byte, Type> engineMessages = new Dictionary<byte, Type>();

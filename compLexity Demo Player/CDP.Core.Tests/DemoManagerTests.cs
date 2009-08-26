@@ -29,6 +29,16 @@ namespace CDP.Core.Tests
                 set { PublicHandler = value; }
             }
 
+            public override bool CanPlay
+            {
+                get { throw new NotImplementedException(); }
+            }
+
+            public override bool CanAnalyse
+            {
+                get { throw new NotImplementedException(); }
+            }
+
             public override void Load()
             {
             }

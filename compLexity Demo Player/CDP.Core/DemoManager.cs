@@ -72,7 +72,6 @@ namespace CDP.Core
                 return null;
             }
 
-            // Create a demo instance and load the demo file.
             Demo demo = (Demo)Activator.CreateInstance(plugin.DemoType);
             demo.FileName = fileName;
             demo.Handler = plugin.DemoHandler;

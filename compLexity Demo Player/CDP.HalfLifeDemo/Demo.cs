@@ -57,6 +57,16 @@ namespace CDP.HalfLifeDemo
         public override TimeSpan Duration { get; protected set; }
         public override IList<Detail> Details { get; protected set; }
 
+        public override bool CanPlay
+        {
+            get { return (game != null); }
+        }
+
+        public override bool CanAnalyse
+        {
+            get { return false; }
+        }
+
         public uint NetworkProtocol { get; private set; }
         public string GameFolderName { get; private set; }
         public uint MapChecksum { get; private set; }
@@ -108,6 +118,7 @@ namespace CDP.HalfLifeDemo
                 using (StreamWriter log = new StreamWriter(string.Format("E:\\Counter-Strike Demos\\col demo player test\\logs\\{0}.txt", Name)))
                 {
                     // Read header.
+                    // TODO: sanity check on demo and network protocol; friendly error message.
                     Header header = new Header();
                     header.Read(br.ReadBytes(Header.SizeInBytes));
                     NetworkProtocol = header.NetworkProtocol;

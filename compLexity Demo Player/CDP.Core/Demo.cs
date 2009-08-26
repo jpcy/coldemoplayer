@@ -87,6 +87,10 @@ namespace CDP.Core
         public abstract TimeSpan Duration { get; protected set; }
         public abstract DemoHandler Handler { set; }
 
+        // Capabilities.
+        public abstract bool CanPlay { get; }
+        public abstract bool CanAnalyse { get; }
+
         public abstract void Load();
         public abstract void Read();
         public abstract void Write(string destinationFileName);
