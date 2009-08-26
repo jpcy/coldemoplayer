@@ -170,6 +170,14 @@
       <Project>{14ABD36D-331F-43C8-8097-18C05B20F06E}</Project>
       <Name>CDP.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CDP.CounterStrikeDemo\CDP.CounterStrikeDemo.csproj">
+      <Project>{77712F28-8EB3-4560-BCD8-096CEA789915}</Project>
+      <Name>CDP.CounterStrikeDemo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CDP.HalfLifeDemo\CDP.HalfLifeDemo.csproj">
+      <Project>{6D554123-E196-4376-9B52-365777B913B8}</Project>
+      <Name>CDP.HalfLifeDemo</Name>
+    </ProjectReference>
     <ProjectReference Include="..\QuickZip\QuickZip.csproj">
       <Project>{0894ACFD-ABA2-402B-AD4A-59764D621A8F}</Project>
       <Name>QuickZip</Name>

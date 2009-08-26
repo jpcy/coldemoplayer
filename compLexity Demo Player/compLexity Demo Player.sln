@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CDP.Core.Tests", "CDP.Core.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickZip", "QuickZip\QuickZip.csproj", "{0894ACFD-ABA2-402B-AD4A-59764D621A8F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CDP.CounterStrikeDemo", "CDP.CounterStrikeDemo\CDP.CounterStrikeDemo.csproj", "{77712F28-8EB3-4560-BCD8-096CEA789915}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,12 @@ Global
 		{0894ACFD-ABA2-402B-AD4A-59764D621A8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0894ACFD-ABA2-402B-AD4A-59764D621A8F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0894ACFD-ABA2-402B-AD4A-59764D621A8F}.Release|x86.ActiveCfg = Release|Any CPU
+		{77712F28-8EB3-4560-BCD8-096CEA789915}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77712F28-8EB3-4560-BCD8-096CEA789915}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77712F28-8EB3-4560-BCD8-096CEA789915}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{77712F28-8EB3-4560-BCD8-096CEA789915}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77712F28-8EB3-4560-BCD8-096CEA789915}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77712F28-8EB3-4560-BCD8-096CEA789915}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

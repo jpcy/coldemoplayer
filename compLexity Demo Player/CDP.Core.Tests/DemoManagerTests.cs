@@ -11,15 +11,7 @@ namespace CDP.Core.Tests
     [TestFixture]
     public class DemoManagerTests
     {
-        public abstract class DemoDummy : Demo
-        {
-        }
-
-        public abstract class DemoHandlerDummy : DemoHandler
-        {
-        }
-
-        // LoadDemo uses Activator to instantiate a type with a base type of Demo. Can't use a Moq mock.
+        // CreateDemo uses Activator to instantiate a type with a base type of Demo. Can't use a Moq mock.
         public class DemoStub : Demo
         {
             public override string GameName
@@ -52,114 +44,82 @@ namespace CDP.Core.Tests
             }
         }
 
-
-        // LoadPlugins uses Activator to instantiate a type with a base type of DemoHandler. Can't use a Moq mock.
-        public class DemoHandlerStub : DemoHandler
-        {
-            public override string FullName
-            {
-                get { throw new NotImplementedException(); }
-            }
-
-            public override string Name
-            {
-                get { throw new NotImplementedException(); }
-            }
-
-            public override string[] Extensions
-            {
-                get { return new string[] { "dem" }; }
-            }
-
-            public override bool IsValidDemo(Stream stream)
-            {
-                return DemoManagerTests.IsValidDemo;
-            }
-        }
-
         private DemoManager demoManager;
-        private Mock<Adapters.IAssembly> assemblyAdapterMock;
+        private Mock<Core.DemoHandler> demoHandlerMock;
         private Mock<Adapters.IFile> fileAdapterMock;
-        private Mock<Adapters.IFolder> folderAdapterMock;
-
-        public static bool IsValidDemo { get; private set; }
+        private Mock<Adapters.IPath> pathAdapterMock;
 
         [SetUp]
         public void SetUp()
         {
-            assemblyAdapterMock = new Mock<Adapters.IAssembly>();
             fileAdapterMock = new Mock<Adapters.IFile>();
             fileAdapterMock.Setup(f => f.OpenRead(It.IsAny<string>())).Returns(new MemoryStream());
-            folderAdapterMock = new Mock<Adapters.IFolder>();
-            folderAdapterMock.Setup(f => f.GetFiles(It.IsAny<string>(), It.IsAny<string>())).Returns(new string[] { "dummy.dll" });
-            demoManager = new DemoManager(assemblyAdapterMock.Object, fileAdapterMock.Object, folderAdapterMock.Object);
-            IsValidDemo = true;
-        }
-
-        private void LoadDummyPlugin()
-        {
-            LoadDummyPlugin(new Type[] { typeof(DemoDummy), typeof(DemoHandlerStub) });
-        }
-
-        private void LoadDummyPlugin(Type[] types)
-        {
-            assemblyAdapterMock.Setup(a => a.GetTypes(It.IsAny<string>())).Returns(types);
-            demoManager.LoadPlugins(string.Empty);
+            pathAdapterMock = new Mock<Adapters.IPath>();
+            demoManager = new DemoManager(fileAdapterMock.Object, pathAdapterMock.Object);
+            demoHandlerMock = new Mock<DemoHandler>();
         }
 
         [Test]
-        [ExpectedException(typeof(ApplicationException), ExpectedMessage = "Assembly \"dummy.dll\" doesn't contain a class that inherits from Demo.")]
-        public void LoadPlugins_NoDemoType()
+        public void AddPlugin_Ok()
         {
-            LoadDummyPlugin(new Type[] { typeof(DemoHandlerDummy) });
+            Mock<Core.DemoHandler> demoHandlerMock = new Mock<DemoHandler>();
+            demoManager.AddPlugin(0, typeof(DemoStub), demoHandlerMock.Object);
         }
 
         [Test]
-        [ExpectedException(typeof(ApplicationException), ExpectedMessage = "Assembly \"dummy.dll\" doesn't contain a class that inherits from DemoHandler.")]
-        public void LoadPlugins_NoDemoHandlerType()
+        [ExpectedException(typeof(ArgumentException))]
+        public void AddPlugin_WrongDemoTypeBaseClass()
         {
-            LoadDummyPlugin(new Type[] { typeof(DemoDummy) });
-        }
-
-        [Test]
-        public void LoadPlugins_Ok()
-        {
-            LoadDummyPlugin();
+            Mock<Core.DemoHandler> demoHandlerMock = new Mock<DemoHandler>();
+            demoManager.AddPlugin(0, typeof(object), demoHandlerMock.Object);
         }
 
         [Test]
         public void ValidDemoExtensions_Ok()
         {
-            LoadDummyPlugin();
+            SetUpPluginStub(string.Empty, new string[] { "dem", "replay" }, true);
             string[] extensions = demoManager.ValidDemoExtensions();
-            Assert.That(extensions.Length, Is.EqualTo(1));
+            Assert.That(extensions.Length, Is.EqualTo(2));
             Assert.That(extensions[0], Is.EqualTo("dem"));
+            Assert.That(extensions[1], Is.EqualTo("replay"));
+        }
+
+        [Test]
+        public void ValidDemoExtensions_NoPlugins()
+        {
+            Assert.That(demoManager.ValidDemoExtensions().Length, Is.EqualTo(0));
         }
 
         [Test]
         public void CreateDemo_NoMatchingExtension()
         {
-            LoadDummyPlugin();
-            fileAdapterMock.Setup(f => f.OpenRead(It.IsAny<string>())).Returns(new MemoryStream());
-            Assert.That(demoManager.CreateDemo("foo.replay"), Is.Null);
+            SetUpPluginStub("replay", new string[] { "dem" }, true);
+            Assert.That(demoManager.CreateDemo(string.Empty), Is.Null);
         }
 
         [Test]
         public void CreateDemo_IsNotValidDemo()
         {
-            LoadDummyPlugin();
-            IsValidDemo = false;
-            Assert.That(demoManager.CreateDemo("foo.dem"), Is.Null);
+            SetUpPluginStub("dem", new string[] { "dem" }, false);
+            Assert.That(demoManager.CreateDemo(string.Empty), Is.Null);
         }
 
         [Test]
         public void CreateDemo_Ok()
         {
-            LoadDummyPlugin(new Type[] { typeof(DemoStub), typeof(DemoHandlerStub) });
-            IsValidDemo = true;
-            DemoStub demo = (DemoStub)demoManager.CreateDemo("foo.dem");
+            SetUpPluginStub("dem", new string[] { "dem" }, true);
+            DemoStub demo = (DemoStub)demoManager.CreateDemo(string.Empty);
             Assert.That(demo, Is.Not.Null);
-            Assert.That(demo.PublicHandler, Is.InstanceOf(typeof(DemoHandlerStub)));
+            Assert.That(demo.PublicHandler, Is.EqualTo(demoHandlerMock.Object));
+        }
+
+        private void SetUpPluginStub(string demoExtension, string[] extensions, bool isValidDemo)
+        {
+            fileAdapterMock.Setup(f => f.OpenRead(It.IsAny<string>())).Returns(new MemoryStream());
+            pathAdapterMock.Setup(p => p.GetExtension(It.IsAny<string>())).Returns(demoExtension);
+            demoHandlerMock.Setup(dh => dh.Extensions).Returns(extensions);
+            demoHandlerMock.Setup(dh => dh.IsValidDemo(It.IsAny<Stream>())).Returns(isValidDemo);
+            demoManager.AddPlugin(0, typeof(DemoStub), demoHandlerMock.Object);
         }
     }
 }

@@ -115,6 +115,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)..\bin\plugins\$(TargetFileName)"</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)..\bin\$(TargetFileName)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -11,53 +11,41 @@ namespace CDP.Core
     {
         private class Plugin
         {
-            public Type DemoType { get; set; }
-            public DemoHandler DemoHandler { get; set; }
+            public uint Priority { get; private set; }
+            public Type DemoType { get; private set; }
+            public DemoHandler DemoHandler { get; private set; }
+
+            public Plugin(uint priority, Type demoType, DemoHandler demoHandler)
+            {
+                Priority = priority;
+                DemoType = demoType;
+                DemoHandler = demoHandler;
+            }
         }
 
-        private Adapters.IAssembly assemblyAdapter;
-        private Adapters.IFile fileAdapter;
-        private Adapters.IFolder folderAdapter;
-        private List<Plugin> plugins = new List<Plugin>();
+        private readonly Adapters.IFile fileAdapter;
+        private readonly Adapters.IPath pathAdapter;
+        private readonly List<Plugin> plugins = new List<Plugin>();
 
-        public DemoManager(Adapters.IAssembly assemblyAdapter, Adapters.IFile fileAdapter, Adapters.IFolder folderAdapter)
+        public DemoManager(Adapters.IFile fileAdapter, Adapters.IPath pathAdapter)
         {
-            this.assemblyAdapter = assemblyAdapter;
             this.fileAdapter = fileAdapter;
-            this.folderAdapter = folderAdapter;
+            this.pathAdapter = pathAdapter;
         }
 
         public DemoManager()
-            : this(new Adapters.Assembly(), new Adapters.File(), new Adapters.Folder())
+            : this(new Adapters.File(), new Adapters.Path())
         {
         }
 
-        public void LoadPlugins(string path)
+        public void AddPlugin(uint priority, Type demoType, DemoHandler demoHandler)
         {
-            foreach (string assemblyFileName in folderAdapter.GetFiles(path, "*.dll"))
+            if (!demoType.IsSubclassOf(typeof(Demo)))
             {
-                Type[] types = assemblyAdapter.GetTypes(assemblyFileName);
-                Type demoType = types.SingleOrDefault(t => t.BaseType == typeof(Demo));
-                Type demoHandlerType = types.SingleOrDefault(t => t.BaseType == typeof(DemoHandler));
-
-                if (demoType == null)
-                {
-                    throw new ApplicationException(string.Format("Assembly \"{0}\" doesn't contain a class that inherits from Demo.", assemblyFileName));
-                }
-
-                if (demoHandlerType == null)
-                {
-                    throw new ApplicationException(string.Format("Assembly \"{0}\" doesn't contain a class that inherits from DemoHandler.", assemblyFileName));
-                }
-
-                plugins.Add(new Plugin()
-                {
-                    DemoType = demoType,
-                    DemoHandler = (DemoHandler)Activator.CreateInstance(demoHandlerType)
-                });
-
-                // TODO: calculate priority based on class heirarchy.
+                throw new ArgumentException("Type must inherit from CDP.Core.Demo.", "demoType");
             }
+
+            plugins.Add(new Plugin(priority, demoType, demoHandler));
         }
 
         public string[] ValidDemoExtensions()
@@ -91,23 +79,27 @@ namespace CDP.Core
             return demo;
         }
 
-        private Plugin FindPlugin(string fileName)
+        /// <summary>
+        /// Find the highest priority plugin that can handle the given demo file.
+        /// </summary>
+        /// <param name="demoFileName">The demo filename.</param>
+        /// <returns>A plugin, or null if no suitable plugin is found.</returns>
+        private Plugin FindPlugin(string demoFileName)
         {
-            string extension = Path.GetExtension(fileName).Replace(".", null);
+            string extension = pathAdapter.GetExtension(demoFileName);
 
-            using (Stream stream = fileAdapter.OpenRead(fileName))
+            using (Stream stream = fileAdapter.OpenRead(demoFileName))
             {
-                // TODO: take priority into account.
-                return plugins.FirstOrDefault(dp =>
+                return plugins.Where(p =>
                 {
-                    if (!dp.DemoHandler.Extensions.Contains(extension, StringComparer.InvariantCultureIgnoreCase))
+                    if (!p.DemoHandler.Extensions.Contains(extension, StringComparer.InvariantCultureIgnoreCase))
                     {
                         return false;
                     }
 
                     stream.Seek(0, SeekOrigin.Begin);
-                    return dp.DemoHandler.IsValidDemo(stream);
-                });
+                    return p.DemoHandler.IsValidDemo(stream);
+                }).OrderByDescending(p => p.Priority).FirstOrDefault();
             }
         }
     }

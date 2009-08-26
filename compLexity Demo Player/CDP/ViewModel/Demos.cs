@@ -46,7 +46,8 @@ namespace CDP.ViewModel
         public override void Initialise()
         {
             mediator.Register<string>(Messages.SelectedFolderChanged, SelectedFolderChanged, this);
-            demoManager.LoadPlugins(Path.Combine(Core.Config.Instance.ProgramPath, "plugins"));
+            demoManager.AddPlugin(0, typeof(HalfLifeDemo.Demo), new HalfLifeDemo.Handler());
+            demoManager.AddPlugin(1, typeof(CounterStrikeDemo.Demo), new CounterStrikeDemo.Handler());
         }
 
         public override void Initialise(object parameter)
