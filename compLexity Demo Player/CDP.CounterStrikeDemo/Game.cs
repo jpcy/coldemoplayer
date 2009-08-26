@@ -1,20 +1,47 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace CDP.CounterStrikeDemo
 {
     public class Game : Core.SteamGame
     {
-        // TODO: read checksums, built in maps, user messages etc.
-
-        public Game()
+        public class Version
         {
-            AppId = 20;
-            AppFolder = "counter-strike";
-            ModFolder = "cstrike";
-            Name = "Counter-Strike";
-            DemoGameFolders = new string[] { "cstrike", "cs13" };
+            [XmlAttribute("name")]
+            public string Name { get; set; }
+
+            [XmlAttribute("checksum")]
+            public string Checksum { get; set; }
         }
+
+        public class Map
+        {
+            [XmlAttribute("name")]
+            public string Name { get; set; }
+
+            [XmlAttribute("checksum")]
+            public uint Checksum { get; set; }
+        }
+
+        public class UserMessage
+        {
+            [XmlAttribute("name")]
+            public string Name { get; set; }
+
+            [XmlAttribute("id")]
+            public byte Id { get; set; }
+        }
+
+        public class Resource
+        {
+            [XmlAttribute("name")]
+            public string Name { get; set; }
+        }
+
+        public Version[] Versions { get; set; }
+        public Map[] Maps { get; set; }
+        public UserMessage[] UserMessages { get; set; }
+        public Resource[] ResourceBlacklist { get; set; }
 
         public override string GetVersionName(string checksum)
         {

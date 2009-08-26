@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GameConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<Game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <AppId>10</AppId>
+  <AppFolder>counter-strike</AppFolder>
+  <ModFolder>cstrike</ModFolder>
+  <Name>Counter-Strike</Name>
+  <DemoGameFolders>
+    <string>cstrike</string>
+    <string>cs13</string>
+  </DemoGameFolders>
   <Versions>
 	<Version name="1.0" checksum="7C8346EFE2629D87A50A94BEF682034D" />
 	<Version name="1.1" checksum="0CB78BC0BABD01EC70A3F77C06B81451" />
@@ -146,4 +154,4 @@
 	<Resource name="sprites/horizontal.spr" />
 	<Resource name="sprites/vertical.spr" />
   </ResourceBlacklist>
-</GameConfig>
+</Game>

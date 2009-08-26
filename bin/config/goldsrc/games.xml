@@ -1,8 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfSteamGame xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SteamGame appId="20" appFolder="team fortress classic" modFolder="tfc" name="Team Fortress Classic">
+  <SteamGame>
+    <AppId>20</AppId>
+    <AppFolder>team fortress classic</AppFolder>
+    <ModFolder>tfc</ModFolder>
+    <Name>Team Fortress Classic</Name>
     <DemoGameFolders>
       <string>tfc</string>
     </DemoGameFolders>
   </SteamGame>
+  <SteamGame>
+    <AppId>30</AppId>
+    <AppFolder>day of defeat</AppFolder>
+    <ModFolder>dod</ModFolder>
+    <Name>Day of Defeat</Name>
+    <DemoGameFolders>
+      <string>dod</string>
+    </DemoGameFolders>
+  </SteamGame>
+  <SteamGame>
+    <AppId>40</AppId>
+    <AppFolder>deathmatch classic</AppFolder>
+    <ModFolder>dmc</ModFolder>
+    <Name>Deathmatch Classic</Name>
+    <DemoGameFolders>
+      <string>dmc</string>
+    </DemoGameFolders>
+  </SteamGame>
+  <SteamGame>
+    <AppId>50</AppId>
+    <AppFolder>opposing force</AppFolder>
+    <ModFolder>op4</ModFolder>
+    <Name>Half-Life: Opposing Force</Name>
+    <DemoGameFolders>
+      <string>op4</string>
+    </DemoGameFolders>
+  </SteamGame>
+  <SteamGame>
+    <AppId>60</AppId>
+    <AppFolder>ricochet</AppFolder>
+    <ModFolder>ricochet</ModFolder>
+    <Name>Ricochet</Name>
+    <DemoGameFolders>
+      <string>ricochet</string>
+    </DemoGameFolders>
+  </SteamGame>
+  <SteamGame>
+    <AppId>70</AppId>
+    <AppFolder>half-life</AppFolder>
+    <ModFolder>valve</ModFolder>
+    <Name>Half-Life</Name>
+    <DemoGameFolders>
+      <string>valve</string>
+    </DemoGameFolders>
+  </SteamGame>
+  <SteamGame>
+    <AppId>80</AppId>
+    <AppFolder>condition zero</AppFolder>
+    <ModFolder>czero</ModFolder>
+    <Name>Counter-Strike: Condition Zero</Name>
+    <DemoGameFolders>
+      <string>czero</string>
+    </DemoGameFolders>
+  </SteamGame>
+  <SteamGame>
+    <AppId>100</AppId>
+    <AppFolder>condition zero deleted scenes</AppFolder>
+    <ModFolder>czerodeleted</ModFolder>
+    <Name>Counter-Strike: Condition Zero Deleted Scenes</Name>
+    <DemoGameFolders>
+      <string>czerodeleted</string>
+    </DemoGameFolders>
+  </SteamGame>
+  <SteamGame>
+    <AppId>130</AppId>
+    <AppFolder>half-life blue shift</AppFolder>
+    <ModFolder>bshift</ModFolder>
+    <Name>Half-Life: Blue Shift</Name>
+    <DemoGameFolders>
+      <string>bshift</string>
+    </DemoGameFolders>
+  </SteamGame>  
 </ArrayOfSteamGame>

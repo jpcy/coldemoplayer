@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Xml.Serialization;
 using System.IO;
 
 namespace CDP.CounterStrikeDemo
@@ -16,7 +17,20 @@ namespace CDP.CounterStrikeDemo
             get { return "cstrike"; }
         }
 
+        private readonly Core.Config config;
+        private readonly Core.Adapters.IPath pathAdapter;
         private Game game;
+
+        public Handler()
+            : this(Core.Config.Instance, new Core.Adapters.Path())
+        {
+        }
+
+        public Handler(Core.Config config, Core.Adapters.IPath pathAdapter)
+        {
+            this.config = config;
+            this.pathAdapter = pathAdapter;
+        }
 
         protected override void RegisterMessages()
         {
@@ -27,8 +41,12 @@ namespace CDP.CounterStrikeDemo
 
         protected override void ReadGameConfig()
         {
-            game = new Game();
-            // TODO: call method to load config.
+            XmlSerializer serializer = new XmlSerializer(typeof(Game));
+
+            using (StreamReader stream = new StreamReader(pathAdapter.Combine(config.ProgramPath, "config", "goldsrc", "cstrike.xml")))
+            {
+                game = (Game)serializer.Deserialize(stream);
+            }
         }
 
         public override Core.SteamGame FindGame(string gameFolder)
