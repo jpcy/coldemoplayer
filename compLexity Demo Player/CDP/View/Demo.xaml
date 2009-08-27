@@ -39,6 +39,13 @@
                     </ItemsControl>
                 </Grid>
             </TabItem>
+            <TabItem Header="Players">
+                <ListView ItemsSource="{Binding Data.Players}">
+                    <ListView.View>
+                        <GridView x:Name="playersGridView" />
+                    </ListView.View>
+                </ListView>
+            </TabItem>
         </TabControl>
         <StackPanel Grid.Row="1" Margin="0,20" Orientation="Horizontal">
             <Button Command="{Binding PlayCommand}">Play</Button>

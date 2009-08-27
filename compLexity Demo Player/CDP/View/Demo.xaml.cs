@@ -14,14 +14,34 @@ using System.Windows.Shapes;
 
 namespace CDP.View
 {
-    /// <summary>
-    /// Interaction logic for Demo.xaml
-    /// </summary>
     public partial class Demo : UserControl
     {
+        private Core.DemoHandler handler = null;
+
         public Demo()
         {
             InitializeComponent();
+            Mediator.Instance.Register<Core.Demo>(Messages.SelectedDemoChanged, SelectedDemoChanged, this);
+        }
+
+        private void SelectedDemoChanged(Core.Demo demo)
+        {
+            if (demo.Handler == handler)
+            {
+                return;
+            }
+
+            handler = demo.Handler;
+            playersGridView.Columns.Clear();
+
+            foreach (Core.DemoHandler.PlayerColumn column in handler.PlayerColumns)
+            {
+                playersGridView.Columns.Add(new GridViewColumn
+                {
+                    Header = column.Header,
+                    DisplayMemberBinding = new Binding(column.DisplayMemberBinding)
+                });
+            }
         }
     }
 }

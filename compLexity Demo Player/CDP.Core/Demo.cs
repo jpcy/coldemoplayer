@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Collections;
 
 namespace CDP.Core
 {
@@ -60,6 +61,7 @@ namespace CDP.Core
         public event EventHandler<OperationErrorEventArgs> OperationErrorEvent;
         public event EventHandler OperationCompleteEvent;
 
+        public virtual DemoHandler Handler { get; set; }
         public string Name { get; private set; }
 
         private string fileName = null;
@@ -85,13 +87,13 @@ namespace CDP.Core
         public abstract string Perspective { get; protected set; }
         public abstract TimeSpan Duration { get; protected set; }
         public abstract IList<Detail> Details { get; protected set; }
+        public abstract ArrayList Players { get; protected set; }
 
         /// <summary>
         /// The relative path to the map preview and overview images corresponding to this demo.
         /// </summary>
         /// <example>goldsrc\de_dust2.jpg</example>
         public abstract string MapImagesRelativePath { get; }
-        public abstract DemoHandler Handler { set; }
 
         // Capabilities.
         public abstract bool CanPlay { get; }

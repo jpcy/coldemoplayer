@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Reflection;
+using System.Collections;
 
 namespace CDP.HalfLifeDemo
 {
@@ -23,8 +24,19 @@ namespace CDP.HalfLifeDemo
             public string Name { get; set; }
         }
 
+        private class Player
+        {
+            public byte Slot { get; set; }
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public float UpdateRate { get; set; }
+            public float Rate { get; set; }
+            public string SteamId { get; set; }
+        }
+
         public override Core.DemoHandler Handler
         {
+            get { return handler; }
             set { handler = (Handler)value; }
         }
 
@@ -56,6 +68,7 @@ namespace CDP.HalfLifeDemo
         public override string Perspective { get; protected set; }
         public override TimeSpan Duration { get; protected set; }
         public override IList<Detail> Details { get; protected set; }
+        public override ArrayList Players { get; protected set; }
 
         public override string MapImagesRelativePath
         {
@@ -96,6 +109,7 @@ namespace CDP.HalfLifeDemo
             IsHltv = false;
             IsCorrupt = false;
             Details = new List<Detail>();
+            Players = new ArrayList();
             messageCallbacks = new List<MessageCallback>();
             deltaStructures = new Dictionary<string, DeltaStructure>();
             userMessageDefinitions = new List<UserMessageDefinition>();
@@ -117,6 +131,7 @@ namespace CDP.HalfLifeDemo
             try
             {
                 AddMessageCallback<Messages.SvcServerInfo>(Load_ServerInfo);
+                AddMessageCallback<Messages.SvcUpdateUserInfo>(Load_UpdateUserInfo);
                 AddMessageCallback<Messages.SvcDeltaDescription>(Load_DeltaDescription);
                 AddMessageCallback<Messages.SvcNewUserMessage>(Load_NewUserMessage);
                 AddMessageCallback<Messages.SvcHltv>(Load_Hltv);
@@ -414,6 +429,79 @@ namespace CDP.HalfLifeDemo
             MaxClients = message.MaxClients;
             AddDetail("Server Slots", MaxClients);
             AddDetail("Server Name", message.ServerName);
+        }
+
+        private void Load_UpdateUserInfo(Messages.SvcUpdateUserInfo message)
+        {
+            Player player = null;
+
+            // Find a player with a matching ID.
+            foreach (Player p in Players)
+            {
+                if (p.Id == message.EntityId)
+                {
+                    player = p;
+                    break;
+                }
+            }
+
+            if (message.Info.Length == 0)
+            {
+                // 0 length text means a player just left and another player's slot is being changed.
+                if (player != null)
+                {
+                    player.Slot = message.Slot;
+                }
+
+                return;
+            }
+
+            // Create a player if one doesn't exist.
+            if (player == null)
+            {
+                player = new Player { Slot = message.Slot, Id = message.EntityId };
+                Players.Add(player);
+            }
+
+            // Parse info string.
+            string s = message.Info.Remove(0, 1); // trim leading slash
+            string[] infoKeyTokens = s.Split('\\');
+
+            if (infoKeyTokens.Length % 2 != 0)
+            {
+                throw new ApplicationException("User information string contains an odd number of tokens.");
+            }
+
+            for (int i = 0; i < infoKeyTokens.Length; i += 2)
+            {
+                string key = infoKeyTokens[i];
+                string value = infoKeyTokens[i + 1];
+
+                if (key == "name")
+                {
+                    player.Name = value;
+                }
+                else if (key == "cl_updaterate")
+                {
+                    player.UpdateRate = float.Parse(value);
+                }
+                else if (key == "rate")
+                {
+                    player.Rate = float.Parse(value);
+                }
+                else if (key == "*sid")
+                {
+                    ulong sid;
+
+                    if (ulong.TryParse(value, out sid) && sid != 0)
+                    {
+                        ulong authId = sid - 76561197960265728;
+                        int serverId = ((authId % 2) == 0 ? 0 : 1);
+                        authId = (authId - (ulong)serverId) / 2;
+                        player.SteamId = string.Format("STEAM_0:{0}:{1}", serverId, authId);
+                    }
+                }
+            }
         }
 
         private void Load_DeltaDescription(Messages.SvcDeltaDescription message)

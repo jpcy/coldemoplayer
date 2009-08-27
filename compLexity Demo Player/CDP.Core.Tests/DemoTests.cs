@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using CDP.Core;
+using System.Collections;
 
 namespace CDP.Core.Tests
 {
@@ -19,13 +20,10 @@ namespace CDP.Core.Tests
             public override string Perspective { get; protected set; }
             public override TimeSpan Duration { get; protected set; }
             public override IList<Demo.Detail> Details { get; protected set; }
+            public override ArrayList Players { get; protected set; }
             public override string MapImagesRelativePath
             {
                 get { throw new NotImplementedException(); }
-            }
-            public override DemoHandler Handler
-            {
-                set { }
             }
 
             public override bool CanPlay

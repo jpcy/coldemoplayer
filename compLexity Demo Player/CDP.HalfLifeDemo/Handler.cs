@@ -24,6 +24,20 @@ namespace CDP.HalfLifeDemo
             get { return new string[] { "dem" }; }
         }
 
+        public override PlayerColumn[] PlayerColumns
+        {
+            get 
+            {
+                return new PlayerColumn[]
+                {
+                    new PlayerColumn("Name", "Name"),
+                    new PlayerColumn("cl__updaterate", "UpdateRate"),
+                    new PlayerColumn("rate", "Rate"),
+                    new PlayerColumn("Steam ID", "SteamId")
+                };
+            }
+        }
+
         protected readonly Core.Config config;
         protected readonly Core.Adapters.IPath pathAdapter;
         private readonly byte[] magic = { 0x48, 0x4C, 0x44, 0x45, 0x4D, 0x4F }; // HLDEMO

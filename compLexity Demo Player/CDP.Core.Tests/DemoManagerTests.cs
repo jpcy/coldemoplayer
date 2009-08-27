@@ -5,6 +5,7 @@ using Moq;
 using CDP.Core;
 using System.IO;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace CDP.Core.Tests
 {
@@ -22,15 +23,10 @@ namespace CDP.Core.Tests
             public override string Perspective { get; protected set; }
             public override TimeSpan Duration { get; protected set; }
             public override IList<Detail> Details { get; protected set; }
+            public override ArrayList Players { get; protected set; }
             public override string MapImagesRelativePath
             {
                 get { throw new NotImplementedException(); }
-            }
-            public DemoHandler PublicHandler { get; private set; }
-
-            public override DemoHandler Handler
-            {
-                set { PublicHandler = value; }
             }
 
             public override bool CanPlay
@@ -124,7 +120,7 @@ namespace CDP.Core.Tests
             SetUpPluginStub("dem", new string[] { "dem" }, true);
             DemoStub demo = (DemoStub)demoManager.CreateDemo(string.Empty);
             Assert.That(demo, Is.Not.Null);
-            Assert.That(demo.PublicHandler, Is.EqualTo(demoHandlerMock.Object));
+            Assert.That(demo.Handler, Is.EqualTo(demoHandlerMock.Object));
         }
 
         private void SetUpPluginStub(string demoExtension, string[] extensions, bool isValidDemo)

@@ -11,9 +11,22 @@ namespace CDP.Core
     /// </summary>
     public abstract class DemoHandler
     {
+        public class PlayerColumn
+        {
+            public string Header { get; private set; }
+            public string DisplayMemberBinding { get; private set; }
+
+            public PlayerColumn(string header, string displayMemberBinding)
+            {
+                Header = header;
+                DisplayMemberBinding = displayMemberBinding;
+            }
+        }
+
         public abstract string FullName { get; }
         public abstract string Name { get; }
         public abstract string[] Extensions { get; } // e.g. "dem".
+        public abstract PlayerColumn[] PlayerColumns { get; }
 
         public abstract bool IsValidDemo(Stream stream);
 
