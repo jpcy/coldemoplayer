@@ -83,14 +83,21 @@ namespace CDP.Core
         public abstract string GameName { get; }
         public abstract string MapName { get; protected set; }
         public abstract string Perspective { get; protected set; }
-        public abstract IList<Detail> Details { get; protected set; }
         public abstract TimeSpan Duration { get; protected set; }
+        public abstract IList<Detail> Details { get; protected set; }
+
+        /// <summary>
+        /// The relative path to the map preview and overview images corresponding to this demo.
+        /// </summary>
+        /// <example>goldsrc\de_dust2.jpg</example>
+        public abstract string MapImagesRelativePath { get; }
         public abstract DemoHandler Handler { set; }
 
         // Capabilities.
         public abstract bool CanPlay { get; }
         public abstract bool CanAnalyse { get; }
 
+        // Operations.
         public abstract void Load();
         public abstract void Read();
         public abstract void Write(string destinationFileName);

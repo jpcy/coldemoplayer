@@ -22,6 +22,10 @@ namespace CDP.Core.Tests
             public override string Perspective { get; protected set; }
             public override TimeSpan Duration { get; protected set; }
             public override IList<Detail> Details { get; protected set; }
+            public override string MapImagesRelativePath
+            {
+                get { throw new NotImplementedException(); }
+            }
             public DemoHandler PublicHandler { get; private set; }
 
             public override DemoHandler Handler

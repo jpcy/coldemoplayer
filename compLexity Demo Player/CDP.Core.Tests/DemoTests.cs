@@ -17,8 +17,12 @@ namespace CDP.Core.Tests
 
             public override string MapName { get; protected set; }
             public override string Perspective { get; protected set; }
-            public override IList<Demo.Detail> Details { get; protected set; }
             public override TimeSpan Duration { get; protected set; }
+            public override IList<Demo.Detail> Details { get; protected set; }
+            public override string MapImagesRelativePath
+            {
+                get { throw new NotImplementedException(); }
+            }
             public override DemoHandler Handler
             {
                 set { }

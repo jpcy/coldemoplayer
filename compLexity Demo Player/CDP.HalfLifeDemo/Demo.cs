@@ -57,6 +57,15 @@ namespace CDP.HalfLifeDemo
         public override TimeSpan Duration { get; protected set; }
         public override IList<Detail> Details { get; protected set; }
 
+        public override string MapImagesRelativePath
+        {
+            get
+            {
+                Core.Adapters.Path pathAdapter = new Core.Adapters.Path();
+                return pathAdapter.Combine("goldsrc", GameFolderName, MapName + ".jpg");
+            }
+        }
+
         public override bool CanPlay
         {
             get { return (game != null); }
