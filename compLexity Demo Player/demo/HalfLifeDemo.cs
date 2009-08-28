@@ -172,6 +172,12 @@ namespace compLexity_Demo_Player
                 {
                     return true;
                 }
+                else if (NetworkProtocol == 47 && Perspective == Perspectives.Hltv)
+                {
+                    // Different user message indicies.
+                    // http://www.sk-gaming.com/file/2047-SKswe_vs_gmpo
+                    return true;
+                }
 
                 return false;
             }
