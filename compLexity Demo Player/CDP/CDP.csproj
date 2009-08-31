@@ -141,7 +141,6 @@
     </Compile>
     <Compile Include="Shell.cs" />
     <Compile Include="ShellFolder.cs" />
-    <Compile Include="ViewModelBase.cs" />
     <Compile Include="ViewModel\Address.cs" />
     <Compile Include="ViewModel\Demo.cs" />
     <Compile Include="ViewModel\Demos.cs" />

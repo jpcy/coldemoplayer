@@ -4,11 +4,18 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Xml.Serialization;
+using System.Windows.Controls;
 
 namespace CDP.HalfLifeDemo
 {
     public class Handler : Core.DemoHandler
     {
+        public enum PlaybackMethods
+        {
+            Playdemo,
+            Viewdemo
+        }
+
         public override string FullName
         {
             get { return "Half-Life"; }
@@ -38,6 +45,21 @@ namespace CDP.HalfLifeDemo
             }
         }
 
+        public override Setting[] Settings
+        {
+            get
+            {
+                return new Setting[]
+                {
+                    new Setting("HlPlaybackMethod", typeof(PlaybackMethods), PlaybackMethods.Playdemo),
+                    new Setting("HlStartListenServer", typeof(bool), true),
+                    new Setting("HlRemoveShowscores", typeof(bool), true)
+                };
+            }
+        }
+
+        public override UserControl SettingsView { get; protected set; }
+
         protected readonly Core.Config config;
         protected readonly Core.Adapters.IPath pathAdapter;
         private readonly byte[] magic = { 0x48, 0x4C, 0x44, 0x45, 0x4D, 0x4F }; // HLDEMO
@@ -55,6 +77,7 @@ namespace CDP.HalfLifeDemo
         {
             this.config = config;
             this.pathAdapter = pathAdapter;
+            SettingsView = new SettingsView { DataContext = new SettingsViewModel() };
             RegisterMessages();
             ReadGameConfig();
         }

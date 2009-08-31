@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CDP.ViewModel
 {
-    public class Demo : ViewModelBase
+    public class Demo : Core.ViewModelBase
     {
         public Core.Demo Data { get; private set; }
         public string MapPreviewFileName
@@ -32,6 +32,7 @@ namespace CDP.ViewModel
                 return pathAdapter.Combine(config.ProgramPath, "overviews", Data.MapImagesRelativePath);
             }
         }
+
         public DelegateCommand PlayCommand { get; private set; }
         public DelegateCommand AnalyseCommand { get; private set; }
 

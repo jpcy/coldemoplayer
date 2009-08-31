@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace CDP
+namespace CDP.Core
 {
     public abstract class ViewModelBase : INotifyPropertyChanged
     {

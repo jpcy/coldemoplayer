@@ -5,18 +5,18 @@ using System.Text;
 
 namespace CDP.ViewModel
 {
-    public class Main : ViewModelBase
+    public class Main : Core.ViewModelBase
     {
-        public ViewModelBase Address { get; private set; }
-        public ViewModelBase Demos { get; private set; }
-        public ViewModelBase Demo { get; private set; }
+        public Core.ViewModelBase Address { get; private set; }
+        public Core.ViewModelBase Demos { get; private set; }
+        public Core.ViewModelBase Demo { get; private set; }
 
         public Main()
             : this(new Address(), new Demos(), new Demo())
         {
         }
 
-        public Main(ViewModelBase address, ViewModelBase demos, ViewModelBase demo)
+        public Main(Core.ViewModelBase address, Core.ViewModelBase demos, Core.ViewModelBase demo)
         {
             Address = address;
             Demos = demos;

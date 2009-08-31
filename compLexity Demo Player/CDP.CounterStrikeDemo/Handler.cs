@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Xml.Serialization;
 using System.IO;
+using System.Collections.Generic;
 
 namespace CDP.CounterStrikeDemo
 {
@@ -17,11 +18,22 @@ namespace CDP.CounterStrikeDemo
             get { return "cstrike"; }
         }
 
+        public override Setting[] Settings
+        {
+            get
+            {
+                List<Setting> temp = new List<Setting>(base.Settings);
+                temp.Add(new Setting("CsRemoveFadeToBlack", typeof(bool), true));
+                return temp.ToArray();
+            }
+        }
+
         private Game game;
 
         public Handler()
             : base(Core.Config.Instance, new Core.Adapters.Path())
         {
+            SettingsView = new SettingsView { DataContext = new SettingsViewModel() };
         }
 
         protected override void RegisterMessages()

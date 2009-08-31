@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace CDP.ViewModel
 {
-    public class Address : ViewModelBase
+    public class Address : Core.ViewModelBase
     {
         public string SelectedFolder
         {

@@ -85,6 +85,28 @@ namespace CDP.Core.Tests
         }
 
         [Test]
+        public void GetAllDemoHandlerSettings_Ok()
+        {
+            Func<DemoHandler.Setting[], Mock<Core.DemoHandler>> createDemoHandlerMock = s =>
+            {
+                var mock = new Mock<DemoHandler>();
+                mock.Setup(dh => dh.Settings).Returns(s);
+                return mock;
+            };
+
+            var setting1 = new DemoHandler.Setting("setting1", typeof(bool), false);
+            var setting2 = new DemoHandler.Setting("setting2", typeof(bool), false);
+            var mock1 = createDemoHandlerMock(new DemoHandler.Setting[] { setting1 });
+            var mock2 = createDemoHandlerMock(new DemoHandler.Setting[] { setting2 });
+            demoManager.AddPlugin(0, typeof(DemoStub), mock1.Object);
+            demoManager.AddPlugin(0, typeof(DemoStub), mock2.Object);
+            var result = demoManager.GetAllDemoHandlerSettings();
+            Assert.That(result.Length, Is.EqualTo(2));
+            Assert.That(result[0], Is.EqualTo(setting1));
+            Assert.That(result[1], Is.EqualTo(setting2));
+        }
+
+        [Test]
         public void ValidDemoExtensions_Ok()
         {
             SetUpPluginStub(string.Empty, new string[] { "dem", "replay" }, true);

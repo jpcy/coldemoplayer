@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Reflection;
+using System.Windows.Controls;
 
 namespace CDP.Core
 {
@@ -46,6 +47,18 @@ namespace CDP.Core
             }
 
             plugins.Add(new Plugin(priority, demoType, demoHandler));
+        }
+
+        public DemoHandler.Setting[] GetAllDemoHandlerSettings()
+        {
+            List<DemoHandler.Setting> settings = new List<DemoHandler.Setting>();
+
+            foreach (Plugin plugin in plugins)
+            {
+                settings.AddRange(plugin.DemoHandler.Settings);
+            }
+
+            return settings.Distinct().ToArray();
         }
 
         public string[] ValidDemoExtensions()
