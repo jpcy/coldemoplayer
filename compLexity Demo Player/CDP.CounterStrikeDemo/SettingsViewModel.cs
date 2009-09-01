@@ -9,16 +9,16 @@ namespace CDP.CounterStrikeDemo
     {
         public bool RemoveFadeToBlack
         {
-            get { return (bool)config.DemoSettings["CsRemoveFadeToBlack"]; }
-            set { config.DemoSettings["CsRemoveFadeToBlack"] = value; }
+            get { return (bool)config.Demo["CsRemoveFadeToBlack"]; }
+            set { config.Demo["CsRemoveFadeToBlack"] = value; }
         }
 
         public SettingsViewModel()
-            : this(Core.Config.Instance)
+            : this(Core.Settings.Instance)
         {
         }
 
-        public SettingsViewModel(Core.Config config) : base(config)
+        public SettingsViewModel(Core.Settings config) : base(config)
         {
         }
     }

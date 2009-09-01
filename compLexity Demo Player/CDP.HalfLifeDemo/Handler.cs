@@ -60,7 +60,7 @@ namespace CDP.HalfLifeDemo
 
         public override UserControl SettingsView { get; protected set; }
 
-        protected readonly Core.Config config;
+        protected readonly Core.Settings config;
         protected readonly Core.Adapters.IPath pathAdapter;
         private readonly byte[] magic = { 0x48, 0x4C, 0x44, 0x45, 0x4D, 0x4F }; // HLDEMO
         private readonly Dictionary<byte, Type> frames = new Dictionary<byte, Type>();
@@ -69,11 +69,11 @@ namespace CDP.HalfLifeDemo
         private Core.SteamGame[] games;
 
         public Handler()
-            : this(Core.Config.Instance, new Core.Adapters.Path())
+            : this(Core.Settings.Instance, new Core.Adapters.Path())
         {
         }
 
-        public Handler(Core.Config config, Core.Adapters.IPath pathAdapter)
+        public Handler(Core.Settings config, Core.Adapters.IPath pathAdapter)
         {
             this.config = config;
             this.pathAdapter = pathAdapter;

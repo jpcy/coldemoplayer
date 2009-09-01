@@ -22,16 +22,17 @@ namespace CDP.CounterStrikeDemo
         {
             get
             {
-                List<Setting> temp = new List<Setting>(base.Settings);
-                temp.Add(new Setting("CsRemoveFadeToBlack", typeof(bool), true));
-                return temp.ToArray();
+                return new Setting[]
+                {
+                    new Setting("CsRemoveFadeToBlack", typeof(bool), true)
+                };
             }
         }
 
         private Game game;
 
         public Handler()
-            : base(Core.Config.Instance, new Core.Adapters.Path())
+            : base(Core.Settings.Instance, new Core.Adapters.Path())
         {
             SettingsView = new SettingsView { DataContext = new SettingsViewModel() };
         }

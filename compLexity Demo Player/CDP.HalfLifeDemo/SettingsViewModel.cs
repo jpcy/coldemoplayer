@@ -4,17 +4,17 @@ namespace CDP.HalfLifeDemo
 {
     public class SettingsViewModel : Core.ViewModelBase
     {
-        protected readonly Core.Config config;
+        protected readonly Core.Settings config;
 
         public bool Playdemo
         {
             get 
             {
-                return ((Handler.PlaybackMethods)config.DemoSettings["HlPlaybackMethod"] == Handler.PlaybackMethods.Playdemo);
+                return ((Handler.PlaybackMethods)config.Demo["HlPlaybackMethod"] == Handler.PlaybackMethods.Playdemo);
             }
             set
             {
-                config.DemoSettings["HlPlaybackMethod"] = Handler.PlaybackMethods.Playdemo;
+                config.Demo["HlPlaybackMethod"] = Handler.PlaybackMethods.Playdemo;
             }
         }
 
@@ -22,32 +22,32 @@ namespace CDP.HalfLifeDemo
         {
             get
             {
-                return ((Handler.PlaybackMethods)config.DemoSettings["HlPlaybackMethod"] == Handler.PlaybackMethods.Viewdemo);
+                return ((Handler.PlaybackMethods)config.Demo["HlPlaybackMethod"] == Handler.PlaybackMethods.Viewdemo);
             }
             set
             {
-                config.DemoSettings["HlPlaybackMethod"] = Handler.PlaybackMethods.Viewdemo;
+                config.Demo["HlPlaybackMethod"] = Handler.PlaybackMethods.Viewdemo;
             }
         }
 
         public bool StartListenServer
         {
-            get { return (bool)config.DemoSettings["HlStartListenServer"]; }
-            set { config.DemoSettings["HlStartListenServer"] = value; }
+            get { return (bool)config.Demo["HlStartListenServer"]; }
+            set { config.Demo["HlStartListenServer"] = value; }
         }
 
         public bool RemoveShowscores
         {
-            get { return (bool)config.DemoSettings["HlRemoveShowscores"]; }
-            set { config.DemoSettings["HlRemoveShowscores"] = value; }
+            get { return (bool)config.Demo["HlRemoveShowscores"]; }
+            set { config.Demo["HlRemoveShowscores"] = value; }
         }
 
         public SettingsViewModel()
-            : this(Core.Config.Instance)
+            : this(Core.Settings.Instance)
         {
         }
 
-        public SettingsViewModel(Core.Config config)
+        public SettingsViewModel(Core.Settings config)
         {
             this.config = config;
         }

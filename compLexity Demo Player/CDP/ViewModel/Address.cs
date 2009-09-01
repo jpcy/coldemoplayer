@@ -26,19 +26,17 @@ namespace CDP.ViewModel
         }
 
         private IMediator mediator;
-        private IShell shell;
         private string lastSelectedFolder;
         private string selectedFolder;
 
         public Address()
-            : this(Mediator.Instance, new Shell())
+            : this(Mediator.Instance)
         {
         }
 
-        public Address(IMediator mediator, IShell shell)
+        public Address(IMediator mediator)
         {
             this.mediator = mediator;
-            this.shell = shell;
             selectedFolder = "";
         }
 

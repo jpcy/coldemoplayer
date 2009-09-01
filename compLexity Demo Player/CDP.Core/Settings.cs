@@ -5,12 +5,37 @@ using System.Xml;
 using System.Text;
 using System.Linq;
 using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace CDP.Core
 {
-    public class Config
+    public class Settings
     {
-        public static Config Instance
+        public class MainConfig
+        {
+            // Updating, on-demand map downloading.
+            public string UpdateUrl { get; set; }
+            public string MapsUrl { get; set; }
+            public bool AutoUpdate { get; set; }
+
+            // Last path/file.
+            public string LastPath { get; set; }
+            public string LastFileName { get; set; }
+
+            // Steam.
+            public string SteamExeFullPath { get; set; }
+            public string SteamAccountFolder { get; set; }
+            public string SteamAdditionalLaunchParameters { get; set; }
+
+            public MainConfig()
+            {
+                UpdateUrl = "http://coldemoplayer.gittodachoppa.com/update115/";
+                MapsUrl = "http://coldemoplayer.gittodachoppa.com/maps/";
+                AutoUpdate = true;
+            }
+        }
+
+        public static Settings Instance
         {
             get { return instance; }
         }
@@ -51,14 +76,15 @@ namespace CDP.Core
         public string ProgramExeFullPath { get; private set; }
         public string ProgramPath { get; private set; }
         public string ProgramDataPath { get; private set; }
-        public Dictionary<string, object> DemoSettings { get; private set; }
+        public MainConfig Main { get; private set; }
+        public Dictionary<string, object> Demo { get; private set; }
 
-        private static readonly Config instance = new Config();
+        private static readonly Settings instance = new Settings();
+        private readonly string mainConfigFileName = "mainconfig.xml";
+        private readonly string demoConfigFileName = "democonfig.xml";
+        private readonly string demoConfigRootElement = "DemoConfig";
 
-        private readonly string demoSettingsFileName = "demosettings.xml";
-        private readonly string demoSettingsRootElement = "DemoSettings";
-
-        private Config()
+        private Settings()
         {
             ProgramDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), ProgramName);
             ProgramExeFullPath = Environment.GetCommandLineArgs()[0];
@@ -68,12 +94,42 @@ namespace CDP.Core
             // Remove the last four folder names from the path, e.g. "\compLexity Demo Player\CDP\bin\Debug" to "\bin".
             ProgramPath = Path.GetFullPath("../../../../bin");
 #endif
-            DemoSettings = new Dictionary<string, object>();
+            Demo = new Dictionary<string, object>();
         }
 
-        public void LoadDemoSettings(DemoHandler.Setting[] settings)
+        public void LoadMainConfig()
         {
-            string fileName = Path.Combine(ProgramDataPath, demoSettingsFileName);
+            string fileName = Path.Combine(ProgramDataPath, mainConfigFileName);
+
+            if (!File.Exists(fileName))
+            {
+                Main = new MainConfig();
+            }
+            else
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(MainConfig));
+
+                using (StreamReader stream = new StreamReader(fileName))
+                {
+                    Main = (MainConfig)serializer.Deserialize(stream);
+                }
+            }
+        }
+
+        public void SaveMainConfig()
+        {
+            string fileName = Path.Combine(ProgramDataPath, mainConfigFileName);
+            XmlSerializer serializer = new XmlSerializer(typeof(MainConfig));
+
+            using (StreamWriter stream = new StreamWriter(fileName))
+            {
+                serializer.Serialize(stream, Main);
+            }
+        }
+
+        public void LoadDemoConfig(DemoHandler.Setting[] settings)
+        {
+            string fileName = Path.Combine(ProgramDataPath, demoConfigFileName);
             XDocument xml = null;
 
             if (File.Exists(fileName))
@@ -106,19 +162,19 @@ namespace CDP.Core
                     }
                 }
 
-                DemoSettings.Add(setting.Key, value);
+                Demo.Add(setting.Key, value);
             }
         }
 
-        public void SaveDemoSettings()
+        public void SaveDemoConfig()
         {
-            using (XmlTextWriter xml = new XmlTextWriter(Path.Combine(ProgramDataPath, demoSettingsFileName), Encoding.ASCII))
+            using (XmlTextWriter xml = new XmlTextWriter(Path.Combine(ProgramDataPath, demoConfigFileName), Encoding.ASCII))
             {
                 xml.Formatting = Formatting.Indented;
                 xml.WriteStartDocument();
-                xml.WriteStartElement(demoSettingsRootElement);
+                xml.WriteStartElement(demoConfigRootElement);
 
-                foreach (KeyValuePair<string, object> setting in DemoSettings)
+                foreach (KeyValuePair<string, object> setting in Demo)
                 {
                     xml.WriteStartElement(setting.Key);
                     xml.WriteValue(setting.Value.ToString());
