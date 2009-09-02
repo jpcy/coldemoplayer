@@ -38,6 +38,7 @@ namespace CDP.ViewModel
 
         private readonly IMediator mediator;
         private readonly Core.Adapters.IPath pathAdapter;
+        private Core.DemoManager demoManager;
 
         public Demo()
             : this(Mediator.Instance, new Core.Adapters.Path())
@@ -52,15 +53,15 @@ namespace CDP.ViewModel
 
         public override void Initialise()
         {
-            PlayCommand = new DelegateCommand(PlayCommandCanExecute, PlayCommandExecute);
-            AnalyseCommand = new DelegateCommand(AnalyseCommandCanExecute, AnalyseCommandExecute);
-            mediator.Register<Core.Demo>(Messages.SelectedDemoChanged, SelectedDemoChanged, this);
+            throw new NotImplementedException();
         }
 
         public override void Initialise(object parameter)
         {
-            throw new NotImplementedException();
-        }
+            demoManager = (Core.DemoManager)parameter;
+            PlayCommand = new DelegateCommand(PlayCommandCanExecute, PlayCommandExecute);
+            AnalyseCommand = new DelegateCommand(AnalyseCommandCanExecute, AnalyseCommandExecute);
+            mediator.Register<Core.Demo>(Messages.SelectedDemoChanged, SelectedDemoChanged, this);        }
 
         public bool PlayCommandCanExecute()
         {
@@ -69,6 +70,15 @@ namespace CDP.ViewModel
 
         public void PlayCommandExecute()
         {
+            Core.Launcher launcher = demoManager.CreateLauncher(Data);
+
+            if (!launcher.Verify())
+            {
+                System.Windows.MessageBox.Show(launcher.Message);
+                return;
+            }
+
+            // TODO
         }
 
         public bool AnalyseCommandCanExecute()

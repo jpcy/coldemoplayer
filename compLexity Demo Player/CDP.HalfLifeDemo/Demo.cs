@@ -54,15 +54,17 @@ namespace CDP.HalfLifeDemo
         {
             get
             {
-                if (game == null)
+                if (Game == null)
                 {
                     return string.Format("Unknown ({0})", GameFolderName);
                 }
 
-                string version = game.GetVersionName(clientDllChecksum);
-                return game.Name + version ?? string.Empty;
+                string version = Game.GetVersionName(clientDllChecksum);
+                return Game.Name + version ?? string.Empty;
             }
         }
+
+        public Core.SteamGame Game { get; private set; }
 
         public override string MapName { get; protected set; }
         public override string Perspective { get; protected set; }
@@ -81,7 +83,7 @@ namespace CDP.HalfLifeDemo
 
         public override bool CanPlay
         {
-            get { return (game != null); }
+            get { return (Game != null); }
         }
 
         public override bool CanAnalyse
@@ -97,7 +99,6 @@ namespace CDP.HalfLifeDemo
         public bool IsCorrupt { get; private set; }
 
         private Handler handler;
-        private Core.SteamGame game;
         private string clientDllChecksum;
         private readonly List<MessageCallback> messageCallbacks;
         private readonly Dictionary<string, DeltaStructure> deltaStructures;
@@ -154,7 +155,7 @@ namespace CDP.HalfLifeDemo
                     AddDetail("Game Folder", GameFolderName);
                     AddDetail("Map Checksum", MapChecksum);
                     AddDetail("Map Name", MapName);
-                    game = handler.FindGame(GameFolderName);
+                    Game = handler.FindGame(GameFolderName);
 
                     // Read directory entries.
                     try

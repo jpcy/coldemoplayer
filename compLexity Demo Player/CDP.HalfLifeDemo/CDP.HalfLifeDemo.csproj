@@ -69,6 +69,7 @@
     <Compile Include="DeltaStructure.cs" />
     <Compile Include="EngineMessage.cs" />
     <Compile Include="IMessage.cs" />
+    <Compile Include="Launcher.cs" />
     <Compile Include="MessageFrame.cs" />
     <Compile Include="Frames\Loading.cs" />
     <Compile Include="Frames\Playback.cs" />

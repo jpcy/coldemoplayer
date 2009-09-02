@@ -47,6 +47,7 @@ namespace CDP.ViewModel
 
         public override void Initialise(object parameter)
         {
+            throw new NotImplementedException();
         }
 
         public void SetSelectedFolder(string path)

@@ -24,7 +24,7 @@ namespace CDP.Core
 
             // Steam.
             public string SteamExeFullPath { get; set; }
-            public string SteamAccountFolder { get; set; }
+            public string SteamAccountName { get; set; }
             public string SteamAdditionalLaunchParameters { get; set; }
 
             public MainConfig()

@@ -29,7 +29,7 @@ namespace CDP.ViewModel
 
         private readonly IMediator mediator;
         private readonly INavigationService navigationService;
-        private readonly Core.DemoManager demoManager;
+        private Core.DemoManager demoManager;
 
         public Demos(IMediator mediator, INavigationService navigationService)
         {
@@ -40,19 +40,17 @@ namespace CDP.ViewModel
         public Demos() : this(Mediator.Instance, NavigationService.Instance)
         {
             Items = new ObservableCollection<Core.Demo>();
-            demoManager = new Core.DemoManager();
         }
 
         public override void Initialise()
         {
-            mediator.Register<string>(Messages.SelectedFolderChanged, SelectedFolderChanged, this);
-            demoManager.AddPlugin(0, typeof(HalfLifeDemo.Demo), new HalfLifeDemo.Handler());
-            demoManager.AddPlugin(1, typeof(CounterStrikeDemo.Demo), new CounterStrikeDemo.Handler());
-            Core.Settings.Instance.LoadDemoConfig(demoManager.GetAllDemoHandlerSettings());
+            throw new NotImplementedException();
         }
 
         public override void Initialise(object parameter)
         {
+            demoManager = (Core.DemoManager)parameter;
+            mediator.Register<string>(Messages.SelectedFolderChanged, SelectedFolderChanged, this);
         }
 
         public void SelectedFolderChanged(string path)

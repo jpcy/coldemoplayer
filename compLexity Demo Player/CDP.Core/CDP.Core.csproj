@@ -63,9 +63,15 @@
     <Compile Include="DemoManager.cs" />
     <Compile Include="Demo.cs" />
     <Compile Include="DemoHandler.cs" />
+    <Compile Include="Launcher.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SteamGame.cs" />
+    <Compile Include="SteamLauncher.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Vector.cs" />
     <Compile Include="ViewModelBase.cs" />
   </ItemGroup>

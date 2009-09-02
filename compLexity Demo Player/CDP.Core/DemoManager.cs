@@ -15,12 +15,14 @@ namespace CDP.Core
             public uint Priority { get; private set; }
             public Type DemoType { get; private set; }
             public DemoHandler DemoHandler { get; private set; }
+            public Type LauncherType { get; private set; }
 
-            public Plugin(uint priority, Type demoType, DemoHandler demoHandler)
+            public Plugin(uint priority, Type demoType, DemoHandler demoHandler, Type launcherType)
             {
                 Priority = priority;
                 DemoType = demoType;
                 DemoHandler = demoHandler;
+                LauncherType = launcherType;
             }
         }
 
@@ -39,14 +41,19 @@ namespace CDP.Core
         {
         }
 
-        public void AddPlugin(uint priority, Type demoType, DemoHandler demoHandler)
+        public void AddPlugin(uint priority, Type demoType, DemoHandler demoHandler, Type launcherType)
         {
             if (!demoType.IsSubclassOf(typeof(Demo)))
             {
                 throw new ArgumentException("Type must inherit from CDP.Core.Demo.", "demoType");
             }
 
-            plugins.Add(new Plugin(priority, demoType, demoHandler));
+            if (!launcherType.IsSubclassOf(typeof(Launcher)))
+            {
+                throw new ArgumentException("Type must inherit from CDP.Core.Launcher.", "launcherType");
+            }
+
+            plugins.Add(new Plugin(priority, demoType, demoHandler, launcherType));
         }
 
         public DemoHandler.Setting[] GetAllDemoHandlerSettings()
@@ -89,6 +96,25 @@ namespace CDP.Core
             demo.FileName = fileName;
             demo.Handler = plugin.DemoHandler;
             return demo;
+        }
+
+        public Launcher CreateLauncher(Demo demo)
+        {
+            Plugin plugin = plugins.SingleOrDefault(p => p.DemoType == demo.GetType());
+
+            if (plugin == null)
+            {
+                throw new ApplicationException("Tried to create a launcher from an unknown demo type.");
+            }
+
+            try
+            {
+                return (Launcher)Activator.CreateInstance(plugin.LauncherType, demo);
+            }
+            catch (MissingMethodException)
+            {
+                throw new ApplicationException(string.Format("Launcher \"{0}\" is missing a constructor that takes a single parameter of type CDP.Core.Demo.", plugin.LauncherType));
+            }
         }
 
         /// <summary>
