@@ -54,9 +54,9 @@ namespace CDP.Core
             plugins.Add(new Plugin(priority, demoType, demoHandler, launcherType));
         }
 
-        public DemoHandler.Setting[] GetAllDemoHandlerSettings()
+        public Setting[] GetAllDemoHandlerSettings()
         {
-            List<DemoHandler.Setting> settings = new List<DemoHandler.Setting>();
+            List<Setting> settings = new List<Setting>();
 
             foreach (Plugin plugin in plugins)
             {

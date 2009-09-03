@@ -45,22 +45,22 @@ namespace CDP.HalfLifeDemo
             }
         }
 
-        public override Setting[] Settings
+        public override Core.Setting[] Settings
         {
             get
             {
-                return new Setting[]
+                return new Core.Setting[]
                 {
-                    new Setting("HlPlaybackMethod", typeof(PlaybackMethods), PlaybackMethods.Playdemo),
-                    new Setting("HlStartListenServer", typeof(bool), true),
-                    new Setting("HlRemoveShowscores", typeof(bool), true)
+                    new Core.Setting("HlPlaybackMethod", typeof(PlaybackMethods), PlaybackMethods.Playdemo),
+                    new Core.Setting("HlStartListenServer", typeof(bool), true),
+                    new Core.Setting("HlRemoveShowscores", typeof(bool), true)
                 };
             }
         }
 
         public override UserControl SettingsView { get; protected set; }
 
-        protected readonly Core.Settings config;
+        protected readonly Core.ISettings settings;
         protected readonly Core.IFileSystem fileSystem;
         private readonly byte[] magic = { 0x48, 0x4C, 0x44, 0x45, 0x4D, 0x4F }; // HLDEMO
         private readonly Dictionary<byte, Type> frames = new Dictionary<byte, Type>();
@@ -73,9 +73,9 @@ namespace CDP.HalfLifeDemo
         {
         }
 
-        public Handler(Core.Settings config, Core.IFileSystem fileSystem)
+        public Handler(Core.ISettings config, Core.IFileSystem fileSystem)
         {
-            this.config = config;
+            this.settings = config;
             this.fileSystem = fileSystem;
             SettingsView = new SettingsView { DataContext = new SettingsViewModel() };
             RegisterMessages();
@@ -133,7 +133,7 @@ namespace CDP.HalfLifeDemo
         protected virtual void ReadGameConfig()
         {
             // Read config/goldsrc/games.xml
-            using (StreamReader stream = new StreamReader(fileSystem.PathCombine(config.ProgramPath, "config", "goldsrc", "games.xml")))
+            using (StreamReader stream = new StreamReader(fileSystem.PathCombine(settings.ProgramPath, "config", "goldsrc", "games.xml")))
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(Core.SteamGame[]));
                 games = (Core.SteamGame[])serializer.Deserialize(stream);

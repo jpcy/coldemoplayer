@@ -11,13 +11,11 @@ namespace CDP
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            Core.Settings.Instance.LoadMainConfig();
         }
 
         private void Application_Exit(object sender, ExitEventArgs e)
         {
-            Core.Settings.Instance.SaveMainConfig();
-            Core.Settings.Instance.SaveDemoConfig();
+            Core.Settings.Instance.Save();
         }
     }
 }

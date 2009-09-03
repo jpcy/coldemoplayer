@@ -10,11 +10,11 @@ namespace CDP.HalfLifeDemo
         private Demo demo;
 
         public Launcher(Demo demo)
-            : this(demo, new Core.FileSystem())
+            : this(demo, Core.Settings.Instance, new Core.FileSystem())
         {
         }
 
-        public Launcher(Demo demo, Core.IFileSystem fileSystem) : base(fileSystem)
+        public Launcher(Demo demo, Core.ISettings settings, Core.IFileSystem fileSystem) : base(settings, fileSystem)
         {
             this.demo = demo;
 
@@ -28,11 +28,9 @@ namespace CDP.HalfLifeDemo
             appFolder = demo.Game.AppFolder;
             gameFolder = demo.Game.ModFolder;
 
-            Core.Settings settings = Core.Settings.Instance;
-
-            if (!string.IsNullOrEmpty(settings.Main.SteamExeFullPath) && !string.IsNullOrEmpty(settings.Main.SteamAccountName))
+            if (!string.IsNullOrEmpty((string)settings["SteamExeFullPath"]) && !string.IsNullOrEmpty((string)settings["SteamAccountName"]))
             {
-                processExecutableFileName = fileSystem.PathCombine(Path.GetDirectoryName(settings.Main.SteamExeFullPath), "SteamApps", settings.Main.SteamAccountName, appFolder, "hl.exe");
+                processExecutableFileName = fileSystem.PathCombine(Path.GetDirectoryName((string)settings["SteamExeFullPath"]), "SteamApps", (string)settings["SteamAccountName"], appFolder, "hl.exe");
             }
         }
 
@@ -46,19 +44,19 @@ namespace CDP.HalfLifeDemo
             string launchParameters = string.Format("-applaunch {0}", appId);
 
             // TODO: check demo capabilities to see if starting a listen server is possible
-            if ((bool)Core.Settings.Instance.Demo["HlStartListenServer"] == true)
+            if ((bool)settings["HlStartListenServer"] == true)
             {
                 launchParameters += string.Format(" -nomaster +maxplayers 10 +sv_lan 1 +map {0}", demo.MapName);
             }
 
             launchParameters += " +exec " + configFileName;
 
-            if (!string.IsNullOrEmpty(Core.Settings.Instance.Main.SteamAdditionalLaunchParameters))
+            if (!string.IsNullOrEmpty((string)settings["SteamAdditionalLaunchParameters"]))
             {
-                launchParameters += " " + Core.Settings.Instance.Main.SteamAdditionalLaunchParameters;
+                launchParameters += " " + settings["SteamAdditionalLaunchParameters"];
             }
 
-            Process.Start(Core.Settings.Instance.Main.SteamExeFullPath, launchParameters);
+            Process.Start((string)settings["SteamExeFullPath"], launchParameters);
         }
     }
 }

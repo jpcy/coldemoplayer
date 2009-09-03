@@ -9,35 +9,42 @@ using System.Xml.Serialization;
 
 namespace CDP.Core
 {
-    public class Settings
+    public interface ISettings
     {
-        public class MainConfig
-        {
-            // Updating, on-demand map downloading.
-            public string UpdateUrl { get; set; }
-            public string MapsUrl { get; set; }
-            public bool AutoUpdate { get; set; }
+        object this[string key] { get; set; }
+        string ProgramName { get; }
+        int ProgramVersionMajor { get; }
+        int ProgramVersionMinor { get; }
+        int ProgramVersionUpdate { get; }
+        string ProgramVersion { get; }
+        string ComplexityUrl { get; }
+        string ProgramExeFullPath { get; }
+        string ProgramPath { get; }
+        string ProgramDataPath { get; }
 
-            // Last path/file.
-            public string LastPath { get; set; }
-            public string LastFileName { get; set; }
+        void Add<T>(string key, T defaultValue);
+        void Add(Setting setting);
+        void Load();
+        void Save();
+    }
 
-            // Steam.
-            public string SteamExeFullPath { get; set; }
-            public string SteamAccountName { get; set; }
-            public string SteamAdditionalLaunchParameters { get; set; }
-
-            public MainConfig()
-            {
-                UpdateUrl = "http://coldemoplayer.gittodachoppa.com/update115/";
-                MapsUrl = "http://coldemoplayer.gittodachoppa.com/maps/";
-                AutoUpdate = true;
-            }
-        }
-
+    public class Settings : ISettings
+    {
         public static Settings Instance
         {
             get { return instance; }
+        }
+
+        public object this[string key]
+        {
+            get
+            {
+                return dictionary[key];
+            }
+            set
+            {
+                dictionary[key] = value;
+            }
         }
 
         public string ProgramName
@@ -73,71 +80,81 @@ namespace CDP.Core
             get { return "http://www.complexitygaming.com/"; }
         }
 
-        public string ProgramExeFullPath { get; private set; }
-        public string ProgramPath { get; private set; }
-        public string ProgramDataPath { get; private set; }
-        public MainConfig Main { get; private set; }
-        public Dictionary<string, object> Demo { get; private set; }
+        private readonly string programExeFullPath;
+        private readonly string programPath;
+        private readonly string programDataPath;
+
+        public string ProgramExeFullPath
+        {
+            get { return programExeFullPath; }
+        }
+        public string ProgramPath
+        {
+            get { return programPath; }
+        }
+        public string ProgramDataPath
+        {
+            get { return programDataPath; }
+        }
 
         private static readonly Settings instance = new Settings();
-        private readonly string mainConfigFileName = "mainconfig.xml";
-        private readonly string demoConfigFileName = "democonfig.xml";
-        private readonly string demoConfigRootElement = "DemoConfig";
+        public readonly List<Setting> definitions = new List<Setting>();
+        public readonly Dictionary<string, object> dictionary = new Dictionary<string, object>();
+        private readonly string fileName = "settings.xml";
+        private readonly string rootElement = "Settings";
+        private bool IsLoaded = false;
 
         private Settings()
         {
-            ProgramDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), ProgramName);
-            ProgramExeFullPath = Environment.GetCommandLineArgs()[0];
-            ProgramPath = Path.GetDirectoryName(ProgramExeFullPath);
+            programDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), ProgramName);
+            programExeFullPath = Environment.GetCommandLineArgs()[0];
+            programPath = Path.GetDirectoryName(ProgramExeFullPath);
 #if DEBUG
             // BLEH: this is what happens when you can't use macros in setting the debug working directory.
             // Remove the last four folder names from the path, e.g. "\compLexity Demo Player\CDP\bin\Debug" to "\bin".
-            ProgramPath = Path.GetFullPath("../../../../bin");
+            programPath = Path.GetFullPath("../../../../bin");
 #endif
-            Demo = new Dictionary<string, object>();
+            Add("UpdateUrl", "http://coldemoplayer.gittodachoppa.com/update115/");
+            Add("MapsUrl", "http://coldemoplayer.gittodachoppa.com/maps/");
+            Add("AutoUpdate", true);
+            Add("LastPath", string.Empty);
+            Add("LastFileName", string.Empty);
+            Add("SteamExeFullPath", string.Empty);
+            Add("SteamAccountName", string.Empty);
+            Add("SteamAdditionalLaunchParameters", string.Empty);
+
+            System.Windows.MessageBox.Show(programDataPath);
+            System.Windows.MessageBox.Show(programExeFullPath);
+            System.Windows.MessageBox.Show(programPath);
         }
 
-        public void LoadMainConfig()
+        public void Add<T>(string key, T defaultValue)
         {
-            string fileName = Path.Combine(ProgramDataPath, mainConfigFileName);
-
-            if (!File.Exists(fileName))
-            {
-                Main = new MainConfig();
-            }
-            else
-            {
-                XmlSerializer serializer = new XmlSerializer(typeof(MainConfig));
-
-                using (StreamReader stream = new StreamReader(fileName))
-                {
-                    Main = (MainConfig)serializer.Deserialize(stream);
-                }
-            }
+            Add(new Setting(key, typeof(T), defaultValue));
         }
 
-        public void SaveMainConfig()
+        public void Add(Setting setting)
         {
-            string fileName = Path.Combine(ProgramDataPath, mainConfigFileName);
-            XmlSerializer serializer = new XmlSerializer(typeof(MainConfig));
-
-            using (StreamWriter stream = new StreamWriter(fileName))
+            if (IsLoaded)
             {
-                serializer.Serialize(stream, Main);
+                throw new InvalidOperationException("Cannot add a setting after the settings file has been loaded.");
             }
+
+            definitions.Add(setting);
         }
 
-        public void LoadDemoConfig(DemoHandler.Setting[] settings)
+        public void Load()
         {
-            string fileName = Path.Combine(ProgramDataPath, demoConfigFileName);
+            IsLoaded = true;
+            string path = Path.Combine(ProgramDataPath, fileName);
             XDocument xml = null;
 
-            if (File.Exists(fileName))
+            if (File.Exists(path))
             {
-                xml = XDocument.Load(fileName);
+                xml = XDocument.Load(path);
             }
 
-            foreach (DemoHandler.Setting setting in settings)
+            foreach (Setting setting in definitions)
             {
                 object value = setting.DefaultValue;
 
@@ -155,29 +172,33 @@ namespace CDP.Core
                         {
                             value = Enum.Parse(setting.Type, element.Value);
                         }
+                        else if (setting.Type == typeof(string))
+                        {
+                            value = element.Value;
+                        }
                         else
                         {
-                            throw new ApplicationException(string.Format("Unsupported demo setting type \"{0}\".", setting.Type));
+                            throw new ApplicationException(string.Format("Unsupported setting type \"{0}\".", setting.Type));
                         }
                     }
                 }
 
-                Demo.Add(setting.Key, value);
+                dictionary.Add(setting.Key, value);
             }
         }
 
-        public void SaveDemoConfig()
+        public void Save()
         {
-            using (XmlTextWriter xml = new XmlTextWriter(Path.Combine(ProgramDataPath, demoConfigFileName), Encoding.ASCII))
+            using (XmlTextWriter xml = new XmlTextWriter(Path.Combine(ProgramDataPath, fileName), Encoding.Unicode))
             {
                 xml.Formatting = Formatting.Indented;
                 xml.WriteStartDocument();
-                xml.WriteStartElement(demoConfigRootElement);
+                xml.WriteStartElement(rootElement);
 
-                foreach (KeyValuePair<string, object> setting in Demo)
+                foreach (Setting setting in definitions)
                 {
                     xml.WriteStartElement(setting.Key);
-                    xml.WriteValue(setting.Value.ToString());
+                    xml.WriteValue(dictionary[setting.Key].ToString());
                     xml.WriteEndElement();
                 }
 

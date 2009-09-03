@@ -127,17 +127,17 @@ namespace CDP.Core.Tests
         [Test]
         public void GetAllDemoHandlerSettings_Ok()
         {
-            Func<DemoHandler.Setting[], Mock<Core.DemoHandler>> createDemoHandlerMock = s =>
+            Func<Setting[], Mock<Core.DemoHandler>> createDemoHandlerMock = s =>
             {
                 var mock = new Mock<DemoHandler>();
                 mock.Setup(dh => dh.Settings).Returns(s);
                 return mock;
             };
 
-            var setting1 = new DemoHandler.Setting("setting1", typeof(bool), false);
-            var setting2 = new DemoHandler.Setting("setting2", typeof(bool), false);
-            var mock1 = createDemoHandlerMock(new DemoHandler.Setting[] { setting1 });
-            var mock2 = createDemoHandlerMock(new DemoHandler.Setting[] { setting2 });
+            var setting1 = new Setting("setting1", typeof(bool), false);
+            var setting2 = new Setting("setting2", typeof(bool), false);
+            var mock1 = createDemoHandlerMock(new Setting[] { setting1 });
+            var mock2 = createDemoHandlerMock(new Setting[] { setting2 });
             demoManager.AddPlugin(0, typeof(DemoStub), mock1.Object, typeof(LauncherStub));
             demoManager.AddPlugin(0, typeof(DemoStub), mock2.Object, typeof(LauncherStub));
             var result = demoManager.GetAllDemoHandlerSettings();

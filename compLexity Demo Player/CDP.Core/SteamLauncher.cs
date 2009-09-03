@@ -5,16 +5,17 @@ namespace CDP.Core
 {
     public abstract class SteamLauncher : Launcher
     {
-        private readonly Settings settings = Settings.Instance;
-        private readonly Core.IFileSystem fileSystem;
+        protected readonly ISettings settings;
+        protected readonly IFileSystem fileSystem;
 
         protected string gameName;
         protected int appId;
         protected string appFolder;
         protected string gameFolder;
 
-        public SteamLauncher(Core.IFileSystem fileSystem)
+        public SteamLauncher(ISettings settings, IFileSystem fileSystem)
         {
+            this.settings = settings;
             this.fileSystem = fileSystem;
         }
 
@@ -38,18 +39,18 @@ namespace CDP.Core
             }
 
             // Verify that steam.exe exists.
-            if (!File.Exists(settings.Main.SteamExeFullPath))
+            if (!File.Exists((string)settings["SteamExeFullPath"]))
             {
-                Message = string.Format("Unable to find \"Steam.exe\" at \"{0}\". Go to Options and select the correct Steam path.", settings.Main.SteamExeFullPath);
+                Message = string.Format("Unable to find \"Steam.exe\" at \"{0}\". Go to Options and select the correct Steam path.", settings["SteamExeFullPath"]);
                 return false;
             }
 
             // Verify that the Steam account folder exists.
-            string steamAccountPath = fileSystem.PathCombine(Path.GetDirectoryName(settings.Main.SteamExeFullPath), "SteamApps", settings.Main.SteamAccountName);
+            string steamAccountPath = fileSystem.PathCombine(Path.GetDirectoryName((string)settings["SteamExeFullPath"]), "SteamApps", (string)settings["SteamAccountName"]);
 
             if (!Directory.Exists(steamAccountPath))
             {
-                Message = string.Format("Steam account folder \"{0}\" doesn't exist. Go to Options and select a valid Steam account folder.", settings.Main.SteamAccountName);
+                Message = string.Format("Steam account folder \"{0}\" doesn't exist. Go to Options and select a valid Steam account folder.", settings["SteamAccountName"]);
                 return false;
             }
 
@@ -63,7 +64,7 @@ namespace CDP.Core
             }
 
             // Verify that Steam is running.
-            if (FindProcess("Steam", settings.Main.SteamExeFullPath) == null)
+            if (FindProcess("Steam", (string)settings["SteamExeFullPath"]) == null)
             {
                 Message = "Steam is not running. Launch Steam, log into your account and try again.";
                 return false;

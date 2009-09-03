@@ -30,7 +30,13 @@ namespace CDP.ViewModel
         {
             demoManager.AddPlugin(0, typeof(HalfLifeDemo.Demo), new HalfLifeDemo.Handler(), typeof(HalfLifeDemo.Launcher));
             demoManager.AddPlugin(1, typeof(CounterStrikeDemo.Demo), new CounterStrikeDemo.Handler(), typeof(HalfLifeDemo.Launcher));
-            Core.Settings.Instance.LoadDemoConfig(demoManager.GetAllDemoHandlerSettings());
+
+            foreach (Core.Setting setting in demoManager.GetAllDemoHandlerSettings())
+            {
+                Core.Settings.Instance.Add(setting);
+            }
+
+            Core.Settings.Instance.Load();
 
             Address.Initialise();
             Demos.Initialise(demoManager);

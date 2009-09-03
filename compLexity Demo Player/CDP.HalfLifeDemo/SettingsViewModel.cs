@@ -4,17 +4,17 @@ namespace CDP.HalfLifeDemo
 {
     public class SettingsViewModel : Core.ViewModelBase
     {
-        protected readonly Core.Settings config;
+        protected readonly Core.ISettings settings;
 
         public bool Playdemo
         {
             get 
             {
-                return ((Handler.PlaybackMethods)config.Demo["HlPlaybackMethod"] == Handler.PlaybackMethods.Playdemo);
+                return ((Handler.PlaybackMethods)settings["HlPlaybackMethod"] == Handler.PlaybackMethods.Playdemo);
             }
             set
             {
-                config.Demo["HlPlaybackMethod"] = Handler.PlaybackMethods.Playdemo;
+                settings["HlPlaybackMethod"] = Handler.PlaybackMethods.Playdemo;
             }
         }
 
@@ -22,24 +22,24 @@ namespace CDP.HalfLifeDemo
         {
             get
             {
-                return ((Handler.PlaybackMethods)config.Demo["HlPlaybackMethod"] == Handler.PlaybackMethods.Viewdemo);
+                return ((Handler.PlaybackMethods)settings["HlPlaybackMethod"] == Handler.PlaybackMethods.Viewdemo);
             }
             set
             {
-                config.Demo["HlPlaybackMethod"] = Handler.PlaybackMethods.Viewdemo;
+                settings["HlPlaybackMethod"] = Handler.PlaybackMethods.Viewdemo;
             }
         }
 
         public bool StartListenServer
         {
-            get { return (bool)config.Demo["HlStartListenServer"]; }
-            set { config.Demo["HlStartListenServer"] = value; }
+            get { return (bool)settings["HlStartListenServer"]; }
+            set { settings["HlStartListenServer"] = value; }
         }
 
         public bool RemoveShowscores
         {
-            get { return (bool)config.Demo["HlRemoveShowscores"]; }
-            set { config.Demo["HlRemoveShowscores"] = value; }
+            get { return (bool)settings["HlRemoveShowscores"]; }
+            set { settings["HlRemoveShowscores"] = value; }
         }
 
         public SettingsViewModel()
@@ -47,9 +47,9 @@ namespace CDP.HalfLifeDemo
         {
         }
 
-        public SettingsViewModel(Core.Settings config)
+        public SettingsViewModel(Core.ISettings settings)
         {
-            this.config = config;
+            this.settings = settings;
         }
 
         public override void Initialise()

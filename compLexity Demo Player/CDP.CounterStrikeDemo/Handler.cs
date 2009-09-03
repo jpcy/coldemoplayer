@@ -18,13 +18,13 @@ namespace CDP.CounterStrikeDemo
             get { return "cstrike"; }
         }
 
-        public override Setting[] Settings
+        public override Core.Setting[] Settings
         {
             get
             {
-                return new Setting[]
+                return new Core.Setting[]
                 {
-                    new Setting("CsRemoveFadeToBlack", typeof(bool), true)
+                    new Core.Setting("CsRemoveFadeToBlack", typeof(bool), true)
                 };
             }
         }
@@ -48,7 +48,7 @@ namespace CDP.CounterStrikeDemo
         {
             XmlSerializer serializer = new XmlSerializer(typeof(Game));
 
-            using (StreamReader stream = new StreamReader(fileSystem.PathCombine(config.ProgramPath, "config", "goldsrc", "cstrike.xml")))
+            using (StreamReader stream = new StreamReader(fileSystem.PathCombine(settings.ProgramPath, "config", "goldsrc", "cstrike.xml")))
             {
                 game = (Game)serializer.Deserialize(stream);
             }
