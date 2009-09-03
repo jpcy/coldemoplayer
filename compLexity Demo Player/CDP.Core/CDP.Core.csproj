@@ -55,14 +55,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Adapters\File.cs" />
-    <Compile Include="Adapters\Folder.cs" />
-    <Compile Include="Adapters\Path.cs" />
     <Compile Include="BitReader.cs" />
     <Compile Include="BitWriter.cs" />
     <Compile Include="DemoManager.cs" />
     <Compile Include="Demo.cs" />
     <Compile Include="DemoHandler.cs" />
+    <Compile Include="FileSystem.cs" />
     <Compile Include="Launcher.cs">
       <SubType>Code</SubType>
     </Compile>

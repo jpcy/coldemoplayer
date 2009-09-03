@@ -61,7 +61,7 @@ namespace CDP.HalfLifeDemo
         public override UserControl SettingsView { get; protected set; }
 
         protected readonly Core.Settings config;
-        protected readonly Core.Adapters.IPath pathAdapter;
+        protected readonly Core.IFileSystem fileSystem;
         private readonly byte[] magic = { 0x48, 0x4C, 0x44, 0x45, 0x4D, 0x4F }; // HLDEMO
         private readonly Dictionary<byte, Type> frames = new Dictionary<byte, Type>();
         private readonly Dictionary<byte, Type> engineMessages = new Dictionary<byte, Type>();
@@ -69,14 +69,14 @@ namespace CDP.HalfLifeDemo
         private Core.SteamGame[] games;
 
         public Handler()
-            : this(Core.Settings.Instance, new Core.Adapters.Path())
+            : this(Core.Settings.Instance, new Core.FileSystem())
         {
         }
 
-        public Handler(Core.Settings config, Core.Adapters.IPath pathAdapter)
+        public Handler(Core.Settings config, Core.IFileSystem fileSystem)
         {
             this.config = config;
-            this.pathAdapter = pathAdapter;
+            this.fileSystem = fileSystem;
             SettingsView = new SettingsView { DataContext = new SettingsViewModel() };
             RegisterMessages();
             ReadGameConfig();
@@ -133,7 +133,7 @@ namespace CDP.HalfLifeDemo
         protected virtual void ReadGameConfig()
         {
             // Read config/goldsrc/games.xml
-            using (StreamReader stream = new StreamReader(pathAdapter.Combine(config.ProgramPath, "config", "goldsrc", "games.xml")))
+            using (StreamReader stream = new StreamReader(fileSystem.PathCombine(config.ProgramPath, "config", "goldsrc", "games.xml")))
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(Core.SteamGame[]));
                 games = (Core.SteamGame[])serializer.Deserialize(stream);

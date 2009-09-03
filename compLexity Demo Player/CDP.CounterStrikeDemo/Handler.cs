@@ -32,7 +32,7 @@ namespace CDP.CounterStrikeDemo
         private Game game;
 
         public Handler()
-            : base(Core.Settings.Instance, new Core.Adapters.Path())
+            : base(Core.Settings.Instance, new Core.FileSystem())
         {
             SettingsView = new SettingsView { DataContext = new SettingsViewModel() };
         }
@@ -48,7 +48,7 @@ namespace CDP.CounterStrikeDemo
         {
             XmlSerializer serializer = new XmlSerializer(typeof(Game));
 
-            using (StreamReader stream = new StreamReader(pathAdapter.Combine(config.ProgramPath, "config", "goldsrc", "cstrike.xml")))
+            using (StreamReader stream = new StreamReader(fileSystem.PathCombine(config.ProgramPath, "config", "goldsrc", "cstrike.xml")))
             {
                 game = (Game)serializer.Deserialize(stream);
             }

@@ -10,6 +10,11 @@ namespace CDP.HalfLifeDemo
         private Demo demo;
 
         public Launcher(Demo demo)
+            : this(demo, new Core.FileSystem())
+        {
+        }
+
+        public Launcher(Demo demo, Core.IFileSystem fileSystem) : base(fileSystem)
         {
             this.demo = demo;
 
@@ -24,11 +29,10 @@ namespace CDP.HalfLifeDemo
             gameFolder = demo.Game.ModFolder;
 
             Core.Settings settings = Core.Settings.Instance;
-            Core.Adapters.Path pathAdapter = new Core.Adapters.Path();
 
             if (!string.IsNullOrEmpty(settings.Main.SteamExeFullPath) && !string.IsNullOrEmpty(settings.Main.SteamAccountName))
             {
-                processExecutableFileName = pathAdapter.Combine(Path.GetDirectoryName(settings.Main.SteamExeFullPath), "SteamApps", settings.Main.SteamAccountName, appFolder, "hl.exe");
+                processExecutableFileName = fileSystem.PathCombine(Path.GetDirectoryName(settings.Main.SteamExeFullPath), "SteamApps", settings.Main.SteamAccountName, appFolder, "hl.exe");
             }
         }
 

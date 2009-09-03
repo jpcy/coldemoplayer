@@ -76,8 +76,8 @@ namespace CDP.HalfLifeDemo
         {
             get
             {
-                Core.Adapters.Path pathAdapter = new Core.Adapters.Path();
-                return pathAdapter.Combine("goldsrc", GameFolderName, MapName + ".jpg");
+                Core.IFileSystem fileSystem = new Core.FileSystem();
+                return fileSystem.PathCombine("goldsrc", GameFolderName, MapName + ".jpg");
             }
         }
 

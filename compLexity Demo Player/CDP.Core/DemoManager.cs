@@ -26,18 +26,16 @@ namespace CDP.Core
             }
         }
 
-        private readonly Adapters.IFile fileAdapter;
-        private readonly Adapters.IPath pathAdapter;
+        private readonly IFileSystem fileSystem;
         private readonly List<Plugin> plugins = new List<Plugin>();
 
-        public DemoManager(Adapters.IFile fileAdapter, Adapters.IPath pathAdapter)
+        public DemoManager(IFileSystem fileSystem)
         {
-            this.fileAdapter = fileAdapter;
-            this.pathAdapter = pathAdapter;
+            this.fileSystem = fileSystem;
         }
 
         public DemoManager()
-            : this(new Adapters.File(), new Adapters.Path())
+            : this(new Core.FileSystem())
         {
         }
 
@@ -124,9 +122,9 @@ namespace CDP.Core
         /// <returns>A plugin, or null if no suitable plugin is found.</returns>
         private Plugin FindPlugin(string demoFileName)
         {
-            string extension = pathAdapter.GetExtension(demoFileName);
+            string extension = fileSystem.GetExtension(demoFileName);
 
-            using (Stream stream = fileAdapter.OpenRead(demoFileName))
+            using (Stream stream = fileSystem.OpenRead(demoFileName))
             {
                 return plugins.Where(p =>
                 {

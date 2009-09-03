@@ -8,8 +8,8 @@ namespace CDP.CounterStrikeDemo
         {
             get
             {
-                Core.Adapters.Path pathAdapter = new Core.Adapters.Path();
-                return pathAdapter.Combine("goldsrc", "cstrike", MapName + ".jpg");
+                Core.IFileSystem fileSystem = new Core.FileSystem();
+                return fileSystem.PathCombine("goldsrc", "cstrike", MapName + ".jpg");
             }
         }
 

@@ -90,16 +90,14 @@ namespace CDP.Core.Tests
 
         private DemoManager demoManager;
         private Mock<Core.DemoHandler> demoHandlerMock;
-        private Mock<Adapters.IFile> fileAdapterMock;
-        private Mock<Adapters.IPath> pathAdapterMock;
+        private Mock<IFileSystem> fileSystemMock;
 
         [SetUp]
         public void SetUp()
         {
-            fileAdapterMock = new Mock<Adapters.IFile>();
-            fileAdapterMock.Setup(f => f.OpenRead(It.IsAny<string>())).Returns(new MemoryStream());
-            pathAdapterMock = new Mock<Adapters.IPath>();
-            demoManager = new DemoManager(fileAdapterMock.Object, pathAdapterMock.Object);
+            fileSystemMock = new Mock<IFileSystem>();
+            fileSystemMock.Setup(f => f.OpenRead(It.IsAny<string>())).Returns(new MemoryStream());
+            demoManager = new DemoManager(fileSystemMock.Object);
             demoHandlerMock = new Mock<DemoHandler>();
         }
 
@@ -216,8 +214,8 @@ namespace CDP.Core.Tests
 
         private void SetUpPluginStub(string demoExtension, string[] extensions, bool isValidDemo)
         {
-            fileAdapterMock.Setup(f => f.OpenRead(It.IsAny<string>())).Returns(new MemoryStream());
-            pathAdapterMock.Setup(p => p.GetExtension(It.IsAny<string>())).Returns(demoExtension);
+            fileSystemMock.Setup(f => f.OpenRead(It.IsAny<string>())).Returns(new MemoryStream());
+            fileSystemMock.Setup(p => p.GetExtension(It.IsAny<string>())).Returns(demoExtension);
             demoHandlerMock.Setup(dh => dh.Extensions).Returns(extensions);
             demoHandlerMock.Setup(dh => dh.IsValidDemo(It.IsAny<Stream>())).Returns(isValidDemo);
             demoManager.AddPlugin(0, typeof(DemoStub), demoHandlerMock.Object, typeof(LauncherStub));

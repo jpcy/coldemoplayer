@@ -17,7 +17,7 @@ namespace CDP.ViewModel
                     return null;
                 }
 
-                return pathAdapter.Combine(Core.Settings.Instance.ProgramPath, "previews", Data.MapImagesRelativePath);
+                return fileSystem.PathCombine(Core.Settings.Instance.ProgramPath, "previews", Data.MapImagesRelativePath);
             }
         }
         public string MapOverviewFileName
@@ -29,7 +29,7 @@ namespace CDP.ViewModel
                     return null;
                 }
 
-                return pathAdapter.Combine(Core.Settings.Instance.ProgramPath, "overviews", Data.MapImagesRelativePath);
+                return fileSystem.PathCombine(Core.Settings.Instance.ProgramPath, "overviews", Data.MapImagesRelativePath);
             }
         }
 
@@ -37,18 +37,18 @@ namespace CDP.ViewModel
         public DelegateCommand AnalyseCommand { get; private set; }
 
         private readonly IMediator mediator;
-        private readonly Core.Adapters.IPath pathAdapter;
+        private readonly Core.IFileSystem fileSystem;
         private Core.DemoManager demoManager;
 
         public Demo()
-            : this(Mediator.Instance, new Core.Adapters.Path())
+            : this(Mediator.Instance, new Core.FileSystem())
         {
         }
 
-        public Demo(IMediator mediator,Core.Adapters.IPath pathAdapter)
+        public Demo(IMediator mediator, Core.IFileSystem fileSystem)
         {
             this.mediator = mediator;
-            this.pathAdapter = pathAdapter;
+            this.fileSystem = fileSystem;
         }
 
         public override void Initialise()

@@ -6,12 +6,17 @@ namespace CDP.Core
     public abstract class SteamLauncher : Launcher
     {
         private readonly Settings settings = Settings.Instance;
-        private readonly Adapters.Path pathAdapter = new Adapters.Path();
+        private readonly Core.IFileSystem fileSystem;
 
         protected string gameName;
         protected int appId;
         protected string appFolder;
         protected string gameFolder;
+
+        public SteamLauncher(Core.IFileSystem fileSystem)
+        {
+            this.fileSystem = fileSystem;
+        }
 
         public override bool Verify()
         {
@@ -40,7 +45,7 @@ namespace CDP.Core
             }
 
             // Verify that the Steam account folder exists.
-            string steamAccountPath = pathAdapter.Combine(Path.GetDirectoryName(settings.Main.SteamExeFullPath), "SteamApps", settings.Main.SteamAccountName);
+            string steamAccountPath = fileSystem.PathCombine(Path.GetDirectoryName(settings.Main.SteamExeFullPath), "SteamApps", settings.Main.SteamAccountName);
 
             if (!Directory.Exists(steamAccountPath))
             {
@@ -49,7 +54,7 @@ namespace CDP.Core
             }
 
             // Verify that the game folder exists.
-            string gamePath = pathAdapter.Combine(steamAccountPath, appFolder, gameFolder);
+            string gamePath = fileSystem.PathCombine(steamAccountPath, appFolder, gameFolder);
 
             if (!Directory.Exists(gamePath))
             {
