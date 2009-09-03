@@ -122,10 +122,6 @@ namespace CDP.Core
             Add("SteamExeFullPath", string.Empty);
             Add("SteamAccountName", string.Empty);
             Add("SteamAdditionalLaunchParameters", string.Empty);
-
-            System.Windows.MessageBox.Show(programDataPath);
-            System.Windows.MessageBox.Show(programExeFullPath);
-            System.Windows.MessageBox.Show(programPath);
         }
 
         public void Add<T>(string key, T defaultValue)
