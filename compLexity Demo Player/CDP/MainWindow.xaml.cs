@@ -16,7 +16,7 @@ namespace CDP
         {
             CDP.NavigationService service = CDP.NavigationService.Instance;
             service.Window = this;
-            service.Navigate("Main");
+            service.Navigate(new View.Main(), new ViewModel.Main());
         }
     }
 }

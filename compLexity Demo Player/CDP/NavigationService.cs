@@ -13,8 +13,8 @@ namespace CDP
     {
         NavigationWindow Window { get; set; }
 
-        void Navigate(string viewName);
-        void Navigate(string viewName, object parameter);
+        void Navigate(Page view, Core.ViewModelBase viewModel);
+        void Navigate(Page view, Core.ViewModelBase viewModel, object parameter);
         void Home();
         void Back();
         void Invoke(Action action);
@@ -39,26 +39,21 @@ namespace CDP
         {
         }
 
-        public void Navigate(string viewName)
+        public void Navigate(Page view, Core.ViewModelBase viewModel)
         {
-            Navigate(viewName, null);
+            Navigate(view, viewModel, null);
         }
 
-        public void Navigate(string viewName, object parameter)
+        public void Navigate(Page view, Core.ViewModelBase viewModel, object parameter)
         {
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            Page view = (Page)assembly.CreateInstance("CDP.View." + viewName);
-
             if (view == null)
             {
-                throw new ArgumentException("Cannot find a View with the name \"" + viewName + "\"");
+                throw new ArgumentNullException("view");
             }
-
-            ViewModelBase viewModel = (ViewModelBase)assembly.CreateInstance("CDP.ViewModel." + viewName);
 
             if (viewModel == null)
             {
-                throw new ArgumentException("Cannot find a ViewModel with the name \"" + viewName + "\"");
+                throw new ArgumentNullException("viewModel");
             }
 
             if (home == null)
