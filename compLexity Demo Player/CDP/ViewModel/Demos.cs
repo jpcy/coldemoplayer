@@ -42,16 +42,18 @@ namespace CDP.ViewModel
 
         private readonly IMediator mediator;
         private readonly INavigationService navigationService;
+        private readonly Core.IFileSystem fileSystem;
         private readonly IconCache iconCache = new IconCache();
         private Core.DemoManager demoManager;
 
-        public Demos(IMediator mediator, INavigationService navigationService)
+        public Demos(IMediator mediator, INavigationService navigationService, Core.IFileSystem fileSystem)
         {
             this.mediator = mediator;
             this.navigationService = navigationService;
+            this.fileSystem = fileSystem;
         }
 
-        public Demos() : this(Mediator.Instance, NavigationService.Instance)
+        public Demos() : this(Mediator.Instance, NavigationService.Instance, new Core.FileSystem())
         {
             Items = new ObservableCollection<Item>();
         }
@@ -71,8 +73,9 @@ namespace CDP.ViewModel
         {
             Items.Clear();
 
-            // TODO: check handlers for valid demo extensions
-            foreach (string fileName in Directory.GetFiles(path, "*.dem", SearchOption.TopDirectoryOnly))
+            string[] validExtensions = demoManager.ValidDemoExtensions();
+
+            foreach (string fileName in Directory.GetFiles(path).Where(f => validExtensions.Contains(fileSystem.GetExtension(f))))
             {
                 Core.Demo demo = demoManager.CreateDemo(fileName);
 
