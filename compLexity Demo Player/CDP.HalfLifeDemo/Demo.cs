@@ -72,6 +72,41 @@ namespace CDP.HalfLifeDemo
         public override IList<Detail> Details { get; protected set; }
         public override ArrayList Players { get; protected set; }
 
+        public override string[] IconFileNames
+        {
+            get
+            {
+                if (Game == null)
+                {
+                    return null;
+                }
+
+                List<string> fileNames = new List<string>();
+                Core.ISettings settings = Core.Settings.Instance;
+                Core.IFileSystem fileSystem = new Core.FileSystem();
+
+                // Locally stored icon: "icons\engine\game folder.ico"
+                fileNames.Add(fileSystem.PathCombine(settings.ProgramPath, "icons", "goldsrc", Game.ModFolder + ".ico"));
+
+                // Check that Steam.exe path is set.
+                if (File.Exists((string)settings["SteamExeFullPath"]))
+                {
+                    string steamFolder = Path.GetDirectoryName((string)settings["SteamExeFullPath"]);
+
+                    // Steam\steam\games\x.ico, where x is the game name. e.g. counter-strike.
+                    fileNames.Add(fileSystem.PathCombine(steamFolder, "steam", "games", Game.AppFolder + ".ico"));
+
+                    // e.g. counter-strike\cstrike\game.ico
+                    fileNames.Add(fileSystem.PathCombine(steamFolder, "SteamApps", (string)settings["SteamAccountName"], Game.AppFolder, Game.ModFolder, "game.ico"));
+
+                    // e.g. counter-strike\cstrike\resource\game.ico.
+                    fileNames.Add(fileSystem.PathCombine(steamFolder, "SteamApps", (string)settings["SteamAccountName"], Game.AppFolder, Game.ModFolder, "resource", "game.ico"));
+                }
+
+                return fileNames.ToArray();
+            }
+        }
+
         public override string MapImagesRelativePath
         {
             get

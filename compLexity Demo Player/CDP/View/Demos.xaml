@@ -4,11 +4,24 @@
     <ListView Margin="8" SelectionMode="Single" ItemsSource="{Binding Items}" SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}">
         <ListView.View>
             <GridView>
-                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
-                <GridViewColumn Header="Game" DisplayMemberBinding="{Binding GameName}" />
-                <GridViewColumn Header="Map" DisplayMemberBinding="{Binding MapName}" />
-                <GridViewColumn Header="Perspective" DisplayMemberBinding="{Binding Perspective}" />
-                <GridViewColumn Header="Duration" DisplayMemberBinding="{Binding Duration}" />
+                <GridViewColumn Header="Name">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Image Grid.Column="0" Width="16" Margin="0,0,2,0" VerticalAlignment="Center" Source="{Binding Icon}" />
+                                <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding Demo.Name}" />
+                            </Grid>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+                <GridViewColumn Header="Game" DisplayMemberBinding="{Binding Demo.GameName}" />
+                <GridViewColumn Header="Map" DisplayMemberBinding="{Binding Demo.MapName}" />
+                <GridViewColumn Header="Perspective" DisplayMemberBinding="{Binding Demo.Perspective}" />
+                <GridViewColumn Header="Duration" DisplayMemberBinding="{Binding Demo.Duration}" />
             </GridView>
         </ListView.View>
     </ListView>

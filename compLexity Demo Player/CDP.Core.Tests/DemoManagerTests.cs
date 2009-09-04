@@ -24,6 +24,10 @@ namespace CDP.Core.Tests
             public override TimeSpan Duration { get; protected set; }
             public override IList<Detail> Details { get; protected set; }
             public override ArrayList Players { get; protected set; }
+            public override string[] IconFileNames
+            {
+                get { throw new NotImplementedException(); }
+            }
             public override string MapImagesRelativePath
             {
                 get { throw new NotImplementedException(); }

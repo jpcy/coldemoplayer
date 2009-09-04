@@ -122,6 +122,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DelegateCommand.cs" />
+    <Compile Include="IconCache.cs" />
     <Compile Include="Mediator.cs" />
     <Compile Include="Messages.cs" />
     <Compile Include="NavigationService.cs" />

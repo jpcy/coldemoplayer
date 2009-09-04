@@ -90,6 +90,11 @@ namespace CDP.Core
         public abstract ArrayList Players { get; protected set; }
 
         /// <summary>
+        /// File locations to try and load an icon from. Filenames are tried in order. If no icon can be found, a generic "unknown" icon is used.
+        /// </summary>
+        public abstract string[] IconFileNames { get; }
+
+        /// <summary>
         /// The relative path to the map preview and overview images corresponding to this demo.
         /// </summary>
         /// <example>goldsrc\de_dust2.jpg</example>

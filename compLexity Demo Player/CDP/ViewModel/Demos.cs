@@ -6,15 +6,28 @@ using System.IO;
 using System.Windows.Threading;
 using System.Threading;
 using System.Collections.ObjectModel;
+using System.Windows.Media.Imaging;
 
 namespace CDP.ViewModel
 {
     public class Demos : Core.ViewModelBase
     {
-        private Core.Demo selectedItem;
+        public class Item
+        {
+            public Core.Demo Demo { get; private set; }
+            public BitmapImage Icon { get; private set; }
 
-        public ObservableCollection<Core.Demo> Items { get; private set; }
-        public Core.Demo SelectedItem
+            public Item(Core.Demo demo, BitmapImage icon)
+            {
+                Demo = demo;
+                Icon = icon;
+            }
+        }
+
+        private Item selectedItem;
+
+        public ObservableCollection<Item> Items { get; private set; }
+        public Item SelectedItem
         {
             get { return selectedItem; }
             set
@@ -22,13 +35,14 @@ namespace CDP.ViewModel
                 if (value != selectedItem)
                 {
                     selectedItem = value;
-                    mediator.Notify<Core.Demo>(Messages.SelectedDemoChanged, value);
+                    mediator.Notify<Core.Demo>(Messages.SelectedDemoChanged, selectedItem.Demo);
                 }
             }
         }
 
         private readonly IMediator mediator;
         private readonly INavigationService navigationService;
+        private readonly IconCache iconCache = new IconCache();
         private Core.DemoManager demoManager;
 
         public Demos(IMediator mediator, INavigationService navigationService)
@@ -39,7 +53,7 @@ namespace CDP.ViewModel
 
         public Demos() : this(Mediator.Instance, NavigationService.Instance)
         {
-            Items = new ObservableCollection<Core.Demo>();
+            Items = new ObservableCollection<Item>();
         }
 
         public override void Initialise()
@@ -93,7 +107,7 @@ namespace CDP.ViewModel
             {
                 demo.OperationErrorEvent -= demo_OperationErrorEvent;
                 demo.OperationCompleteEvent -= demo_OperationCompleteEvent;
-                Items.Add(demo);
+                Items.Add(new Item(demo, iconCache.FindIcon(demo.IconFileNames)));
             },
             (Core.Demo)sender);
         }
