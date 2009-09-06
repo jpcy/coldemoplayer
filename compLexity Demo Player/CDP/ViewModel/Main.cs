@@ -23,7 +23,7 @@ namespace CDP.ViewModel
             Address = address;
             Demos = demos;
             Demo = demo;
-            demoManager = new Core.DemoManager();
+            demoManager = Core.NinjectFactory.Get<Core.DemoManager>();
         }
 
         public override void Initialise()

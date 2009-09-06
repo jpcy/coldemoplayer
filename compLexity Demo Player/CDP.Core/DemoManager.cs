@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.Reflection;
 using System.Windows.Controls;
+using Ninject.Core;
 
 namespace CDP.Core
 {
@@ -32,11 +33,6 @@ namespace CDP.Core
         public DemoManager(IFileSystem fileSystem)
         {
             this.fileSystem = fileSystem;
-        }
-
-        public DemoManager()
-            : this(new Core.FileSystem())
-        {
         }
 
         public void AddPlugin(uint priority, Type demoType, DemoHandler demoHandler, Type launcherType)

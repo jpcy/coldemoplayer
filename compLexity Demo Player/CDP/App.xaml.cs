@@ -11,6 +11,8 @@ namespace CDP
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            Core.NinjectFactory.LoadModule(new NinjectModule());
+            Core.NinjectFactory.LoadModule(new Core.NinjectModule());
         }
 
         private void Application_Exit(object sender, ExitEventArgs e)

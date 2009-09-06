@@ -6,12 +6,23 @@ using CDP.Core;
 using System.IO;
 using System.Collections.Generic;
 using System.Collections;
+using Ninject.Core;
 
 namespace CDP.Core.Tests
 {
     [TestFixture]
     public class DemoManagerTests
     {
+        public class BindingModule : StandardModule
+        {
+            public override void Load()
+            {
+                Bind<DemoManager>().ToSelf();
+                Bind<IFileSystem>().ToProvider(new MockProvider<IFileSystem>());
+            }
+        }
+
+
         // CreateDemo uses Activator to instantiate a type with a base type of Demo. Can't use a Moq mock.
         public class DemoStub : Demo
         {
@@ -92,6 +103,7 @@ namespace CDP.Core.Tests
 
         public class DemoDummy : DemoStub { }
 
+        private IKernel kernel;
         private DemoManager demoManager;
         private Mock<Core.DemoHandler> demoHandlerMock;
         private Mock<IFileSystem> fileSystemMock;
@@ -101,7 +113,10 @@ namespace CDP.Core.Tests
         {
             fileSystemMock = new Mock<IFileSystem>();
             fileSystemMock.Setup(f => f.OpenRead(It.IsAny<string>())).Returns(new MemoryStream());
-            demoManager = new DemoManager(fileSystemMock.Object);
+            MockProvider<IFileSystem>.Mock = fileSystemMock;
+
+            kernel = new StandardKernel(new BindingModule());
+            demoManager = kernel.Get<DemoManager>();
             demoHandlerMock = new Mock<DemoHandler>();
         }
 
