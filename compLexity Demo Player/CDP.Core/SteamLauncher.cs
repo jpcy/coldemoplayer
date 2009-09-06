@@ -13,7 +13,7 @@ namespace CDP.Core
         protected string appFolder;
         protected string gameFolder;
 
-        public SteamLauncher(ISettings settings, IFileSystem fileSystem)
+        public SteamLauncher(IProcessFinder processFinder, ISettings settings, IFileSystem fileSystem) : base(processFinder)
         {
             this.settings = settings;
             this.fileSystem = fileSystem;

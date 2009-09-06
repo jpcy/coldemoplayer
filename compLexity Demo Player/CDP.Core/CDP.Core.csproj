@@ -70,6 +70,8 @@
     </Compile>
     <Compile Include="NinjectFactory.cs" />
     <Compile Include="NinjectModule.cs" />
+    <Compile Include="Process.cs" />
+    <Compile Include="ProcessFinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Setting.cs" />
     <Compile Include="Settings.cs" />

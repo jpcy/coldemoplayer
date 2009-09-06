@@ -73,6 +73,7 @@ namespace CDP.Core.Tests
         public class LauncherStub : Core.Launcher
         {
             public LauncherStub(Core.Demo demo)
+                : base(new Mock<IProcessFinder>().Object)
             {
             }
 
@@ -87,8 +88,13 @@ namespace CDP.Core.Tests
             }
         }
 
-        public class LauncherStubNoCtor : Core.Launcher
+        public class LauncherStubEmptyCtor : Core.Launcher
         {
+            public LauncherStubEmptyCtor()
+                : base(new Mock<IProcessFinder>().Object)
+            {
+            }
+
             public override bool Verify()
             {
                 throw new NotImplementedException();
@@ -218,7 +224,7 @@ namespace CDP.Core.Tests
         public void CreateLauncher_NoLauncherCtorWithDemoParameter()
         {
             var demoHandlerMock = new Mock<DemoHandler>();
-            demoManager.AddPlugin(0, typeof(DemoStub), demoHandlerMock.Object, typeof(LauncherStubNoCtor));
+            demoManager.AddPlugin(0, typeof(DemoStub), demoHandlerMock.Object, typeof(LauncherStubEmptyCtor));
             demoManager.CreateLauncher(new DemoStub());
         }
 

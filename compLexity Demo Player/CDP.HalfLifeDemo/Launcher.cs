@@ -10,11 +10,11 @@ namespace CDP.HalfLifeDemo
         private Demo demo;
 
         public Launcher(Demo demo)
-            : this(demo, Core.Settings.Instance, new Core.FileSystem())
+            : this(demo, new Core.ProcessFinder(), Core.Settings.Instance, new Core.FileSystem())
         {
         }
 
-        public Launcher(Demo demo, Core.ISettings settings, Core.IFileSystem fileSystem) : base(settings, fileSystem)
+        public Launcher(Demo demo, Core.IProcessFinder processFinder, Core.ISettings settings, Core.IFileSystem fileSystem) : base(processFinder, settings, fileSystem)
         {
             this.demo = demo;
 

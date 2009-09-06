@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
@@ -9,9 +8,9 @@ namespace CDP.Core
     {
         public class ProcessFoundEventArgs : EventArgs
         {
-            public Process Process { get; private set; }
+            public IProcess Process { get; private set; }
 
-            public ProcessFoundEventArgs(Process process)
+            public ProcessFoundEventArgs(IProcess process)
             {
                 Process = process;
             }
@@ -24,17 +23,28 @@ namespace CDP.Core
         public abstract bool Verify();
         public abstract void Launch();
 
+        private readonly IProcessFinder processFinder;
         protected string processExecutableFileName;
-        private const int monitorProcessSleepTime = 250;
+        private const int defaultMonitorProcessSleepTime = 250;
+
+        public Launcher(IProcessFinder processFinder)
+        {
+            this.processFinder = processFinder;
+        }
 
         public void MonitorProcessWorker()
+        {
+            MonitorProcessWorker(defaultMonitorProcessSleepTime);
+        }
+
+        public void MonitorProcessWorker(int sleepTime)
         {
             if (processExecutableFileName == null)
             {
                 throw new InvalidOperationException("processExecutableFileName cannot be null.");
             }
 
-            Process process = null;
+            IProcess process = null;
 
             while (true)
             {
@@ -56,11 +66,14 @@ namespace CDP.Core
                     }
                 }
 
-                Thread.Sleep(monitorProcessSleepTime);
+                if (sleepTime > 0)
+                {
+                    Thread.Sleep(sleepTime);
+                }
             }
         }
 
-        private void OnProcessFound(Process process)
+        private void OnProcessFound(IProcess process)
         {
             if (ProcessFound != null)
             {
@@ -76,21 +89,13 @@ namespace CDP.Core
             }
         }
 
-        protected Process FindProcess(string processName, string executableFileName)
+        protected IProcess FindProcess(string processName, string executableFileName)
         {
-            Process[] processes = Process.GetProcessesByName(processName);
+            var processes = processFinder.FindByName(processName);
 
-            foreach (Process process in processes)
+            foreach (IProcess process in processes)
             {
-                string compare = executableFileName;
-
-                try
-                {
-                    compare = process.MainModule.FileName;
-                }
-                catch (System.ComponentModel.Win32Exception)
-                {
-                }
+                string compare = process.FileName ?? executableFileName;
 
                 if (string.Equals(executableFileName, compare, StringComparison.CurrentCultureIgnoreCase))
                 {
