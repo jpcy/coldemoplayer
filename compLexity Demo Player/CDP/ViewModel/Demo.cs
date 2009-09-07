@@ -17,7 +17,7 @@ namespace CDP.ViewModel
                     return null;
                 }
 
-                return fileSystem.PathCombine(Core.Settings.Instance.ProgramPath, "previews", Data.MapImagesRelativePath);
+                return fileSystem.PathCombine(settings.ProgramPath, "previews", Data.MapImagesRelativePath);
             }
         }
         public string MapOverviewFileName
@@ -29,24 +29,26 @@ namespace CDP.ViewModel
                     return null;
                 }
 
-                return fileSystem.PathCombine(Core.Settings.Instance.ProgramPath, "overviews", Data.MapImagesRelativePath);
+                return fileSystem.PathCombine(settings.ProgramPath, "overviews", Data.MapImagesRelativePath);
             }
         }
 
         public DelegateCommand PlayCommand { get; private set; }
         public DelegateCommand AnalyseCommand { get; private set; }
 
+        private readonly Core.ISettings settings;
         private readonly IMediator mediator;
         private readonly Core.IFileSystem fileSystem;
         private Core.DemoManager demoManager;
 
         public Demo()
-            : this(Mediator.Instance, new Core.FileSystem())
+            : this(Core.Settings.Instance, Mediator.Instance, new Core.FileSystem())
         {
         }
 
-        public Demo(IMediator mediator, Core.IFileSystem fileSystem)
+        public Demo(Core.ISettings settings, IMediator mediator, Core.IFileSystem fileSystem)
         {
+            this.settings = settings;
             this.mediator = mediator;
             this.fileSystem = fileSystem;
         }

@@ -1,7 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
 using Moq;
-using Ninject.Core;
 using CDP.Core;
 
 namespace CDP.Core.Tests
@@ -9,15 +8,6 @@ namespace CDP.Core.Tests
     [TestFixture]
     public class LauncherTests
     {
-        public class BindingModule : StandardModule
-        {
-            public override void Load()
-            {
-                Bind<Launcher>().To<LauncherMock>();
-                Bind<IProcessFinder>().ToProvider(new MockProvider<IProcessFinder>());
-            }
-        }
-
         public class LauncherMock : Launcher
         {
             public string ProcessExecutableFileName
@@ -28,6 +18,10 @@ namespace CDP.Core.Tests
 
             public LauncherMock(IProcessFinder processFinder)
                 : base(processFinder)
+            {
+            }
+
+            public override void Initialise(Demo demo)
             {
             }
 
@@ -42,17 +36,14 @@ namespace CDP.Core.Tests
             }
         }
 
-        private IKernel kernel;
         private Mock<IProcessFinder> processFinderMock;
         private LauncherMock launcher;
 
         [SetUp]
         public void SetUp()
         {
-            kernel = new StandardKernel(new BindingModule());
             processFinderMock = new Mock<IProcessFinder>();
-            MockProvider<IProcessFinder>.Mock = processFinderMock;
-            launcher = (LauncherMock)kernel.Get<Launcher>();
+            launcher = new LauncherMock(processFinderMock.Object);
         }
 
         [Test]

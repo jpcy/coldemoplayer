@@ -42,11 +42,6 @@ namespace CDP.HalfLifeDemo
             set { settings["HlRemoveShowscores"] = value; }
         }
 
-        public SettingsViewModel()
-            : this(Core.Settings.Instance)
-        {
-        }
-
         public SettingsViewModel(Core.ISettings settings)
         {
             this.settings = settings;

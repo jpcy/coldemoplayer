@@ -32,6 +32,8 @@ namespace CDP.Core
             this.processFinder = processFinder;
         }
 
+        public abstract void Initialise(Demo demo);
+
         public void MonitorProcessWorker()
         {
             MonitorProcessWorker(defaultMonitorProcessSleepTime);

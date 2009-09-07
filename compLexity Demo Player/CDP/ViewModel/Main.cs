@@ -1,29 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using CDP.Core;
 
 namespace CDP.ViewModel
 {
-    public class Main : Core.ViewModelBase
+    public class Main : ViewModelBase
     {
-        public Core.ViewModelBase Address { get; private set; }
-        public Core.ViewModelBase Demos { get; private set; }
-        public Core.ViewModelBase Demo { get; private set; }
+        public ViewModelBase Address { get; private set; }
+        public ViewModelBase Demos { get; private set; }
+        public ViewModelBase Demo { get; private set; }
 
-        private readonly Core.DemoManager demoManager;
+        private readonly ISettings settings;
+        private readonly IDemoManager demoManager;
 
         public Main()
-            : this(new Address(), new Demos(), new Demo())
+            : this(Settings.Instance, new DemoManager(), new Address(), new Demos(), new Demo())
         {
         }
 
-        public Main(Core.ViewModelBase address, Core.ViewModelBase demos, Core.ViewModelBase demo)
+        public Main(ISettings settings, IDemoManager demoManager, ViewModelBase address, ViewModelBase demos, ViewModelBase demo)
         {
+            this.settings = settings;
+            this.demoManager = demoManager;
             Address = address;
             Demos = demos;
             Demo = demo;
-            demoManager = Core.NinjectFactory.Get<Core.DemoManager>();
         }
 
         public override void Initialise()
@@ -31,13 +31,12 @@ namespace CDP.ViewModel
             demoManager.AddPlugin(0, typeof(HalfLifeDemo.Demo), new HalfLifeDemo.Handler(), typeof(HalfLifeDemo.Launcher));
             demoManager.AddPlugin(1, typeof(CounterStrikeDemo.Demo), new CounterStrikeDemo.Handler(), typeof(HalfLifeDemo.Launcher));
 
-            foreach (Core.Setting setting in demoManager.GetAllDemoHandlerSettings())
+            foreach (Setting setting in demoManager.GetAllDemoHandlerSettings())
             {
-                Core.Settings.Instance.Add(setting);
+                settings.Add(setting);
             }
 
-            Core.Settings.Instance.Load();
-
+            settings.Load();
             Address.Initialise();
             Demos.Initialise(demoManager);
             Demo.Initialise(demoManager);

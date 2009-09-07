@@ -6,23 +6,12 @@ using CDP.Core;
 using System.IO;
 using System.Collections.Generic;
 using System.Collections;
-using Ninject.Core;
 
 namespace CDP.Core.Tests
 {
     [TestFixture]
     public class DemoManagerTests
     {
-        public class BindingModule : StandardModule
-        {
-            public override void Load()
-            {
-                Bind<DemoManager>().ToSelf();
-                Bind<IFileSystem>().ToProvider(new MockProvider<IFileSystem>());
-            }
-        }
-
-
         // CreateDemo uses Activator to instantiate a type with a base type of Demo. Can't use a Moq mock.
         public class DemoStub : Demo
         {
@@ -72,8 +61,12 @@ namespace CDP.Core.Tests
         // CreateLauncher uses Activator to instantiate a type with a base type of Launcher. Can't use a Moq mock.
         public class LauncherStub : Core.Launcher
         {
-            public LauncherStub(Core.Demo demo)
+            public LauncherStub()
                 : base(new Mock<IProcessFinder>().Object)
+            {
+            }
+
+            public override void Initialise(Demo demo)
             {
             }
 
@@ -87,29 +80,9 @@ namespace CDP.Core.Tests
                 throw new NotImplementedException();
             }
         }
-
-        public class LauncherStubEmptyCtor : Core.Launcher
-        {
-            public LauncherStubEmptyCtor()
-                : base(new Mock<IProcessFinder>().Object)
-            {
-            }
-
-            public override bool Verify()
-            {
-                throw new NotImplementedException();
-            }
-
-            public override void Launch()
-            {
-                throw new NotImplementedException();
-            }
-        }
-
 
         public class DemoDummy : DemoStub { }
 
-        private IKernel kernel;
         private DemoManager demoManager;
         private Mock<Core.DemoHandler> demoHandlerMock;
         private Mock<IFileSystem> fileSystemMock;
@@ -119,10 +92,7 @@ namespace CDP.Core.Tests
         {
             fileSystemMock = new Mock<IFileSystem>();
             fileSystemMock.Setup(f => f.OpenRead(It.IsAny<string>())).Returns(new MemoryStream());
-            MockProvider<IFileSystem>.Mock = fileSystemMock;
-
-            kernel = new StandardKernel(new BindingModule());
-            demoManager = kernel.Get<DemoManager>();
+            demoManager = new DemoManager(fileSystemMock.Object);
             demoHandlerMock = new Mock<DemoHandler>();
         }
 
@@ -217,15 +187,6 @@ namespace CDP.Core.Tests
             var demoHandlerMock = new Mock<DemoHandler>();
             demoManager.AddPlugin(0, typeof(DemoStub), demoHandlerMock.Object, typeof(LauncherStub));
             demoManager.CreateLauncher(new DemoDummy());
-        }
-
-        [Test]
-        [ExpectedException(typeof(ApplicationException))]
-        public void CreateLauncher_NoLauncherCtorWithDemoParameter()
-        {
-            var demoHandlerMock = new Mock<DemoHandler>();
-            demoManager.AddPlugin(0, typeof(DemoStub), demoHandlerMock.Object, typeof(LauncherStubEmptyCtor));
-            demoManager.CreateLauncher(new DemoStub());
         }
 
         [Test]

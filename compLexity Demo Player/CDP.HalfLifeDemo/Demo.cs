@@ -82,8 +82,6 @@ namespace CDP.HalfLifeDemo
                 }
 
                 List<string> fileNames = new List<string>();
-                Core.ISettings settings = Core.Settings.Instance;
-                Core.IFileSystem fileSystem = new Core.FileSystem();
 
                 // Locally stored icon: "icons\engine\game folder.ico"
                 fileNames.Add(fileSystem.PathCombine(settings.ProgramPath, "icons", "goldsrc", Game.ModFolder + ".ico"));
@@ -139,8 +137,19 @@ namespace CDP.HalfLifeDemo
         private readonly Dictionary<string, DeltaStructure> deltaStructures;
         private readonly List<UserMessageDefinition> userMessageDefinitions;
 
+        protected readonly Core.ISettings settings;
+        protected readonly Core.IFileSystem fileSystem;
+
         public Demo()
+            : this(Core.Settings.Instance, new Core.FileSystem())
         {
+        }
+
+        public Demo(Core.ISettings settings, Core.IFileSystem fileSystem)
+        {
+            this.settings = settings;
+            this.fileSystem = fileSystem;
+
             Perspective = "POV";
             IsHltv = false;
             IsCorrupt = false;

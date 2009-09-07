@@ -73,11 +73,11 @@ namespace CDP.HalfLifeDemo
         {
         }
 
-        public Handler(Core.ISettings config, Core.IFileSystem fileSystem)
+        public Handler(Core.ISettings settings, Core.IFileSystem fileSystem)
         {
-            this.settings = config;
+            this.settings = settings;
             this.fileSystem = fileSystem;
-            SettingsView = new SettingsView { DataContext = new SettingsViewModel() };
+            SettingsView = new SettingsView { DataContext = new SettingsViewModel(settings) };
             RegisterMessages();
             ReadGameConfig();
         }

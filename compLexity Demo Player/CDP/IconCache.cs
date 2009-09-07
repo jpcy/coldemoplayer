@@ -8,13 +8,21 @@ namespace CDP
 {
     public class IconCache
     {
+        private readonly Core.ISettings settings;
+        private readonly Core.IFileSystem fileSystem;
         private readonly List<BitmapImage> cache = new List<BitmapImage>();
         private readonly BitmapImage unknown;
 
         public IconCache()
+            : this(Core.Settings.Instance, new Core.FileSystem())
         {
-            Core.IFileSystem fileSystem = new Core.FileSystem();
-            unknown = new BitmapImage(new Uri(fileSystem.PathCombine(Core.Settings.Instance.ProgramPath, "icons", "unknown.ico")));
+        }
+
+        public IconCache(Core.ISettings settings, Core.IFileSystem fileSystem)
+        {
+            this.settings = settings;
+            this.fileSystem = fileSystem;
+            unknown = new BitmapImage(new Uri(fileSystem.PathCombine(settings.ProgramPath, "icons", "unknown.ico")));
             unknown.Freeze();
             cache.Add(unknown);
         }

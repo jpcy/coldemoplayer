@@ -32,9 +32,14 @@ namespace CDP.CounterStrikeDemo
         private Game game;
 
         public Handler()
-            : base(Core.Settings.Instance, new Core.FileSystem())
+            : this(Core.Settings.Instance, new Core.FileSystem())
         {
-            SettingsView = new SettingsView { DataContext = new SettingsViewModel() };
+        }
+
+        public Handler(Core.ISettings settings, Core.IFileSystem fileSystem)
+            : base(settings, fileSystem)
+        {
+            SettingsView = new SettingsView { DataContext = new SettingsViewModel(settings) };
         }
 
         protected override void RegisterMessages()

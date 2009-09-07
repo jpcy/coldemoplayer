@@ -13,11 +13,6 @@ namespace CDP.CounterStrikeDemo
             set { settings["CsRemoveFadeToBlack"] = value; }
         }
 
-        public SettingsViewModel()
-            : this(Core.Settings.Instance)
-        {
-        }
-
         public SettingsViewModel(Core.ISettings settings) : base(settings)
         {
         }

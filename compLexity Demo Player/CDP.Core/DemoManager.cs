@@ -9,7 +9,16 @@ using Ninject.Core;
 
 namespace CDP.Core
 {
-    public class DemoManager
+    public interface IDemoManager
+    {
+        void AddPlugin(uint priority, Type demoType, DemoHandler demoHandler, Type launcherType);
+        Setting[] GetAllDemoHandlerSettings();
+        string[] ValidDemoExtensions();
+        Demo CreateDemo(string fileName);
+        Launcher CreateLauncher(Demo demo);
+    }
+
+    public class DemoManager : IDemoManager
     {
         private class Plugin
         {
@@ -29,6 +38,11 @@ namespace CDP.Core
 
         private readonly IFileSystem fileSystem;
         private readonly List<Plugin> plugins = new List<Plugin>();
+
+        public DemoManager()
+            : this(new FileSystem())
+        {
+        }
 
         public DemoManager(IFileSystem fileSystem)
         {
@@ -101,14 +115,9 @@ namespace CDP.Core
                 throw new ApplicationException("Tried to create a launcher from an unknown demo type.");
             }
 
-            try
-            {
-                return (Launcher)Activator.CreateInstance(plugin.LauncherType, demo);
-            }
-            catch (MissingMethodException)
-            {
-                throw new ApplicationException(string.Format("Launcher \"{0}\" is missing a constructor that takes a single parameter of type CDP.Core.Demo.", plugin.LauncherType));
-            }
+            Launcher launcher = (Launcher)Activator.CreateInstance(plugin.LauncherType);
+            launcher.Initialise(demo);
+            return launcher;
         }
 
         /// <summary>

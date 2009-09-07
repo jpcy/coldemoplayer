@@ -9,24 +9,24 @@ namespace CDP.HalfLifeDemo
         private readonly string configFileName = "coldemoplayer.cfg";
         private Demo demo;
 
-        public Launcher(Demo demo)
-            : this(demo, new Core.ProcessFinder(), Core.Settings.Instance, new Core.FileSystem())
+        public Launcher(Core.IProcessFinder processFinder, Core.ISettings settings, Core.IFileSystem fileSystem)
+            : base(processFinder, settings, fileSystem)
         {
         }
 
-        public Launcher(Demo demo, Core.IProcessFinder processFinder, Core.ISettings settings, Core.IFileSystem fileSystem) : base(processFinder, settings, fileSystem)
+        public override void Initialise(Core.Demo demo)
         {
-            this.demo = demo;
+            this.demo = (Demo)demo;
 
-            if (demo.Game == null)
+            if (this.demo.Game == null)
             {
                 throw new InvalidOperationException("Cannot launch a Half-Life demo recorded with an unknown game.");
             }
 
-            gameName = demo.Game.Name;
-            appId = demo.Game.AppId;
-            appFolder = demo.Game.AppFolder;
-            gameFolder = demo.Game.ModFolder;
+            gameName = this.demo.Game.Name;
+            appId = this.demo.Game.AppId;
+            appFolder = this.demo.Game.AppFolder;
+            gameFolder = this.demo.Game.ModFolder;
 
             if (!string.IsNullOrEmpty((string)settings["SteamExeFullPath"]) && !string.IsNullOrEmpty((string)settings["SteamAccountName"]))
             {

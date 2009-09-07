@@ -68,8 +68,6 @@
     <Compile Include="Launcher.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="NinjectFactory.cs" />
-    <Compile Include="NinjectModule.cs" />
     <Compile Include="Process.cs" />
     <Compile Include="ProcessFinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
