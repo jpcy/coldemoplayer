@@ -32,5 +32,7 @@ namespace CDP.Core
         public abstract UserControl SettingsView { get; protected set; }
 
         public abstract bool IsValidDemo(Stream stream);
+        public abstract Demo CreateDemo();
+        public abstract Launcher CreateLauncher();
     }
 }

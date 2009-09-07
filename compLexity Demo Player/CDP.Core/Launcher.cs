@@ -27,6 +27,11 @@ namespace CDP.Core
         protected string processExecutableFileName;
         private const int defaultMonitorProcessSleepTime = 250;
 
+        public Launcher()
+            : this(new Core.ProcessFinder())
+        {
+        }
+
         public Launcher(IProcessFinder processFinder)
         {
             this.processFinder = processFinder;

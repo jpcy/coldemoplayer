@@ -11,7 +11,7 @@ namespace CDP.Core
 {
     public interface IDemoManager
     {
-        void AddPlugin(uint priority, Type demoType, DemoHandler demoHandler, Type launcherType);
+        void AddPlugin(uint priority, DemoHandler demoHandler);
         Setting[] GetAllDemoHandlerSettings();
         string[] ValidDemoExtensions();
         Demo CreateDemo(string fileName);
@@ -23,16 +23,12 @@ namespace CDP.Core
         private class Plugin
         {
             public uint Priority { get; private set; }
-            public Type DemoType { get; private set; }
             public DemoHandler DemoHandler { get; private set; }
-            public Type LauncherType { get; private set; }
 
-            public Plugin(uint priority, Type demoType, DemoHandler demoHandler, Type launcherType)
+            public Plugin(uint priority, DemoHandler demoHandler)
             {
                 Priority = priority;
-                DemoType = demoType;
                 DemoHandler = demoHandler;
-                LauncherType = launcherType;
             }
         }
 
@@ -49,19 +45,9 @@ namespace CDP.Core
             this.fileSystem = fileSystem;
         }
 
-        public void AddPlugin(uint priority, Type demoType, DemoHandler demoHandler, Type launcherType)
+        public void AddPlugin(uint priority, DemoHandler demoHandler)
         {
-            if (!demoType.IsSubclassOf(typeof(Demo)))
-            {
-                throw new ArgumentException("Type must inherit from CDP.Core.Demo.", "demoType");
-            }
-
-            if (!launcherType.IsSubclassOf(typeof(Launcher)))
-            {
-                throw new ArgumentException("Type must inherit from CDP.Core.Launcher.", "launcherType");
-            }
-
-            plugins.Add(new Plugin(priority, demoType, demoHandler, launcherType));
+            plugins.Add(new Plugin(priority, demoHandler));
         }
 
         public Setting[] GetAllDemoHandlerSettings()
@@ -100,7 +86,7 @@ namespace CDP.Core
                 return null;
             }
 
-            Demo demo = (Demo)Activator.CreateInstance(plugin.DemoType);
+            Demo demo = plugin.DemoHandler.CreateDemo();
             demo.FileName = fileName;
             demo.Handler = plugin.DemoHandler;
             return demo;
@@ -108,14 +94,7 @@ namespace CDP.Core
 
         public Launcher CreateLauncher(Demo demo)
         {
-            Plugin plugin = plugins.SingleOrDefault(p => p.DemoType == demo.GetType());
-
-            if (plugin == null)
-            {
-                throw new ApplicationException("Tried to create a launcher from an unknown demo type.");
-            }
-
-            Launcher launcher = (Launcher)Activator.CreateInstance(plugin.LauncherType);
+            Launcher launcher = demo.Handler.CreateLauncher();
             launcher.Initialise(demo);
             return launcher;
         }

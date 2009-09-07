@@ -32,14 +32,37 @@ namespace CDP.CounterStrikeDemo
         private Game game;
 
         public Handler()
-            : this(Core.Settings.Instance, new Core.FileSystem())
+            : this(Core.Settings.Instance, new Core.FileSystem(), new Core.ProcessFinder())
         {
         }
 
-        public Handler(Core.ISettings settings, Core.IFileSystem fileSystem)
-            : base(settings, fileSystem)
+        public Handler(Core.ISettings settings, Core.IFileSystem fileSystem, Core.ProcessFinder processFinder)
+            : base(settings, fileSystem, processFinder)
         {
             SettingsView = new SettingsView { DataContext = new SettingsViewModel(settings) };
+        }
+
+        public override bool IsValidDemo(Stream stream)
+        {
+            if (!base.IsValidDemo(stream))
+            {
+                return false;
+            }
+
+            // magic (8 bytes) + demo protocol (4 bytes) + network protocol (4 bytes) + map name (260 bytes) = 276
+            stream.Seek(276, SeekOrigin.Begin);
+
+            using (BinaryReader br = new BinaryReader(stream))
+            {
+                Core.BitReader buffer = new Core.BitReader(br.ReadBytes(260));
+                string gameFolder = buffer.ReadString();
+                return game.DemoGameFolders.Contains(gameFolder, StringComparer.InvariantCultureIgnoreCase);
+            }
+        }
+
+        public override Core.Demo CreateDemo()
+        {
+            return new Demo(settings, fileSystem);
         }
 
         protected override void RegisterMessages()
@@ -62,24 +85,6 @@ namespace CDP.CounterStrikeDemo
         public override Core.SteamGame FindGame(string gameFolder)
         {
             return game;
-        }
-
-        public override bool IsValidDemo(Stream stream)
-        {
-            if (!base.IsValidDemo(stream))
-            {
-                return false;
-            }
-
-            // magic (8 bytes) + demo protocol (4 bytes) + network protocol (4 bytes) + map name (260 bytes) = 276
-            stream.Seek(276, SeekOrigin.Begin);
-
-            using (BinaryReader br = new BinaryReader(stream))
-            {
-                Core.BitReader buffer = new Core.BitReader(br.ReadBytes(260));
-                string gameFolder = buffer.ReadString();
-                return game.DemoGameFolders.Contains(gameFolder, StringComparer.InvariantCultureIgnoreCase);
-            }
         }
     }
 }

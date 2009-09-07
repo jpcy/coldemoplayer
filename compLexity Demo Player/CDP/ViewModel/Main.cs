@@ -28,8 +28,8 @@ namespace CDP.ViewModel
 
         public override void Initialise()
         {
-            demoManager.AddPlugin(0, typeof(HalfLifeDemo.Demo), new HalfLifeDemo.Handler(), typeof(HalfLifeDemo.Launcher));
-            demoManager.AddPlugin(1, typeof(CounterStrikeDemo.Demo), new CounterStrikeDemo.Handler(), typeof(HalfLifeDemo.Launcher));
+            demoManager.AddPlugin(0, new HalfLifeDemo.Handler());
+            demoManager.AddPlugin(1, new CounterStrikeDemo.Handler());
 
             foreach (Setting setting in demoManager.GetAllDemoHandlerSettings())
             {

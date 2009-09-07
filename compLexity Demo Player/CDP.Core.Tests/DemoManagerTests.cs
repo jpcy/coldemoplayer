@@ -12,22 +12,79 @@ namespace CDP.Core.Tests
     [TestFixture]
     public class DemoManagerTests
     {
-        // CreateDemo uses Activator to instantiate a type with a base type of Demo. Can't use a Moq mock.
-        public class DemoStub : Demo
+        // Moq bitches out on CreateDemo_Ok test - it doesn't like Handler being set as virtual.
+        public class DummyDemo : Demo
         {
             public override string GameName
             {
                 get { throw new NotImplementedException(); }
             }
-            public override string MapName { get; protected set; }
-            public override string Perspective { get; protected set; }
-            public override TimeSpan Duration { get; protected set; }
-            public override IList<Detail> Details { get; protected set; }
-            public override ArrayList Players { get; protected set; }
+
+            public override string MapName
+            {
+                get
+                {
+                    throw new NotImplementedException();
+                }
+                protected set
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
+            public override string Perspective
+            {
+                get
+                {
+                    throw new NotImplementedException();
+                }
+                protected set
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
+            public override TimeSpan Duration
+            {
+                get
+                {
+                    throw new NotImplementedException();
+                }
+                protected set
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
+            public override IList<Demo.Detail> Details
+            {
+                get
+                {
+                    throw new NotImplementedException();
+                }
+                protected set
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
+            public override ArrayList Players
+            {
+                get
+                {
+                    throw new NotImplementedException();
+                }
+                protected set
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
             public override string[] IconFileNames
             {
                 get { throw new NotImplementedException(); }
             }
+
             public override string MapImagesRelativePath
             {
                 get { throw new NotImplementedException(); }
@@ -45,6 +102,7 @@ namespace CDP.Core.Tests
 
             public override void Load()
             {
+                throw new NotImplementedException();
             }
 
             public override void Read()
@@ -57,31 +115,6 @@ namespace CDP.Core.Tests
                 throw new NotImplementedException();
             }
         }
-
-        // CreateLauncher uses Activator to instantiate a type with a base type of Launcher. Can't use a Moq mock.
-        public class LauncherStub : Core.Launcher
-        {
-            public LauncherStub()
-                : base(new Mock<IProcessFinder>().Object)
-            {
-            }
-
-            public override void Initialise(Demo demo)
-            {
-            }
-
-            public override bool Verify()
-            {
-                throw new NotImplementedException();
-            }
-
-            public override void Launch()
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public class DemoDummy : DemoStub { }
 
         private DemoManager demoManager;
         private Mock<Core.DemoHandler> demoHandlerMock;
@@ -99,24 +132,7 @@ namespace CDP.Core.Tests
         [Test]
         public void AddPlugin_Ok()
         {
-            Mock<Core.DemoHandler> demoHandlerMock = new Mock<DemoHandler>();
-            demoManager.AddPlugin(0, typeof(DemoStub), demoHandlerMock.Object, typeof(LauncherStub));
-        }
-
-        [Test]
-        [ExpectedException(typeof(ArgumentException))]
-        public void AddPlugin_WrongDemoTypeBaseClass()
-        {
-            Mock<Core.DemoHandler> demoHandlerMock = new Mock<DemoHandler>();
-            demoManager.AddPlugin(0, typeof(object), demoHandlerMock.Object, typeof(LauncherStub));
-        }
-
-        [Test]
-        [ExpectedException(typeof(ArgumentException))]
-        public void AddPlugin_WrongLauncherTypeBaseClass()
-        {
-            Mock<Core.DemoHandler> demoHandlerMock = new Mock<DemoHandler>();
-            demoManager.AddPlugin(0, typeof(DemoStub), demoHandlerMock.Object, typeof(object));
+            demoManager.AddPlugin(0, demoHandlerMock.Object);
         }
 
         [Test]
@@ -133,8 +149,8 @@ namespace CDP.Core.Tests
             var setting2 = new Setting("setting2", typeof(bool), false);
             var mock1 = createDemoHandlerMock(new Setting[] { setting1 });
             var mock2 = createDemoHandlerMock(new Setting[] { setting2 });
-            demoManager.AddPlugin(0, typeof(DemoStub), mock1.Object, typeof(LauncherStub));
-            demoManager.AddPlugin(0, typeof(DemoStub), mock2.Object, typeof(LauncherStub));
+            demoManager.AddPlugin(0, mock1.Object);
+            demoManager.AddPlugin(0, mock2.Object);
             var result = demoManager.GetAllDemoHandlerSettings();
             Assert.That(result.Length, Is.EqualTo(2));
             Assert.That(result[0], Is.EqualTo(setting1));
@@ -174,28 +190,38 @@ namespace CDP.Core.Tests
         [Test]
         public void CreateDemo_Ok()
         {
+            // Setup.
+            string fileName = "C:\\foo.dem";
             SetUpPluginStub("dem", new string[] { "dem" }, true);
-            DemoStub demo = (DemoStub)demoManager.CreateDemo(string.Empty);
-            Assert.That(demo, Is.Not.Null);
-            Assert.That(demo.Handler, Is.EqualTo(demoHandlerMock.Object));
-        }
+            var dummyDemo = new DummyDemo();
+            demoHandlerMock.Setup(dh => dh.CreateDemo()).Returns(dummyDemo);
 
-        [Test]
-        [ExpectedException(typeof(ApplicationException))]
-        public void CreateLauncher_UnknownDemoType()
-        {
-            var demoHandlerMock = new Mock<DemoHandler>();
-            demoManager.AddPlugin(0, typeof(DemoStub), demoHandlerMock.Object, typeof(LauncherStub));
-            demoManager.CreateLauncher(new DemoDummy());
+            // Run.
+            Demo demo = demoManager.CreateDemo(fileName);
+
+            // Verify.
+            Assert.That(demo, Is.EqualTo(dummyDemo));
+            Assert.That(demo.FileName, Is.EqualTo(fileName));
+            Assert.That(demo.Handler, Is.EqualTo(demoHandlerMock.Object));
         }
 
         [Test]
         public void CreateLauncher_Ok()
         {
-            var demoHandlerMock = new Mock<DemoHandler>();
-            demoManager.AddPlugin(0, typeof(DemoStub), demoHandlerMock.Object, typeof(LauncherStub));
-            Launcher launcher = demoManager.CreateLauncher(new DemoStub());
-            Assert.That(launcher, Is.Not.Null);
+            // Setup.
+            var demoMock = new Mock<Demo>();
+            demoMock.Setup(d => d.Handler).Returns(demoHandlerMock.Object);
+            var launcherMock = new Mock<Launcher>();
+            launcherMock.Setup(l => l.Initialise(demoMock.Object)).Verifiable();
+            demoHandlerMock.Setup(dh => dh.CreateLauncher()).Returns(launcherMock.Object);
+
+            // Run.
+            demoManager.AddPlugin(0, demoHandlerMock.Object);
+            var launcher = demoManager.CreateLauncher(demoMock.Object);
+            
+            // Verify.
+            Assert.That(launcher, Is.EqualTo(launcherMock.Object));
+            launcherMock.Verify();
         }
 
         private void SetUpPluginStub(string demoExtension, string[] extensions, bool isValidDemo)
@@ -204,7 +230,7 @@ namespace CDP.Core.Tests
             fileSystemMock.Setup(p => p.GetExtension(It.IsAny<string>())).Returns(demoExtension);
             demoHandlerMock.Setup(dh => dh.Extensions).Returns(extensions);
             demoHandlerMock.Setup(dh => dh.IsValidDemo(It.IsAny<Stream>())).Returns(isValidDemo);
-            demoManager.AddPlugin(0, typeof(DemoStub), demoHandlerMock.Object, typeof(LauncherStub));
+            demoManager.AddPlugin(0, demoHandlerMock.Object);
         }
     }
 }

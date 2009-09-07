@@ -22,5 +22,16 @@ namespace CDP.CounterStrikeDemo
         {
             get { return true; }
         }
+
+        public Demo()
+            : this(Core.Settings.Instance, new Core.FileSystem())
+        {
+        }
+
+        public Demo(Core.ISettings settings, Core.IFileSystem fileSystem)
+            : base(settings, fileSystem)
+        {
+        }
+
     }
 }

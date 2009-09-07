@@ -62,6 +62,7 @@ namespace CDP.HalfLifeDemo
 
         protected readonly Core.ISettings settings;
         protected readonly Core.IFileSystem fileSystem;
+        protected readonly Core.ProcessFinder processFinder;
         private readonly byte[] magic = { 0x48, 0x4C, 0x44, 0x45, 0x4D, 0x4F }; // HLDEMO
         private readonly Dictionary<byte, Type> frames = new Dictionary<byte, Type>();
         private readonly Dictionary<byte, Type> engineMessages = new Dictionary<byte, Type>();
@@ -69,17 +70,41 @@ namespace CDP.HalfLifeDemo
         private Core.SteamGame[] games;
 
         public Handler()
-            : this(Core.Settings.Instance, new Core.FileSystem())
+            : this(Core.Settings.Instance, new Core.FileSystem(), new Core.ProcessFinder())
         {
         }
 
-        public Handler(Core.ISettings settings, Core.IFileSystem fileSystem)
+        public Handler(Core.ISettings settings, Core.IFileSystem fileSystem, Core.ProcessFinder processFinder)
         {
             this.settings = settings;
             this.fileSystem = fileSystem;
+            this.processFinder = processFinder;
             SettingsView = new SettingsView { DataContext = new SettingsViewModel(settings) };
             RegisterMessages();
             ReadGameConfig();
+        }
+
+        public override bool IsValidDemo(Stream stream)
+        {
+            for (int i = 0; i < magic.Length; i++)
+            {
+                if (stream.ReadByte() != magic[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public override Core.Demo CreateDemo()
+        {
+            return new Demo(settings, fileSystem);
+        }
+
+        public override Core.Launcher CreateLauncher()
+        {
+            return new Launcher(processFinder, settings, fileSystem);
         }
 
         protected virtual void RegisterMessages()
@@ -143,19 +168,6 @@ namespace CDP.HalfLifeDemo
         public virtual Core.SteamGame FindGame(string gameFolder)
         {
             return games.FirstOrDefault(sg => sg.DemoGameFolders.Contains(gameFolder));
-        }
-
-        public override bool IsValidDemo(Stream stream)
-        {
-            for (int i = 0; i < magic.Length; i++)
-            {
-                if (stream.ReadByte() != magic[i])
-                {
-                    return false;
-                }
-            }
-
-            return true;
         }
 
         public Frame CreateFrame(byte id)
