@@ -10,6 +10,7 @@ namespace CDP.Tests.ViewModel
     {
         private Main main;
         private Mock<Core.IDemoManager> demoManager;
+        private Mock<Core.ViewModelBase> header;
         private Mock<Core.ViewModelBase> address;
         private Mock<Core.ViewModelBase> demos;
         private Mock<Core.ViewModelBase> demo;
@@ -18,12 +19,14 @@ namespace CDP.Tests.ViewModel
         public void SetUp()
         {
             demoManager = new Mock<Core.IDemoManager>();
+            header = new Mock<Core.ViewModelBase>();
             address = new Mock<Core.ViewModelBase>();
             demos = new Mock<Core.ViewModelBase>();
             demo = new Mock<Core.ViewModelBase>();
             main = new Main(
                 new Mock<Core.ISettings>().Object,
                 demoManager.Object,
+                header.Object,
                 address.Object,
                 demos.Object,
                 demo.Object);
@@ -32,6 +35,7 @@ namespace CDP.Tests.ViewModel
         [Test]
         public void Ctor_Ok()
         {
+            Assert.That(main.Header, Is.EqualTo(header.Object));
             Assert.That(main.Address, Is.EqualTo(address.Object));
             Assert.That(main.Demos, Is.EqualTo(demos.Object));
             Assert.That(main.Demo, Is.EqualTo(demo.Object));

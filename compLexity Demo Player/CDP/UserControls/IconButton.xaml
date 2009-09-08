@@ -1,0 +1,10 @@
+﻿<UserControl x:Class="CDP.UserControls.IconButton"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Button Name="buttonControl">
+        <StackPanel Orientation="Horizontal">
+            <Image Name="iconControl" />
+            <TextBlock Name="textControl" />
+        </StackPanel>
+    </Button>
+</UserControl>

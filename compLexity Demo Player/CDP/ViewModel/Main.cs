@@ -5,6 +5,7 @@ namespace CDP.ViewModel
 {
     public class Main : ViewModelBase
     {
+        public ViewModelBase Header { get; private set; }
         public ViewModelBase Address { get; private set; }
         public ViewModelBase Demos { get; private set; }
         public ViewModelBase Demo { get; private set; }
@@ -13,14 +14,15 @@ namespace CDP.ViewModel
         private readonly IDemoManager demoManager;
 
         public Main()
-            : this(Settings.Instance, new DemoManager(), new Address(), new Demos(), new Demo())
+            : this(Settings.Instance, new DemoManager(), new Header(), new Address(), new Demos(), new Demo())
         {
         }
 
-        public Main(ISettings settings, IDemoManager demoManager, ViewModelBase address, ViewModelBase demos, ViewModelBase demo)
+        public Main(ISettings settings, IDemoManager demoManager, ViewModelBase header, ViewModelBase address, ViewModelBase demos, ViewModelBase demo)
         {
             this.settings = settings;
             this.demoManager = demoManager;
+            Header = header;
             Address = address;
             Demos = demos;
             Demo = demo;
@@ -37,6 +39,7 @@ namespace CDP.ViewModel
             }
 
             settings.Load();
+            Header.Initialise();
             Address.Initialise();
             Demos.Initialise(demoManager);
             Demo.Initialise(demoManager);

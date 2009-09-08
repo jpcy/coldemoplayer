@@ -1,0 +1,12 @@
+﻿<UserControl x:Class="CDP.View.Header"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:uc="clr-namespace:CDP.UserControls">
+    <DockPanel LastChildFill="True" Background="Black">
+        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
+            <uc:IconButton Margin="8" IconSource="/Images/options.png" Command="{Binding OptionsCommand}">Options</uc:IconButton>
+            <uc:IconButton Margin="8" IconSource="/Images/about.png" Command="{Binding AboutCommand}">About</uc:IconButton>
+        </StackPanel>
+        <Image Stretch="Fill" Source="/Images/banner.jpg" StretchDirection="Both" MinHeight="0" MaxHeight="47" VerticalAlignment="Top" Height="48" HorizontalAlignment="Left" Width="427" />
+    </DockPanel>
+</UserControl>
