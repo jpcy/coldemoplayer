@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Button Command="{Binding Path=Command, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
         <StackPanel Orientation="Horizontal">
-            <Image Source="{Binding Path=IconSource, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, diag:PresentationTraceSources.TraceLevel=High}" />
+            <Image Source="{Binding Path=IconSource, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" />
             <TextBlock Text="{Binding Path=Text, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" />
         </StackPanel>
     </Button>
