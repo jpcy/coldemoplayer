@@ -12,11 +12,13 @@ namespace CDP
     public interface INavigationService
     {
         NavigationWindow Window { get; set; }
+        string CurrentPageTitle { get; }
 
         void Navigate(Page view, Core.ViewModelBase viewModel);
         void Navigate(Page view, Core.ViewModelBase viewModel, object parameter);
         void Home();
         void Back();
+        string BrowseForFile(string fileName, string initialPath);
         void Invoke(Action action);
         void Invoke<T>(Action<T> action, T arg);
         void Invoke<T1, T2>(Action<T1, T2> action, T1 arg1, T2 arg2);
@@ -34,6 +36,11 @@ namespace CDP
         }
 
         public NavigationWindow Window { get; set; }
+
+        public string CurrentPageTitle
+        {
+            get { return ((Page)Window.NavigationService.Content).Title; }
+        }
 
         private NavigationService()
         {
@@ -92,6 +99,24 @@ namespace CDP
         public void Back()
         {
             Window.NavigationService.GoBack();
+        }
+
+        public string BrowseForFile(string fileName, string initialPath)
+        {
+            Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Title = "Browse for \"" + fileName + "\"...",
+                InitialDirectory = initialPath,
+                Filter = fileName + "|" + fileName,
+                RestoreDirectory = true
+            };
+
+            if (dialog.ShowDialog(Window) == true)
+            {
+                return dialog.FileName;
+            }
+
+            return null;
         }
 
         public void Invoke(Action action)

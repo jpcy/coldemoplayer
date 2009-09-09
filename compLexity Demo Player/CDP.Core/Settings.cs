@@ -147,7 +147,14 @@ namespace CDP.Core
 
             if (File.Exists(path))
             {
-                xml = XDocument.Load(path);
+                try
+                {
+                    xml = XDocument.Load(path);
+                }
+                catch (Exception) // TODO: log exception
+                {
+                    xml = null;
+                }
             }
 
             foreach (Setting setting in definitions)
@@ -193,9 +200,14 @@ namespace CDP.Core
 
                 foreach (Setting setting in definitions)
                 {
-                    xml.WriteStartElement(setting.Key);
-                    xml.WriteValue(dictionary[setting.Key].ToString());
-                    xml.WriteEndElement();
+                    object value = dictionary[setting.Key];
+
+                    if (value != null)
+                    {
+                        xml.WriteStartElement(setting.Key);
+                        xml.WriteValue(value.ToString());
+                        xml.WriteEndElement();
+                    }
                 }
 
                 xml.WriteEndElement();

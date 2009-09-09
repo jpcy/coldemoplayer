@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.IO;
+using System.Collections.Generic;
 
 namespace CDP.Core
 {
@@ -8,6 +9,7 @@ namespace CDP.Core
     {
         Stream OpenRead(string fileName);
         string[] GetFiles(string path, string fileSearchPattern);
+        IEnumerable<string> GetFolderNames(string path);
         string PathCombine(string path, params string[] paths);
         string GetExtension(string fileName);
     }
@@ -23,6 +25,12 @@ namespace CDP.Core
         {
             DirectoryInfo di = new DirectoryInfo(path);
             return di.GetFiles(fileSearchPattern).Select(fi => fi.FullName).ToArray();
+        }
+
+        public IEnumerable<string> GetFolderNames(string path)
+        {
+            DirectoryInfo root = new DirectoryInfo(path);
+            return root.GetDirectories().Select(di => di.Name);
         }
 
         public string PathCombine(string path, params string[] paths)
