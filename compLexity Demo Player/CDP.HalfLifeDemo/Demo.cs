@@ -132,6 +132,7 @@ namespace CDP.HalfLifeDemo
         public bool IsCorrupt { get; private set; }
 
         private Handler handler;
+        private uint directoryEntriesOffset;
         private string clientDllChecksum;
         private readonly List<MessageCallback> messageCallbacks;
         private readonly Dictionary<string, DeltaStructure> deltaStructures;
@@ -180,11 +181,10 @@ namespace CDP.HalfLifeDemo
                 AddMessageCallback<Messages.SvcDeltaDescription>(Load_DeltaDescription);
                 AddMessageCallback<Messages.SvcNewUserMessage>(Load_NewUserMessage);
                 AddMessageCallback<Messages.SvcHltv>(Load_Hltv);
-                int progress = 0;
+                ResetProgress();
 
                 using (FileStream stream = File.OpenRead(FileName))
                 using (BinaryReader br = new BinaryReader(stream))
-                using (StreamWriter log = new StreamWriter(string.Format("E:\\Counter-Strike Demos\\col demo player test\\logs\\{0}.txt", Name)))
                 {
                     // Read header.
                     // TODO: sanity check on demo and network protocol; friendly error message.
@@ -194,6 +194,7 @@ namespace CDP.HalfLifeDemo
                     MapName = header.MapName;
                     GameFolderName = header.GameFolderName;
                     MapChecksum = header.MapChecksum;
+                    directoryEntriesOffset = header.DirectoryEntriesOffset;
                     AddDetail("Demo Protocol", header.DemoProtocol);
                     AddDetail("Network Protocol", NetworkProtocol);
                     AddDetail("Game Folder", GameFolderName);
@@ -233,23 +234,11 @@ namespace CDP.HalfLifeDemo
 
                         while (messageReader.CurrentByte < messageReader.Length)
                         {
-                            IMessage message = null;
-                            message = ReadMessage(messageReader);
-                            log.WriteLine("{0} [{1}]", message.Name, message.Id);
-                            message.Log(log);
-                            log.WriteLine("----------------");
-                            log.Flush();
+                            ReadMessage(messageReader);
                         }
                     }
 
-                    // Update progress.
-                    int newProgress = (int)(stream.Position / stream.Length * 100);
-                    
-                    if (newProgress > progress)
-                    {
-                        progress = newProgress;
-                        OnProgressChanged(progress);
-                    }
+                    UpdateProgress(stream.Position, stream.Length);
                 }
             }
             catch (Exception ex)
@@ -257,13 +246,61 @@ namespace CDP.HalfLifeDemo
                 OnOperationError(null, ex);
                 return;
             }
+            finally
+            {
+                messageCallbacks.Clear();
+            }
 
             OnOperationComplete();
         }
 
         public override void Read()
         {
-            throw new NotImplementedException();
+            try
+            {
+                ResetProgress();
+
+                using (FileStream stream = File.OpenRead(FileName))
+                using (BinaryReader br = new BinaryReader(stream))
+                {
+                    stream.Seek(Header.SizeInBytes, SeekOrigin.Begin);
+
+                    while (true)
+                    {
+                        Frame frame = ReadFrame(br);
+
+                        if (!frame.HasMessages)
+                        {
+                            continue;
+                        }
+
+                        Core.BitReader messageReader = new Core.BitReader(((MessageFrame)frame).MessageData);
+
+                        while (messageReader.CurrentByte < messageReader.Length)
+                        {
+                            ReadMessage(messageReader);
+                        }
+
+                        if (stream.Position >= directoryEntriesOffset || stream.Position == stream.Length)
+                        {
+                            break;
+                        }
+                    }
+
+                    UpdateProgress(stream.Position, stream.Length);
+                }
+            }
+            catch (Exception ex)
+            {
+                OnOperationError(null, ex);
+                return;
+            }
+            finally
+            {
+                messageCallbacks.Clear();
+            }
+
+            OnOperationComplete();
         }
 
         public override void Write(string destinationFileName)

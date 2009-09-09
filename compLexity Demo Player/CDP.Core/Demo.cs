@@ -132,5 +132,24 @@ namespace CDP.Core
                 OperationCompleteEvent(this, EventArgs.Empty);
             }
         }
+
+        // Helpers for calculating operation progress.
+        private int currentProgress;
+
+        protected void ResetProgress()
+        {
+            currentProgress = 0;
+        }
+
+        protected void UpdateProgress(long streamPosition, long streamLength)
+        {
+            int newProgress = (int)(streamPosition / streamLength * 100);
+
+            if (newProgress > currentProgress)
+            {
+                currentProgress = newProgress;
+                OnProgressChanged(currentProgress);
+            }
+        }
     }
 }
