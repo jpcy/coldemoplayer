@@ -42,32 +42,14 @@ namespace CDP.UserControls
 
         static IconButton()
         {
-            CommandProperty = DependencyProperty.Register("Command", typeof(ICommand), typeof(IconButton), new FrameworkPropertyMetadata(null, new PropertyChangedCallback(OnCommandChanged)));
-            IconSourceProperty = DependencyProperty.Register("IconSource", typeof(ImageSource), typeof(IconButton), new FrameworkPropertyMetadata(null, new PropertyChangedCallback(OnIconSourceChanged)));
-            TextProperty = DependencyProperty.Register("Text", typeof(string), typeof(IconButton), new FrameworkPropertyMetadata(null, new PropertyChangedCallback(OnTextChanged)));
+            CommandProperty = DependencyProperty.Register("Command", typeof(ICommand), typeof(IconButton));
+            IconSourceProperty = DependencyProperty.Register("IconSource", typeof(ImageSource), typeof(IconButton));
+            TextProperty = DependencyProperty.Register("Text", typeof(string), typeof(IconButton));
         }
 
         public IconButton()
         {
             InitializeComponent();
-        }
-
-        private static void OnCommandChanged(object sender, DependencyPropertyChangedEventArgs args)
-        {
-            IconButton iconButton = (IconButton)sender;
-            iconButton.buttonControl.Command = iconButton.Command;
-
-        }
-        private static void OnIconSourceChanged(object sender, DependencyPropertyChangedEventArgs args)
-        {
-            IconButton iconButton = (IconButton)sender;
-            iconButton.iconControl.Source = iconButton.IconSource;
-        }
-
-        private static void OnTextChanged(object sender, DependencyPropertyChangedEventArgs args)
-        {
-            IconButton iconButton = (IconButton)sender;
-            iconButton.textControl.Text = iconButton.Text;
         }
     }
 }
