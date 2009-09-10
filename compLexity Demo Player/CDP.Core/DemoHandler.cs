@@ -34,5 +34,7 @@ namespace CDP.Core
         public abstract bool IsValidDemo(Stream stream);
         public abstract Demo CreateDemo();
         public abstract Launcher CreateLauncher();
+        public abstract UserControl CreateAnalysisView();
+        public abstract ViewModelBase CreateAnalysisViewModel();
     }
 }

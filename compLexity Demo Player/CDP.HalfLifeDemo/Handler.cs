@@ -107,6 +107,16 @@ namespace CDP.HalfLifeDemo
             return new Launcher(processFinder, settings, fileSystem);
         }
 
+        public override UserControl CreateAnalysisView()
+        {
+            return new Analysis.View();
+        }
+
+        public override Core.ViewModelBase CreateAnalysisViewModel()
+        {
+            return new Analysis.ViewModel();
+        }
+
         protected virtual void RegisterMessages()
         {
             // Register frames.
