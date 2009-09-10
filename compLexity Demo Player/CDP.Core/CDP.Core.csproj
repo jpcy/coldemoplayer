@@ -68,6 +68,7 @@
     <Compile Include="Launcher.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ObjectCreator.cs" />
     <Compile Include="Process.cs" />
     <Compile Include="ProcessFinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
