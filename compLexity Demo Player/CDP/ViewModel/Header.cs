@@ -7,17 +7,7 @@ namespace CDP.ViewModel
         public DelegateCommand OptionsCommand { get; private set; }
         public DelegateCommand AboutCommand { get; private set; }
 
-        private readonly INavigationService navigationService;
-
-        public Header()
-            : this(NavigationService.Instance)
-        {
-        }
-
-        public Header(INavigationService navigationService)
-        {
-            this.navigationService = navigationService;
-        }
+        private readonly INavigationService navigationService = Core.ObjectCreator.Get<INavigationService>();
 
         public override void Initialise()
         {

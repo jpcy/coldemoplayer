@@ -14,7 +14,7 @@ namespace CDP
 
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            CDP.NavigationService service = CDP.NavigationService.Instance;
+            CDP.INavigationService service = Core.ObjectCreator.Get<CDP.INavigationService>();
             service.Window = this;
             service.Navigate(new View.Main(), new ViewModel.Main());
         }

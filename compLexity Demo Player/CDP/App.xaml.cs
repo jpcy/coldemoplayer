@@ -9,6 +9,8 @@ namespace CDP
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             Core.ObjectMappings.Initialise();
+            ObjectCreator.Map<IMediator, Mediator>();
+            ObjectCreator.Map<INavigationService, NavigationService>();
         }
 
         private void Application_Exit(object sender, ExitEventArgs e)

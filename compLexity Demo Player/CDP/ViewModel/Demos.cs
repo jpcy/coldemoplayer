@@ -40,33 +40,25 @@ namespace CDP.ViewModel
             }
         }
 
-        private readonly IMediator mediator;
-        private readonly INavigationService navigationService;
-        private readonly Core.IFileSystem fileSystem;
+        private readonly IMediator mediator = Core.ObjectCreator.Get<IMediator>();
+        private readonly INavigationService navigationService = Core.ObjectCreator.Get<INavigationService>();
+        private readonly Core.IFileSystem fileSystem = Core.ObjectCreator.Get<Core.IFileSystem>();
         private readonly IconCache iconCache = new IconCache();
-        private Core.DemoManager demoManager;
+        private readonly Core.IDemoManager demoManager = Core.ObjectCreator.Get<Core.IDemoManager>();
 
-        public Demos(IMediator mediator, INavigationService navigationService, Core.IFileSystem fileSystem)
-        {
-            this.mediator = mediator;
-            this.navigationService = navigationService;
-            this.fileSystem = fileSystem;
-        }
-
-        public Demos() : this(Mediator.Instance, NavigationService.Instance, new Core.FileSystem())
+        public Demos()
         {
             Items = new ObservableCollection<Item>();
         }
 
         public override void Initialise()
         {
-            throw new NotImplementedException();
+            mediator.Register<string>(Messages.SelectedFolderChanged, SelectedFolderChanged, this);
         }
 
         public override void Initialise(object parameter)
         {
-            demoManager = (Core.DemoManager)parameter;
-            mediator.Register<string>(Messages.SelectedFolderChanged, SelectedFolderChanged, this);
+            throw new NotImplementedException();
         }
 
         public void SelectedFolderChanged(string path)

@@ -37,32 +37,21 @@ namespace CDP.ViewModel
         public DelegateCommand AnalyseCommand { get; private set; }
 
         private readonly Core.ISettings settings = Core.ObjectCreator.Get<Core.ISettings>();
-        private readonly IMediator mediator;
-        private readonly Core.IFileSystem fileSystem;
-        private Core.DemoManager demoManager;
-
-        public Demo()
-            : this(Mediator.Instance, new Core.FileSystem())
-        {
-        }
-
-        public Demo(IMediator mediator, Core.IFileSystem fileSystem)
-        {
-            this.mediator = mediator;
-            this.fileSystem = fileSystem;
-        }
+        private readonly IMediator mediator = Core.ObjectCreator.Get<IMediator>();
+        private readonly Core.IFileSystem fileSystem = Core.ObjectCreator.Get<Core.IFileSystem>();
+        private readonly Core.IDemoManager demoManager = Core.ObjectCreator.Get<Core.IDemoManager>();
 
         public override void Initialise()
         {
-            throw new NotImplementedException();
+            PlayCommand = new DelegateCommand(PlayCommandCanExecute, PlayCommandExecute);
+            AnalyseCommand = new DelegateCommand(AnalyseCommandCanExecute, AnalyseCommandExecute);
+            mediator.Register<Core.Demo>(Messages.SelectedDemoChanged, SelectedDemoChanged, this);
         }
 
         public override void Initialise(object parameter)
         {
-            demoManager = (Core.DemoManager)parameter;
-            PlayCommand = new DelegateCommand(PlayCommandCanExecute, PlayCommandExecute);
-            AnalyseCommand = new DelegateCommand(AnalyseCommandCanExecute, AnalyseCommandExecute);
-            mediator.Register<Core.Demo>(Messages.SelectedDemoChanged, SelectedDemoChanged, this);        }
+            throw new NotImplementedException();
+        }
 
         public bool PlayCommandCanExecute()
         {

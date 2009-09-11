@@ -21,7 +21,7 @@ namespace CDP.View
         public Demo()
         {
             InitializeComponent();
-            Mediator.Instance.Register<Core.Demo>(Messages.SelectedDemoChanged, SelectedDemoChanged, this);
+            Core.ObjectCreator.Get<IMediator>().Register<Core.Demo>(Messages.SelectedDemoChanged, SelectedDemoChanged, this);
         }
 
         private void SelectedDemoChanged(Core.Demo demo)

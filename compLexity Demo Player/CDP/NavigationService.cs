@@ -25,16 +25,9 @@ namespace CDP
         void Invoke<T1, T2, T3>(Action<T1, T2, T3> action, T1 arg1, T2 arg2, T3 arg3);
     }
 
+    [Core.Singleton]
     public class NavigationService : INavigationService
     {
-        private static readonly NavigationService instance = new NavigationService();
-        private Page home;
-
-        public static NavigationService Instance
-        {
-            get { return instance; }
-        }
-
         public NavigationWindow Window { get; set; }
 
         public string CurrentPageTitle
@@ -42,9 +35,7 @@ namespace CDP
             get { return ((Page)Window.NavigationService.Content).Title; }
         }
 
-        private NavigationService()
-        {
-        }
+        private Page home;
 
         public void Navigate(Page view, Core.ViewModelBase viewModel)
         {

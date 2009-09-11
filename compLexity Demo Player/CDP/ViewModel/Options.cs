@@ -17,20 +17,9 @@ namespace CDP.ViewModel
         public DelegateCommand BrowseForSteamExeCommand { get; private set; }
         public ObservableCollection<string> SteamAccountNames { get; private set; }
 
-        private readonly INavigationService navigationService;
+        private readonly INavigationService navigationService = Core.ObjectCreator.Get<INavigationService>();
         private readonly Core.ISettings settings = Core.ObjectCreator.Get<Core.ISettings>();
-        private readonly Core.IFileSystem fileSystem;
-
-        public Options()
-            : this(NavigationService.Instance, new Core.FileSystem())
-        {
-        }
-
-        public Options(INavigationService navigationService, Core.IFileSystem fileSystem)
-        {
-            this.navigationService = navigationService;
-            this.fileSystem = fileSystem;
-        }
+        private readonly Core.IFileSystem fileSystem = Core.ObjectCreator.Get<Core.IFileSystem>();
 
         public override void Initialise()
         {

@@ -5,7 +5,6 @@ using System.Text;
 using System.IO;
 using System.Reflection;
 using System.Windows.Controls;
-using Ninject.Core;
 
 namespace CDP.Core
 {
@@ -18,6 +17,7 @@ namespace CDP.Core
         Launcher CreateLauncher(Demo demo);
     }
 
+    [Singleton]
     public class DemoManager : IDemoManager
     {
         private class Plugin

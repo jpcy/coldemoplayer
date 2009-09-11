@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Windows.Threading;
-using System.Threading;
 
 namespace CDP.ViewModel
 {
@@ -25,20 +19,9 @@ namespace CDP.ViewModel
             }
         }
 
-        private IMediator mediator;
+        private readonly IMediator mediator = Core.ObjectCreator.Get<IMediator>();
         private string lastSelectedFolder;
-        private string selectedFolder;
-
-        public Address()
-            : this(Mediator.Instance)
-        {
-        }
-
-        public Address(IMediator mediator)
-        {
-            this.mediator = mediator;
-            selectedFolder = "";
-        }
+        private string selectedFolder = "";
 
         public override void Initialise()
         {

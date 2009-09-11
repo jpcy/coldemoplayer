@@ -13,6 +13,7 @@ namespace CDP
         void Notify<T>(Messages message, T parameter);
     }
 
+    [Core.Singleton]
     public class Mediator : IMediator
     {
         public class MessageNotFoundException : Exception
@@ -50,17 +51,7 @@ namespace CDP
             }
         }
 
-        private static readonly Mediator instance = new Mediator();
-        private static Dictionary<Messages, List<Registration>> registrations = new Dictionary<Messages, List<Registration>>();
-
-        public static Mediator Instance
-        {
-            get { return instance; }
-        }
-
-        private Mediator()
-        {
-        }
+        private Dictionary<Messages, List<Registration>> registrations = new Dictionary<Messages, List<Registration>>();
 
         public void Register<T>(Messages message, Action<T> callback, object registerer)
         {

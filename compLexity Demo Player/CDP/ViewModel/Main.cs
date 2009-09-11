@@ -5,26 +5,20 @@ namespace CDP.ViewModel
 {
     public class Main : ViewModelBase
     {
-        public ViewModelBase Header { get; private set; }
-        public ViewModelBase Address { get; private set; }
-        public ViewModelBase Demos { get; private set; }
-        public ViewModelBase Demo { get; private set; }
+        public Header Header { get; private set; }
+        public Address Address { get; private set; }
+        public Demos Demos { get; private set; }
+        public Demo Demo { get; private set; }
 
         private readonly ISettings settings = ObjectCreator.Get<ISettings>();
-        private readonly IDemoManager demoManager;
+        private readonly IDemoManager demoManager = ObjectCreator.Get<IDemoManager>();
 
         public Main()
-            : this(new DemoManager(), new Header(), new Address(), new Demos(), new Demo())
         {
-        }
-
-        public Main(IDemoManager demoManager, ViewModelBase header, ViewModelBase address, ViewModelBase demos, ViewModelBase demo)
-        {
-            this.demoManager = demoManager;
-            Header = header;
-            Address = address;
-            Demos = demos;
-            Demo = demo;
+            Header = new Header();
+            Address = new Address();
+            Demos = new Demos();
+            Demo = new Demo();
         }
 
         public override void Initialise()
@@ -40,8 +34,8 @@ namespace CDP.ViewModel
             settings.Load();
             Header.Initialise();
             Address.Initialise();
-            Demos.Initialise(demoManager);
-            Demo.Initialise(demoManager);
+            Demos.Initialise();
+            Demo.Initialise();
         }
 
         public override void Initialise(object parameter)
