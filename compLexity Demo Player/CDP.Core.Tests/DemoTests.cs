@@ -10,14 +10,22 @@ namespace CDP.Core.Tests
     [TestFixture]
     public class DemoTests
     {
-        private Mock<Demo> demo;
+        public abstract class MockDemo : Demo
+        {
+            public void PublicUpdateProgress(long streamPosition, long streamLength)
+            {
+                UpdateProgress(streamPosition, streamLength);
+            }
+        }
+
+        private Mock<MockDemo> demo;
         private readonly string name = "mydemo";
         private readonly string fileName = "C:\\Demos\\mydemo.dem";
 
         [SetUp]
         public void SetUp()
         {
-            demo = new Mock<Demo>();
+            demo = new Mock<MockDemo>();
         }
 
         [Test]
@@ -34,6 +42,48 @@ namespace CDP.Core.Tests
         {
             demo.Object.FileName = fileName;
             demo.Object.FileName = fileName;
+        }
+
+        [Test]
+        public void UpdateProgress_Ok()
+        {
+            const int progress = 50;
+
+            var eventHandler = new EventHandler<Demo.ProgressChangedEventArgs>((sender, args) =>
+            {
+                Assert.That(args.Progress, Is.EqualTo(progress));
+            });
+
+            demo.Object.ProgressChangedEvent += eventHandler;
+
+            try
+            {
+                demo.Object.PublicUpdateProgress(progress, 100);
+            }
+            finally
+            {
+                demo.Object.ProgressChangedEvent -= eventHandler;
+            }
+        }
+
+        [Test]
+        public void UpdateProgress_ProgressNotChanged()
+        {
+            var eventHandler = new EventHandler<Demo.ProgressChangedEventArgs>((sender, args) =>
+            {
+                Assert.Fail();
+            });
+
+            demo.Object.ProgressChangedEvent += eventHandler;
+
+            try
+            {
+                demo.Object.PublicUpdateProgress(0, 100);
+            }
+            finally
+            {
+                demo.Object.ProgressChangedEvent -= eventHandler;
+            }
         }
     }
 }
