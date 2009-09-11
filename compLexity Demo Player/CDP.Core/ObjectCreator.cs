@@ -8,9 +8,9 @@ namespace CDP.Core
     {
     }
 
-    public interface IObjectProvider
+    public interface IObjectProvider<T> where T:class
     {
-        T Get<T>(params object[] args);
+        T Get(params object[] args);
     }
 
     public static class ObjectCreator
@@ -18,14 +18,14 @@ namespace CDP.Core
         private class Mapping
         {
             public Type Type { get; private set; }
-            public IObjectProvider Provider { get; private set; }
+            public object Provider { get; private set; }
 
             public Mapping(Type type)
             {
                 Type = type;
             }
 
-            public Mapping(IObjectProvider provider)
+            public Mapping(object provider)
             {
                 Provider = provider;
             }
@@ -34,23 +34,29 @@ namespace CDP.Core
         private static Dictionary<Type, Mapping> mappings = new Dictionary<Type, Mapping>();
         private static Dictionary<Type, object> singletons = new Dictionary<Type, object>();
 
-        public static void Map<T1,T2>()
+        public static void Map<T1,T2>() where T1:class where T2:class
         {
             mappings.Add(typeof(T1), new Mapping(typeof(T2)));
         }
 
-        public static void MapToProvider<T>(IObjectProvider provider)
+        public static void MapToProvider<T>(IObjectProvider<T> provider) where T:class
         {
             mappings.Add(typeof(T), new Mapping(provider));
         }
 
-        public static T Get<T>(params object[] args)
+        public static T Get<T>(params object[] args) where T:class
         {
+            if (!mappings.ContainsKey(typeof(T)))
+            {
+                throw new ArgumentException(string.Format("No mapping for type '{0}' found.", typeof(T).ToString()));
+            }
+
             Mapping mapping = mappings[typeof(T)];
 
             if (mapping.Provider != null)
             {
-                return mapping.Provider.Get<T>(args);
+                IObjectProvider<T> provider = (IObjectProvider<T>)mapping.Provider;
+                return provider.Get(args);
             }
 
             bool isSingleton = false;
