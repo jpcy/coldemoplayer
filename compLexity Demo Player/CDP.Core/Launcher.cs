@@ -23,19 +23,9 @@ namespace CDP.Core
         public abstract bool Verify();
         public abstract void Launch();
 
-        private readonly IProcessFinder processFinder;
+        private readonly IProcessFinder processFinder = ObjectCreator.Get<IProcessFinder>();
         protected string processExecutableFileName;
         private const int defaultMonitorProcessSleepTime = 250;
-
-        public Launcher()
-            : this(new Core.ProcessFinder())
-        {
-        }
-
-        public Launcher(IProcessFinder processFinder)
-        {
-            this.processFinder = processFinder;
-        }
 
         public abstract void Initialise(Demo demo);
 

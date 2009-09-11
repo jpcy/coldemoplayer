@@ -13,6 +13,9 @@ namespace CDP.Core
         T Get(params object[] args);
     }
 
+    /// <summary>
+    /// Handles mapping and resolving interfaces to their implementation classes.
+    /// </summary>
     public static class ObjectCreator
     {
         private class Mapping

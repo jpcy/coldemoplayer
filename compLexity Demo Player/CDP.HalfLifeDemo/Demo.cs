@@ -109,7 +109,6 @@ namespace CDP.HalfLifeDemo
         {
             get
             {
-                Core.IFileSystem fileSystem = new Core.FileSystem();
                 return fileSystem.PathCombine("goldsrc", GameFolderName, MapName + ".jpg");
             }
         }
@@ -138,19 +137,11 @@ namespace CDP.HalfLifeDemo
         private readonly Dictionary<string, DeltaStructure> deltaStructures;
         private readonly List<UserMessageDefinition> userMessageDefinitions;
 
-        protected readonly Core.ISettings settings;
-        protected readonly Core.IFileSystem fileSystem;
+        protected readonly Core.ISettings settings = Core.ObjectCreator.Get<Core.ISettings>();
+        protected readonly Core.IFileSystem fileSystem = Core.ObjectCreator.Get<Core.IFileSystem>();
 
         public Demo()
-            : this(Core.Settings.Instance, new Core.FileSystem())
         {
-        }
-
-        public Demo(Core.ISettings settings, Core.IFileSystem fileSystem)
-        {
-            this.settings = settings;
-            this.fileSystem = fileSystem;
-
             Perspective = "POV";
             IsHltv = false;
             IsCorrupt = false;

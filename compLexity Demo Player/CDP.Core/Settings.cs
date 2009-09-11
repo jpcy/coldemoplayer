@@ -28,13 +28,9 @@ namespace CDP.Core
         void Save();
     }
 
+    [Singleton]
     public class Settings : ISettings
     {
-        public static Settings Instance
-        {
-            get { return instance; }
-        }
-
         public object this[string key]
         {
             get
@@ -97,14 +93,13 @@ namespace CDP.Core
             get { return programDataPath; }
         }
 
-        private static readonly Settings instance = new Settings();
         public readonly List<Setting> definitions = new List<Setting>();
         public readonly Dictionary<string, object> dictionary = new Dictionary<string, object>();
         private readonly string fileName = "settings.xml";
         private readonly string rootElement = "Settings";
         private bool IsLoaded = false;
 
-        private Settings()
+        public Settings()
         {
             programDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), ProgramName);
             programExeFullPath = Environment.GetCommandLineArgs()[0];

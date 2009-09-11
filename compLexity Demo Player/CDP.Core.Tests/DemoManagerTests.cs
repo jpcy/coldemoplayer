@@ -118,14 +118,16 @@ namespace CDP.Core.Tests
 
         private DemoManager demoManager;
         private Mock<Core.DemoHandler> demoHandlerMock;
-        private Mock<IFileSystem> fileSystemMock;
+        private MockProvider<IFileSystem> fileSystem;
 
         [SetUp]
         public void SetUp()
         {
-            fileSystemMock = new Mock<IFileSystem>();
-            fileSystemMock.Setup(f => f.OpenRead(It.IsAny<string>())).Returns(new MemoryStream());
-            demoManager = new DemoManager(fileSystemMock.Object);
+            fileSystem = new MockProvider<IFileSystem>();
+            fileSystem.Mock.Setup(f => f.OpenRead(It.IsAny<string>())).Returns(new MemoryStream());
+            ObjectCreator.Reset();
+            ObjectCreator.MapToProvider<IFileSystem>(fileSystem);
+            demoManager = new DemoManager();
             demoHandlerMock = new Mock<DemoHandler>();
         }
 
@@ -209,6 +211,7 @@ namespace CDP.Core.Tests
         public void CreateLauncher_Ok()
         {
             // Setup.
+            Core.ObjectCreator.MapToProvider<IProcessFinder>(new MockProvider<IProcessFinder>());
             var demoMock = new Mock<Demo>();
             demoMock.Setup(d => d.Handler).Returns(demoHandlerMock.Object);
             var launcherMock = new Mock<Launcher>();
@@ -226,8 +229,8 @@ namespace CDP.Core.Tests
 
         private void SetUpPluginStub(string demoExtension, string[] extensions, bool isValidDemo)
         {
-            fileSystemMock.Setup(f => f.OpenRead(It.IsAny<string>())).Returns(new MemoryStream());
-            fileSystemMock.Setup(p => p.GetExtension(It.IsAny<string>())).Returns(demoExtension);
+            fileSystem.Mock.Setup(f => f.OpenRead(It.IsAny<string>())).Returns(new MemoryStream());
+            fileSystem.Mock.Setup(p => p.GetExtension(It.IsAny<string>())).Returns(demoExtension);
             demoHandlerMock.Setup(dh => dh.Extensions).Returns(extensions);
             demoHandlerMock.Setup(dh => dh.IsValidDemo(It.IsAny<Stream>())).Returns(isValidDemo);
             demoManager.AddPlugin(0, demoHandlerMock.Object);

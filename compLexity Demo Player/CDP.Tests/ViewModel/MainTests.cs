@@ -18,18 +18,18 @@ namespace CDP.Tests.ViewModel
         [SetUp]
         public void SetUp()
         {
+            Core.ObjectCreator.Reset();
+            Core.ObjectCreator.MapToProvider<Core.ISettings>(new MockProvider<Core.ISettings>());
             demoManager = new Mock<Core.IDemoManager>();
             header = new Mock<Core.ViewModelBase>();
             address = new Mock<Core.ViewModelBase>();
             demos = new Mock<Core.ViewModelBase>();
             demo = new Mock<Core.ViewModelBase>();
-            main = new Main(
-                new Mock<Core.ISettings>().Object,
-                demoManager.Object,
-                header.Object,
-                address.Object,
-                demos.Object,
-                demo.Object);
+            main = new Main(demoManager.Object,
+                            header.Object,
+                            address.Object,
+                            demos.Object,
+                            demo.Object);
         }
 
         [Test]

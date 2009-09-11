@@ -36,19 +36,18 @@ namespace CDP.ViewModel
         public DelegateCommand PlayCommand { get; private set; }
         public DelegateCommand AnalyseCommand { get; private set; }
 
-        private readonly Core.ISettings settings;
+        private readonly Core.ISettings settings = Core.ObjectCreator.Get<Core.ISettings>();
         private readonly IMediator mediator;
         private readonly Core.IFileSystem fileSystem;
         private Core.DemoManager demoManager;
 
         public Demo()
-            : this(Core.Settings.Instance, Mediator.Instance, new Core.FileSystem())
+            : this(Mediator.Instance, new Core.FileSystem())
         {
         }
 
-        public Demo(Core.ISettings settings, IMediator mediator, Core.IFileSystem fileSystem)
+        public Demo(IMediator mediator, Core.IFileSystem fileSystem)
         {
-            this.settings = settings;
             this.mediator = mediator;
             this.fileSystem = fileSystem;
         }

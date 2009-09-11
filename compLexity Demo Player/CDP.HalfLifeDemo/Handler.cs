@@ -60,9 +60,9 @@ namespace CDP.HalfLifeDemo
 
         public override UserControl SettingsView { get; protected set; }
 
-        protected readonly Core.ISettings settings;
-        protected readonly Core.IFileSystem fileSystem;
-        protected readonly Core.ProcessFinder processFinder;
+        protected readonly Core.ISettings settings = Core.ObjectCreator.Get<Core.ISettings>();
+        protected readonly Core.IFileSystem fileSystem = Core.ObjectCreator.Get<Core.IFileSystem>();
+        protected readonly Core.IProcessFinder processFinder = Core.ObjectCreator.Get<Core.IProcessFinder>();
         private readonly byte[] magic = { 0x48, 0x4C, 0x44, 0x45, 0x4D, 0x4F }; // HLDEMO
         private readonly Dictionary<byte, Type> frames = new Dictionary<byte, Type>();
         private readonly Dictionary<byte, Type> engineMessages = new Dictionary<byte, Type>();
@@ -70,15 +70,7 @@ namespace CDP.HalfLifeDemo
         private Core.SteamGame[] games;
 
         public Handler()
-            : this(Core.Settings.Instance, new Core.FileSystem(), new Core.ProcessFinder())
         {
-        }
-
-        public Handler(Core.ISettings settings, Core.IFileSystem fileSystem, Core.ProcessFinder processFinder)
-        {
-            this.settings = settings;
-            this.fileSystem = fileSystem;
-            this.processFinder = processFinder;
             SettingsView = new SettingsView { DataContext = new SettingsViewModel(settings) };
             RegisterMessages();
             ReadGameConfig();
@@ -99,12 +91,12 @@ namespace CDP.HalfLifeDemo
 
         public override Core.Demo CreateDemo()
         {
-            return new Demo(settings, fileSystem);
+            return new Demo();
         }
 
         public override Core.Launcher CreateLauncher()
         {
-            return new Launcher(processFinder, settings, fileSystem);
+            return new Launcher();
         }
 
         public override UserControl CreateAnalysisView()

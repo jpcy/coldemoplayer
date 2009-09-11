@@ -9,11 +9,6 @@ namespace CDP.HalfLifeDemo
         private readonly string configFileName = "coldemoplayer.cfg";
         private Demo demo;
 
-        public Launcher(Core.IProcessFinder processFinder, Core.ISettings settings, Core.IFileSystem fileSystem)
-            : base(processFinder, settings, fileSystem)
-        {
-        }
-
         public override void Initialise(Core.Demo demo)
         {
             this.demo = (Demo)demo;

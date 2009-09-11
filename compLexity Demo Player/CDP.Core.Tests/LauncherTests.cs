@@ -16,11 +16,6 @@ namespace CDP.Core.Tests
                 set { processExecutableFileName = value; }
             }
 
-            public LauncherMock(IProcessFinder processFinder)
-                : base(processFinder)
-            {
-            }
-
             public override void Initialise(Demo demo)
             {
             }
@@ -36,14 +31,16 @@ namespace CDP.Core.Tests
             }
         }
 
-        private Mock<IProcessFinder> processFinderMock;
+        private MockProvider<IProcessFinder> processFinder;
         private LauncherMock launcher;
 
         [SetUp]
         public void SetUp()
         {
-            processFinderMock = new Mock<IProcessFinder>();
-            launcher = new LauncherMock(processFinderMock.Object);
+            ObjectCreator.Reset();
+            processFinder = new MockProvider<IProcessFinder>();
+            ObjectCreator.MapToProvider<IProcessFinder>(processFinder);
+            launcher = new LauncherMock();
         }
 
         [Test]
@@ -64,7 +61,7 @@ namespace CDP.Core.Tests
             var processMock = new Mock<IProcess>();
             processMock.Setup(p => p.FileName).Returns(exeFileName);
             processMock.Setup(p => p.HasExited).Returns(true);
-            processFinderMock.Setup(pf => pf.FindByName(It.IsAny<string>())).Returns(new IProcess[] { processMock.Object });
+            processFinder.Mock.Setup(pf => pf.FindByName(It.IsAny<string>())).Returns(new IProcess[] { processMock.Object });
 
             launcher.ProcessFound += new EventHandler<Launcher.ProcessFoundEventArgs>(new Action<object, Launcher.ProcessFoundEventArgs>((sender, eventargs) =>
             {

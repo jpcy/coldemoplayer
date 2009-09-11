@@ -32,12 +32,6 @@ namespace CDP.CounterStrikeDemo
         private Game game;
 
         public Handler()
-            : this(Core.Settings.Instance, new Core.FileSystem(), new Core.ProcessFinder())
-        {
-        }
-
-        public Handler(Core.ISettings settings, Core.IFileSystem fileSystem, Core.ProcessFinder processFinder)
-            : base(settings, fileSystem, processFinder)
         {
             SettingsView = new SettingsView { DataContext = new SettingsViewModel(settings) };
         }
@@ -62,7 +56,7 @@ namespace CDP.CounterStrikeDemo
 
         public override Core.Demo CreateDemo()
         {
-            return new Demo(settings, fileSystem);
+            return new Demo();
         }
 
         protected override void RegisterMessages()

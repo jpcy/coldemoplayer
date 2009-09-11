@@ -32,18 +32,8 @@ namespace CDP.Core
             }
         }
 
-        private readonly IFileSystem fileSystem;
+        private readonly IFileSystem fileSystem = ObjectCreator.Get<IFileSystem>();
         private readonly List<Plugin> plugins = new List<Plugin>();
-
-        public DemoManager()
-            : this(new FileSystem())
-        {
-        }
-
-        public DemoManager(IFileSystem fileSystem)
-        {
-            this.fileSystem = fileSystem;
-        }
 
         public void AddPlugin(uint priority, DemoHandler demoHandler)
         {

@@ -5,19 +5,13 @@ namespace CDP.Core
 {
     public abstract class SteamLauncher : Launcher
     {
-        protected readonly ISettings settings;
-        protected readonly IFileSystem fileSystem;
+        protected readonly ISettings settings = ObjectCreator.Get<ISettings>();
+        protected readonly IFileSystem fileSystem = ObjectCreator.Get<IFileSystem>();
 
         protected string gameName;
         protected int appId;
         protected string appFolder;
         protected string gameFolder;
-
-        public SteamLauncher(IProcessFinder processFinder, ISettings settings, IFileSystem fileSystem) : base(processFinder)
-        {
-            this.settings = settings;
-            this.fileSystem = fileSystem;
-        }
 
         public override bool Verify()
         {

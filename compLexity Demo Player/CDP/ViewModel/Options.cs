@@ -18,18 +18,17 @@ namespace CDP.ViewModel
         public ObservableCollection<string> SteamAccountNames { get; private set; }
 
         private readonly INavigationService navigationService;
-        private readonly Core.ISettings settings;
+        private readonly Core.ISettings settings = Core.ObjectCreator.Get<Core.ISettings>();
         private readonly Core.IFileSystem fileSystem;
 
         public Options()
-            : this(NavigationService.Instance, Core.Settings.Instance, new Core.FileSystem())
+            : this(NavigationService.Instance, new Core.FileSystem())
         {
         }
 
-        public Options(INavigationService navigationService, Core.ISettings settings, Core.IFileSystem fileSystem)
+        public Options(INavigationService navigationService, Core.IFileSystem fileSystem)
         {
             this.navigationService = navigationService;
-            this.settings = settings;
             this.fileSystem = fileSystem;
         }
 

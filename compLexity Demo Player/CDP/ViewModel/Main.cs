@@ -10,17 +10,16 @@ namespace CDP.ViewModel
         public ViewModelBase Demos { get; private set; }
         public ViewModelBase Demo { get; private set; }
 
-        private readonly ISettings settings;
+        private readonly ISettings settings = ObjectCreator.Get<ISettings>();
         private readonly IDemoManager demoManager;
 
         public Main()
-            : this(Settings.Instance, new DemoManager(), new Header(), new Address(), new Demos(), new Demo())
+            : this(new DemoManager(), new Header(), new Address(), new Demos(), new Demo())
         {
         }
 
-        public Main(ISettings settings, IDemoManager demoManager, ViewModelBase header, ViewModelBase address, ViewModelBase demos, ViewModelBase demo)
+        public Main(IDemoManager demoManager, ViewModelBase header, ViewModelBase address, ViewModelBase demos, ViewModelBase demo)
         {
-            this.settings = settings;
             this.demoManager = demoManager;
             Header = header;
             Address = address;
