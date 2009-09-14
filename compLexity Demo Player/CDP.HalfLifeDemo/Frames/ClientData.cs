@@ -33,9 +33,11 @@ namespace CDP.HalfLifeDemo.Frames
 
         protected override void ReadContent(BinaryReader br)
         {
+            Origin = new Core.Vector();
             Origin.X = br.ReadSingle();
             Origin.Y = br.ReadSingle();
             Origin.Z = br.ReadSingle();
+            ViewAngles = new Core.Vector();
             ViewAngles.X = br.ReadSingle();
             ViewAngles.Y = br.ReadSingle();
             ViewAngles.Z = br.ReadSingle();

@@ -144,6 +144,7 @@ namespace CDP.HalfLifeDemo
             RegisterEngineMessage(typeof(Messages.SvcCdTrack));
             RegisterEngineMessage(typeof(Messages.SvcNewUserMessage));
             RegisterEngineMessage(typeof(Messages.SvcPacketEntities));
+            RegisterEngineMessage(typeof(Messages.SvcDeltaPacketEntities));
             RegisterEngineMessage(typeof(Messages.SvcChoke));
             RegisterEngineMessage(typeof(Messages.SvcResourceList));
             RegisterEngineMessage(typeof(Messages.SvcNewMoveVars));

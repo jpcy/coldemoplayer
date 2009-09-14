@@ -227,9 +227,9 @@ namespace CDP.HalfLifeDemo
                         {
                             ReadMessage(messageReader);
                         }
-                    }
 
-                    UpdateProgress(stream.Position, stream.Length);
+                        UpdateProgress(stream.Position, stream.Length);
+                    }
                 }
             }
             catch (Exception ex)
@@ -249,6 +249,7 @@ namespace CDP.HalfLifeDemo
         {
             try
             {
+                ResetOperationCancelledState();
                 ResetProgress();
 
                 using (FileStream stream = File.OpenRead(FileName))
@@ -281,13 +282,18 @@ namespace CDP.HalfLifeDemo
                         {
                             return;
                         }
-                    }
 
-                    UpdateProgress(stream.Position, stream.Length);
+                        UpdateProgress(stream.Position, stream.Length);
+                    }
                 }
             }
             catch (Exception ex)
             {
+                if (IsOperationCancelled())
+                {
+                    return;
+                }
+
                 OnOperationError(null, ex);
                 return;
             }

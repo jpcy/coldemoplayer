@@ -84,6 +84,7 @@
     <Compile Include="Messages\SvcChoke.cs" />
     <Compile Include="Messages\SvcClientData.cs" />
     <Compile Include="Messages\SvcDeltaDescription.cs" />
+    <Compile Include="Messages\SvcDeltaPacketEntities.cs" />
     <Compile Include="Messages\SvcDirector.cs" />
     <Compile Include="Messages\SvcHltv.cs" />
     <Compile Include="Messages\SvcLightStyle.cs" />
