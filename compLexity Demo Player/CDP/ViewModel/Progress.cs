@@ -19,8 +19,6 @@ namespace CDP.ViewModel
 
         public DelegateCommand CancelCommand { get; private set; }
 
-        private readonly INavigationService navigationService = Core.ObjectCreator.Get<INavigationService>();
-
         public Progress()
         {
             CancelCommand = new DelegateCommand(CancelCommandExecute);
@@ -29,7 +27,6 @@ namespace CDP.ViewModel
         public void CancelCommandExecute()
         {
             OnCancel();
-            navigationService.Home();
         }
 
         private void OnCancel()

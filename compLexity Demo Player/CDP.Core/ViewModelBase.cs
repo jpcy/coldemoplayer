@@ -7,6 +7,8 @@ namespace CDP.Core
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public virtual void OnNavigateComplete() { }
+
         protected void OnPropertyChanged(string propertyName)
         {
             // Stop the annoying warning.

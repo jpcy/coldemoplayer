@@ -103,6 +103,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\Analysis.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AnalysisError.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AnalysisProgress.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Demo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -164,6 +176,11 @@
       <DependentUpon>IconButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\Address.cs" />
+    <Compile Include="ViewModel\Analysis.cs" />
+    <Compile Include="ViewModel\AnalysisError.cs" />
+    <Compile Include="ViewModel\AnalysisProgress.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ViewModel\Demo.cs" />
     <Compile Include="ViewModel\Demos.cs" />
     <Compile Include="ViewModel\Error.cs" />
@@ -173,6 +190,16 @@
     <Compile Include="ViewModel\Progress.cs" />
     <Compile Include="View\Address.xaml.cs">
       <DependentUpon>Address.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Analysis.xaml.cs">
+      <DependentUpon>Analysis.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AnalysisError.xaml.cs">
+      <DependentUpon>AnalysisError.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AnalysisProgress.xaml.cs">
+      <DependentUpon>AnalysisProgress.xaml</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="View\Demo.xaml.cs">
       <DependentUpon>Demo.xaml</DependentUpon>

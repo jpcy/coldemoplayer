@@ -40,6 +40,7 @@ namespace CDP.ViewModel
         private readonly IMediator mediator = Core.ObjectCreator.Get<IMediator>();
         private readonly Core.IFileSystem fileSystem = Core.ObjectCreator.Get<Core.IFileSystem>();
         private readonly Core.IDemoManager demoManager = Core.ObjectCreator.Get<Core.IDemoManager>();
+        private readonly INavigationService navigationService = Core.ObjectCreator.Get<INavigationService>();
 
         public Demo()
         {
@@ -73,6 +74,7 @@ namespace CDP.ViewModel
 
         public void AnalyseCommandExecute()
         {
+            navigationService.Navigate(new View.AnalysisProgress(), new AnalysisProgress(Data));
         }
 
         public void SelectedDemoChanged(Core.Demo demo)

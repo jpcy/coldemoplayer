@@ -55,6 +55,7 @@ namespace CDP
 
             view.DataContext = viewModel;
             Window.Navigate(view);
+            viewModel.OnNavigateComplete();
         }
 
         public void Home()

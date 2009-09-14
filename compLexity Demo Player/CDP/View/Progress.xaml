@@ -10,7 +10,7 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <ProgressBar Grid.Column="0" MinWidth="100" Margin="0,0,10,0" Minimum="0" Maximum="100" Value="{Binding Value}" />
+        <ProgressBar Grid.Column="0" MinWidth="200" Margin="0,0,10,0" Minimum="0" Maximum="100" Value="{Binding Value}" />
         <uc:IconButton Grid.Column="1" IconSource="/Images/cancel.png" Command="{Binding CancelCommand}">Cancel</uc:IconButton>
     </Grid>
 </UserControl>

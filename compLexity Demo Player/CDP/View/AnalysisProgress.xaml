@@ -1,0 +1,9 @@
+﻿<Page x:Class="CDP.View.AnalysisProgress"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:view="clr-namespace:CDP.View"
+    Title="Analysis Progress">
+    <Grid>
+        <view:Progress DataContext="{Binding ProgressViewModel}" />
+    </Grid>
+</Page>
