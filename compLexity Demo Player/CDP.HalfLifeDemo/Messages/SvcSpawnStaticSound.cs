@@ -34,6 +34,7 @@ namespace CDP.HalfLifeDemo.Messages
             Position.X = buffer.ReadShort() / 8.0f;
             Position.Y = buffer.ReadShort() / 8.0f;
             Position.Z = buffer.ReadShort() / 8.0f;
+            Index = buffer.ReadUShort();
             Volume = buffer.ReadByte();
             Attenuation = buffer.ReadByte();
             Edict = buffer.ReadUShort();
@@ -50,6 +51,7 @@ namespace CDP.HalfLifeDemo.Messages
         public override void Log(StreamWriter log)
         {
             log.WriteLine("Position: {0} {1} {2}", Position.X, Position.Y, Position.Z);
+            log.WriteLine("Index: {0}", Index);
             log.WriteLine("Volume: {0}", Volume);
             log.WriteLine("Attenuation: {0}", Attenuation);
             log.WriteLine("Edict: {0}", Edict);
