@@ -123,6 +123,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\Progress.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -161,6 +165,7 @@
     <Compile Include="ViewModel\Header.cs" />
     <Compile Include="ViewModel\Main.cs" />
     <Compile Include="ViewModel\Options.cs" />
+    <Compile Include="ViewModel\Progress.cs" />
     <Compile Include="View\Address.xaml.cs">
       <DependentUpon>Address.xaml</DependentUpon>
     </Compile>
@@ -178,6 +183,9 @@
     </Compile>
     <Compile Include="View\Options.xaml.cs">
       <DependentUpon>Options.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Progress.xaml.cs">
+      <DependentUpon>Progress.xaml</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

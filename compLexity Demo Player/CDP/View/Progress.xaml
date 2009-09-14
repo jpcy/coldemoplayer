@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="CDP.View.Progress"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:uc="clr-namespace:CDP.UserControls">
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <ProgressBar Grid.Column="0" MinWidth="100" Margin="0,0,10,0" Minimum="0" Maximum="100" Value="{Binding Value}" />
+        <uc:IconButton Grid.Column="1" IconSource="/Images/cancel.png" Command="{Binding CancelCommand}">Cancel</uc:IconButton>
+    </Grid>
+</UserControl>
