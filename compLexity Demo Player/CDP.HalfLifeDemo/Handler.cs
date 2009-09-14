@@ -125,6 +125,7 @@ namespace CDP.HalfLifeDemo
 
             // Register engine messages.
             RegisterEngineMessage(typeof(Messages.SvcNop));
+            RegisterEngineMessage(typeof(Messages.SvcEvent));
             RegisterEngineMessage(typeof(Messages.SvcSetView));
             RegisterEngineMessage(typeof(Messages.SvcSound));
             RegisterEngineMessage(typeof(Messages.SvcTime));

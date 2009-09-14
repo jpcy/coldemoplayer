@@ -86,6 +86,9 @@
     <Compile Include="Messages\SvcDeltaDescription.cs" />
     <Compile Include="Messages\SvcDeltaPacketEntities.cs" />
     <Compile Include="Messages\SvcDirector.cs" />
+    <Compile Include="Messages\SvcEvent.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Messages\SvcHltv.cs" />
     <Compile Include="Messages\SvcLightStyle.cs" />
     <Compile Include="Messages\SvcNewMoveVars.cs" />
