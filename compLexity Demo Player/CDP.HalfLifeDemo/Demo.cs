@@ -276,6 +276,11 @@ namespace CDP.HalfLifeDemo
                         {
                             break;
                         }
+
+                        if (IsOperationCancelled())
+                        {
+                            return;
+                        }
                     }
 
                     UpdateProgress(stream.Position, stream.Length);
@@ -291,7 +296,10 @@ namespace CDP.HalfLifeDemo
                 messageCallbacks.Clear();
             }
 
-            OnOperationComplete();
+            if (!IsOperationCancelled())
+            {
+                OnOperationComplete();
+            }
         }
 
         public override void Write(string destinationFileName)

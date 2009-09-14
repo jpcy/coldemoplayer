@@ -133,6 +133,26 @@ namespace CDP.Core
             }
         }
 
+        // Operation cancelling.
+        private object isOperationCancelledLock = new object();
+        private bool isOperationCancelled = false;
+
+        protected bool IsOperationCancelled()
+        {
+            lock (isOperationCancelledLock)
+            {
+                return isOperationCancelled;
+            }
+        }
+
+        public void CancelOperation()
+        {
+            lock (isOperationCancelledLock)
+            {
+                isOperationCancelled = true;
+            }
+        }
+
         // Helpers for calculating operation progress.
         private int currentProgress;
 
