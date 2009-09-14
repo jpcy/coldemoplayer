@@ -216,16 +216,14 @@ namespace CDP.HalfLifeDemo
                         {
                             break;
                         }
-                        else if (!frame.HasMessages)
+                        else if (frame.HasMessages)
                         {
-                            continue;
-                        }
+                            Core.BitReader messageReader = new Core.BitReader(((MessageFrame)frame).MessageData);
 
-                        Core.BitReader messageReader = new Core.BitReader(((MessageFrame)frame).MessageData);
-
-                        while (messageReader.CurrentByte < messageReader.Length)
-                        {
-                            ReadMessage(messageReader);
+                            while (messageReader.CurrentByte < messageReader.Length)
+                            {
+                                ReadMessage(messageReader);
+                            }
                         }
 
                         UpdateProgress(stream.Position, stream.Length);
@@ -247,6 +245,9 @@ namespace CDP.HalfLifeDemo
 
         public override void Read()
         {
+            long lastFrameOffset = 0;
+            List<IMessage> lastMessages = new List<IMessage>();
+
             try
             {
                 ResetOperationCancelledState();
@@ -259,18 +260,18 @@ namespace CDP.HalfLifeDemo
 
                     while (true)
                     {
+                        lastFrameOffset = stream.Position;
                         Frame frame = ReadFrame(br);
 
-                        if (!frame.HasMessages)
+                        if (frame.HasMessages)
                         {
-                            continue;
-                        }
+                            Core.BitReader messageReader = new Core.BitReader(((MessageFrame)frame).MessageData);
+                            lastMessages.Clear();
 
-                        Core.BitReader messageReader = new Core.BitReader(((MessageFrame)frame).MessageData);
-
-                        while (messageReader.CurrentByte < messageReader.Length)
-                        {
-                            ReadMessage(messageReader);
+                            while (messageReader.CurrentByte < messageReader.Length)
+                            {
+                                lastMessages.Add(ReadMessage(messageReader));
+                            }
                         }
 
                         if (stream.Position >= directoryEntriesOffset || stream.Position == stream.Length)
@@ -280,6 +281,7 @@ namespace CDP.HalfLifeDemo
 
                         if (IsOperationCancelled())
                         {
+                            OnOperationComplete();
                             return;
                         }
 
@@ -289,23 +291,18 @@ namespace CDP.HalfLifeDemo
             }
             catch (Exception ex)
             {
-                if (IsOperationCancelled())
+                if (!IsOperationCancelled())
                 {
+                    OnOperationError(string.Format("Frame offset: {0}\n\n{1}", lastFrameOffset, CreateMessageLog(lastMessages)), ex);
                     return;
                 }
-
-                OnOperationError(null, ex);
-                return;
             }
             finally
             {
                 messageCallbacks.Clear();
             }
 
-            if (!IsOperationCancelled())
-            {
-                OnOperationComplete();
-            }
+            OnOperationComplete();
         }
 
         public override void Write(string destinationFileName)
@@ -500,6 +497,18 @@ namespace CDP.HalfLifeDemo
             }
 
             detail.Value = value;
+        }
+
+        private string CreateMessageLog(IEnumerable<IMessage> messages)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (IMessage message in messages)
+            {
+                sb.AppendFormat("{0} [{1}]\n", message.Name, message.Id);
+            }
+
+            return sb.ToString();
         }
 
         #region Load message callbacks
