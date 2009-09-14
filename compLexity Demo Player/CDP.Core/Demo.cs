@@ -137,6 +137,11 @@ namespace CDP.Core
         private object isOperationCancelledLock = new object();
         private bool isOperationCancelled = false;
 
+        protected void ResetOperationCancelledState()
+        {
+            isOperationCancelled = false;
+        }
+
         protected bool IsOperationCancelled()
         {
             lock (isOperationCancelledLock)
@@ -163,7 +168,7 @@ namespace CDP.Core
 
         protected void UpdateProgress(long streamPosition, long streamLength)
         {
-            int newProgress = (int)(streamPosition / streamLength * 100);
+            int newProgress = (int)(streamPosition / (float)streamLength * 100.0f);
 
             if (newProgress > currentProgress)
             {
