@@ -60,6 +60,7 @@ namespace CDP.Core
         public event EventHandler<ProgressChangedEventArgs> ProgressChangedEvent;
         public event EventHandler<OperationErrorEventArgs> OperationErrorEvent;
         public event EventHandler OperationCompleteEvent;
+        public event EventHandler OperationCancelledEvent;
 
         public virtual DemoHandler Handler { get; set; }
         public string Name { get; private set; }
@@ -130,6 +131,14 @@ namespace CDP.Core
             if (OperationCompleteEvent != null)
             {
                 OperationCompleteEvent(this, EventArgs.Empty);
+            }
+        }
+
+        protected void OnOperationCancelled()
+        {
+            if (OperationCancelledEvent != null)
+            {
+                OperationCancelledEvent(this, EventArgs.Empty);
             }
         }
 

@@ -281,7 +281,7 @@ namespace CDP.HalfLifeDemo
 
                         if (IsOperationCancelled())
                         {
-                            OnOperationComplete();
+                            OnOperationCancelled();
                             return;
                         }
 
@@ -302,7 +302,14 @@ namespace CDP.HalfLifeDemo
                 messageCallbacks.Clear();
             }
 
-            OnOperationComplete();
+            if (IsOperationCancelled())
+            {
+                OnOperationCancelled();
+            }
+            else
+            {
+                OnOperationComplete();
+            }
         }
 
         public override void Write(string destinationFileName)
