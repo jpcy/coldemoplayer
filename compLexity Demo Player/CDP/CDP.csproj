@@ -111,6 +111,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\Error.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Header.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -162,6 +166,7 @@
     <Compile Include="ViewModel\Address.cs" />
     <Compile Include="ViewModel\Demo.cs" />
     <Compile Include="ViewModel\Demos.cs" />
+    <Compile Include="ViewModel\Error.cs" />
     <Compile Include="ViewModel\Header.cs" />
     <Compile Include="ViewModel\Main.cs" />
     <Compile Include="ViewModel\Options.cs" />
@@ -174,6 +179,9 @@
     </Compile>
     <Compile Include="View\Demos.xaml.cs">
       <DependentUpon>Demos.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Error.xaml.cs">
+      <DependentUpon>Error.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Header.xaml.cs">
       <DependentUpon>Header.xaml</DependentUpon>
