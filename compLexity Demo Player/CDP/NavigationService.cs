@@ -15,7 +15,6 @@ namespace CDP
         string CurrentPageTitle { get; }
 
         void Navigate(Page view, Core.ViewModelBase viewModel);
-        void Navigate(Page view, Core.ViewModelBase viewModel, object parameter);
         void Home();
         void Back();
         string BrowseForFile(string fileName, string initialPath);
@@ -39,11 +38,6 @@ namespace CDP
 
         public void Navigate(Page view, Core.ViewModelBase viewModel)
         {
-            Navigate(view, viewModel, null);
-        }
-
-        public void Navigate(Page view, Core.ViewModelBase viewModel, object parameter)
-        {
             if (view == null)
             {
                 throw new ArgumentNullException("view");
@@ -57,15 +51,6 @@ namespace CDP
             if (home == null)
             {
                 home = view;
-            }
-
-            if (parameter == null)
-            {
-                viewModel.Initialise();
-            }
-            else
-            {
-                viewModel.Initialise(parameter);
             }
 
             view.DataContext = viewModel;

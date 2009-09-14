@@ -41,16 +41,11 @@ namespace CDP.ViewModel
         private readonly Core.IFileSystem fileSystem = Core.ObjectCreator.Get<Core.IFileSystem>();
         private readonly Core.IDemoManager demoManager = Core.ObjectCreator.Get<Core.IDemoManager>();
 
-        public override void Initialise()
+        public Demo()
         {
             PlayCommand = new DelegateCommand(PlayCommandCanExecute, PlayCommandExecute);
             AnalyseCommand = new DelegateCommand(AnalyseCommandCanExecute, AnalyseCommandExecute);
             mediator.Register<Core.Demo>(Messages.SelectedDemoChanged, SelectedDemoChanged, this);
-        }
-
-        public override void Initialise(object parameter)
-        {
-            throw new NotImplementedException();
         }
 
         public bool PlayCommandCanExecute()

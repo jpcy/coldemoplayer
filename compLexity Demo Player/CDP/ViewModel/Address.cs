@@ -23,14 +23,9 @@ namespace CDP.ViewModel
         private string lastSelectedFolder;
         private string selectedFolder = "";
 
-        public override void Initialise()
+        public Address()
         {
             mediator.Register<string>(Messages.SetSelectedFolder, SetSelectedFolder, this);
-        }
-
-        public override void Initialise(object parameter)
-        {
-            throw new NotImplementedException();
         }
 
         public void SetSelectedFolder(string path)

@@ -33,7 +33,7 @@ namespace CDP.CounterStrikeDemo
 
         public Handler()
         {
-            SettingsView = new SettingsView { DataContext = new SettingsViewModel(settings) };
+            SettingsView = new SettingsView { DataContext = new SettingsViewModel() };
         }
 
         public override bool IsValidDemo(Stream stream)

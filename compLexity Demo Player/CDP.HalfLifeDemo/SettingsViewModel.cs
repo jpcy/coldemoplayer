@@ -4,7 +4,7 @@ namespace CDP.HalfLifeDemo
 {
     public class SettingsViewModel : Core.ViewModelBase
     {
-        protected readonly Core.ISettings settings;
+        protected readonly Core.ISettings settings = Core.ObjectCreator.Get<Core.ISettings>();
 
         public bool Playdemo
         {
@@ -42,16 +42,7 @@ namespace CDP.HalfLifeDemo
             set { settings["HlRemoveShowscores"] = value; }
         }
 
-        public SettingsViewModel(Core.ISettings settings)
-        {
-            this.settings = settings;
-        }
-
-        public override void Initialise()
-        {
-        }
-
-        public override void Initialise(object parameter)
+        public SettingsViewModel()
         {
         }
     }

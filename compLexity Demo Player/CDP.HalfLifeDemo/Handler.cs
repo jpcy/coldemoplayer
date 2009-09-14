@@ -71,7 +71,7 @@ namespace CDP.HalfLifeDemo
 
         public Handler()
         {
-            SettingsView = new SettingsView { DataContext = new SettingsViewModel(settings) };
+            SettingsView = new SettingsView { DataContext = new SettingsViewModel() };
             RegisterMessages();
             ReadGameConfig();
         }
@@ -104,9 +104,9 @@ namespace CDP.HalfLifeDemo
             return new Analysis.View();
         }
 
-        public override Core.ViewModelBase CreateAnalysisViewModel()
+        public override Core.ViewModelBase CreateAnalysisViewModel(Core.Demo demo)
         {
-            return new Analysis.ViewModel();
+            return new Analysis.ViewModel(demo);
         }
 
         protected virtual void RegisterMessages()

@@ -7,9 +7,6 @@ namespace CDP.Core
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public abstract void Initialise();
-        public abstract void Initialise(object parameter);
-
         protected void OnPropertyChanged(string propertyName)
         {
             // Stop the annoying warning.

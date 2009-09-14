@@ -15,14 +15,6 @@ namespace CDP.ViewModel
 
         public Main()
         {
-            Header = new Header();
-            Address = new Address();
-            Demos = new Demos();
-            Demo = new Demo();
-        }
-
-        public override void Initialise()
-        {
             demoManager.AddPlugin(0, new HalfLifeDemo.Handler());
             demoManager.AddPlugin(1, new CounterStrikeDemo.Handler());
 
@@ -32,15 +24,11 @@ namespace CDP.ViewModel
             }
 
             settings.Load();
-            Header.Initialise();
-            Address.Initialise();
-            Demos.Initialise();
-            Demo.Initialise();
-        }
 
-        public override void Initialise(object parameter)
-        {
-            throw new NotImplementedException();
+            Header = new Header();
+            Address = new Address();
+            Demos = new Demos();
+            Demo = new Demo();
         }
     }
 }

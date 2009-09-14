@@ -9,15 +9,10 @@ namespace CDP.ViewModel
 
         private readonly INavigationService navigationService = Core.ObjectCreator.Get<INavigationService>();
 
-        public override void Initialise()
+        public Header()
         {
             OptionsCommand = new DelegateCommand(OptionsCommandCanExecute, OptionsCommandExecute);
             AboutCommand = new DelegateCommand(AboutCommandExecute);
-        }
-
-        public override void Initialise(object parameter)
-        {
-            throw new NotImplementedException();
         }
 
         public void OptionsCommandExecute()

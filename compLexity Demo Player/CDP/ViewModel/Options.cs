@@ -21,7 +21,7 @@ namespace CDP.ViewModel
         private readonly Core.ISettings settings = Core.ObjectCreator.Get<Core.ISettings>();
         private readonly Core.IFileSystem fileSystem = Core.ObjectCreator.Get<Core.IFileSystem>();
 
-        public override void Initialise()
+        public Options()
         {
             Header = new Header();
             CancelCommand = new DelegateCommand(CancelCommandExecute);
@@ -32,11 +32,6 @@ namespace CDP.ViewModel
             SteamAccountName = (string)settings["SteamAccountName"];
             SteamAdditionalLaunchParameters = (string)settings["SteamAdditionalLaunchParameters"];
             UpdateSteamAccountNames();
-        }
-
-        public override void Initialise(object parameter)
-        {
-            throw new NotImplementedException();
         }
 
         public void CancelCommandExecute()

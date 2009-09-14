@@ -7,15 +7,10 @@ namespace CDP.HalfLifeDemo.Analysis
         private Demo demo;
         public string ServerName { get; private set; }
 
-        public override void Initialise()
+        public ViewModel(Core.Demo demo)
         {
-            throw new NotImplementedException();
-        }
-
-        public override void Initialise(object parameter)
-        {
-            demo = (Demo)parameter;
-            demo.AddMessageCallback<Messages.SvcServerInfo>(MessageServerInfo);
+            this.demo = (Demo)demo;
+            this.demo.AddMessageCallback<Messages.SvcServerInfo>(MessageServerInfo);
         }
 
         private void MessageServerInfo(Messages.SvcServerInfo message)

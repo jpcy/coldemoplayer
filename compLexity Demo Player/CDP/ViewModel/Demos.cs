@@ -49,16 +49,7 @@ namespace CDP.ViewModel
         public Demos()
         {
             Items = new ObservableCollection<Item>();
-        }
-
-        public override void Initialise()
-        {
             mediator.Register<string>(Messages.SelectedFolderChanged, SelectedFolderChanged, this);
-        }
-
-        public override void Initialise(object parameter)
-        {
-            throw new NotImplementedException();
         }
 
         public void SelectedFolderChanged(string path)
