@@ -24,6 +24,7 @@ namespace CDP.ViewModel
         {
             View = demo.Handler.CreateAnalysisView();
             View.DataContext = viewModel;
+            viewModel.OnNavigateComplete();
             OnPropertyChanged("View");
         }
 

@@ -1,22 +1,31 @@
 ﻿using System;
+using System.Windows.Documents;
 
 namespace CDP.HalfLifeDemo.Analysis
 {
     class ViewModel : Core.ViewModelBase
     {
-        private Demo demo;
-        public string ServerName { get; private set; }
+        public FlowDocument GameLogDocument { get; private set; }
+
+        private readonly Demo demo;
+        private readonly Core.IFlowDocumentWriter gameLog = Core.ObjectCreator.Get<Core.IFlowDocumentWriter>();
 
         public ViewModel(Core.Demo demo)
         {
             this.demo = (Demo)demo;
-            this.demo.AddMessageCallback<Messages.SvcServerInfo>(MessageServerInfo);
+            this.demo.AddMessageCallback<Messages.SvcPrint>(MessagePrint);
+            GameLogDocument = new FlowDocument();
         }
 
-        private void MessageServerInfo(Messages.SvcServerInfo message)
+        public override void OnNavigateComplete()
         {
-            ServerName = message.ServerName;
-            OnPropertyChanged("ServerName");
+            gameLog.Save(GameLogDocument);
+            OnPropertyChanged("GameLogDocument");
+        }
+
+        private void MessagePrint(Messages.SvcPrint message)
+        {
+            gameLog.Write(message.Text + "\n");
         }
     }
 }
