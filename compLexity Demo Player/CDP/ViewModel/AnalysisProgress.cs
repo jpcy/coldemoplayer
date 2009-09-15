@@ -14,13 +14,13 @@ namespace CDP.ViewModel
         public AnalysisProgress(Core.Demo demo)
         {
             ProgressViewModel = new Progress();
-            ProgressViewModel.CancelEvent += new EventHandler(ProgressViewModel_CancelEvent);
+            ProgressViewModel.CancelEvent += ProgressViewModel_CancelEvent;
 
             this.demo = demo;
-            demo.ProgressChangedEvent += new EventHandler<Core.Demo.ProgressChangedEventArgs>(demo_ProgressChangedEvent);
-            demo.OperationErrorEvent += new EventHandler<Core.Demo.OperationErrorEventArgs>(demo_OperationErrorEvent);
-            demo.OperationCompleteEvent += new EventHandler(demo_OperationCompleteEvent);
-            demo.OperationCancelledEvent += new EventHandler(demo_OperationCancelledEvent);
+            demo.ProgressChangedEvent += demo_ProgressChangedEvent;
+            demo.OperationErrorEvent += demo_OperationErrorEvent;
+            demo.OperationCompleteEvent += demo_OperationCompleteEvent;
+            demo.OperationCancelledEvent += demo_OperationCancelledEvent;
 
             analysisViewModel = new Analysis(demo);
         }
@@ -45,20 +45,32 @@ namespace CDP.ViewModel
 
         void demo_OperationCompleteEvent(object sender, EventArgs e)
         {
+            RemoveEventHandlers();
             navigationService.Invoke(new Action(() => navigationService.Navigate(new View.Analysis(), analysisViewModel)));
         }
 
         void demo_OperationCancelledEvent(object sender, EventArgs e)
         {
+            RemoveEventHandlers();
             navigationService.Invoke(new Action(() => navigationService.Home()));
         }
 
         void demo_OperationErrorEvent(object sender, Core.Demo.OperationErrorEventArgs e)
         {
+            RemoveEventHandlers();
             navigationService.Invoke(new Action<string, Exception>((msg, ex) =>
             {
                 navigationService.Navigate(new View.AnalysisError(), new AnalysisError(msg, ex));
             }), e.ErrorMessage, e.Exception);
+        }
+
+        private void RemoveEventHandlers()
+        {
+            ProgressViewModel.CancelEvent -= ProgressViewModel_CancelEvent;
+            demo.ProgressChangedEvent -= demo_ProgressChangedEvent;
+            demo.OperationErrorEvent -= demo_OperationErrorEvent;
+            demo.OperationCompleteEvent -= demo_OperationCompleteEvent;
+            demo.OperationCancelledEvent -= demo_OperationCancelledEvent;
         }
     }
 }
