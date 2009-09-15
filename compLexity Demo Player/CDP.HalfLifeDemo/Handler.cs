@@ -158,6 +158,7 @@ namespace CDP.HalfLifeDemo
             RegisterEngineMessage(typeof(Messages.SvcTimeScale));
 
             // Register user messages.
+            RegisterUserMessage(typeof(UserMessages.ResetHud));
         }
 
         protected virtual void ReadGameConfig()
@@ -228,7 +229,7 @@ namespace CDP.HalfLifeDemo
 
             if (instance == null)
             {
-                throw new ApplicationException("Specified type does not inherit from Message.");
+                throw new ApplicationException("Specified type does not inherit from EngineMessage.");
             }
 
             engineMessages.Add(instance.Id, type);
@@ -236,7 +237,14 @@ namespace CDP.HalfLifeDemo
 
         private void RegisterUserMessage(Type type)
         {
+            UserMessage instance = Activator.CreateInstance(type) as UserMessage;
 
+            if (instance == null)
+            {
+                throw new ApplicationException("Specified type does not inherit from UserMessage.");
+            }
+
+            userMessages.Add(instance.Name, type);
         }
     }
 }

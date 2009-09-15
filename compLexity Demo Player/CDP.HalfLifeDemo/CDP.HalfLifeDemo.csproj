@@ -121,6 +121,7 @@
     </Compile>
     <Compile Include="SettingsViewModel.cs" />
     <Compile Include="UserMessage.cs" />
+    <Compile Include="UserMessages\ResetHud.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CDP.Core\CDP.Core.csproj">
