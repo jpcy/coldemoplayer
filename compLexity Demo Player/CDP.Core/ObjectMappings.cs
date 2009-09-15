@@ -14,6 +14,7 @@ namespace CDP.Core
             ObjectCreator.Map<IProcess, Process>();
             ObjectCreator.Map<IProcessFinder, ProcessFinder>();
             ObjectCreator.Map<ISettings, Settings>();
+            ObjectCreator.Map<IFlowDocumentWriter, FlowDocumentWriter>();
         }
     }
 }
