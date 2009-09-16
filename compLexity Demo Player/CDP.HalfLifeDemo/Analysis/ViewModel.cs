@@ -10,8 +10,7 @@ namespace CDP.HalfLifeDemo.Analysis
     public class ViewModel : Core.ViewModelBase
     {
         public FlowDocument GameLogDocument { get; private set; }
-        public List<Round> Rounds { get; private set; }
-        public Round SelectedRound { get; set; }
+        public List<Scoreboard.Round> Rounds { get; private set; }
 
         private readonly Demo demo;
         private float currentTimestamp = 0.0f; // TODO: need demo event handler for when gamedata frame is read to get this.
@@ -27,7 +26,7 @@ namespace CDP.HalfLifeDemo.Analysis
             this.demo.AddMessageCallback<UserMessages.TeamInfo>(MessageTeamInfo);
             this.demo.AddMessageCallback<UserMessages.TeamScore>(MessageTeamScore);
             GameLogDocument = new FlowDocument();
-            Rounds = new List<Round>();
+            Rounds = new List<Scoreboard.Round>();
             NewRound();
         }
 
@@ -39,23 +38,23 @@ namespace CDP.HalfLifeDemo.Analysis
 
         protected void NewRound()
         {
-            Round lastRound = Rounds.LastOrDefault();
-            Round newRound = new Round(Rounds.Count + 1, currentTimestamp);
+            Scoreboard.Round lastRound = Rounds.LastOrDefault();
+            Scoreboard.Round newRound = new Scoreboard.Round(Rounds.Count + 1, currentTimestamp);
             Rounds.Add(newRound);
 
             // Carry over all player and team scores from the previous round (except disconnected players).
             if (lastRound != null)
             {
-                foreach (Team team in lastRound.Teams)
+                foreach (Scoreboard.Team team in lastRound.Teams)
                 {
-                    newRound.Teams.Add((Team)team.Clone());
+                    newRound.Teams.Add((Scoreboard.Team)team.Clone());
                 }
 
-                foreach (Player player in lastRound.Players)
+                foreach (Scoreboard.Player player in lastRound.Players)
                 {
                     if (player.IsConnected)
                     {
-                        newRound.Players.Add((Player)player.Clone());
+                        newRound.Players.Add((Scoreboard.Player)player.Clone());
                     }
                 }
             }
@@ -96,11 +95,11 @@ namespace CDP.HalfLifeDemo.Analysis
             }
 
             byte slot = (byte)(message.Slot + 1);
-            Player player = Rounds.Last().Players.FirstOrDefault(p => p.Slot == slot);
+            Scoreboard.Player player = Rounds.Last().Players.FirstOrDefault(p => p.Slot == slot);
 
             if (player == null)
             {
-                player = new Player(slot);
+                player = new Scoreboard.Player(slot);
                 Rounds.Last().Players.Add(player);
             }
             else if (string.IsNullOrEmpty(message.Info))
@@ -115,7 +114,7 @@ namespace CDP.HalfLifeDemo.Analysis
 
         private void MessageScoreInfo(UserMessages.ScoreInfo message)
         {
-            Player player = Rounds.Last().Players.FirstOrDefault(p => p.Slot == message.Slot);
+            Scoreboard.Player player = Rounds.Last().Players.FirstOrDefault(p => p.Slot == message.Slot);
 
             if (player != null && player.IsConnected)
             {
@@ -126,7 +125,7 @@ namespace CDP.HalfLifeDemo.Analysis
 
         private void MessageTeamInfo(UserMessages.TeamInfo message)
         {
-            Player player = Rounds.Last().Players.FirstOrDefault(p => p.Slot == message.Slot);
+            Scoreboard.Player player = Rounds.Last().Players.FirstOrDefault(p => p.Slot == message.Slot);
 
             if (player != null)
             {
@@ -136,11 +135,11 @@ namespace CDP.HalfLifeDemo.Analysis
 
         private void MessageTeamScore(UserMessages.TeamScore message)
         {
-            Team team = Rounds.Last().Teams.FirstOrDefault(t => t.Name == message.TeamName);
+            Scoreboard.Team team = Rounds.Last().Teams.FirstOrDefault(t => t.Name == message.TeamName);
 
             if (team == null)
             {
-                team = new HalfLifeDemo.Analysis.Team(message.TeamName, message.Score);
+                team = new HalfLifeDemo.Analysis.Scoreboard.Team(message.TeamName, message.Score);
                 Rounds.Last().Teams.Add(team);
             }
             else

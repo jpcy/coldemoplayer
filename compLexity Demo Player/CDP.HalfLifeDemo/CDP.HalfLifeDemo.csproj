@@ -55,11 +55,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Analysis\Player.cs" />
-    <Compile Include="Analysis\Round.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Analysis\Team.cs" />
+    <Compile Include="Analysis\Scoreboard\Player.cs" />
+    <Compile Include="Analysis\Scoreboard\Round.cs" />
+    <Compile Include="Analysis\Scoreboard\Team.cs" />
     <Compile Include="Analysis\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>

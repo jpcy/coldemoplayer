@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 
-namespace CDP.HalfLifeDemo.Analysis
+namespace CDP.HalfLifeDemo.Analysis.Scoreboard
 {
     public class Round
     {
