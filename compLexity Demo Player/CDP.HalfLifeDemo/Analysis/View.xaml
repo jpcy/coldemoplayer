@@ -6,5 +6,49 @@
         <TabItem Header="Game Log">
             <core:RichTextBox Document="{Binding GameLogDocument}" />
         </TabItem>
+        <TabItem Header="Scoreboard">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5*" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.4*" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                
+                <!-- Rounds -->
+                <ListView Grid.Column="0" Grid.RowSpan="2" Margin="4" ItemsSource="{Binding Rounds}" IsSynchronizedWithCurrentItem="True">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Round" DisplayMemberBinding="{Binding Number}" />
+                            <GridViewColumn Header="Start Time" DisplayMemberBinding="{Binding Timestamp}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                
+                <!-- Teams -->
+                <ListView Grid.Column="1" Grid.Row="0" Margin="4" ItemsSource="{Binding Path=Rounds/Teams}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Team" DisplayMemberBinding="{Binding Name}" />
+                            <GridViewColumn Header="Score" DisplayMemberBinding="{Binding Score}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                
+                <!-- Players -->
+                <ListView Grid.Column="1" Grid.Row="1" Margin="4" ItemsSource="{Binding Path=Rounds/Players}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Team" DisplayMemberBinding="{Binding TeamName}" />
+                            <GridViewColumn Header="Player Name" DisplayMemberBinding="{Binding Name}" />
+                            <GridViewColumn Header="Frags" DisplayMemberBinding="{Binding Frags}" />
+                            <GridViewColumn Header="Deaths" DisplayMemberBinding="{Binding Deaths}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+        </TabItem>
     </TabControl>
 </UserControl>

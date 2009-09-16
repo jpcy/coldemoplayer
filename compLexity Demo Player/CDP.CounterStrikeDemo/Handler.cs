@@ -59,11 +59,14 @@ namespace CDP.CounterStrikeDemo
             return new Demo();
         }
 
+        public override Core.ViewModelBase CreateAnalysisViewModel(Core.Demo demo)
+        {
+            return new Analysis.ViewModel((Demo)demo);
+        }
+
         protected override void RegisterMessages()
         {
             base.RegisterMessages();
-
-            // TODO: add CS-specific user message handlers.
         }
 
         protected override void ReadGameConfig()

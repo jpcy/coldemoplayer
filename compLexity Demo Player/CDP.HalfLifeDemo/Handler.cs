@@ -106,7 +106,7 @@ namespace CDP.HalfLifeDemo
 
         public override Core.ViewModelBase CreateAnalysisViewModel(Core.Demo demo)
         {
-            return new Analysis.ViewModel(demo);
+            return new Analysis.ViewModel((Demo)demo);
         }
 
         protected virtual void RegisterMessages()
@@ -159,6 +159,9 @@ namespace CDP.HalfLifeDemo
 
             // Register user messages.
             RegisterUserMessage(typeof(UserMessages.ResetHud));
+            RegisterUserMessage(typeof(UserMessages.ScoreInfo));
+            RegisterUserMessage(typeof(UserMessages.TeamInfo));
+            RegisterUserMessage(typeof(UserMessages.TeamScore));
         }
 
         protected virtual void ReadGameConfig()
@@ -235,13 +238,20 @@ namespace CDP.HalfLifeDemo
             engineMessages.Add(instance.Id, type);
         }
 
-        private void RegisterUserMessage(Type type)
+        protected void RegisterUserMessage(Type type)
         {
             UserMessage instance = Activator.CreateInstance(type) as UserMessage;
 
             if (instance == null)
             {
                 throw new ApplicationException("Specified type does not inherit from UserMessage.");
+            }
+
+            // Remove if the user message is already registered.
+            // This allows game-specific handlers to override generic base handlers.
+            if (userMessages.ContainsKey(instance.Name))
+            {
+                userMessages.Remove(instance.Name);
             }
 
             userMessages.Add(instance.Name, type);

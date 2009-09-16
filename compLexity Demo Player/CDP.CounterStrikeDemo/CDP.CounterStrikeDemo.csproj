@@ -57,6 +57,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analysis\ViewModel.cs" />
     <Compile Include="Demo.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Handler.cs" />

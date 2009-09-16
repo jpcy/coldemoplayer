@@ -55,6 +55,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analysis\Player.cs" />
+    <Compile Include="Analysis\Round.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Analysis\Team.cs" />
     <Compile Include="Analysis\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>
@@ -122,6 +127,9 @@
     <Compile Include="SettingsViewModel.cs" />
     <Compile Include="UserMessage.cs" />
     <Compile Include="UserMessages\ResetHud.cs" />
+    <Compile Include="UserMessages\ScoreInfo.cs" />
+    <Compile Include="UserMessages\TeamInfo.cs" />
+    <Compile Include="UserMessages\TeamScore.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CDP.Core\CDP.Core.csproj">
