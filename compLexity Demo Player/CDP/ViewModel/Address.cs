@@ -14,18 +14,25 @@ namespace CDP.ViewModel
 
                 if (lastSelectedFolder != selectedFolder)
                 {
+                    settings["LastPath"] = selectedFolder;
                     mediator.Notify<string>(Messages.SelectedFolderChanged, selectedFolder);
                 }
             }
         }
 
         private readonly IMediator mediator = Core.ObjectCreator.Get<IMediator>();
+        private readonly Core.ISettings settings = Core.ObjectCreator.Get<Core.ISettings>();
         private string lastSelectedFolder;
         private string selectedFolder = "";
 
         public Address()
         {
             mediator.Register<string>(Messages.SetSelectedFolder, SetSelectedFolder, this);
+        }
+
+        public override void OnNavigateComplete()
+        {
+            SetSelectedFolder((string)settings["LastPath"]);
         }
 
         public void SetSelectedFolder(string path)

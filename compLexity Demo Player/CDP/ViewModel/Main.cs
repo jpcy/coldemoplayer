@@ -29,6 +29,10 @@ namespace CDP.ViewModel
             Address = new Address();
             Demos = new Demos();
             Demo = new Demo();
+            Header.OnNavigateComplete();
+            Address.OnNavigateComplete();
+            Demos.OnNavigateComplete();
+            Demo.OnNavigateComplete();
         }
     }
 }
