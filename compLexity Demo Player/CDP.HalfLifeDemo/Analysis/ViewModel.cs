@@ -9,8 +9,16 @@ namespace CDP.HalfLifeDemo.Analysis
 {
     public class ViewModel : Core.ViewModelBase
     {
+        public class Player
+        {
+            public byte Slot { get; set; }
+            public int EntityId { get; set; }
+            public string Name { get; set; }
+        }
+
         public FlowDocument GameLogDocument { get; private set; }
         public List<Scoreboard.Round> Rounds { get; private set; }
+        public List<Player> Players { get; private set; }
 
         private readonly Demo demo;
         private float currentTimestamp = 0.0f; // TODO: need demo event handler for when gamedata frame is read to get this.
@@ -27,6 +35,7 @@ namespace CDP.HalfLifeDemo.Analysis
             this.demo.AddMessageCallback<UserMessages.TeamScore>(MessageTeamScore);
             GameLogDocument = new FlowDocument();
             Rounds = new List<Scoreboard.Round>();
+            Players = new List<Player>();
             NewRound();
         }
 
@@ -95,21 +104,38 @@ namespace CDP.HalfLifeDemo.Analysis
             }
 
             byte slot = (byte)(message.Slot + 1);
-            Scoreboard.Player player = Rounds.Last().Players.FirstOrDefault(p => p.Slot == slot);
+
+            // Global player state.
+            Player player = Players.FirstOrDefault(p => p.EntityId == message.EntityId);
 
             if (player == null)
             {
-                player = new Scoreboard.Player(slot);
-                Rounds.Last().Players.Add(player);
+                player = new Player
+                {
+                    Slot = slot,
+                    EntityId = message.EntityId,
+                    Name = name
+                };
+
+                Players.Add(player);
+            }
+
+            // Scoreboard.
+            Scoreboard.Player sbPlayer = Rounds.Last().Players.FirstOrDefault(p => p.Slot == slot);
+
+            if (sbPlayer == null)
+            {
+                sbPlayer = new Scoreboard.Player(slot);
+                Rounds.Last().Players.Add(sbPlayer);
             }
             else if (string.IsNullOrEmpty(message.Info))
             {
-                player.IsConnected = false;
+                sbPlayer.IsConnected = false;
                 return;
             }
 
-            player.Name = name;
-            player.IsConnected = true; // Possible mid-round reconnect.
+            sbPlayer.Name = name;
+            sbPlayer.IsConnected = true; // Possible mid-round reconnect.
         }
 
         private void MessageScoreInfo(UserMessages.ScoreInfo message)
