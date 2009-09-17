@@ -127,6 +127,7 @@ namespace CDP.HalfLifeDemo
         public string GameFolderName { get; private set; }
         public uint MapChecksum { get; private set; }
         public byte MaxClients { get; private set; }
+        public string ServerName { get; private set; }
         public bool IsHltv { get; private set; }
         public bool IsCorrupt { get; private set; }
 
@@ -531,6 +532,7 @@ namespace CDP.HalfLifeDemo
             clientDllChecksum = sb.ToString();
             MaxClients = message.MaxClients;
             AddDetail("Server Slots", MaxClients);
+            ServerName = message.ServerName;
             AddDetail("Server Name", message.ServerName);
         }
 

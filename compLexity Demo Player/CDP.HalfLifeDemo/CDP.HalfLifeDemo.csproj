@@ -125,9 +125,11 @@
     <Compile Include="SettingsViewModel.cs" />
     <Compile Include="UserMessage.cs" />
     <Compile Include="UserMessages\ResetHud.cs" />
+    <Compile Include="UserMessages\SayText.cs" />
     <Compile Include="UserMessages\ScoreInfo.cs" />
     <Compile Include="UserMessages\TeamInfo.cs" />
     <Compile Include="UserMessages\TeamScore.cs" />
+    <Compile Include="UserMessages\TextMsg.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CDP.Core\CDP.Core.csproj">

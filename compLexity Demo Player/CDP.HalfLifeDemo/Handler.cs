@@ -159,9 +159,11 @@ namespace CDP.HalfLifeDemo
 
             // Register user messages.
             RegisterUserMessage(typeof(UserMessages.ResetHud));
+            RegisterUserMessage(typeof(UserMessages.SayText));
             RegisterUserMessage(typeof(UserMessages.ScoreInfo));
             RegisterUserMessage(typeof(UserMessages.TeamInfo));
             RegisterUserMessage(typeof(UserMessages.TeamScore));
+            RegisterUserMessage(typeof(UserMessages.TextMsg));
         }
 
         protected virtual void ReadGameConfig()

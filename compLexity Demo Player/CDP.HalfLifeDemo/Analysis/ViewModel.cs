@@ -4,6 +4,7 @@ using System.Windows.Documents;
 using System.Collections.Generic;
 using System.Windows.Media;
 using System.Windows;
+using CDP.Core.Extensions;
 
 namespace CDP.HalfLifeDemo.Analysis
 {
@@ -14,6 +15,7 @@ namespace CDP.HalfLifeDemo.Analysis
             public byte Slot { get; set; }
             public int EntityId { get; set; }
             public string Name { get; set; }
+            public string TeamName { get; set; }
         }
 
         public FlowDocument GameLogDocument { get; private set; }
@@ -21,6 +23,7 @@ namespace CDP.HalfLifeDemo.Analysis
         public List<Player> Players { get; private set; }
 
         private readonly Demo demo;
+        protected readonly Dictionary<string,string> titles = new Dictionary<string,string>();
         private float currentTimestamp = 0.0f; // TODO: need demo event handler for when gamedata frame is read to get this.
 
         protected readonly Core.IFlowDocumentWriter gameLog = Core.ObjectCreator.Get<Core.IFlowDocumentWriter>();
@@ -30,9 +33,11 @@ namespace CDP.HalfLifeDemo.Analysis
             this.demo = demo;
             this.demo.AddMessageCallback<Messages.SvcPrint>(MessagePrint);
             this.demo.AddMessageCallback<Messages.SvcUpdateUserInfo>(MessageUpdateUserInfo);
+            this.demo.AddMessageCallback<UserMessages.SayText>(MessageSayText);
             this.demo.AddMessageCallback<UserMessages.ScoreInfo>(MessageScoreInfo);
             this.demo.AddMessageCallback<UserMessages.TeamInfo>(MessageTeamInfo);
             this.demo.AddMessageCallback<UserMessages.TeamScore>(MessageTeamScore);
+            this.demo.AddMessageCallback<UserMessages.TextMsg>(MessageTextMsg);
             GameLogDocument = new FlowDocument();
             Rounds = new List<Scoreboard.Round>();
             Players = new List<Player>();
@@ -80,6 +85,59 @@ namespace CDP.HalfLifeDemo.Analysis
         protected void GameLogWriteTimestamp()
         {
             gameLog.Write(string.Format("{0}: ", currentTimestamp), Brushes.Brown);
+        }
+
+        protected string DetokeniseTitle(string[] strings)
+        {
+            if (strings.Length == 0)
+            {
+                return null;
+            }
+
+            // Check for token.
+            string token = strings.First();
+
+            if (!token.StartsWith("#"))
+            {
+                return null;
+            }
+
+            // Find format string that applies to token.
+            if (!titles.ContainsKey(token))
+            {
+                return null;
+            }
+
+            // Fill in format string
+            string result = titles[token];
+
+            while (true)
+            {
+                int wildcardIndex = result.IndexOf("%s");
+
+                if (wildcardIndex == -1 || wildcardIndex + 2 >= result.Length || !Char.IsNumber(result, wildcardIndex + 2))
+                {
+                    break;
+                }
+
+                // get number following "%s"
+                int wildcardNumber = result[wildcardIndex + 2] - '0';
+
+                // replace the wildcard with the correct string
+                result = result.Replace(string.Format("%s{0}", wildcardNumber), strings[wildcardNumber]);
+            }
+
+            return result;
+        }
+
+        protected string RemoveSpecialCharacters(string s)
+        {
+            return s.RemoveChars('\n', (char)0x01, (char)0x02, (char)0x03, (char)0x04);
+        }
+
+        protected virtual SolidColorBrush GetTeamColour(string teamName)
+        {
+            return Brushes.Black;
         }
 
         #region Message handlers
@@ -138,6 +196,48 @@ namespace CDP.HalfLifeDemo.Analysis
             sbPlayer.IsConnected = true; // Possible mid-round reconnect.
         }
 
+        private void MessageSayText(UserMessages.SayText message)
+        {
+            string[] strings = message.Strings.ToArray();
+
+            for (int i = 0; i < strings.Length; i++)
+            {
+                strings[i] = RemoveSpecialCharacters(strings[i]);
+            }
+
+            string title = DetokeniseTitle(strings);
+
+            if (title != null)
+            {
+                GameLogWriteTimestamp();
+                gameLog.Write(title);
+
+                // Player name.
+                Player player = Players.FirstOrDefault(p => p.Slot == message.Slot);
+
+                if (message.Slot == 0)
+                {
+                    gameLog.Write("<" + demo.ServerName + ">", Brushes.Gray);
+                }
+                else if (player == null || player.Name == null)
+                {
+                    gameLog.Write("UNKNOWN", Brushes.Gray);
+                }
+                else
+                {
+                    gameLog.Write(player.Name, GetTeamColour(player.TeamName));
+                }
+
+                // Chat text.
+                gameLog.Write(" :  " + strings[1] + "\n");
+            }
+            else
+            {
+                GameLogWriteTimestamp();
+                gameLog.Write(strings[0] + "\n");
+            }
+        }
+
         private void MessageScoreInfo(UserMessages.ScoreInfo message)
         {
             Scoreboard.Player player = Rounds.Last().Players.FirstOrDefault(p => p.Slot == message.Slot);
@@ -151,11 +251,20 @@ namespace CDP.HalfLifeDemo.Analysis
 
         private void MessageTeamInfo(UserMessages.TeamInfo message)
         {
-            Scoreboard.Player player = Rounds.Last().Players.FirstOrDefault(p => p.Slot == message.Slot);
+            // Global player state.
+            Player player = Players.FirstOrDefault(p => p.Slot == message.Slot);
 
             if (player != null)
             {
                 player.TeamName = message.TeamName;
+            }
+
+            // Scoreboard.
+            Scoreboard.Player sbPlayer = Rounds.Last().Players.FirstOrDefault(p => p.Slot == message.Slot);
+
+            if (sbPlayer != null)
+            {
+                sbPlayer.TeamName = message.TeamName;
             }
         }
 
@@ -171,6 +280,24 @@ namespace CDP.HalfLifeDemo.Analysis
             else
             {
                 team.Score = message.Score;
+            }
+        }
+
+        private void MessageTextMsg(UserMessages.TextMsg message)
+        {
+            string[] strings = message.Strings.ToArray();
+
+            for (int i = 0; i < strings.Length; i++)
+            {
+                strings[i] = RemoveSpecialCharacters(strings[i]);
+            }
+
+            string title = DetokeniseTitle(strings);
+
+            if (title != null)
+            {
+                GameLogWriteTimestamp();
+                gameLog.Write(title + "\n");
             }
         }
         #endregion
