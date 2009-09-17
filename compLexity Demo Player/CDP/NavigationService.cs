@@ -22,6 +22,8 @@ namespace CDP
         void Invoke<T>(Action<T> action, T arg);
         void Invoke<T1, T2>(Action<T1, T2> action, T1 arg1, T2 arg2);
         void Invoke<T1, T2, T3>(Action<T1, T2, T3> action, T1 arg1, T2 arg2, T3 arg3);
+        void BeginInvoke<T>(Action<T> action, T arg, bool force);
+        void BeginInvoke<T1, T2>(Action<T1, T2> action, T1 arg1, T2 arg2, bool force);
     }
 
     [Core.Singleton]
@@ -141,6 +143,30 @@ namespace CDP
             else
             {
                 Window.Dispatcher.Invoke(action, arg1, arg2, arg3);
+            }
+        }
+
+        public void BeginInvoke<T>(Action<T> action, T arg, bool force)
+        {
+            if (!force && Dispatcher.CurrentDispatcher == Window.Dispatcher)
+            {
+                action(arg);
+            }
+            else
+            {
+                Window.Dispatcher.BeginInvoke(action, arg);
+            }
+        }
+
+        public void BeginInvoke<T1, T2>(Action<T1, T2> action, T1 arg1, T2 arg2, bool force)
+        {
+            if (!force && Dispatcher.CurrentDispatcher == Window.Dispatcher)
+            {
+                action(arg1, arg2);
+            }
+            else
+            {
+                Window.Dispatcher.BeginInvoke(action, arg1, arg2);
             }
         }
     }

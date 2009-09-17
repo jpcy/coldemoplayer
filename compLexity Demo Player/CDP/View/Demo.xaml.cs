@@ -26,6 +26,13 @@ namespace CDP.View
 
         private void SelectedDemoChanged(Core.Demo demo)
         {
+            if (demo == null)
+            {
+                handler = null;
+                playersGridView.Columns.Clear();
+                return;
+            }
+
             if (demo.Handler == handler)
             {
                 return;

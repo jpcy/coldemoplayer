@@ -7,15 +7,37 @@ using System.Windows.Threading;
 using System.Threading;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Imaging;
+using System.ComponentModel;
 
 namespace CDP.ViewModel
 {
     public class Demos : Core.ViewModelBase
     {
-        public class Item
+        public class Item : Core.NotifyPropertyChanged
         {
             public Core.Demo Demo { get; private set; }
+
             public BitmapImage Icon { get; private set; }
+            public string Name
+            {
+                get { return Demo.Name; }
+            }
+            public string Game
+            {
+                get { return Demo.GameName; }
+            }
+            public string Map
+            {
+                get { return Demo.MapName; }
+            }
+            public string Perspective
+            {
+                get { return Demo.Perspective; }
+            }
+            public TimeSpan Duration
+            {
+                get { return Demo.Duration; }
+            }
 
             public Item(Core.Demo demo, BitmapImage icon)
             {
@@ -35,7 +57,7 @@ namespace CDP.ViewModel
                 if (value != selectedItem)
                 {
                     selectedItem = value;
-                    mediator.Notify<Core.Demo>(Messages.SelectedDemoChanged, selectedItem.Demo);
+                    mediator.Notify<Core.Demo>(Messages.SelectedDemoChanged, selectedItem == null ? null : selectedItem.Demo, true);
                 }
             }
         }
@@ -55,6 +77,11 @@ namespace CDP.ViewModel
         public void SelectedFolderChanged(string path)
         {
             Items.Clear();
+
+            if (!Directory.Exists(path))
+            {
+                return;
+            }
 
             string[] validExtensions = demoManager.ValidDemoExtensions();
 
@@ -82,6 +109,7 @@ namespace CDP.ViewModel
             navigationService.Invoke((demo, window, errorMessage) => 
             {
                 demo.OperationErrorEvent -= demo_OperationErrorEvent;
+                demo.OperationCompleteEvent -= demo_OperationCompleteEvent;
                 System.Windows.MessageBox.Show(window, errorMessage);
             },
             (Core.Demo)sender, navigationService.Window, e.ErrorMessage);

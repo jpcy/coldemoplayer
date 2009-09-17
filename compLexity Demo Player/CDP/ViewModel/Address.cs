@@ -15,7 +15,7 @@ namespace CDP.ViewModel
                 if (lastSelectedFolder != selectedFolder)
                 {
                     settings["LastPath"] = selectedFolder;
-                    mediator.Notify<string>(Messages.SelectedFolderChanged, selectedFolder);
+                    mediator.Notify<string>(Messages.SelectedFolderChanged, selectedFolder, true);
                 }
             }
         }

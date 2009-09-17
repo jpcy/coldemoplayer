@@ -11,6 +11,7 @@ namespace CDP
         void Register<T>(Messages message, Action<T> callback, object registerer);
         void Unregister(Messages message, object registerer);
         void Notify<T>(Messages message, T parameter);
+        void Notify<T>(Messages message, T parameter, bool async);
     }
 
     [Core.Singleton]
@@ -51,7 +52,8 @@ namespace CDP
             }
         }
 
-        private Dictionary<Messages, List<Registration>> registrations = new Dictionary<Messages, List<Registration>>();
+        private readonly Dictionary<Messages, List<Registration>> registrations = new Dictionary<Messages, List<Registration>>();
+        private readonly INavigationService navigationService = Core.ObjectCreator.Get<INavigationService>();
 
         public void Register<T>(Messages message, Action<T> callback, object registerer)
         {
@@ -114,6 +116,11 @@ namespace CDP
                     methodInfo.Invoke(r.Callback, new object[] { parameter });
                 }
             }
+        }
+
+        public void Notify<T>(Messages message, T parameter, bool async)
+        {
+            navigationService.BeginInvoke<Messages, T>(new Action<Messages, T>((m, p) => Notify(m, p)), message, parameter, async);
         }
     }
 }
