@@ -47,6 +47,8 @@ namespace CDP.ViewModel
         }
 
         private Item selectedItem;
+        private object dirtyLock = new object();
+        private bool isDirty = false;
 
         public ObservableCollection<Item> Items { get; private set; }
         public Item SelectedItem
@@ -54,8 +56,11 @@ namespace CDP.ViewModel
             get { return selectedItem; }
             set
             {
+                SetDirty();
+
                 if (value != selectedItem)
                 {
+                    settings["LastFileName"] = value.Demo.FileName;
                     selectedItem = value;
                     mediator.Notify<Core.Demo>(Messages.SelectedDemoChanged, selectedItem == null ? null : selectedItem.Demo, true);
                 }
@@ -67,6 +72,7 @@ namespace CDP.ViewModel
         private readonly Core.IFileSystem fileSystem = Core.ObjectCreator.Get<Core.IFileSystem>();
         private readonly IconCache iconCache = new IconCache();
         private readonly Core.IDemoManager demoManager = Core.ObjectCreator.Get<Core.IDemoManager>();
+        private readonly Core.ISettings settings = Core.ObjectCreator.Get<Core.ISettings>();
 
         public Demos()
         {
@@ -121,9 +127,32 @@ namespace CDP.ViewModel
             {
                 demo.OperationErrorEvent -= demo_OperationErrorEvent;
                 demo.OperationCompleteEvent -= demo_OperationCompleteEvent;
-                Items.Add(new Item(demo, iconCache.FindIcon(demo.IconFileNames)));
+                Item item = new Item(demo, iconCache.FindIcon(demo.IconFileNames));
+                Items.Add(item);
+
+                if (!IsDirty() && demo.FileName == (string)settings["LastFileName"])
+                {
+                    SelectedItem = item;
+                    OnPropertyChanged("SelectedItem");
+                }
             },
             (Core.Demo)sender);
+        }
+
+        private bool IsDirty()
+        {
+            lock (dirtyLock)
+            {
+                return isDirty;
+            }
+        }
+
+        private void SetDirty()
+        {
+            lock (dirtyLock)
+            {
+                isDirty = true;
+            }
         }
     }
 }
