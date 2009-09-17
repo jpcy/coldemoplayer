@@ -33,6 +33,7 @@ namespace CDP.HalfLifeDemo.Analysis
             this.demo = demo;
             this.demo.AddMessageCallback<Messages.SvcPrint>(MessagePrint);
             this.demo.AddMessageCallback<Messages.SvcUpdateUserInfo>(MessageUpdateUserInfo);
+            this.demo.AddMessageCallback<UserMessages.DeathMsg>(MessageDeathMsg);
             this.demo.AddMessageCallback<UserMessages.SayText>(MessageSayText);
             this.demo.AddMessageCallback<UserMessages.ScoreInfo>(MessageScoreInfo);
             this.demo.AddMessageCallback<UserMessages.TeamInfo>(MessageTeamInfo);
@@ -137,7 +138,7 @@ namespace CDP.HalfLifeDemo.Analysis
 
         protected virtual SolidColorBrush GetTeamColour(string teamName)
         {
-            return Brushes.Black;
+            return Brushes.Gray;
         }
 
         #region Message handlers
@@ -194,6 +195,55 @@ namespace CDP.HalfLifeDemo.Analysis
 
             sbPlayer.Name = name;
             sbPlayer.IsConnected = true; // Possible mid-round reconnect.
+        }
+
+        private void MessageDeathMsg(UserMessages.DeathMsg message)
+        {
+            Player killer = Players.FirstOrDefault(p => p.Slot == message.KillerSlot);
+            Player victim = Players.FirstOrDefault(p => p.Slot == message.VictimSlot);
+            string killerName = ((killer == null || killer.Name == null) ? "UNKNOWN" : killer.Name);
+            string victimName = ((victim == null || victim.Name == null) ? "UNKNOWN" : victim.Name);
+            string killerTeamName = (killer == null ? null : killer.TeamName);
+            string victimTeamName = (killer == null ? null : victim.TeamName);
+
+            GameLogWriteTimestamp();
+
+            if (message.Headshot)
+            {
+                gameLog.Write("*** ");
+            }
+
+            if (message.WeaponName == "world" || message.WeaponName == "worldspawn")
+            {
+                gameLog.Write(victimName, GetTeamColour(victimTeamName));
+                gameLog.Write(" suicided.");
+            }
+            else if (message.WeaponName == "trigger_hurt")
+            {
+                gameLog.Write(victimName, GetTeamColour(victimTeamName));
+                gameLog.Write(" died.");
+            }
+            else
+            {
+                gameLog.Write(killerName, GetTeamColour(killerTeamName));
+                gameLog.Write(" killed ");
+                gameLog.Write(victimName, GetTeamColour(victimTeamName));
+                gameLog.Write(" with ");
+
+                if (message.Headshot)
+                {
+                    gameLog.Write("a headshot from ");
+                }
+
+                gameLog.Write(message.WeaponName);
+            }
+
+            if (message.Headshot)
+            {
+                gameLog.Write(" ***");
+            }
+
+            gameLog.Write("\n");
         }
 
         private void MessageSayText(UserMessages.SayText message)

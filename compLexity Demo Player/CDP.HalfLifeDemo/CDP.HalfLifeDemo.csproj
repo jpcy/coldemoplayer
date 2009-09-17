@@ -124,6 +124,7 @@
     </Compile>
     <Compile Include="SettingsViewModel.cs" />
     <Compile Include="UserMessage.cs" />
+    <Compile Include="UserMessages\DeathMsg.cs" />
     <Compile Include="UserMessages\ResetHud.cs" />
     <Compile Include="UserMessages\SayText.cs" />
     <Compile Include="UserMessages\ScoreInfo.cs" />

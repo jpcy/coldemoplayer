@@ -158,6 +158,7 @@ namespace CDP.HalfLifeDemo
             RegisterEngineMessage(typeof(Messages.SvcTimeScale));
 
             // Register user messages.
+            RegisterUserMessage(typeof(UserMessages.DeathMsg));
             RegisterUserMessage(typeof(UserMessages.ResetHud));
             RegisterUserMessage(typeof(UserMessages.SayText));
             RegisterUserMessage(typeof(UserMessages.ScoreInfo));
