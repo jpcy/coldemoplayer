@@ -16,8 +16,6 @@ namespace CDP.HalfLifeDemo.Analysis
 
         private readonly Demo demo;
         protected readonly Dictionary<string,string> titles = new Dictionary<string,string>();
-        private float currentTimestamp = 0.0f; // TODO: need demo event handler for when gamedata frame is read to get this.
-
         protected readonly Core.IFlowDocumentWriter gameLog = Core.ObjectCreator.Get<Core.IFlowDocumentWriter>();
 
         public ViewModel(Demo demo)
@@ -45,7 +43,7 @@ namespace CDP.HalfLifeDemo.Analysis
         protected void NewRound()
         {
             Scoreboard.Round lastRound = Rounds.LastOrDefault();
-            Scoreboard.Round newRound = new Scoreboard.Round(Rounds.Count + 1, currentTimestamp);
+            Scoreboard.Round newRound = new Scoreboard.Round(Rounds.Count + 1, demo.CurrentTimestamp);
             Rounds.Add(newRound);
 
             // Carry over all player and team scores from the previous round (except disconnected players).
@@ -76,7 +74,8 @@ namespace CDP.HalfLifeDemo.Analysis
 
         protected void GameLogWriteTimestamp()
         {
-            gameLog.Write(string.Format("{0}: ", currentTimestamp), Brushes.Brown);
+            TimestampConverter converter = new TimestampConverter();
+            gameLog.Write(string.Format("{0}: ", converter.Convert(demo.CurrentTimestamp, null, null, null)), Brushes.Brown);
         }
 
         protected string DetokeniseTitle(string[] strings)
@@ -162,7 +161,7 @@ namespace CDP.HalfLifeDemo.Analysis
 
                     if (!string.IsNullOrEmpty(key))
                     {
-                        player.AddInfoKeyValue(key, value, currentTimestamp);
+                        player.AddInfoKeyValue(key, value, demo.CurrentTimestamp);
                     }
                 }
             }

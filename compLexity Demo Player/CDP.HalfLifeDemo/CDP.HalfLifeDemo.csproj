@@ -59,6 +59,7 @@
     <Compile Include="Analysis\Scoreboard\Player.cs" />
     <Compile Include="Analysis\Scoreboard\Round.cs" />
     <Compile Include="Analysis\Scoreboard\Team.cs" />
+    <Compile Include="Analysis\TimestampConverter.cs" />
     <Compile Include="Analysis\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>

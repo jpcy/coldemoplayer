@@ -131,6 +131,11 @@ namespace CDP.HalfLifeDemo
         public bool IsHltv { get; private set; }
         public bool IsCorrupt { get; private set; }
 
+        /// <summary>
+        /// During a Read operation, the timestamp of the frame currently being read.
+        /// </summary>
+        public float CurrentTimestamp { get; private set; }
+
         private Handler handler;
         private uint directoryEntriesOffset;
         protected string clientDllChecksum;
@@ -248,6 +253,7 @@ namespace CDP.HalfLifeDemo
         {
             long lastFrameOffset = 0;
             List<IMessage> lastMessages = new List<IMessage>();
+            CurrentTimestamp = 0.0f;
 
             try
             {
@@ -263,6 +269,7 @@ namespace CDP.HalfLifeDemo
                     {
                         lastFrameOffset = stream.Position;
                         Frame frame = ReadFrame(br);
+                        CurrentTimestamp = frame.Timestamp;
 
                         if (frame.HasMessages)
                         {
