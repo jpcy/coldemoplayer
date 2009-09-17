@@ -10,14 +10,6 @@ namespace CDP.HalfLifeDemo.Analysis
 {
     public class ViewModel : Core.ViewModelBase
     {
-        public class Player
-        {
-            public byte Slot { get; set; }
-            public int EntityId { get; set; }
-            public string Name { get; set; }
-            public string TeamName { get; set; }
-        }
-
         public FlowDocument GameLogDocument { get; private set; }
         public List<Scoreboard.Round> Rounds { get; private set; }
         public List<Player> Players { get; private set; }
@@ -149,19 +141,6 @@ namespace CDP.HalfLifeDemo.Analysis
 
         private void MessageUpdateUserInfo(Messages.SvcUpdateUserInfo message)
         {
-            // FIXME: handle infokey parsing elsewhere.
-            string[] infoKeys = message.Info.Split('\\');
-            string name = null;
-
-            for (int i = 0; i < infoKeys.Length; i++)
-            {
-                if (infoKeys[i] == "name")
-                {
-                    name = infoKeys[i + 1];
-                    break;
-                }
-            }
-
             byte slot = (byte)(message.Slot + 1);
 
             // Global player state.
@@ -172,11 +151,22 @@ namespace CDP.HalfLifeDemo.Analysis
                 player = new Player
                 {
                     Slot = slot,
-                    EntityId = message.EntityId,
-                    Name = name
+                    EntityId = message.EntityId
                 };
 
                 Players.Add(player);
+            }
+
+            if (!string.IsNullOrEmpty(message.Info))
+            {
+                string[] infoKeyTokens = message.Info.Remove(0, 1).Split('\\');
+
+                for (int i = 0; i < infoKeyTokens.Length; i += 2)
+                {
+                    string key = infoKeyTokens[i];
+                    string value = infoKeyTokens[i + 1];
+                    player.AddInfoKeyValue(key, value, currentTimestamp);
+                }
             }
 
             // Scoreboard.
@@ -193,7 +183,8 @@ namespace CDP.HalfLifeDemo.Analysis
                 return;
             }
 
-            sbPlayer.Name = name;
+            Player.InfoKey nameInfoKey = player.InfoKeys.SingleOrDefault(ik => ik.Key == "name");
+            sbPlayer.Name = (nameInfoKey == null ? null : nameInfoKey.NewestValueInnerValue);
             sbPlayer.IsConnected = true; // Possible mid-round reconnect.
         }
 

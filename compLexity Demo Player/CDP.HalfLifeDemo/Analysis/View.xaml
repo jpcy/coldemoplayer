@@ -57,6 +57,8 @@
                     <ColumnDefinition Width="0.75*" />
                     <ColumnDefinition Width="0.75*" />
                 </Grid.ColumnDefinitions>
+                
+                <!-- Players -->
                 <ListView Grid.Column="0" Margin="4" ItemsSource="{Binding Players}" IsSynchronizedWithCurrentItem="True">
                     <ListView.View>
                         <GridView>
@@ -66,18 +68,22 @@
                         </GridView>
                     </ListView.View>
                 </ListView>
-                <ListView Grid.Column="1" Margin="4">
+                
+                <!-- InfoKeys -->
+                <ListView Grid.Column="1" Margin="4" ItemsSource="{Binding Path=Players/InfoKeys}" IsSynchronizedWithCurrentItem="True">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Key" DisplayMemberBinding="{Binding Key}" />
-                            <GridViewColumn Header="Value" DisplayMemberBinding="{Binding NewestValueValue}" />
+                            <GridViewColumn Header="Value" DisplayMemberBinding="{Binding NewestValueInnerValue}" />
                         </GridView>
                     </ListView.View>
                 </ListView>
-                <ListView Grid.Column="2" Margin="4">
+                
+                <!-- InfoKey values -->
+                <ListView Grid.Column="2" Margin="4" ItemsSource="{Binding Path=Players/InfoKeys/Values}">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Value" DisplayMemberBinding="{Binding Value}" />
+                            <GridViewColumn Header="Value" DisplayMemberBinding="{Binding InnerValue}" />
                             <GridViewColumn Header="Timestamp" DisplayMemberBinding="{Binding Timestamp}" />
                         </GridView>
                     </ListView.View>
