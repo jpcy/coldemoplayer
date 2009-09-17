@@ -23,7 +23,6 @@ namespace CDP.HalfLifeDemo.Analysis
         public ViewModel(Demo demo)
         {
             this.demo = demo;
-            this.demo.AddMessageCallback<Messages.SvcPrint>(MessagePrint);
             this.demo.AddMessageCallback<Messages.SvcUpdateUserInfo>(MessageUpdateUserInfo);
             this.demo.AddMessageCallback<UserMessages.DeathMsg>(MessageDeathMsg);
             this.demo.AddMessageCallback<UserMessages.SayText>(MessageSayText);
@@ -134,11 +133,6 @@ namespace CDP.HalfLifeDemo.Analysis
         }
 
         #region Message handlers
-        private void MessagePrint(Messages.SvcPrint message)
-        {
-            gameLog.Write(message.Text + "\n");
-        }
-
         private void MessageUpdateUserInfo(Messages.SvcUpdateUserInfo message)
         {
             byte slot = (byte)(message.Slot + 1);
@@ -165,7 +159,11 @@ namespace CDP.HalfLifeDemo.Analysis
                 {
                     string key = infoKeyTokens[i];
                     string value = infoKeyTokens[i + 1];
-                    player.AddInfoKeyValue(key, value, currentTimestamp);
+
+                    if (!string.IsNullOrEmpty(key))
+                    {
+                        player.AddInfoKeyValue(key, value, currentTimestamp);
+                    }
                 }
             }
 
