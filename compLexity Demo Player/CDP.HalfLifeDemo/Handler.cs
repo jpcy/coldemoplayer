@@ -142,6 +142,7 @@ namespace CDP.HalfLifeDemo
             RegisterEngineMessage(typeof(Messages.SvcSpawnBaseline));
             RegisterEngineMessage(typeof(Messages.SvcTempEntity));
             RegisterEngineMessage(typeof(Messages.SvcSignOnNum));
+            RegisterEngineMessage(typeof(Messages.SvcCenterPrint));
             RegisterEngineMessage(typeof(Messages.SvcSpawnStaticSound));
             RegisterEngineMessage(typeof(Messages.SvcCdTrack));
             RegisterEngineMessage(typeof(Messages.SvcNewUserMessage));

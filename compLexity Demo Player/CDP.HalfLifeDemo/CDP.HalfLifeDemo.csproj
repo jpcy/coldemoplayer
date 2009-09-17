@@ -85,6 +85,7 @@
     <Compile Include="Header.cs" />
     <Compile Include="Frame.cs" />
     <Compile Include="Messages\SvcCdTrack.cs" />
+    <Compile Include="Messages\SvcCenterPrint.cs" />
     <Compile Include="Messages\SvcChoke.cs" />
     <Compile Include="Messages\SvcClientData.cs" />
     <Compile Include="Messages\SvcCustomization.cs" />
