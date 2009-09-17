@@ -57,6 +57,7 @@
     <Compile Include="BitWriterTests.cs" />
     <Compile Include="DemoManagerTests.cs" />
     <Compile Include="DemoTests.cs" />
+    <Compile Include="Extensions\StringExtensionsTests.cs" />
     <Compile Include="LauncherTests.cs" />
     <Compile Include="MockProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

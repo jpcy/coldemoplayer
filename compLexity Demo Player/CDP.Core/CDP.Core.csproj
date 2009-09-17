@@ -32,10 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Ninject.Core, Version=1.0.0.82, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\libraries\Ninject-1.0-debug-net-2.0\Ninject.Core.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationCore">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
@@ -67,6 +63,7 @@
     <Compile Include="DemoManager.cs" />
     <Compile Include="Demo.cs" />
     <Compile Include="DemoHandler.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="FileSystem.cs" />
     <Compile Include="Launcher.cs">
       <SubType>Code</SubType>
