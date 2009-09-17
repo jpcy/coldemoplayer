@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml.Serialization;
+using System.Linq;
 
 namespace CDP.CounterStrikeDemo
 {
@@ -45,12 +46,27 @@ namespace CDP.CounterStrikeDemo
 
         public override string GetVersionName(string checksum)
         {
-            return base.GetVersionName(checksum);
+            Version version = Versions.FirstOrDefault(v => v.Checksum == checksum);
+
+            if (version == null)
+            {
+                return Versions.First(v => v.Checksum == "default").Name;
+            }
+
+            return version.Name;
         }
 
         public override int GetVersion(string checksum)
         {
-            return base.GetVersion(checksum);
+            Version version = Versions.FirstOrDefault(v => v.Checksum == checksum);
+
+            if (version == null)
+            {
+                return (int)Demo.Versions.CounterStrike16;
+            }
+
+            // Translate the string names defined in the XML config file (e.g. "1.3") to the enumeration Versions (e.g. "CounterStrike13").
+            return (int)Enum.Parse(typeof(Demo.Versions), "CounterStrike" + version.Name.Replace(".", string.Empty));
         }
     }
 }

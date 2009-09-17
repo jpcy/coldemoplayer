@@ -60,7 +60,7 @@ namespace CDP.HalfLifeDemo
                 }
 
                 string version = Game.GetVersionName(clientDllChecksum);
-                return Game.Name + version ?? string.Empty;
+                return Game.Name + (version == null ? string.Empty : " " + version);
             }
         }
 
@@ -133,7 +133,7 @@ namespace CDP.HalfLifeDemo
 
         private Handler handler;
         private uint directoryEntriesOffset;
-        private string clientDllChecksum;
+        protected string clientDllChecksum;
         private readonly List<MessageCallback> messageCallbacks;
         private readonly Dictionary<string, DeltaStructure> deltaStructures;
         private readonly List<UserMessageDefinition> userMessageDefinitions;

@@ -6,8 +6,11 @@ namespace CDP.CounterStrikeDemo.Analysis
 {
     public class ViewModel : HalfLifeDemo.Analysis.ViewModel
     {
+        private readonly Demo demo;
+
         public ViewModel(Demo demo) : base(demo)
         {
+            this.demo = demo;
             demo.AddMessageCallback<HalfLifeDemo.Messages.SvcEventReliable>(MessageEventReliable);
 
             // TextMsg
@@ -69,8 +72,9 @@ namespace CDP.CounterStrikeDemo.Analysis
         #region Message handlers
         private void MessageEventReliable(HalfLifeDemo.Messages.SvcEventReliable message)
         {
-            // TODO: should be 29 for 1.6, 26 for everything else.
-            if (message.Index == 29)
+            int newRoundEventId = (demo.Version == Demo.Versions.CounterStrike16 ? 29 : 26);
+
+            if (message.Index == newRoundEventId)
             {
                 NewRound();
             }
