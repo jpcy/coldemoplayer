@@ -105,6 +105,7 @@
     <Compile Include="Messages\SvcPings.cs" />
     <Compile Include="Messages\SvcPrint.cs" />
     <Compile Include="Messages\SvcResourceList.cs" />
+    <Compile Include="Messages\SvcResourceLocation.cs" />
     <Compile Include="Messages\SvcResourceRequest.cs" />
     <Compile Include="Messages\SvcSendExtraInfo.cs" />
     <Compile Include="Messages\SvcServerInfo.cs" />
