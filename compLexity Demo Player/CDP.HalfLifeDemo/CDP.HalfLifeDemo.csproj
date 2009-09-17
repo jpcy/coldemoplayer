@@ -111,6 +111,7 @@
     <Compile Include="Messages\SvcSendExtraInfo.cs" />
     <Compile Include="Messages\SvcServerInfo.cs" />
     <Compile Include="Messages\SvcSetAngle.cs" />
+    <Compile Include="Messages\SvcSetPause.cs" />
     <Compile Include="Messages\SvcSetView.cs" />
     <Compile Include="Messages\SvcSignOnNum.cs" />
     <Compile Include="Messages\SvcSound.cs" />
