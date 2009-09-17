@@ -95,6 +95,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Messages\SvcEventReliable.cs" />
+    <Compile Include="Messages\SvcFileTransferFailed.cs" />
     <Compile Include="Messages\SvcHltv.cs" />
     <Compile Include="Messages\SvcLightStyle.cs" />
     <Compile Include="Messages\SvcNewMoveVars.cs" />
