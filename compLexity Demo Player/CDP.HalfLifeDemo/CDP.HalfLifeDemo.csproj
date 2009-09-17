@@ -117,6 +117,7 @@
     <Compile Include="Messages\SvcTime.cs" />
     <Compile Include="Messages\SvcTimeScale.cs" />
     <Compile Include="Messages\SvcUpdateUserInfo.cs" />
+    <Compile Include="Messages\SvcVoiceData.cs" />
     <Compile Include="Messages\SvcVoiceInit.cs" />
     <Compile Include="Messages\UnregisteredUserMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

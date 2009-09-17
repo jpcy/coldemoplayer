@@ -68,6 +68,7 @@
     <Compile Include="Launcher.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="NotifyPropertyChanged.cs" />
     <Compile Include="ObjectCreator.cs" />
     <Compile Include="ObjectMappings.cs" />
     <Compile Include="Process.cs" />

@@ -154,6 +154,7 @@ namespace CDP.HalfLifeDemo
             RegisterEngineMessage(typeof(Messages.SvcHltv));
             RegisterEngineMessage(typeof(Messages.SvcDirector));
             RegisterEngineMessage(typeof(Messages.SvcVoiceInit));
+            RegisterEngineMessage(typeof(Messages.SvcVoiceData));
             RegisterEngineMessage(typeof(Messages.SvcSendExtraInfo));
             RegisterEngineMessage(typeof(Messages.SvcTimeScale));
 
