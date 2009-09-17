@@ -19,6 +19,7 @@ namespace CDP.HalfLifeDemo.UserMessages
 
         public override void Read(BitReader buffer)
         {
+            int endOffset = buffer.CurrentByte + Length;
             Slot = buffer.ReadByte();
             Strings = new List<string>();
 
@@ -31,7 +32,7 @@ namespace CDP.HalfLifeDemo.UserMessages
                     Strings.Add(s);
                 }
 
-                if (s.EndsWith("\n"))
+                if (buffer.CurrentByte == endOffset)
                 {
                     break;
                 }
