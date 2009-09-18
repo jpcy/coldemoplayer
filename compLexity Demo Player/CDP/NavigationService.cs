@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Windows.Navigation;
 using System.Reflection;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using System.Windows;
 
 namespace CDP
 {
     public interface INavigationService
     {
-        NavigationWindow Window { get; set; }
+        Window Window { get; set; }
         string CurrentPageTitle { get; }
 
         void Navigate(Page view, Core.ViewModelBase viewModel);
@@ -29,14 +29,14 @@ namespace CDP
     [Core.Singleton]
     public class NavigationService : INavigationService
     {
-        public NavigationWindow Window { get; set; }
+        public Window Window { get; set; }
 
         public string CurrentPageTitle
         {
-            get { return ((Page)Window.NavigationService.Content).Title; }
+            get { return ((Page)Window.Content).Title; }
         }
 
-        private Page home;
+        private readonly Stack<Page> pages = new Stack<Page>();
 
         public void Navigate(Page view, Core.ViewModelBase viewModel)
         {
@@ -50,34 +50,34 @@ namespace CDP
                 throw new ArgumentNullException("viewModel");
             }
 
-            if (home == null)
-            {
-                home = view;
-            }
-
             view.DataContext = viewModel;
-            Window.Navigate(view);
+            pages.Push(view);
+            Window.Content = view;
             viewModel.OnNavigateComplete();
         }
 
         public void Home()
         {
-            if (home == null)
+            if (pages.Count == 0)
             {
                 throw new InvalidOperationException("Cannot go to the home page when no pages have been navigated to yet.");
             }
 
-            Window.NavigationService.Navigate(home);
-
-            // clear the history
-            while (Window.NavigationService.RemoveBackEntry() != null)
+            while (pages.Count > 1)
             {
+                pages.Pop();
             }
+
+            Window.Content = pages.Peek();
         }
 
         public void Back()
         {
-            Window.NavigationService.GoBack();
+            if (pages.Count > 1)
+            {
+                pages.Pop();
+                Window.Content = pages.Peek();
+            }
         }
 
         public string BrowseForFile(string fileName, string initialPath)

@@ -4,7 +4,7 @@ using System.Windows.Navigation;
 
 namespace CDP
 {
-    public partial class MainWindow : NavigationWindow
+    public partial class MainWindow : Window
     {
         public MainWindow()
         {

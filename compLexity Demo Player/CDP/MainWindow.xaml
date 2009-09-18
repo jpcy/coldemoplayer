@@ -1,5 +1,5 @@
-﻿<NavigationWindow x:Class="CDP.MainWindow"
+﻿<Window x:Class="CDP.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="compLexity Demo Player"
-    Width="800" Height="600" WindowStartupLocation="CenterScreen" ShowsNavigationUI="False" />
+    Width="800" Height="600" WindowStartupLocation="CenterScreen" />
