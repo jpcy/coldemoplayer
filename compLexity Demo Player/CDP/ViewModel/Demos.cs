@@ -60,7 +60,7 @@ namespace CDP.ViewModel
 
                 if (value != selectedItem)
                 {
-                    settings["LastFileName"] = value.Demo.FileName;
+                    settings["LastFileName"] = (value == null ? null : value.Demo.FileName);
                     selectedItem = value;
                     mediator.Notify<Core.Demo>(Messages.SelectedDemoChanged, selectedItem == null ? null : selectedItem.Demo, true);
                 }
@@ -83,6 +83,8 @@ namespace CDP.ViewModel
         public void SelectedFolderChanged(string path)
         {
             Items.Clear();
+            SelectedItem = null;
+            OnPropertyChanged("SelectedItem");
 
             if (!Directory.Exists(path))
             {
