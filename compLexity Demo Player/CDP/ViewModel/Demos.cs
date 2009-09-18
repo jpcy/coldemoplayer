@@ -83,8 +83,12 @@ namespace CDP.ViewModel
         public void SelectedFolderChanged(string path)
         {
             Items.Clear();
-            SelectedItem = null;
-            OnPropertyChanged("SelectedItem");
+
+            if (IsDirty())
+            {
+                SelectedItem = null;
+                OnPropertyChanged("SelectedItem");
+            }
 
             if (!Directory.Exists(path))
             {
