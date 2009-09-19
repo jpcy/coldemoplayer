@@ -183,6 +183,8 @@ namespace CDP.HalfLifeDemo
                 using (FileStream stream = File.OpenRead(FileName))
                 using (BinaryReader br = new BinaryReader(stream))
                 {
+                    long streamLength = stream.Length;
+
                     // Read header.
                     // TODO: sanity check on demo and network protocol; friendly error message.
                     Header header = new Header();
@@ -232,7 +234,7 @@ namespace CDP.HalfLifeDemo
                             }
                         }
 
-                        UpdateProgress(stream.Position, stream.Length);
+                        UpdateProgress(stream.Position, streamLength);
                     }
                 }
             }
@@ -263,6 +265,7 @@ namespace CDP.HalfLifeDemo
                 using (FileStream stream = File.OpenRead(FileName))
                 using (BinaryReader br = new BinaryReader(stream))
                 {
+                    long streamLength = stream.Length;
                     stream.Seek(Header.SizeInBytes, SeekOrigin.Begin);
 
                     while (true)
@@ -282,7 +285,7 @@ namespace CDP.HalfLifeDemo
                             }
                         }
 
-                        if (stream.Position >= directoryEntriesOffset || stream.Position == stream.Length)
+                        if ((!IsCorrupt && stream.Position >= directoryEntriesOffset) || stream.Position == streamLength)
                         {
                             break;
                         }
@@ -293,7 +296,7 @@ namespace CDP.HalfLifeDemo
                             return;
                         }
 
-                        UpdateProgress(stream.Position, stream.Length);
+                        UpdateProgress(stream.Position, streamLength);
                     }
                 }
             }
