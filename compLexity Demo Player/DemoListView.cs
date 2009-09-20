@@ -123,8 +123,18 @@ namespace compLexity_Demo_Player
 
             threadPoolFull = false;
             threadPoolCount = 0;
+            FileInfo[] files = null;
 
-            foreach (FileInfo fi in directoryInfo.GetFiles("*.dem", SearchOption.TopDirectoryOnly))
+            try
+            {
+                files = directoryInfo.GetFiles("*.dem", SearchOption.TopDirectoryOnly);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return;
+            }
+
+            foreach (FileInfo fi in files)
             {
                 Thread thread;
 

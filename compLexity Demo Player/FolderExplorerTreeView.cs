@@ -127,6 +127,7 @@ namespace compLexity_Demo_Player
 
                     if (!foundMatch)
                     {
+                        root.IsSelected = true;
                         return; // abort, couldn't find folder
                     }
                 }
@@ -240,6 +241,12 @@ namespace compLexity_Demo_Player
                     Shell32.Folder folderTemp = shell.NameSpace(folderItem.Path);
                     Shell32.FolderItem folderItemTemp = (Shell32.FolderItem)folderTemp.ParseName(s.Substring(s.LastIndexOf('\\') + 1));
 
+                    if (folderItemTemp == null)
+                    {
+                        // Folder is inaccessible.
+                        continue;
+                    }
+
                     TreeViewItem newItem = CreateTreeItem(folderItemTemp);
                     newItem.Items.Add(dummyNode);
                     newItem.Expanded += new RoutedEventHandler(folder_Expanded);
@@ -258,6 +265,11 @@ namespace compLexity_Demo_Player
 
         private TreeViewItem CreateTreeItem(Shell32.FolderItem folderItem)
         {
+            if (folderItem == null)
+            {
+                throw new ArgumentNullException("folderItem");
+            }
+
             TreeViewItem tvi = new TreeViewItem();
             //tvi.Header = folderItem.Name;
             tvi.Tag = folderItem;

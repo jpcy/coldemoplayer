@@ -33,7 +33,7 @@ namespace compLexity_Demo_Player
                 String path = System.IO.Path.GetDirectoryName(fileName);
                 uiExplorerTreeView.SelectedItemChanged -= uiExplorerTreeView_SelectedItemChanged;
                 uiExplorerTreeView.CurrentFolderPath = path;
-                uiDemoListView.SetCurrentPath(path, System.IO.Path.GetFileNameWithoutExtension(fileName));
+                uiDemoListView.SetCurrentPath(uiExplorerTreeView.CurrentFolderPath, System.IO.Path.GetFileNameWithoutExtension(fileName));
                 uiExplorerTreeView.SelectedItemChanged += uiExplorerTreeView_SelectedItemChanged;
 
                 return true;
