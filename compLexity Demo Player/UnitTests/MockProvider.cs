@@ -1,9 +1,10 @@
 ﻿using System;
 using Moq;
+using CDP.Core;
 
-namespace CDP.Core.Tests
+namespace UnitTests
 {
-    class MockProvider<T> : Core.IObjectProvider<T> where T:class
+    class MockProvider<T> : IObjectProvider<T> where T:class
     {
         public Mock<T> Mock { get; private set; }
         private bool dirty = false;

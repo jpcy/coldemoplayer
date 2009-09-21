@@ -7,7 +7,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Collections;
 
-namespace CDP.Core.Tests
+namespace UnitTests.Core
 {
     [TestFixture]
     public class DemoManagerTests
@@ -117,7 +117,7 @@ namespace CDP.Core.Tests
         }
 
         private DemoManager demoManager;
-        private Mock<Core.DemoHandler> demoHandlerMock;
+        private Mock<CDP.Core.DemoHandler> demoHandlerMock;
         private MockProvider<IFileSystem> fileSystem;
 
         [SetUp]
@@ -140,7 +140,7 @@ namespace CDP.Core.Tests
         [Test]
         public void GetAllDemoHandlerSettings_Ok()
         {
-            Func<Setting[], Mock<Core.DemoHandler>> createDemoHandlerMock = s =>
+            Func<Setting[], Mock<CDP.Core.DemoHandler>> createDemoHandlerMock = s =>
             {
                 var mock = new Mock<DemoHandler>();
                 mock.Setup(dh => dh.Settings).Returns(s);
@@ -211,7 +211,7 @@ namespace CDP.Core.Tests
         public void CreateLauncher_Ok()
         {
             // Setup.
-            Core.ObjectCreator.MapToProvider<IProcessFinder>(new MockProvider<IProcessFinder>());
+            CDP.Core.ObjectCreator.MapToProvider<IProcessFinder>(new MockProvider<IProcessFinder>());
             var demoMock = new Mock<Demo>();
             demoMock.Setup(d => d.Handler).Returns(demoHandlerMock.Object);
             var launcherMock = new Mock<Launcher>();

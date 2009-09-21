@@ -3,7 +3,7 @@ using System.Text;
 using NUnit.Framework;
 using CDP.Core;
 
-namespace CDP.Core.Tests
+namespace UnitTests.Core
 {
     [TestFixture]
     public class BitWriterTests

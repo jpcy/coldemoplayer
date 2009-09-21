@@ -5,7 +5,7 @@ using CDP.Core;
 using System.Collections;
 using Moq;
 
-namespace CDP.Core.Tests
+namespace UnitTests.Core
 {
     [TestFixture]
     public class DemoTests
