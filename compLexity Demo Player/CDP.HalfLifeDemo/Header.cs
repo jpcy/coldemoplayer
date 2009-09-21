@@ -14,13 +14,13 @@ namespace CDP.HalfLifeDemo
             get { return 544; }
         }
 
-        public string Magic { get; private set; }
-        public uint DemoProtocol { get; private set; }
-        public uint NetworkProtocol { get; private set; }
-        public string MapName { get; private set; }
-        public string GameFolderName { get; private set; }
-        public uint MapChecksum { get; private set; }
-        public uint DirectoryEntriesOffset { get; private set; }
+        public string Magic { get; set; }
+        public uint DemoProtocol { get; set; }
+        public uint NetworkProtocol { get; set; }
+        public string MapName { get; set; }
+        public string GameFolderName { get; set; }
+        public uint MapChecksum { get; set; }
+        public uint DirectoryEntriesOffset { get; set; }
 
         private const int magicLength = 8;
         private const int mapNameLength = 260;
@@ -54,7 +54,15 @@ namespace CDP.HalfLifeDemo
 
         public byte[] Write()
         {
-            return null;
+            BitWriter buffer = new BitWriter();
+            buffer.WriteString(Magic, magicLength);
+            buffer.WriteUInt(DemoProtocol);
+            buffer.WriteUInt(NetworkProtocol);
+            buffer.WriteString(MapName, mapNameLength);
+            buffer.WriteString(GameFolderName, gameFolderLength);
+            buffer.WriteUInt(MapChecksum);
+            buffer.WriteUInt(DirectoryEntriesOffset);
+            return buffer.ToArray();
         }
     }
 }

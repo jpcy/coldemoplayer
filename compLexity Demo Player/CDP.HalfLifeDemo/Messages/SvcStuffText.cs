@@ -17,7 +17,17 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_stufftext"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return true; }
+        }
+
         public string Text { get; set; }
+
+        public override void Skip(BitReader buffer)
+        {
+            buffer.SeekString();
+        }
 
         public override void Read(BitReader buffer)
         {
@@ -28,14 +38,12 @@ namespace CDP.HalfLifeDemo.Messages
         {
             BitWriter buffer = new BitWriter();
             buffer.WriteString(Text);
-            return buffer.Data;
+            return buffer.ToArray();
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
-            log.WriteLine("Text: {0}", Text);
+            log.WriteLine("Text: \"{0}\"", Text);
         }
-#endif
     }
 }

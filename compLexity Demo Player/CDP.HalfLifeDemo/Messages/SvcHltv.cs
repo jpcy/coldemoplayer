@@ -17,8 +17,23 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_hltv"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return true; }
+        }
+
         public byte Command { get; set; }
         public byte[] CommandData { get; set; }
+
+        public override void Skip(BitReader buffer)
+        {
+            byte command = buffer.ReadByte();
+
+            if (command == 2)
+            {
+                buffer.SeekBytes(8);
+            }
+        }
 
         public override void Read(BitReader buffer)
         {
@@ -32,14 +47,20 @@ namespace CDP.HalfLifeDemo.Messages
 
         public override byte[] Write()
         {
-            throw new NotImplementedException();
+            BitWriter buffer = new BitWriter();
+            buffer.WriteByte(Command);
+
+            if (Command == 2)
+            {
+                buffer.WriteBytes(CommandData);
+            }
+
+            return buffer.ToArray();
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
             log.WriteLine("Command: {0}", Command);
         }
-#endif
     }
 }

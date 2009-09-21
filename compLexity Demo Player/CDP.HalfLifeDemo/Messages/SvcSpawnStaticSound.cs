@@ -20,6 +20,11 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_spawnstaticsound"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return true; }
+        }
+
         public Core.Vector Position { get; set; }
         public ushort Index { get; set; }
         public byte Volume { get; set; }
@@ -27,6 +32,11 @@ namespace CDP.HalfLifeDemo.Messages
         public ushort Edict { get; set; }
         public byte Pitch { get; set; }
         public byte Flags { get; set; }
+
+        public override void Skip(BitReader buffer)
+        {
+            buffer.SeekBytes(14);
+        }
 
         public override void Read(BitReader buffer)
         {
@@ -44,13 +54,26 @@ namespace CDP.HalfLifeDemo.Messages
 
         public override byte[] Write()
         {
-            throw new NotImplementedException();
+            BitWriter buffer = new BitWriter();
+            buffer.WriteShort((short)(Position.X * 8.0f));
+            buffer.WriteShort((short)(Position.Y * 8.0f));
+            buffer.WriteShort((short)(Position.Z * 8.0f));
+            buffer.WriteUShort(Index);
+            buffer.WriteByte(Volume);
+            buffer.WriteByte(Attenuation);
+            buffer.WriteUShort(Edict);
+            buffer.WriteByte(Pitch);
+            buffer.WriteByte(Flags);
+            return buffer.ToArray();
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
-            log.WriteLine("Position: {0} {1} {2}", Position.X, Position.Y, Position.Z);
+            if (Position != null)
+            {
+                log.WriteLine("Position: {0} {1} {2}", Position.X, Position.Y, Position.Z);
+            }
+
             log.WriteLine("Index: {0}", Index);
             log.WriteLine("Volume: {0}", Volume);
             log.WriteLine("Attenuation: {0}", Attenuation);
@@ -58,6 +81,5 @@ namespace CDP.HalfLifeDemo.Messages
             log.WriteLine("Pitch: {0}", Pitch);
             log.WriteLine("Flags: {0}", Flags);
         }
-#endif
     }
 }

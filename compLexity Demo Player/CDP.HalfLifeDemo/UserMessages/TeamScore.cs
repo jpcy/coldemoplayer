@@ -12,6 +12,11 @@ namespace CDP.HalfLifeDemo.UserMessages
             get { return "TeamScore"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return true; }
+        }
+
         public string TeamName { get; set; }
         public short Score { get; set; }
 
@@ -23,14 +28,16 @@ namespace CDP.HalfLifeDemo.UserMessages
 
         public override byte[] Write()
         {
-            throw new NotImplementedException();
+            BitWriter buffer = new BitWriter();
+            buffer.WriteString(TeamName);
+            buffer.WriteShort(Score);
+            return buffer.ToArray();
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
-            throw new NotImplementedException();
+            log.WriteLine("Team name: {0}", TeamName);
+            log.WriteLine("Score: {0}", Score);
         }
-#endif
     }
 }

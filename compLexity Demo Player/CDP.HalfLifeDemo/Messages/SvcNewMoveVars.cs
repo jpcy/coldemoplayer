@@ -17,6 +17,11 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_newmovevars"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return true; }
+        }
+
         public float Gravity { get; set; }
         public float StopSpeed { get; set; }
         public float MaxSpeed { get; set; }
@@ -41,6 +46,12 @@ namespace CDP.HalfLifeDemo.Messages
         public float SkyColourBlue { get; set; }
         public Core.Vector SkyVector { get; set; }
         public string SkyName { get; set; }
+
+        public override void Skip(BitReader buffer)
+        {
+            buffer.SeekBytes(97);
+            buffer.SeekString();
+        }
 
         public override void Read(BitReader buffer)
         {
@@ -75,10 +86,36 @@ namespace CDP.HalfLifeDemo.Messages
 
         public override byte[] Write()
         {
-            throw new NotImplementedException();
+            BitWriter buffer = new BitWriter();
+            buffer.WriteFloat(Gravity);
+            buffer.WriteFloat(StopSpeed);
+            buffer.WriteFloat(MaxSpeed);
+            buffer.WriteFloat(SpectatorMaxSpeed);
+            buffer.WriteFloat(Accelerate);
+            buffer.WriteFloat(AirAccelerate);
+            buffer.WriteFloat(WaterAccelerate);
+            buffer.WriteFloat(Friction);
+            buffer.WriteFloat(EdgeFriction);
+            buffer.WriteFloat(WaterFriction);
+            buffer.WriteFloat(EntityGravity);
+            buffer.WriteFloat(Bounce);
+            buffer.WriteFloat(StepSize);
+            buffer.WriteFloat(MaxVelocity);
+            buffer.WriteFloat(ZMax);
+            buffer.WriteFloat(WaveHeight);
+            buffer.WriteByte((byte)(Footsteps ? 1 : 0));
+            buffer.WriteFloat(RollAngle);
+            buffer.WriteFloat(RollSpeed);
+            buffer.WriteFloat(SkyColourRed);
+            buffer.WriteFloat(SkyColourGreen);
+            buffer.WriteFloat(SkyColourBlue);
+            buffer.WriteFloat(SkyVector.X);
+            buffer.WriteFloat(SkyVector.Y);
+            buffer.WriteFloat(SkyVector.Z);
+            buffer.WriteString(SkyName);
+            return buffer.ToArray();
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
             log.WriteLine("Gravity: {0}", Gravity);
@@ -103,11 +140,15 @@ namespace CDP.HalfLifeDemo.Messages
             log.WriteLine("SkyColourRed: {0}", SkyColourRed);
             log.WriteLine("SkyColourGreen: {0}", SkyColourGreen);
             log.WriteLine("SkyColourBlue: {0}", SkyColourBlue);
-            log.WriteLine("SkyVector.X: {0}", SkyVector.X);
-            log.WriteLine("SkyVector.Y: {0}", SkyVector.Y);
-            log.WriteLine("SkyVector.Z: {0}", SkyVector.Z);
+
+            if (SkyVector != null)
+            {
+                log.WriteLine("SkyVector.X: {0}", SkyVector.X);
+                log.WriteLine("SkyVector.Y: {0}", SkyVector.Y);
+                log.WriteLine("SkyVector.Z: {0}", SkyVector.Z);
+            }
+
             log.WriteLine("SkyName: {0}", SkyName);
         }
-#endif
     }
 }

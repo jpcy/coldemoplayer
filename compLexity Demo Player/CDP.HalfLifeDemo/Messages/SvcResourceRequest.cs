@@ -16,8 +16,18 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_resourcerequest"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return true; }
+        }
+
         public uint ServerProcessCount { get; set; }
         public uint Unknown { get; set; }
+
+        public override void Skip(BitReader buffer)
+        {
+            buffer.SeekBytes(8);
+        }
 
         public override void Read(BitReader buffer)
         {
@@ -30,15 +40,13 @@ namespace CDP.HalfLifeDemo.Messages
             BitWriter buffer = new BitWriter();
             buffer.WriteUInt(ServerProcessCount);
             buffer.WriteUInt(Unknown);
-            return buffer.Data;
+            return buffer.ToArray();
         }
 
-#if DEBUG
         public override void Log(System.IO.StreamWriter log)
         {
             log.WriteLine("Server process count: {0}", ServerProcessCount);
             log.WriteLine("Unknown: {0}", Unknown);
         }
-#endif
     }
 }

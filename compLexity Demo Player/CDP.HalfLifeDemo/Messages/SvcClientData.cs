@@ -18,6 +18,12 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_clientdata"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            // Because of weapon index num. bits.
+            get { return demo.NetworkProtocol >= 47; }
+        }
+
         public class Weapon
         {
             public uint Index { get; set; }
@@ -27,6 +33,44 @@ namespace CDP.HalfLifeDemo.Messages
         public byte? DeltaSequenceNumber { get; set; }
         public Delta Delta { get; set; }
         public List<Weapon> Weapons { get; set; }
+
+        public override void Skip(BitReader buffer)
+        {
+            if (demo.IsHltv)
+            {
+                return;
+            }
+
+            if (demo.NetworkProtocol <= 43)
+            {
+                buffer.Endian = BitReader.Endians.Big;
+            }
+
+            if (buffer.ReadBoolean())
+            {
+                buffer.SeekBytes(1);
+            }
+
+            DeltaStructure clientDataStructure = demo.FindDeltaStructure("clientdata_t");
+            clientDataStructure.SkipDelta(buffer);
+            DeltaStructure weaponDataStructure = demo.FindDeltaStructure("weapon_data_t");
+
+            while (buffer.ReadBoolean())
+            {
+                if (demo.NetworkProtocol < 47) // TODO: beta steam detection
+                {
+                    buffer.SeekBits(5);
+                }
+                else
+                {
+                    buffer.SeekBits(6);
+                }
+
+                weaponDataStructure.SkipDelta(buffer);
+            }
+
+            buffer.SeekRemainingBitsInCurrentByte();
+        }
 
         public override void Read(BitReader buffer)
         {
@@ -69,7 +113,7 @@ namespace CDP.HalfLifeDemo.Messages
                 Weapons.Add(weapon);
             }
 
-            buffer.SkipRemainingBitsInCurrentByte();
+            buffer.SeekRemainingBitsInCurrentByte();
             buffer.Endian = BitReader.Endians.Little;
         }
 
@@ -92,12 +136,21 @@ namespace CDP.HalfLifeDemo.Messages
                 buffer.WriteByte(DeltaSequenceNumber.Value);
             }
 
-            // TODO
+            DeltaStructure clientDataStructure = demo.FindDeltaStructure("clientdata_t");
+            clientDataStructure.WriteDelta(buffer, Delta);
+            DeltaStructure weaponStructure = demo.FindDeltaStructure("weapon_data_t");
 
-            return buffer.Data;
+            foreach (Weapon weapon in Weapons)
+            {
+                buffer.WriteBoolean(true);
+                buffer.WriteUnsignedBits(weapon.Index, 6);
+                weaponStructure.WriteDelta(buffer, weapon.Delta);
+            }
+
+            buffer.WriteBoolean(false);
+            return buffer.ToArray();
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
             if (demo.IsHltv)
@@ -108,6 +161,5 @@ namespace CDP.HalfLifeDemo.Messages
             log.WriteLine("Delta sequence number: {0}", DeltaSequenceNumber);
             // TODO
         }
-#endif
     }
 }

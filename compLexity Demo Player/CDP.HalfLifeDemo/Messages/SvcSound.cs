@@ -17,6 +17,11 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_sound"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return demo.NetworkProtocol > 43; }
+        }
+
         [Flags]
         private enum FlagBits : uint
         {
@@ -34,6 +39,46 @@ namespace CDP.HalfLifeDemo.Messages
         public ushort Index { get; set; }
         public Core.Vector Position { get; set; }
         public byte? Pitch;
+
+        public override void Skip(BitReader buffer)
+        {
+            if (demo.NetworkProtocol <= 43)
+            {
+                buffer.Endian = BitReader.Endians.Big;
+            }
+
+            FlagBits flags = (FlagBits)buffer.ReadUnsignedBits(9);
+
+            if ((flags & FlagBits.Volume) == FlagBits.Volume)
+            {
+                buffer.SeekBytes(1);
+            }
+
+            if ((flags & FlagBits.Attenuation) == FlagBits.Attenuation)
+            {
+                buffer.SeekBytes(1);
+            }
+
+            buffer.SeekBits(14);
+
+            if ((flags & FlagBits.Index) == FlagBits.Index)
+            {
+                buffer.SeekBytes(2);
+            }
+            else
+            {
+                buffer.SeekBytes(1);
+            }
+
+            buffer.ReadVectorCoord(true);
+
+            if ((flags & FlagBits.Pitch) == FlagBits.Pitch)
+            {
+                buffer.SeekBytes(1);
+            }
+
+            buffer.SeekRemainingBitsInCurrentByte();
+        }
 
         public override void Read(BitReader buffer)
         {
@@ -73,16 +118,68 @@ namespace CDP.HalfLifeDemo.Messages
                 Pitch = buffer.ReadByte();
             }
 
-            buffer.SkipRemainingBitsInCurrentByte();
-            buffer.Endian = BitReader.Endians.Little;
+            buffer.SeekRemainingBitsInCurrentByte();
         }
 
         public override byte[] Write()
         {
-            throw new NotImplementedException();
+            FlagBits flags = FlagBits.None;
+
+            if (Volume.HasValue)
+            {
+                flags |= FlagBits.Volume;
+            }
+
+            if (Attenuation.HasValue)
+            {
+                flags |= FlagBits.Attenuation;
+            }
+
+            if (Index > byte.MaxValue)
+            {
+                flags |= FlagBits.Index;
+            }
+
+            if (Pitch.HasValue)
+            {
+                flags |= FlagBits.Pitch;
+            }
+
+            BitWriter buffer = new BitWriter();
+            buffer.WriteUnsignedBits((uint)flags, 9);
+
+            if ((flags & FlagBits.Volume) == FlagBits.Volume)
+            {
+                buffer.WriteByte(Volume.Value);
+            }
+
+            if ((flags & FlagBits.Attenuation) == FlagBits.Attenuation)
+            {
+                buffer.WriteByte(Attenuation.Value);
+            }
+
+            buffer.WriteUnsignedBits(Channel, 3);
+            buffer.WriteUnsignedBits(Edict, 11);
+
+            if ((flags & FlagBits.Index) == FlagBits.Index)
+            {
+                buffer.WriteUShort(Index);
+            }
+            else
+            {
+                buffer.WriteByte((byte)Index);
+            }
+
+            buffer.WriteVectorCoord(true, Position.ToArray());
+
+            if ((flags & FlagBits.Pitch) == FlagBits.Pitch)
+            {
+                buffer.WriteByte(Pitch.Value);
+            }
+
+            return buffer.ToArray();
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
             log.WriteLine("Volume: {0}", Volume);
@@ -90,9 +187,13 @@ namespace CDP.HalfLifeDemo.Messages
             log.WriteLine("Channel: {0}", Channel);
             log.WriteLine("Edict: {0}", Edict);
             log.WriteLine("Index: {0}", Index);
-            log.WriteLine("Position: {0} {1} {2}", Position.X, Position.Y, Position.Z);
+
+            if (Position != null)
+            {
+                log.WriteLine("Position: {0} {1} {2}", Position.X, Position.Y, Position.Z);
+            }
+
             log.WriteLine("Pitch: {0}", Pitch);
         }
-#endif
     }
 }

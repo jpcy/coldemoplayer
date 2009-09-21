@@ -126,7 +126,6 @@
     <Compile Include="Messages\SvcUpdateUserInfo.cs" />
     <Compile Include="Messages\SvcVoiceData.cs" />
     <Compile Include="Messages\SvcVoiceInit.cs" />
-    <Compile Include="Messages\UnregisteredUserMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
@@ -140,6 +139,7 @@
     <Compile Include="UserMessages\TeamInfo.cs" />
     <Compile Include="UserMessages\TeamScore.cs" />
     <Compile Include="UserMessages\TextMsg.cs" />
+    <Compile Include="UserMessages\UnregisteredUserMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CDP.Core\CDP.Core.csproj">

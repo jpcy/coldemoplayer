@@ -10,12 +10,12 @@ namespace CDP.HalfLifeDemo
     {
         byte Id { get; }
         string Name { get; }
+        bool CanSkipWhenWriting { get; }
         Demo Demo { set; }
 
+        void Skip(Core.BitReader buffer);
         void Read(Core.BitReader buffer);
         byte[] Write();
-#if DEBUG
         void Log(StreamWriter log);
-#endif
     }
 }

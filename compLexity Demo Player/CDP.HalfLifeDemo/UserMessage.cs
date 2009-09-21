@@ -11,6 +11,7 @@ namespace CDP.HalfLifeDemo
         public byte Id { get; set; }
         public sbyte Length { get; set; }
         public abstract string Name { get; }
+        public abstract bool CanSkipWhenWriting { get; }
 
         public Demo Demo
         {
@@ -19,10 +20,13 @@ namespace CDP.HalfLifeDemo
 
         protected Demo demo;
 
+        public void Skip(Core.BitReader buffer)
+        {
+            buffer.SeekBytes(Length);
+        }
+
         public abstract void Read(Core.BitReader buffer);
         public abstract byte[] Write();
-#if DEBUG
         public abstract void Log(StreamWriter log);
-#endif
     }
 }

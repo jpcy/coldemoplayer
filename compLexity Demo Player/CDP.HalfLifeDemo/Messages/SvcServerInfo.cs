@@ -17,6 +17,11 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_serverinfo"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return false; }
+        }
+
         public uint NetworkProtocol { get; set; }
         public uint ProcessCount { get; set; }
         public uint MungedMapChecksum { get; set; }
@@ -30,6 +35,44 @@ namespace CDP.HalfLifeDemo.Messages
         public string MapCycle { get; set; }
         public byte ExtraInfoFlag { get; set; }
         public byte[] ExtraInfo { get; set; }
+
+        public override void Skip(BitReader buffer)
+        {
+            buffer.SeekBytes(31);
+            buffer.SeekString();
+
+            if (demo.NetworkProtocol > 43)
+            {
+                buffer.SeekString();
+            }
+
+            buffer.SeekString();
+
+            if (demo.NetworkProtocol == 45)
+            {
+                // Peek and see if the next message ID is svc_sendextrainfo.
+                byte nextMessageId = buffer.ReadByte();
+                buffer.SeekBytes(-1);
+
+                if (nextMessageId == (byte)EngineMessageIds.svc_sendextrainfo)
+                {
+                    return;
+                }
+            }
+
+            buffer.SeekString();
+
+            if (demo.NetworkProtocol > 43)
+            {
+                ExtraInfoFlag = buffer.ReadByte();
+
+                if (ExtraInfoFlag > 0)
+                {
+                    int length = demo.NetworkProtocol == 45 ? 36 : 21;
+                    buffer.SeekBytes(length);
+                }
+            }
+        }
 
         public override void Read(BitReader buffer)
         {
@@ -94,10 +137,9 @@ namespace CDP.HalfLifeDemo.Messages
             buffer.WriteString(MapName);
             buffer.WriteString(MapCycle);
             buffer.WriteByte(0); // extra flag
-            return buffer.Data;
+            return buffer.ToArray();
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
             log.WriteLine("Network protocol: {0}", NetworkProtocol);
@@ -136,6 +178,5 @@ namespace CDP.HalfLifeDemo.Messages
 
             log.WriteLine();
         }
-#endif
     }
 }

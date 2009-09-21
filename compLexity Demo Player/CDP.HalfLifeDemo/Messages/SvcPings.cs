@@ -18,6 +18,11 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_pings"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return demo.NetworkProtocol > 43; }
+        }
+
         public class Client
         {
             public uint Slot { get; set; }
@@ -26,6 +31,21 @@ namespace CDP.HalfLifeDemo.Messages
         }
 
         public List<Client> Clients { get; set; }
+
+        public override void Skip(BitReader buffer)
+        {
+            if (demo.NetworkProtocol <= 43)
+            {
+                buffer.Endian = BitReader.Endians.Big;
+            }
+
+            while (buffer.ReadBoolean())
+            {
+                buffer.SeekBits(24);
+            }
+
+            buffer.SeekRemainingBitsInCurrentByte();
+        }
 
         public override void Read(BitReader buffer)
         {
@@ -46,8 +66,7 @@ namespace CDP.HalfLifeDemo.Messages
                 });
             }
 
-            buffer.SkipRemainingBitsInCurrentByte();
-            buffer.Endian = BitReader.Endians.Little;
+            buffer.SeekRemainingBitsInCurrentByte();
         }
 
         public override byte[] Write()
@@ -63,15 +82,13 @@ namespace CDP.HalfLifeDemo.Messages
             }
 
             buffer.WriteBoolean(false);
-            return buffer.Data;
+            return buffer.ToArray();
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
             log.WriteLine("Num clients: {0}", Clients.Count);
             // TODO
         }
-#endif
     }
 }

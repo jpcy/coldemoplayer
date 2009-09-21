@@ -17,8 +17,33 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_deltadescription"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return demo.NetworkProtocol > 43; }
+        }
+
         public DeltaStructure Structure { get; set; }
         public Delta[] Deltas { get; set; }
+
+        public override void Skip(BitReader buffer)
+        {
+            buffer.SeekString();
+
+            if (demo.NetworkProtocol == 43)
+            {
+                buffer.Endian = Core.BitReader.Endians.Big;
+            }
+
+            ushort nEntries = buffer.ReadUShort();
+            DeltaStructure deltaDescription = demo.FindDeltaStructure("delta_description_t");
+
+            for (int i = 0; i < nEntries; i++)
+            {
+                deltaDescription.SkipDelta(buffer);
+            }
+
+            buffer.SeekRemainingBitsInCurrentByte();
+        }
 
         public override void Read(BitReader buffer)
         {
@@ -41,8 +66,7 @@ namespace CDP.HalfLifeDemo.Messages
                 Structure.AddEntry(Deltas[i]);
             }
 
-            buffer.SkipRemainingBitsInCurrentByte();
-            buffer.Endian = Core.BitReader.Endians.Little;
+            buffer.SeekRemainingBitsInCurrentByte();
         }
 
         public override byte[] Write()
@@ -58,15 +82,13 @@ namespace CDP.HalfLifeDemo.Messages
                 deltaDescription.WriteDelta(buffer, Deltas[i]);
             }
 
-            return buffer.Data;
+            return buffer.ToArray();
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
             log.WriteLine("Name: {0}", Structure.Name);
             log.WriteLine("Num entries: {0}", Structure.NumEntries);
         }
-#endif
     }
 }

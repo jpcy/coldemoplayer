@@ -17,7 +17,17 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_timescale"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return true; }
+        }
+
         public float Multiplier { get; set; }
+
+        public override void Skip(BitReader buffer)
+        {
+            buffer.SeekBytes(4);
+        }
 
         public override void Read(BitReader buffer)
         {
@@ -29,11 +39,9 @@ namespace CDP.HalfLifeDemo.Messages
             throw new NotImplementedException();
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
             log.WriteLine("Multiplier: {0}", Multiplier);
         }
-#endif
     }
 }

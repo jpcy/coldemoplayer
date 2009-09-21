@@ -17,7 +17,17 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_signonnum"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return true; }
+        }
+
         public byte Number { get; set; }
+
+        public override void Skip(BitReader buffer)
+        {
+            buffer.SeekBytes(1);
+        }
 
         public override void Read(BitReader buffer)
         {
@@ -29,11 +39,9 @@ namespace CDP.HalfLifeDemo.Messages
             return new byte[] { Number };
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
             log.WriteLine("Number: {0}", Number);
         }
-#endif
     }
 }

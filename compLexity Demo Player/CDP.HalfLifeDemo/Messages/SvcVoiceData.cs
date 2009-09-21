@@ -17,8 +17,20 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_voicedata"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return true; }
+        }
+
         public byte Slot { get; set; }
         public byte[] Data { get; set; }
+
+        public override void Skip(BitReader buffer)
+        {
+            buffer.SeekBytes(1);
+            ushort length = buffer.ReadUShort();
+            buffer.SeekBytes(length);
+        }
 
         public override void Read(BitReader buffer)
         {
@@ -29,10 +41,22 @@ namespace CDP.HalfLifeDemo.Messages
 
         public override byte[] Write()
         {
-            throw new NotImplementedException();
+            BitWriter buffer = new BitWriter();
+            buffer.WriteByte(Slot);
+
+            if (Data == null)
+            {
+                buffer.WriteUShort(0);
+            }
+            else
+            {
+                buffer.WriteUShort((ushort)Data.Length);
+                buffer.WriteBytes(Data);
+            }
+
+            return buffer.ToArray();
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
             log.WriteLine("Slot: {0}", Slot);
@@ -42,6 +66,5 @@ namespace CDP.HalfLifeDemo.Messages
                 log.WriteLine("Length: {0}", Data.Length);
             }
         }
-#endif
     }
 }

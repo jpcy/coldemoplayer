@@ -12,6 +12,11 @@ namespace CDP.HalfLifeDemo.UserMessages
             get { return "ResetHUD"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return true; }
+        }
+
         public byte[] Data { get; set; }
 
         public override void Read(BitReader buffer)
@@ -24,14 +29,12 @@ namespace CDP.HalfLifeDemo.UserMessages
 
         public override byte[] Write()
         {
-            throw new NotImplementedException();
+            return Data;
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
             log.WriteLine("Data length: {0}", (Data == null ? 0 : Data.Length));
         }
-#endif
     }
 }

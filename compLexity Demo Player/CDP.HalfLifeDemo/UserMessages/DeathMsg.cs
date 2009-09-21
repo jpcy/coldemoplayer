@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 using System.IO;
 using BitReader = CDP.Core.BitReader;
 using BitWriter = CDP.Core.BitWriter;
@@ -13,6 +12,11 @@ namespace CDP.HalfLifeDemo.UserMessages
         public override string Name
         {
             get { return "DeathMsg"; }
+        }
+
+        public override bool CanSkipWhenWriting
+        {
+            get { return true; }
         }
 
         public byte KillerSlot { get; set; }
@@ -30,14 +34,20 @@ namespace CDP.HalfLifeDemo.UserMessages
 
         public override byte[] Write()
         {
-            throw new NotImplementedException();
+            BitWriter buffer = new BitWriter();
+            buffer.WriteByte(KillerSlot);
+            buffer.WriteByte(VictimSlot);
+            buffer.WriteByte((byte)(Headshot ? 1 : 0));
+            buffer.WriteString(WeaponName);
+            return buffer.ToArray();
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
-            throw new NotImplementedException();
+            log.WriteLine("KillerSlot: {0}", KillerSlot);
+            log.WriteLine("VictimSlot: {0}", VictimSlot);
+            log.WriteLine("Headshot: {0}", Headshot);
+            log.WriteLine("WeaponName: {0}", WeaponName);
         }
-#endif
     }
 }

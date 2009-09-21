@@ -100,6 +100,42 @@ namespace CDP.HalfLifeDemo
             return delta;
         }
 
+        public void SkipDelta(Core.BitReader buffer)
+        {
+            uint nBitmaskBytes = buffer.ReadUnsignedBits(3);
+            // TODO: error check nBitmaskBytes against nEntries
+
+            if (nBitmaskBytes == 0)
+            {
+                return;
+            }
+
+            byte[] bitmaskBytes = new byte[nBitmaskBytes];
+
+            for (int i = 0; i < nBitmaskBytes; i++)
+            {
+                bitmaskBytes[i] = buffer.ReadByte();
+            }
+
+            for (int i = 0; i < nBitmaskBytes; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    int index = j + i * 8;
+
+                    if (index == entries.Count)
+                    {
+                        return;
+                    }
+
+                    if ((bitmaskBytes[i] & (1 << j)) != 0)
+                    {
+                        SkipEntry(buffer, entries[index]);
+                    }
+                }
+            }
+        }
+
         public void ReadDelta(Core.BitReader buffer, Delta delta)
         {
             byte[] bitmaskBytes;
@@ -211,6 +247,18 @@ namespace CDP.HalfLifeDemo
                         WriteEntry(delta, buffer, entries[index]);
                     }
                 }
+            }
+        }
+
+        private void SkipEntry(Core.BitReader buffer, Entry e)
+        {
+            if ((e.Flags & EntryFlags.String) == EntryFlags.String)
+            {
+                buffer.ReadString();
+            }
+            else
+            {
+                buffer.SeekBits((int)e.nBits);
             }
         }
 

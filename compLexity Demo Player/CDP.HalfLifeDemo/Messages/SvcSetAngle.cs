@@ -17,7 +17,17 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_setangle"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return true; }
+        }
+
         public float[] Angle { get; set; }
+
+        public override void Skip(BitReader buffer)
+        {
+            buffer.SeekBytes(6);
+        }
 
         public override void Read(BitReader buffer)
         {
@@ -38,14 +48,12 @@ namespace CDP.HalfLifeDemo.Messages
                 writer.WriteShort((short)(Angle[i] * (((1 << 16) - 1) / 360.0f)));
             }
 
-            return writer.Data;
+            return writer.ToArray();
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
             log.WriteLine("Angle: {0}", Angle);
         }
-#endif
     }
 }

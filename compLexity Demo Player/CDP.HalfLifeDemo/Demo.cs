@@ -15,6 +15,12 @@ namespace CDP.HalfLifeDemo
             public byte EngineMessageId { get; set; }
             public string UserMessageName { get; set; }
             public object Delegate { get; set; }
+
+            public void Fire(IMessage message)
+            {
+                MethodInfo methodInfo = Delegate.GetType().GetMethod("Invoke");
+                methodInfo.Invoke(Delegate, new object[] { message });
+            }
         }
 
         private class UserMessageDefinition
@@ -328,6 +334,7 @@ namespace CDP.HalfLifeDemo
             throw new NotImplementedException();
         }
 
+        #region Reading
         private void ReadDirectoryEntries(long offset, BinaryReader br)
         {
             // offset + nEntries + 2 directory entries.
@@ -411,29 +418,42 @@ namespace CDP.HalfLifeDemo
             }
 
             message.Demo = this;
-            message.Read(reader);
-            FireMessageCallbacks(message);
+            List<MessageCallback> messageCallbacks = FindMessageCallbacks(message);
+
+            try
+            {
+                if (messageCallbacks.Count > 0)
+                {
+                    message.Read(reader);
+                }
+                else
+                {
+                    message.Skip(reader);
+                }
+            }
+            finally
+            {
+                reader.Endian = Core.BitReader.Endians.Little;
+            }
+
+            foreach (MessageCallback messageCallback in messageCallbacks)
+            {
+                messageCallback.Fire(message);
+            }
+
             return message;
         }
+        #endregion
 
-        private void FireMessageCallbacks(IMessage message)
+        #region Message callbacks
+        private List<MessageCallback> FindMessageCallbacks(IMessage message)
         {
-            List<MessageCallback> callbacks = null;
-
             if (message.Id <= Demo.MaxEngineMessageId)
             {
-                callbacks = messageCallbacks.FindAll(mc => mc.EngineMessageId == message.Id);
+                return messageCallbacks.FindAll(mc => mc.EngineMessageId == message.Id);
             }
-            else
-            {
-                callbacks = messageCallbacks.FindAll(mc => mc.UserMessageName == message.Name);
-            }
-
-            foreach (MessageCallback callback in callbacks)
-            {
-                MethodInfo methodInfo = callback.Delegate.GetType().GetMethod("Invoke");
-                methodInfo.Invoke(callback.Delegate, new object[] { message });
-            }
+            
+            return messageCallbacks.FindAll(mc => mc.UserMessageName == message.Name);
         }
 
         public void AddMessageCallback<T>(Action<T> method) where T : IMessage
@@ -457,6 +477,7 @@ namespace CDP.HalfLifeDemo
 
             messageCallbacks.Add(callback);
         }
+        #endregion
 
         private void AddDeltaStructure(DeltaStructure structure)
         {

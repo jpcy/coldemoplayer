@@ -18,16 +18,93 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_deltapacketentities"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return demo.NetworkProtocol > 43; }
+        }
+
         public class Entity
         {
             public uint Id { get; set; }
             public bool Remove { get; set; }
             public Delta Delta { get; set; }
+            public bool Custom { get; set; }
+            public bool Unknown1 { get; set; }
+            public bool Unknown2 { get; set; }
         }
 
         public ushort MaxEntities { get; set; }
         public byte DeltaSequenceNumber { get; set; }
         public List<Entity> Entities { get; set; }
+
+        public override void Skip(BitReader buffer)
+        {
+            buffer.SeekBytes(3);
+
+            if (demo.NetworkProtocol <= 43)
+            {
+                buffer.Endian = BitReader.Endians.Big;
+            }
+
+            uint entityId = 0;
+
+            while (true)
+            {
+                ushort footer = buffer.ReadUShort();
+
+                if (footer == 0)
+                {
+                    break;
+                }
+                else
+                {
+                    buffer.SeekBits(-16);
+                }
+
+                bool remove = buffer.ReadBoolean();
+
+                if (buffer.ReadBoolean())
+                {
+                    entityId = buffer.ReadUnsignedBits(11);
+                }
+                else
+                {
+                    entityId += buffer.ReadUnsignedBits(6);
+                }
+
+                if (!remove)
+                {
+                    if (demo.GameFolderName == "tfc")
+                    {
+                        // TODO: look into this. Does TFC simply use some feature other games don't or is it a fork of the Half-Life engine. Probably the former.
+                        buffer.SeekBits(1); // unknown
+                    }
+
+                    bool custom = buffer.ReadBoolean();
+
+                    if (demo.NetworkProtocol <= 43)
+                    {
+                        buffer.ReadBoolean(); // Unknown, always 0.
+                    }
+
+                    string typeName = "entity_state_t";
+
+                    if (entityId > 0 && entityId <= demo.MaxClients)
+                    {
+                        typeName = "entity_state_player_t";
+                    }
+                    else if (custom)
+                    {
+                        typeName = "custom_entity_state_t";
+                    }
+
+                    DeltaStructure structure = demo.FindDeltaStructure(typeName);
+                    structure.SkipDelta(buffer);
+                }
+            }
+
+            buffer.SeekRemainingBitsInCurrentByte();
+        }
 
         public override void Read(BitReader buffer)
         {
@@ -77,14 +154,14 @@ namespace CDP.HalfLifeDemo.Messages
                     if (demo.GameFolderName == "tfc")
                     {
                         // TODO: look into this. Does TFC simply use some feature other games don't or is it a fork of the Half-Life engine. Probably the former.
-                        buffer.SeekBits(1); // unknown
+                        entity.Unknown1 = buffer.ReadBoolean();
                     }
 
-                    bool custom = buffer.ReadBoolean();
+                    entity.Custom = buffer.ReadBoolean();
 
                     if (demo.NetworkProtocol <= 43)
                     {
-                        buffer.ReadBoolean(); // Unknown, always 0.
+                        entity.Unknown2 = buffer.ReadBoolean(); // Unknown, always 0.
                     }
 
                     string typeName = "entity_state_t";
@@ -93,7 +170,7 @@ namespace CDP.HalfLifeDemo.Messages
                     {
                         typeName = "entity_state_player_t";
                     }
-                    else if (custom)
+                    else if (entity.Custom)
                     {
                         typeName = "custom_entity_state_t";
                     }
@@ -107,16 +184,55 @@ namespace CDP.HalfLifeDemo.Messages
                 Entities.Add(entity);
             }
 
-            buffer.SkipRemainingBitsInCurrentByte();
-            buffer.Endian = BitReader.Endians.Little;
+            buffer.SeekRemainingBitsInCurrentByte();
         }
 
         public override byte[] Write()
         {
-            throw new NotImplementedException();
+            BitWriter buffer = new BitWriter();
+            buffer.WriteUShort(MaxEntities);
+            buffer.WriteByte(DeltaSequenceNumber);
+
+            foreach (Entity entity in Entities)
+            {
+                buffer.WriteBoolean(entity.Remove);
+                buffer.WriteBoolean(true);
+                buffer.WriteUnsignedBits(entity.Id, 11);
+
+                if (!entity.Remove)
+                {
+                    if (demo.GameFolderName == "tfc")
+                    {
+                        buffer.WriteBoolean(entity.Unknown1);
+                    }
+
+                    buffer.WriteBoolean(entity.Custom);
+
+                    if (demo.NetworkProtocol <= 43)
+                    {
+                        buffer.WriteBoolean(entity.Unknown2);
+                    }
+
+                    string typeName = "entity_state_t";
+
+                    if (entity.Id > 0 && entity.Id <= demo.MaxClients)
+                    {
+                        typeName = "entity_state_player_t";
+                    }
+                    else if (entity.Custom)
+                    {
+                        typeName = "custom_entity_state_t";
+                    }
+
+                    DeltaStructure structure = demo.FindDeltaStructure(typeName);
+                    structure.WriteDelta(buffer, entity.Delta);
+                }
+            }
+
+            buffer.WriteUShort(0);
+            return buffer.ToArray();
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
             log.WriteLine("Max entities: {0}", MaxEntities);
@@ -124,6 +240,5 @@ namespace CDP.HalfLifeDemo.Messages
             log.WriteLine("Num entities: {0}", Entities.Count);
             // TODO
         }
-#endif
     }
 }

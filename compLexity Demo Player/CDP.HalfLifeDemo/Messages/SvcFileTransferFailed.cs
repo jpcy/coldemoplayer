@@ -17,7 +17,17 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_filetxferfailed"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return true; }
+        }
+
         public string FileName { get; set; }
+
+        public override void Skip(BitReader buffer)
+        {
+            buffer.SeekString();
+        }
 
         public override void Read(BitReader buffer)
         {
@@ -28,14 +38,12 @@ namespace CDP.HalfLifeDemo.Messages
         {
             BitWriter buffer = new BitWriter();
             buffer.WriteString(FileName);
-            return buffer.Data;
+            return buffer.ToArray();
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
             log.WriteLine("FileName: {0}", FileName);
         }
-#endif
     }
 }

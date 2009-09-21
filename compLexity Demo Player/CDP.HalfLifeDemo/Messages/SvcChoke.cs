@@ -17,6 +17,15 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_choke"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return true; }
+        }
+
+        public override void Skip(BitReader buffer)
+        {
+        }
+
         public override void Read(BitReader buffer)
         {
         }
@@ -26,10 +35,8 @@ namespace CDP.HalfLifeDemo.Messages
             return null;
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
         }
-#endif
     }
 }

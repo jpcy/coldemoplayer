@@ -60,8 +60,8 @@ namespace UnitTests.Core
         public void WriteUnsignedBits_ByteAligned()
         {
             writer.WriteUnsignedBits(testUBits, nTestBits);
-            Assert.That(writer.Data.Length, Is.EqualTo(CalculateNumberOfBytes(nTestBits)));
-            BitReader reader = new BitReader(writer.Data);
+            Assert.That(writer.ToArray().Length, Is.EqualTo(CalculateNumberOfBytes(nTestBits)));
+            BitReader reader = new BitReader(writer.ToArray());
             Assert.That(reader.ReadUnsignedBits(nTestBits), Is.EqualTo(testUBits));
         }
 
@@ -71,8 +71,8 @@ namespace UnitTests.Core
             const int nDummyBits = 2;
             writer.WriteUnsignedBits(0, nDummyBits);
             writer.WriteUnsignedBits(testUBits, nTestBits);
-            Assert.That(writer.Data.Length, Is.EqualTo(CalculateNumberOfBytes(nDummyBits + nTestBits)));
-            BitReader reader = new BitReader(writer.Data);
+            Assert.That(writer.ToArray().Length, Is.EqualTo(CalculateNumberOfBytes(nDummyBits + nTestBits)));
+            BitReader reader = new BitReader(writer.ToArray());
             reader.SeekBits(nDummyBits);
             Assert.That(reader.ReadUnsignedBits(nTestBits), Is.EqualTo(testUBits));
         }
@@ -81,9 +81,9 @@ namespace UnitTests.Core
         public void WriteBits()
         {
             writer.WriteBits(testBits, nTestBits);
-            Assert.That(writer.Data.Length, Is.EqualTo(CalculateNumberOfBytes(nTestBits)));
+            Assert.That(writer.ToArray().Length, Is.EqualTo(CalculateNumberOfBytes(nTestBits)));
 
-            BitReader reader = new BitReader(writer.Data);
+            BitReader reader = new BitReader(writer.ToArray());
             Assert.That(reader.ReadBits(nTestBits), Is.EqualTo(testBits));
         }
 
@@ -91,8 +91,8 @@ namespace UnitTests.Core
         public void WriteBoolean_ByteAligned()
         {
             writer.WriteBoolean(true);
-            Assert.That(writer.Data.Length, Is.EqualTo(1));
-            Assert.That((writer.Data[0] & 1) != 0, Is.EqualTo(true));
+            Assert.That(writer.ToArray().Length, Is.EqualTo(1));
+            Assert.That((writer.ToArray()[0] & 1) != 0, Is.EqualTo(true));
         }
 
         [Test]
@@ -105,39 +105,39 @@ namespace UnitTests.Core
 
             writer.WriteBits(0, nDummyBits);
             writer.WriteBoolean(true);
-            Assert.That(writer.Data.Length, Is.EqualTo(1));
-            Assert.That((writer.Data[0] & (1 << nDummyBits)) != 0, Is.EqualTo(true));
+            Assert.That(writer.ToArray().Length, Is.EqualTo(1));
+            Assert.That((writer.ToArray()[0] & (1 << nDummyBits)) != 0, Is.EqualTo(true));
         }
 
         [Test]
         public void WriteByte()
         {
             writer.WriteByte(testByte);
-            Assert.That(writer.Data.Length, Is.EqualTo(1));
-            Assert.That(writer.Data[0], Is.EqualTo(testByte));
+            Assert.That(writer.ToArray().Length, Is.EqualTo(1));
+            Assert.That(writer.ToArray()[0], Is.EqualTo(testByte));
         }
 
         [Test]
         public void WriteSByte()
         {
             writer.WriteSByte(testSByte);
-            Assert.That(writer.Data.Length, Is.EqualTo(1));
-            Assert.That((sbyte)writer.Data[0], Is.EqualTo(testSByte));
+            Assert.That(writer.ToArray().Length, Is.EqualTo(1));
+            Assert.That((sbyte)writer.ToArray()[0], Is.EqualTo(testSByte));
         }
 
         [Test]
         public void WriteBytes()
         {
             writer.WriteBytes(testBytes);
-            Assert.That(writer.Data.Length, Is.EqualTo(testBytes.Length));
-            Assert.That(writer.Data, Is.EqualTo(testBytes));
+            Assert.That(writer.ToArray().Length, Is.EqualTo(testBytes.Length));
+            Assert.That(writer.ToArray(), Is.EqualTo(testBytes));
         }
 
         [Test]
         public void WriteChars()
         {
             writer.WriteChars(testChars);
-            Assert.That(writer.Data.Length, Is.EqualTo(testChars.Length));
+            Assert.That(writer.ToArray().Length, Is.EqualTo(testChars.Length));
             byte[] temp = new byte[testChars.Length];
 
             for (int i = 0; i < temp.Length; i++)
@@ -145,57 +145,57 @@ namespace UnitTests.Core
                 temp[i] = (byte)testChars[i];
             }
 
-            Assert.That(writer.Data, Is.EqualTo(temp));
+            Assert.That(writer.ToArray(), Is.EqualTo(temp));
         }
 
         [Test]
         public void WriteShort()
         {
             writer.WriteShort(testShort);
-            Assert.That(writer.Data.Length, Is.EqualTo(2));
-            Assert.That(writer.Data, Is.EqualTo(BitConverter.GetBytes(testShort)));
+            Assert.That(writer.ToArray().Length, Is.EqualTo(2));
+            Assert.That(writer.ToArray(), Is.EqualTo(BitConverter.GetBytes(testShort)));
         }
 
         [Test]
         public void WriteUShort()
         {
             writer.WriteUShort(testUShort);
-            Assert.That(writer.Data.Length, Is.EqualTo(2));
-            Assert.That(writer.Data, Is.EqualTo(BitConverter.GetBytes(testUShort)));
+            Assert.That(writer.ToArray().Length, Is.EqualTo(2));
+            Assert.That(writer.ToArray(), Is.EqualTo(BitConverter.GetBytes(testUShort)));
         }
 
         [Test]
         public void WriteInt()
         {
             writer.WriteInt(testInt);
-            Assert.That(writer.Data.Length, Is.EqualTo(4));
-            Assert.That(writer.Data, Is.EqualTo(BitConverter.GetBytes(testInt)));
+            Assert.That(writer.ToArray().Length, Is.EqualTo(4));
+            Assert.That(writer.ToArray(), Is.EqualTo(BitConverter.GetBytes(testInt)));
         }
 
         [Test]
         public void WriteUInt()
         {
             writer.WriteUInt(testUInt);
-            Assert.That(writer.Data.Length, Is.EqualTo(4));
-            Assert.That(writer.Data, Is.EqualTo(BitConverter.GetBytes(testUInt)));
+            Assert.That(writer.ToArray().Length, Is.EqualTo(4));
+            Assert.That(writer.ToArray(), Is.EqualTo(BitConverter.GetBytes(testUInt)));
         }
 
         [Test]
         public void WriteFloat()
         {
             writer.WriteFloat(testFloat);
-            Assert.That(writer.Data.Length, Is.EqualTo(4));
-            Assert.That(writer.Data, Is.EqualTo(BitConverter.GetBytes(testFloat)));
+            Assert.That(writer.ToArray().Length, Is.EqualTo(4));
+            Assert.That(writer.ToArray(), Is.EqualTo(BitConverter.GetBytes(testFloat)));
         }
 
         [Test]
         public void WriteString()
         {
             writer.WriteString(testString);
-            Assert.That(writer.Data.Length, Is.EqualTo(testString.Length + 1));
+            Assert.That(writer.ToArray().Length, Is.EqualTo(testString.Length + 1));
             byte[] temp = new byte[testString.Length + 1];
             Array.Copy(Encoding.ASCII.GetBytes(testString), temp, testString.Length);
-            Assert.That(writer.Data, Is.EqualTo(temp));
+            Assert.That(writer.ToArray(), Is.EqualTo(temp));
         }
 
         [Test]
@@ -213,7 +213,7 @@ namespace UnitTests.Core
             writer.WriteString(testString, totalLength);
             byte[] temp = new byte[totalLength];
             Array.Copy(Encoding.ASCII.GetBytes(testString), temp, testString.Length);
-            Assert.That(writer.Data, Is.EqualTo(temp));
+            Assert.That(writer.ToArray(), Is.EqualTo(temp));
         }
 
         [Test]

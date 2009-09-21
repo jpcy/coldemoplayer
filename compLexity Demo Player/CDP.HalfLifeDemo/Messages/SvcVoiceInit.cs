@@ -17,8 +17,23 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_voiceinit"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return demo.NetworkProtocol >= 47; } // TODO: beta steam check
+        }
+
         public string Codec { get; set; }
         public byte Quality { get; set; }
+
+        public override void Skip(BitReader buffer)
+        {
+            buffer.SeekString();
+
+            if (demo.NetworkProtocol >= 47) // TODO: beta steam check
+            {
+                buffer.SeekBytes(1);
+            }
+        }
 
         public override void Read(BitReader buffer)
         {
@@ -39,15 +54,13 @@ namespace CDP.HalfLifeDemo.Messages
             BitWriter buffer = new BitWriter();
             buffer.WriteString(Codec);
             buffer.WriteByte(Quality);
-            return buffer.Data;
+            return buffer.ToArray();
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
             log.WriteLine("Codec: {0}", Codec);
             log.WriteLine("Quality: {0}", Quality);
         }
-#endif
     }
 }

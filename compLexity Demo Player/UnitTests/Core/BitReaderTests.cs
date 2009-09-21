@@ -61,7 +61,7 @@ namespace UnitTests.Core
         public void SkipRemainingBitsInCurrentByte_NotByteAligned()
         {
             blankReader.SeekBits(4);
-            blankReader.SkipRemainingBitsInCurrentByte();
+            blankReader.SeekRemainingBitsInCurrentByte();
             Assert.That(blankReader.CurrentBit, Is.EqualTo(8));
         }
 
@@ -69,7 +69,7 @@ namespace UnitTests.Core
         public void SkipRemainingBitsInCurrentByte_ByteAligned()
         {
             blankReader.SeekBits(8);
-            blankReader.SkipRemainingBitsInCurrentByte();
+            blankReader.SeekRemainingBitsInCurrentByte();
             Assert.That(blankReader.CurrentBit, Is.EqualTo(8));
         }
 

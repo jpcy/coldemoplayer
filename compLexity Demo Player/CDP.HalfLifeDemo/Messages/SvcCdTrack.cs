@@ -17,8 +17,18 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_cdtrack"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return true; }
+        }
+
         public byte Track { get; set; }
         public byte LoopTrack { get; set; }
+
+        public override void Skip(BitReader buffer)
+        {
+            buffer.SeekBytes(2);
+        }
 
         public override void Read(BitReader buffer)
         {
@@ -31,7 +41,7 @@ namespace CDP.HalfLifeDemo.Messages
             BitWriter buffer = new BitWriter();
             buffer.WriteByte(Track);
             buffer.WriteByte(LoopTrack);
-            return buffer.Data;
+            return buffer.ToArray();
         }
 
         public override void Log(StreamWriter log)

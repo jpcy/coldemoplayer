@@ -2,13 +2,18 @@
 using System.IO;
 using BitReader = CDP.Core.BitReader;
 
-namespace CDP.HalfLifeDemo.Messages
+namespace CDP.HalfLifeDemo.UserMessages
 {
-    class UnregisteredUserMessage : UserMessage
+    public class UnregisteredUserMessage : UserMessage
     {
         public override string Name
         {
             get { return name; }
+        }
+
+        public override bool CanSkipWhenWriting
+        {
+            get { return true; }
         }
 
         private string name;
@@ -36,7 +41,6 @@ namespace CDP.HalfLifeDemo.Messages
             return data;
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
             if (data == null)
@@ -53,6 +57,5 @@ namespace CDP.HalfLifeDemo.Messages
 
             log.WriteLine();
         }
-#endif
     }
 }

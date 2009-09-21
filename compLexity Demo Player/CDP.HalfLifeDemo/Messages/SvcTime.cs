@@ -17,7 +17,17 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_time"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return true; }
+        }
+
         public float Timestamp { get; set; }
+
+        public override void Skip(BitReader buffer)
+        {
+            buffer.SeekBytes(4);
+        }
 
         public override void Read(BitReader buffer)
         {
@@ -28,14 +38,12 @@ namespace CDP.HalfLifeDemo.Messages
         {
             BitWriter buffer = new BitWriter();
             buffer.WriteFloat(Timestamp);
-            return buffer.Data;
+            return buffer.ToArray();
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
             log.WriteLine("Timestamp: {0}", Timestamp);
         }
-#endif
     }
 }

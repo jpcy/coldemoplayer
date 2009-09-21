@@ -16,8 +16,19 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_sendextrainfo"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return true; }
+        }
+
         public string ClientFallback { get; set; }
         public byte Cheats { get; set; }
+
+        public override void Skip(BitReader buffer)
+        {
+            buffer.SeekString();
+            buffer.SeekBytes(1);
+        }
 
         public override void Read(BitReader buffer)
         {
@@ -30,15 +41,13 @@ namespace CDP.HalfLifeDemo.Messages
             BitWriter buffer = new BitWriter();
             buffer.WriteString(ClientFallback);
             buffer.WriteByte(Cheats);
-            return buffer.Data;
+            return buffer.ToArray();
         }
 
-#if DEBUG
         public override void Log(System.IO.StreamWriter log)
         {
             log.WriteLine("com_clientfallback: {0}", ClientFallback);
             log.WriteLine("sv_cheats: {0}", Cheats);
         }
-#endif
     }
 }

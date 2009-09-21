@@ -16,7 +16,17 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_setview"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return true; }
+        }
+
         public short EntityId { get; set; }
+
+        public override void Skip(BitReader buffer)
+        {
+            buffer.SeekBytes(2);
+        }
 
         public override void Read(BitReader buffer)
         {

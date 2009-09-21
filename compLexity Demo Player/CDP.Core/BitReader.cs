@@ -116,7 +116,14 @@ namespace CDP.Core
             SeekBits(offset * 8, origin);
         }
 
-        public void SkipRemainingBitsInCurrentByte()
+        public void SeekString()
+        {
+            while (ReadByte() != 0)
+            {
+            }
+        }
+
+        public void SeekRemainingBitsInCurrentByte()
         {
             int bitOffset = currentBit % 8;
 

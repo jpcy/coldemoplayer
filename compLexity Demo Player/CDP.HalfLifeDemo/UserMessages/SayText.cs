@@ -14,6 +14,11 @@ namespace CDP.HalfLifeDemo.UserMessages
             get { return "SayText"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return true; }
+        }
+
         public byte Slot { get; set; }
         public List<string> Strings { get; set; }
 
@@ -27,6 +32,7 @@ namespace CDP.HalfLifeDemo.UserMessages
             {
                 string s = buffer.ReadString();
 
+                // FIXME: this will cause problems when writing.
                 if (!string.IsNullOrEmpty(s))
                 {
                     Strings.Add(s);
@@ -41,14 +47,28 @@ namespace CDP.HalfLifeDemo.UserMessages
 
         public override byte[] Write()
         {
-            throw new NotImplementedException();
+            BitWriter buffer = new BitWriter();
+            buffer.WriteByte(Slot);
+
+            foreach (String s in Strings)
+            {
+                buffer.WriteString(s);
+            }
+
+            return buffer.ToArray();
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
-            throw new NotImplementedException();
+            log.WriteLine("Slot: {0}", Slot);
+
+            if (Strings != null)
+            {
+                foreach (String s in Strings)
+                {
+                    log.WriteLine("\"{0}\"", s);
+                }
+            }
         }
-#endif
     }
 }

@@ -18,13 +18,37 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_event_reliable"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return demo.NetworkProtocol > 43; }
+        }
+
         public uint Index { get; set; }
         public Delta Delta { get; set; }
         public float? Delay { get; set; }
 
+        public override void Skip(BitReader buffer)
+        {
+            if (demo.NetworkProtocol <= 43)
+            {
+                buffer.Endian = BitReader.Endians.Big;
+            }
+
+            buffer.SeekBits(10);
+            DeltaStructure eventDeltaStructure = demo.FindDeltaStructure("event_t");
+            eventDeltaStructure.SkipDelta(buffer);
+
+            if (buffer.ReadBoolean())
+            {
+                buffer.SeekBytes(2);
+            }
+
+            buffer.SeekRemainingBitsInCurrentByte();
+        }
+
         public override void Read(BitReader buffer)
         {
-            if (demo.NetworkProtocol <= 34)
+            if (demo.NetworkProtocol <= 43)
             {
                 buffer.Endian = BitReader.Endians.Big;
             }
@@ -39,21 +63,33 @@ namespace CDP.HalfLifeDemo.Messages
                 Delay = buffer.ReadUnsignedBits(16) / 100.0f;
             }
 
-            buffer.SkipRemainingBitsInCurrentByte();
-            buffer.Endian = BitReader.Endians.Little;
+            buffer.SeekRemainingBitsInCurrentByte();
         }
 
         public override byte[] Write()
         {
-            throw new NotImplementedException();
+            BitWriter buffer = new BitWriter();
+            buffer.WriteUnsignedBits(Index, 10);
+            DeltaStructure eventDeltaStructure = demo.FindDeltaStructure("event_t");
+            eventDeltaStructure.WriteDelta(buffer, Delta);
+
+            if (Delay == null)
+            {
+                buffer.WriteBoolean(false);
+            }
+            else
+            {
+                buffer.WriteBoolean(true);
+                buffer.WriteUnsignedBits((uint)(Delay * 100.0f), 16);
+            }
+
+            return buffer.ToArray();
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
             log.WriteLine("Index: {0}", Index);
             log.WriteLine("Delay: {0}", Delay);
         }
-#endif
     }
 }

@@ -17,24 +17,34 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_resourcelocation"; }
         }
 
-        // URL of a HTTP mirror for downloadable resources?
-        public string Location { get; set; }
+        public override bool CanSkipWhenWriting
+        {
+            get { return true; }
+        }
+
+        // URL of a HTTP mirror for downloadable resources.
+        public string Url { get; set; }
+
+        public override void Skip(BitReader buffer)
+        {
+            buffer.SeekString();
+        }
 
         public override void Read(BitReader buffer)
         {
-            Location = buffer.ReadString();
+            Url = buffer.ReadString();
         }
 
         public override byte[] Write()
         {
-            throw new NotImplementedException();
+            BitWriter buffer = new BitWriter();
+            buffer.WriteString(Url);
+            return buffer.ToArray();
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
-            throw new NotImplementedException();
+            log.WriteLine("Url: \"{0}\"", Url);
         }
-#endif
     }
 }

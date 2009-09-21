@@ -17,29 +17,52 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_director"; }
         }
 
-        public byte Length { get; set; }
+        public override bool CanSkipWhenWriting
+        {
+            get { return true; }
+        }
+
         public byte[] Data { get; set; }
+
+        public override void Skip(BitReader buffer)
+        {
+            byte length = buffer.ReadByte();
+            buffer.SeekBytes(length);
+        }
 
         public override void Read(BitReader buffer)
         {
-            Length = buffer.ReadByte();
+            byte length = buffer.ReadByte();
 
-            if (Length > 0)
+            if (length > 0)
             {
-                Data = buffer.ReadBytes(Length);
+                Data = buffer.ReadBytes(length);
             }
         }
 
         public override byte[] Write()
         {
-            throw new NotImplementedException();
+            BitWriter buffer = new BitWriter();
+
+            if (Data == null)
+            {
+                buffer.WriteByte(0);
+            }
+            else
+            {
+                buffer.WriteByte((byte)Data.Length);
+                buffer.WriteBytes(Data);
+            }
+
+            return buffer.ToArray();
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
-            log.WriteLine("Length: {0}", Length);
+            if (Data != null)
+            {
+                log.WriteLine("Length: {0}", Data.Length);
+            }
         }
-#endif
     }
 }

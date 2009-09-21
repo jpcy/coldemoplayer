@@ -17,6 +17,11 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_updateuserinfo"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return demo.NetworkProtocol > 43; }
+        }
+
         const int checksumLength = 16;
 
         public byte Slot { get; set; }
@@ -24,15 +29,30 @@ namespace CDP.HalfLifeDemo.Messages
         public string Info { get; set; }
         public byte[] Checksum { get; set; }
 
+        public override void Skip(BitReader buffer)
+        {
+            buffer.SeekBytes(5);
+            buffer.SeekString();
+
+            if (demo.NetworkProtocol > 43)
+            {
+                buffer.SeekBytes(checksumLength);
+            }
+        }
+
         public override void Read(BitReader buffer)
         {
             Slot = buffer.ReadByte();
             EntityId = buffer.ReadInt();
             Info = buffer.ReadString();
-            
+
             if (demo.NetworkProtocol > 43)
             {
                 Checksum = buffer.ReadBytes(checksumLength);
+            }
+            else
+            {
+                Checksum = new byte[checksumLength];
             }
         }
 
@@ -52,16 +72,14 @@ namespace CDP.HalfLifeDemo.Messages
                 buffer.WriteBytes(Checksum);
             }
 
-            return buffer.Data;
+            return buffer.ToArray();
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
             log.WriteLine("Slot: {0}", Slot);
             log.WriteLine("Entity ID: {0}", EntityId);
             log.WriteLine("Info: {0}", Info);
         }
-#endif
     }
 }

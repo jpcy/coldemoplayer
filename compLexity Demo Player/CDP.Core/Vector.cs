@@ -26,5 +26,10 @@ namespace CDP.Core
             Y = v[1];
             Z = v[2];
         }
+
+        public float[] ToArray()
+        {
+            return new float[] { X, Y, Z };
+        }
     }
 }

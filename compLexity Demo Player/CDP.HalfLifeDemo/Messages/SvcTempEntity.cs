@@ -17,8 +17,18 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_tempentity"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return false; }
+        }
+
         public byte Type { get; set; }
         public byte[] Data { get; set; }
+
+        public override void Skip(BitReader buffer)
+        {
+            Read(buffer);
+        }
 
         public override void Read(BitReader buffer)
         {
@@ -296,15 +306,13 @@ namespace CDP.HalfLifeDemo.Messages
                 buffer.WriteBytes(Data);
             }
 
-            return buffer.Data;
+            return buffer.ToArray();
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
             log.WriteLine("Type: {0}", Type);
             log.WriteLine("Length: {0}", Data == null ? 0 : Data.Length);
         }
-#endif
     }
 }

@@ -218,7 +218,7 @@ namespace CDP.HalfLifeDemo
         {
             if (!userMessages.ContainsKey(name))
             {
-                return new Messages.UnregisteredUserMessage(name);
+                return new UserMessages.UnregisteredUserMessage(name);
             }
 
             return (UserMessage)Activator.CreateInstance(userMessages[name]);

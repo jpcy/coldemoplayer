@@ -18,6 +18,11 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_customization"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return true; }
+        }
+
         public enum Types : byte
         {
             Sound,
@@ -48,6 +53,18 @@ namespace CDP.HalfLifeDemo.Messages
         public FlagBits Flags { get; set; }
         public byte[] Hash { get; set; }
 
+        public override void Skip(BitReader buffer)
+        {
+            buffer.SeekBytes(2);
+            buffer.SeekString();
+            buffer.SeekBytes(6);
+
+            if (((FlagBits)buffer.ReadByte() & FlagBits.Custom) == FlagBits.Custom)
+            {
+                buffer.SeekBytes(16);
+            }
+        }
+
         public override void Read(BitReader buffer)
         {
             Slot = buffer.ReadByte();
@@ -65,14 +82,35 @@ namespace CDP.HalfLifeDemo.Messages
 
         public override byte[] Write()
         {
-            throw new NotImplementedException();
+            BitWriter buffer = new BitWriter();
+            buffer.WriteByte(Slot);
+            buffer.WriteByte((byte)Type);
+            buffer.WriteString(FileName);
+            buffer.WriteUShort(Index);
+            buffer.WriteUInt(DownloadSize);
+            buffer.WriteByte((byte)Flags);
+
+            if ((Flags & FlagBits.Custom) == FlagBits.Custom)
+            {
+                buffer.WriteBytes(Hash);
+            }
+
+            return buffer.ToArray();
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
-            throw new NotImplementedException();
+            log.WriteLine("Slot: {0}", Slot);
+            log.WriteLine("Type: {0}", Type);
+            log.WriteLine("FileName: {0}", FileName);
+            log.WriteLine("Index: {0}", Index);
+            log.WriteLine("DownloadSize: {0}", DownloadSize);
+            log.WriteLine("Flags: {0}", Flags);
+
+            if (Hash != null)
+            {
+                log.WriteLine("Hash length: {0}", Hash.Length);
+            }
         }
-#endif
     }
 }

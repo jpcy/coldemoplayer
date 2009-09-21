@@ -10,17 +10,14 @@ namespace CDP.Core
         private List<byte> data;
         private int currentBit = 0;
 
-        public byte[] Data
-        {
-            get
-            {
-                return data.ToArray();
-            }
-        }
-
         public BitWriter()
         {
             data = new List<byte>();
+        }
+
+        public byte[] ToArray()
+        {
+            return data.ToArray();
         }
 
         public void WriteUnsignedBits(uint value, int nBits)

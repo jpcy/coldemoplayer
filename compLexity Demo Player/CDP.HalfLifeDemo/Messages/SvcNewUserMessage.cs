@@ -17,9 +17,19 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_newusermsg"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return true; }
+        }
+
         public byte UserMessageId { get; set; }
         public sbyte UserMessageLength { get; set; }
         public string UserMessageName { get; set; }
+
+        public override void Skip(BitReader buffer)
+        {
+            buffer.SeekBytes(18);
+        }
 
         public override void Read(BitReader buffer)
         {
@@ -34,7 +44,7 @@ namespace CDP.HalfLifeDemo.Messages
             buffer.WriteByte(UserMessageId);
             buffer.WriteSByte(UserMessageLength);
             buffer.WriteString(UserMessageName, 16);
-            return buffer.Data;
+            return buffer.ToArray();
         }
 
         public override void Log(StreamWriter log)

@@ -10,6 +10,7 @@ namespace CDP.HalfLifeDemo
     {
         public abstract byte Id { get; }
         public abstract string Name { get; }
+        public abstract bool CanSkipWhenWriting { get; }
         public Demo Demo
         {
             set { demo = value; }
@@ -17,11 +18,10 @@ namespace CDP.HalfLifeDemo
 
         protected Demo demo;
 
+        public abstract void Skip(Core.BitReader buffer);
         public abstract void Read(Core.BitReader buffer);
         public abstract byte[] Write();
-#if DEBUG
         public abstract void Log(StreamWriter log);
-#endif
     }
 
     public enum EngineMessageIds : byte

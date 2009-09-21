@@ -12,9 +12,15 @@ namespace CDP.HalfLifeDemo.UserMessages
             get { return "ScoreInfo"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return true; }
+        }
+
         public byte Slot { get; set; }
         public short Frags { get; set; }
         public short Deaths { get; set; }
+        public short Dummy { get; set; }
         public short TeamId { get; set; }
 
         public override void Read(BitReader buffer)
@@ -22,20 +28,28 @@ namespace CDP.HalfLifeDemo.UserMessages
             Slot = buffer.ReadByte();
             Frags = buffer.ReadShort();
             Deaths = buffer.ReadShort();
-            buffer.SeekBytes(2); // Should be 0 (short).
+            Dummy = buffer.ReadShort();
             TeamId = buffer.ReadShort();
         }
 
         public override byte[] Write()
         {
-            throw new NotImplementedException();
+            BitWriter buffer = new BitWriter();
+            buffer.WriteByte(Slot);
+            buffer.WriteShort(Frags);
+            buffer.WriteShort(Deaths);
+            buffer.WriteShort(Dummy);
+            buffer.WriteShort(TeamId);
+            return buffer.ToArray();
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
-            throw new NotImplementedException();
+            log.WriteLine("Slot: {0}", Slot);
+            log.WriteLine("Frags: {0}", Frags);
+            log.WriteLine("Deaths: {0}", Deaths);
+            log.WriteLine("Dummy: {0}", Dummy);
+            log.WriteLine("TeamId: {0}", TeamId);
         }
-#endif
     }
 }

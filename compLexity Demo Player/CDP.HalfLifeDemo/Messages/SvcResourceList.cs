@@ -18,6 +18,11 @@ namespace CDP.HalfLifeDemo.Messages
             get { return "svc_resourcelist"; }
         }
 
+        public override bool CanSkipWhenWriting
+        {
+            get { return demo.NetworkProtocol > 43; }
+        }
+
         public class Resource
         {
             public enum Types : uint
@@ -56,6 +61,47 @@ namespace CDP.HalfLifeDemo.Messages
 
         private const int hashLength = 16;
         private const int reservedLength = 32;
+
+        public override void Skip(BitReader buffer)
+        {
+            if (demo.NetworkProtocol <= 43)
+            {
+                buffer.Endian = BitReader.Endians.Big;
+            }
+
+            uint nEntries = buffer.ReadUnsignedBits(12);
+
+            for (int i = 0; i < nEntries; i++)
+            {
+                buffer.SeekBits(4);
+                buffer.SeekString();
+                buffer.SeekBits(36);
+                Resource.FlagBits flags = (Resource.FlagBits)buffer.ReadUnsignedBits(3);
+
+                if ((flags & Resource.FlagBits.Custom) == Resource.FlagBits.Custom)
+                {
+                    buffer.SeekBytes(hashLength);
+                }
+
+                if (buffer.ReadBoolean())
+                {
+                    buffer.SeekBytes(reservedLength);
+                }
+            }
+
+            // Consistency list.
+            // Indicies of resources to force consistency upon. Delta compressed from the last index, starting with 0.
+            if (buffer.ReadBoolean())
+            {
+                while (buffer.ReadBoolean())
+                {
+                    int nBits = (buffer.ReadBoolean() ? 5 : 10);
+                    buffer.SeekBits(nBits);
+                }
+            }
+
+            buffer.SeekRemainingBitsInCurrentByte();
+        }
 
         public override void Read(BitReader buffer)
         {
@@ -105,8 +151,7 @@ namespace CDP.HalfLifeDemo.Messages
                 }
             }
 
-            buffer.SkipRemainingBitsInCurrentByte();
-            buffer.Endian = BitReader.Endians.Little;
+            buffer.SeekRemainingBitsInCurrentByte();
         }
 
         public override byte[] Write()
@@ -151,15 +196,13 @@ namespace CDP.HalfLifeDemo.Messages
                 buffer.WriteBoolean(false);
             }
 
-            return buffer.Data;
+            return buffer.ToArray();
         }
 
-#if DEBUG
         public override void Log(StreamWriter log)
         {
             log.WriteLine("Num resources: {0}", Resources.Count);
             // TODO
         }
-#endif
     }
 }
