@@ -34,5 +34,19 @@ namespace CDP.HalfLifeDemo
             Offset = br.ReadInt();
             Length = br.ReadInt();
         }
+
+        public byte[] Write()
+        {
+            BitWriter buffer = new BitWriter();
+            buffer.WriteInt(Number);
+            buffer.WriteString(Title, titleLength);
+            buffer.WriteInt(Flags);
+            buffer.WriteInt(CdTrack);
+            buffer.WriteFloat(Duration);
+            buffer.WriteInt(NumFrames);
+            buffer.WriteInt(Offset);
+            buffer.WriteInt(Length);
+            return buffer.ToArray();
+        }
     }
 }

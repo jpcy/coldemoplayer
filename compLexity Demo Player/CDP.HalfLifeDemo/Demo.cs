@@ -347,11 +347,15 @@ namespace CDP.HalfLifeDemo
                 {
                     long streamLength = inputStream.Length;
 
+                    // Read header, write empty header.
+                    // The directory entries offset must be known before the header can be written, which means the entire demo must be parsed first.
                     Header header = new Header();
                     header.Read(br.ReadBytes(Header.SizeInBytes));
-                    header.NetworkProtocol = Demo.NewestNetworkProtocol;
-                    header.GameFolderName = Game.ModFolder;
-                    bw.Write(header.Write());
+                    bw.Write(new byte[Header.SizeInBytes]);
+
+                    bool foundPlaybackSegment = false;
+                    uint playbackSegmentOffset = 0;
+                    int nPlaybackFrames = 0;
 
                     while (true)
                     {
@@ -361,6 +365,16 @@ namespace CDP.HalfLifeDemo
 
                         if (frame.HasMessages)
                         {
+                            if (foundPlaybackSegment)
+                            {
+                                nPlaybackFrames++;
+                            }
+                            else if (frame is Frames.Playback)
+                            {
+                                foundPlaybackSegment = true;
+                                playbackSegmentOffset = (uint)outputStream.Position;
+                            }
+
                             Core.BitReader messageReader = new Core.BitReader(((MessageFrame)frame).MessageData);
                             lastMessages.Clear();
 
@@ -392,6 +406,39 @@ namespace CDP.HalfLifeDemo
 
                         UpdateProgress(inputStream.Position, streamLength);
                     }
+
+                    if (!foundPlaybackSegment)
+                    {
+                        throw new ApplicationException("Demo frames have been written, but no playback segment offset has been found.");
+                    }
+
+                    // Write directory entries.
+                    directoryEntriesOffset = (uint)outputStream.Position;
+                    bw.Write((int)2); // Number of dir. entries (always 2).
+
+                    bw.Write(new DirectoryEntry
+                    {
+                        Title = "LOADING",
+                        Offset = Header.SizeInBytes,
+                        Length = (int)(playbackSegmentOffset - Header.SizeInBytes)
+                    }.Write());
+
+                    bw.Write(new DirectoryEntry
+                    {
+                        Title = "Playback",
+                        Number = 1,
+                        Offset = (int)playbackSegmentOffset,
+                        Length = (int)(directoryEntriesOffset - playbackSegmentOffset),
+                        NumFrames = nPlaybackFrames,
+                        Duration = CurrentTimestamp
+                    }.Write());
+
+                    // Write header.
+                    header.DirectoryEntriesOffset = directoryEntriesOffset;
+                    header.NetworkProtocol = Demo.NewestNetworkProtocol;
+                    header.GameFolderName = Game.ModFolder;
+                    outputStream.Seek(0, SeekOrigin.Begin);
+                    bw.Write(header.Write());
                 }
             }
             catch (Exception ex)
