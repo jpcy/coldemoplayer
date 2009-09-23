@@ -17,6 +17,8 @@ namespace CDP
         void Navigate(Page view, Core.ViewModelBase viewModel);
         void Home();
         void Back();
+        void ShowWindow();
+        void HideWindow();
         string BrowseForFile(string fileName, string initialPath);
         void Invoke(Action action);
         void Invoke<T>(Action<T> action, T arg);
@@ -78,6 +80,16 @@ namespace CDP
                 pages.Pop();
                 Window.Content = pages.Peek();
             }
+        }
+
+        public void ShowWindow()
+        {
+            Window.Show();
+        }
+
+        public void HideWindow()
+        {
+            Window.Hide();
         }
 
         public string BrowseForFile(string fileName, string initialPath)

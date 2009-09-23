@@ -39,7 +39,6 @@ namespace CDP.ViewModel
         private readonly Core.ISettings settings = Core.ObjectCreator.Get<Core.ISettings>();
         private readonly IMediator mediator = Core.ObjectCreator.Get<IMediator>();
         private readonly Core.IFileSystem fileSystem = Core.ObjectCreator.Get<Core.IFileSystem>();
-        private readonly Core.IDemoManager demoManager = Core.ObjectCreator.Get<Core.IDemoManager>();
         private readonly INavigationService navigationService = Core.ObjectCreator.Get<INavigationService>();
 
         public Demo()
@@ -56,16 +55,7 @@ namespace CDP.ViewModel
 
         public void PlayCommandExecute()
         {
-            Data.Write("E:\\temp.dem");
-            /*Core.Launcher launcher = demoManager.CreateLauncher(Data);
-
-            if (!launcher.Verify())
-            {
-                System.Windows.MessageBox.Show(launcher.Message);
-                return;
-            }*/
-
-            // TODO
+            navigationService.Navigate(new View.Play(), new Play(Data));
         }
 
         public bool AnalyseCommandCanExecute()

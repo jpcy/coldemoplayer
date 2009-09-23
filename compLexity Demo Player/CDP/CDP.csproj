@@ -139,6 +139,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\Play.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Progress.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -187,6 +191,7 @@
     <Compile Include="ViewModel\Header.cs" />
     <Compile Include="ViewModel\Main.cs" />
     <Compile Include="ViewModel\Options.cs" />
+    <Compile Include="ViewModel\Play.cs" />
     <Compile Include="ViewModel\Progress.cs" />
     <Compile Include="View\Address.xaml.cs">
       <DependentUpon>Address.xaml</DependentUpon>
@@ -218,6 +223,9 @@
     </Compile>
     <Compile Include="View\Options.xaml.cs">
       <DependentUpon>Options.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Play.xaml.cs">
+      <DependentUpon>Play.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Progress.xaml.cs">
       <DependentUpon>Progress.xaml</DependentUpon>

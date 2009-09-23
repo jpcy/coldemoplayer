@@ -16,6 +16,11 @@ namespace UnitTests.Core
                 set { processExecutableFileName = value; }
             }
 
+            public override string CalculateDestinationFileName()
+            {
+                throw new NotImplementedException();
+            }
+
             public override void Initialise(Demo demo)
             {
             }

@@ -3,15 +3,16 @@ using System.Threading;
 
 namespace CDP.ViewModel
 {
-    public class AnalysisProgress : Core.ViewModelBase
+    class Play : Core.ViewModelBase
     {
         public Progress ProgressViewModel { get; private set; }
 
-        private readonly INavigationService navigationService = Core.ObjectCreator.Get<INavigationService>();
         private readonly Core.Demo demo;
-        private readonly Analysis analysisViewModel;
+        private readonly INavigationService navigationService = Core.ObjectCreator.Get<INavigationService>();
+        private readonly Core.IDemoManager demoManager = Core.ObjectCreator.Get<Core.IDemoManager>();
+        private Core.Launcher launcher;
 
-        public AnalysisProgress(Core.Demo demo)
+        public Play(Core.Demo demo)
         {
             ProgressViewModel = new Progress();
             ProgressViewModel.CancelEvent += ProgressViewModel_CancelEvent;
@@ -21,15 +22,22 @@ namespace CDP.ViewModel
             demo.OperationErrorEvent += demo_OperationErrorEvent;
             demo.OperationCompleteEvent += demo_OperationCompleteEvent;
             demo.OperationCancelledEvent += demo_OperationCancelledEvent;
-
-            analysisViewModel = new Analysis(demo);
         }
 
         public override void OnNavigateComplete()
         {
+            launcher = demoManager.CreateLauncher(demo);
+
+            if (!launcher.Verify())
+            {
+                // TODO: proper message page
+                System.Windows.MessageBox.Show(launcher.Message);
+                return;
+            }
+
             ThreadPool.QueueUserWorkItem(new WaitCallback(o =>
             {
-                demo.Read();
+                demo.Write(launcher.CalculateDestinationFileName());
             }));
         }
 
@@ -45,26 +53,53 @@ namespace CDP.ViewModel
 
         void demo_OperationCompleteEvent(object sender, EventArgs e)
         {
-            RemoveEventHandlers();
-            navigationService.Invoke(new Action(() => navigationService.Navigate(new View.Analysis(), analysisViewModel)));
+            RemoveDemoWriteEventHandlers();
+            navigationService.Invoke(new Action(() =>
+            {
+                navigationService.HideWindow();
+                launcher.Launch();
+                launcher.ProcessFound += launcher_ProcessFound;
+                launcher.ProcessClosed += launcher_ProcessClosed;
+
+                ThreadPool.QueueUserWorkItem(new WaitCallback(o =>
+                {
+                    launcher.MonitorProcessWorker();
+                }));
+            }));
+        }
+
+        void launcher_ProcessClosed(object sender, EventArgs e)
+        {
+            launcher.ProcessFound -= launcher_ProcessFound;
+            launcher.ProcessClosed -= launcher_ProcessClosed;
+
+            navigationService.Invoke(new Action(() =>
+            {
+                navigationService.ShowWindow();
+                navigationService.Home();
+            }));
+        }
+
+        void launcher_ProcessFound(object sender, CDP.Core.Launcher.ProcessFoundEventArgs e)
+        {
         }
 
         void demo_OperationCancelledEvent(object sender, EventArgs e)
         {
-            RemoveEventHandlers();
+            RemoveDemoWriteEventHandlers();
             navigationService.Invoke(new Action(() => navigationService.Home()));
         }
 
         void demo_OperationErrorEvent(object sender, Core.Demo.OperationErrorEventArgs e)
         {
-            RemoveEventHandlers();
+            RemoveDemoWriteEventHandlers();
             navigationService.Invoke(new Action<string, Exception>((msg, ex) =>
             {
-                navigationService.Navigate(new View.AnalysisError(), new AnalysisError(msg, ex));
+                //navigationService.Navigate(new View.AnalysisError(), new AnalysisError(msg, ex));
             }), e.ErrorMessage, e.Exception);
         }
 
-        private void RemoveEventHandlers()
+        private void RemoveDemoWriteEventHandlers()
         {
             ProgressViewModel.CancelEvent -= ProgressViewModel_CancelEvent;
             demo.ProgressChangedEvent -= demo_ProgressChangedEvent;

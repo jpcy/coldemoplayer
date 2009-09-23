@@ -7,6 +7,7 @@ namespace CDP.HalfLifeDemo
     public class Launcher : Core.SteamLauncher
     {
         private readonly string configFileName = "coldemoplayer.cfg";
+        private readonly string demoFileName = "coldemoplayer.dem";
         private Demo demo;
 
         public override void Initialise(Core.Demo demo)
@@ -29,6 +30,11 @@ namespace CDP.HalfLifeDemo
             }
         }
 
+        public override string CalculateDestinationFileName()
+        {
+            return fileSystem.PathCombine(Path.GetDirectoryName((string)settings["SteamExeFullPath"]), "SteamApps", (string)settings["SteamAccountName"], appFolder, gameFolder, demoFileName);
+        }
+
         public override bool Verify()
         {
             return base.Verify();
@@ -36,6 +42,67 @@ namespace CDP.HalfLifeDemo
 
         public override void Launch()
         {
+            // Write config file.
+            using (StreamWriter stream = File.CreateText(fileSystem.PathCombine(Path.GetDirectoryName((string)settings["SteamExeFullPath"]), "SteamApps", (string)settings["SteamAccountName"], appFolder, gameFolder, configFileName)))
+            {
+                stream.WriteLine("alias +col_ff_slow \"host_framerate 0.01; alias col_pause col_pause1\"");
+                stream.WriteLine("alias -col_ff_slow \"host_framerate 0\"");
+                stream.WriteLine("alias +col_ff_fast \"host_framerate 0.1; alias col_pause col_pause1\"");
+                stream.WriteLine("alias -col_ff_fast \"host_framerate 0\"");
+                stream.WriteLine("alias +col_slowmo \"host_framerate 0.001; alias col_pause col_pause1\"");
+                stream.WriteLine("alias -col_slowmo \"host_framerate 0\"");
+                stream.WriteLine("alias col_pause1 \"host_framerate 0.000000001; alias col_pause col_pause2\"");
+                stream.WriteLine("alias col_pause2 \"host_framerate 0; alias col_pause col_pause1\"");
+                stream.WriteLine("alias col_pause col_pause1\n");
+
+                stream.WriteLine("alias wait10 \"wait; wait; wait; wait; wait; wait; wait; wait; wait; wait\"\n");
+                stream.WriteLine("brightness 2");
+                stream.WriteLine("gamma 3");
+                stream.WriteLine("wait10");
+                stream.WriteLine("sv_voicecodec voice_speex");
+                stream.WriteLine("sv_voicequality 5");
+                stream.WriteLine("wait10");
+                stream.WriteLine("wait10");
+                stream.WriteLine("wait10");
+                stream.WriteLine("wait10");
+                stream.WriteLine("wait10");
+
+                string playbackType = ((Handler.PlaybackMethods)settings["HlPlaybackMethod"] == Handler.PlaybackMethods.Playdemo ? "playdemo" : "viewdemo");
+
+                stream.WriteLine("{0} {1}", playbackType, demoFileName);
+                stream.WriteLine("wait10");
+                stream.WriteLine("slot1");
+
+                // TODO: remove this, figure out why the spec menu it's initalised correctly with old converted HLTV demos.
+                if (demo.Perspective == "POV")
+                {
+                    stream.WriteLine("wait10");
+                    stream.WriteLine("spec_menu 0");
+                    stream.WriteLine("wait10");
+                    stream.WriteLine("spec_mode 4");
+                    stream.WriteLine("wait10");
+                    stream.WriteLine("wait10");
+                    stream.WriteLine("wait10");
+                    stream.WriteLine("spec_menu 1");
+                    stream.WriteLine("wait10");
+                    stream.WriteLine("+attack");
+                }
+
+                stream.WriteLine("echo \"\"");
+                stream.WriteLine("echo \"==========================\"");
+                stream.WriteLine("echo \"{0}\"", settings.ProgramName);
+                stream.WriteLine("echo \"==========================\"");
+                stream.WriteLine("echo \"Aliases:\"");
+                stream.WriteLine("echo \"  +col_ff_slow (Fast Forward)\"");
+                stream.WriteLine("echo \"  +col_ff_fast (Faster Fast Forward)\"");
+                stream.WriteLine("echo \"  +col_slowmo (Slow Motion)\"");
+                stream.WriteLine("echo \"  col_pause (Toggle Pause)\"");
+                stream.WriteLine("echo \"\"");
+                stream.WriteLine("echo \"Playing \'{0}\'...\"", demo.Name);
+                // TODO: duration, recorded by.
+                stream.WriteLine("echo \"\"");
+            }
+
             string launchParameters = string.Format("-applaunch {0}", appId);
 
             // TODO: check demo capabilities to see if starting a listen server is possible

@@ -20,6 +20,7 @@ namespace CDP.Core
         public event EventHandler ProcessClosed;
         public string Message { get; protected set; }
 
+        public abstract string CalculateDestinationFileName();
         public abstract bool Verify();
         public abstract void Launch();
 
