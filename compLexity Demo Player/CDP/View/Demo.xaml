@@ -1,8 +1,9 @@
 ﻿<UserControl x:Class="CDP.View.Demo"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:CDP">
-    <Grid Margin="10">
+    xmlns:local="clr-namespace:CDP"
+    xmlns:uc="clr-namespace:CDP.UserControls">
+    <Grid Margin="8">
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition Height="Auto" />
@@ -51,9 +52,19 @@
                 <ContentControl Content="{Binding Data.Handler.SettingsView}" />
             </TabItem>
         </TabControl>
-        <StackPanel Grid.Row="1" Margin="0,20" Orientation="Horizontal">
-            <Button Command="{Binding PlayCommand}">Play</Button>
-            <Button Command="{Binding AnalyseCommand}">Analyse</Button>
+        <StackPanel Grid.Row="1" Margin="0,10,0,0" Orientation="Horizontal">
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type uc:IconButton}">
+                    <Setter Property="FontSize" Value="20" />
+                    <Setter Property="Margin" Value="0,0,10,0" />
+                </Style>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="Padding" Value="0,0,10,0" />
+                </Style>
+            </StackPanel.Resources>
+            <uc:IconButton Command="{Binding PlayCommand}" IconSource="/Images/play.png">Play</uc:IconButton>
+            <uc:IconButton Command="{Binding AnalyseCommand}" IconSource="/Images/analyse.png">Analyse</uc:IconButton>
         </StackPanel>
     </Grid>
 </UserControl>
