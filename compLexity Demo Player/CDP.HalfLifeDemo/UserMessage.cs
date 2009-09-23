@@ -9,7 +9,7 @@ namespace CDP.HalfLifeDemo
     public abstract class UserMessage : IMessage
     {
         public byte Id { get; set; }
-        public sbyte Length { get; set; }
+        public byte Length { get; set; }
         public abstract string Name { get; }
         public abstract bool CanSkipWhenWriting { get; }
 

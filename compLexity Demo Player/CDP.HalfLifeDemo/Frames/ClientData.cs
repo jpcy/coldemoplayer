@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using CDP.Core;
 
 namespace CDP.HalfLifeDemo.Frames
 {
@@ -47,8 +48,16 @@ namespace CDP.HalfLifeDemo.Frames
 
         protected override byte[] WriteContent()
         {
-            // TODO
-            return null;
+            BitWriter buffer = new BitWriter();
+            buffer.WriteFloat(Origin.X);
+            buffer.WriteFloat(Origin.Y);
+            buffer.WriteFloat(Origin.Z);
+            buffer.WriteFloat(ViewAngles.X);
+            buffer.WriteFloat(ViewAngles.Y);
+            buffer.WriteFloat(ViewAngles.Z);
+            buffer.WriteUInt(WeaponBitmask);
+            buffer.WriteFloat(Fov);
+            return buffer.ToArray();
         }
     }
 }

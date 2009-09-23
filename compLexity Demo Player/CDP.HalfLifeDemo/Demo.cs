@@ -331,7 +331,90 @@ namespace CDP.HalfLifeDemo
 
         public override void Write(string destinationFileName)
         {
-            throw new NotImplementedException();
+            long lastFrameOffset = 0;
+            List<IMessage> lastMessages = new List<IMessage>();
+            CurrentTimestamp = 0.0f;
+
+            try
+            {
+                ResetOperationCancelledState();
+                ResetProgress();
+
+                using (FileStream inputStream = File.OpenRead(FileName))
+                using (BinaryReader br = new BinaryReader(inputStream))
+                using (FileStream outputStream = File.OpenWrite(destinationFileName))
+                using (BinaryWriter bw = new BinaryWriter(outputStream))
+                {
+                    long streamLength = inputStream.Length;
+
+                    Header header = new Header();
+                    header.Read(br.ReadBytes(Header.SizeInBytes));
+                    header.NetworkProtocol = Demo.NewestNetworkProtocol;
+                    header.GameFolderName = Game.ModFolder;
+                    bw.Write(header.Write());
+
+                    while (true)
+                    {
+                        lastFrameOffset = inputStream.Position;
+                        Frame frame = ReadFrame(br);
+                        CurrentTimestamp = frame.Timestamp;
+
+                        if (frame.HasMessages)
+                        {
+                            Core.BitReader messageReader = new Core.BitReader(((MessageFrame)frame).MessageData);
+                            lastMessages.Clear();
+
+                            using (MemoryStream ms = new MemoryStream())
+                            using (BinaryWriter messageWriter = new BinaryWriter(ms))
+                            {
+                                while (messageReader.CurrentByte < messageReader.Length)
+                                {
+                                    IMessage message = ReadAndWriteMessage(messageReader, messageWriter);
+                                    lastMessages.Add(message);
+                                }
+
+                                ((MessageFrame)frame).MessageData = ms.ToArray();
+                            }
+                        }
+
+                        bw.Write(frame.Write());
+
+                        if ((!IsCorrupt && inputStream.Position >= directoryEntriesOffset) || inputStream.Position == streamLength)
+                        {
+                            break;
+                        }
+
+                        if (IsOperationCancelled())
+                        {
+                            OnOperationCancelled();
+                            return;
+                        }
+
+                        UpdateProgress(inputStream.Position, streamLength);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (!IsOperationCancelled())
+                {
+                    OnOperationError(string.Format("Frame offset: {0}\n\n{1}", lastFrameOffset, CreateMessageLog(lastMessages)), ex);
+                    return;
+                }
+            }
+            finally
+            {
+                messageCallbacks.Clear();
+            }
+
+            if (IsOperationCancelled())
+            {
+                OnOperationCancelled();
+            }
+            else
+            {
+                OnOperationComplete();
+            }
         }
 
         #region Reading
@@ -378,9 +461,103 @@ namespace CDP.HalfLifeDemo
             return frame;
         }
 
-        private IMessage ReadMessage(Core.BitReader reader)
+        private IMessage ReadMessage(Core.BitReader buffer)
         {
-            byte id = reader.ReadByte();
+            IMessage message = ReadMessageHeader(buffer);
+            List<MessageCallback> messageCallbacks = FindMessageCallbacks(message);
+
+            try
+            {
+                if (messageCallbacks.Count == 0)
+                {
+                    message.Skip(buffer);
+                }
+                else
+                {
+                    message.Read(buffer);
+                }
+            }
+            finally
+            {
+                buffer.Endian = Core.BitReader.Endians.Little;
+            }
+
+            foreach (MessageCallback messageCallback in messageCallbacks)
+            {
+                messageCallback.Fire(message);
+            }
+
+            return message;
+        }
+
+        private IMessage ReadAndWriteMessage(Core.BitReader buffer, BinaryWriter writer)
+        {
+            IMessage message = ReadMessageHeader(buffer);
+            writer.Write(message.Id);
+            UserMessage userMessage = message as UserMessage;
+
+            if (userMessage != null)
+            {
+                UserMessageDefinition definition = userMessageDefinitions.FirstOrDefault(umd => umd.Id == message.Id);
+
+                if (definition.Length == -1)
+                {
+                    writer.Write(userMessage.Length);
+                }
+            }
+
+            List<MessageCallback> messageCallbacks = FindMessageCallbacks(message);
+            int startPosition = buffer.CurrentByte;
+            bool wasSkipped;
+
+            try
+            {
+                if (messageCallbacks.Count == 0 && message.CanSkipWhenWriting)
+                {
+                    message.Skip(buffer);
+                    wasSkipped = true;
+                }
+                else
+                {
+                    message.Read(buffer);
+                    wasSkipped = false;
+                }
+            }
+            finally
+            {
+                buffer.Endian = Core.BitReader.Endians.Little;
+            }
+
+            foreach (MessageCallback messageCallback in messageCallbacks)
+            {
+                messageCallback.Fire(message);
+            }
+
+            if (wasSkipped)
+            {
+                int length = buffer.CurrentByte - startPosition;
+
+                if (length > 0)
+                {
+                    writer.Write(buffer.Buffer, startPosition, length);
+                }
+            }
+            else
+            {
+                byte[] data = message.Write();
+
+                if (data != null)
+                {
+                    writer.Write(data);
+                }
+            }
+
+            return message;
+        }
+
+        private IMessage ReadMessageHeader(Core.BitReader buffer)
+        {
+            byte id = buffer.ReadByte();
             IMessage message = null;
 
             if (id <= Demo.MaxEngineMessageId)
@@ -400,12 +577,15 @@ namespace CDP.HalfLifeDemo
                 {
                     UserMessage userMessage = handler.CreateUserMessage(userMessageDefinition.Name);
                     userMessage.Id = userMessageDefinition.Id;
-                    userMessage.Length = userMessageDefinition.Length;
 
-                    if (userMessage.Length == -1)
+                    if (userMessageDefinition.Length == -1)
                     {
-                        // -1 is a marker for "dynamic length message", which just means the next signed byte contains the message length.
-                        userMessage.Length = reader.ReadSByte();
+                        // -1 is a marker for "dynamic length message", which just means the next byte contains the message length.
+                        userMessage.Length = buffer.ReadByte();
+                    }
+                    else
+                    {
+                        userMessage.Length = (byte)userMessageDefinition.Length;
                     }
 
                     message = userMessage;
@@ -418,29 +598,6 @@ namespace CDP.HalfLifeDemo
             }
 
             message.Demo = this;
-            List<MessageCallback> messageCallbacks = FindMessageCallbacks(message);
-
-            try
-            {
-                if (messageCallbacks.Count > 0)
-                {
-                    message.Read(reader);
-                }
-                else
-                {
-                    message.Skip(reader);
-                }
-            }
-            finally
-            {
-                reader.Endian = Core.BitReader.Endians.Little;
-            }
-
-            foreach (MessageCallback messageCallback in messageCallbacks)
-            {
-                messageCallback.Fire(message);
-            }
-
             return message;
         }
         #endregion

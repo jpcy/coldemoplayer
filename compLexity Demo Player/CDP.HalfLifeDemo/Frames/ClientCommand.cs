@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using CDP.Core;
 
 namespace CDP.HalfLifeDemo.Frames
 {
@@ -25,7 +26,9 @@ namespace CDP.HalfLifeDemo.Frames
 
         protected override byte[] WriteContent()
         {
-            throw new NotImplementedException();
+            BitWriter buffer = new BitWriter();
+            buffer.WriteString(Command);
+            return buffer.ToArray();
         }
     }
 }

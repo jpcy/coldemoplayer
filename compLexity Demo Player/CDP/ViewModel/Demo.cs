@@ -56,13 +56,14 @@ namespace CDP.ViewModel
 
         public void PlayCommandExecute()
         {
-            Core.Launcher launcher = demoManager.CreateLauncher(Data);
+            Data.Write("E:\\temp.dem");
+            /*Core.Launcher launcher = demoManager.CreateLauncher(Data);
 
             if (!launcher.Verify())
             {
                 System.Windows.MessageBox.Show(launcher.Message);
                 return;
-            }
+            }*/
 
             // TODO
         }

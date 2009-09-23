@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using CDP.Core;
 
 namespace CDP.HalfLifeDemo.Frames
 {
@@ -12,6 +13,8 @@ namespace CDP.HalfLifeDemo.Frames
         {
             get { return (byte)FrameIds.Loading; } 
         }
+
+        public byte[] DemoInfo { get; set; }
 
         // Sequence info.
         // See: Quake, client/net.h
@@ -26,14 +29,18 @@ namespace CDP.HalfLifeDemo.Frames
         protected override void ReadContent(BinaryReader br)
         {
             // Demo info.
+            int demoInfoLength;
+
             if (networkProtocol <= 43)
             {
-                br.BaseStream.Seek(532, SeekOrigin.Current);
+                demoInfoLength = 532;
             }
             else
             {
-                br.BaseStream.Seek(436, SeekOrigin.Current);
+                demoInfoLength = 436;
             }
+
+            DemoInfo = br.ReadBytes(demoInfoLength);
 
             // Sequence info.
             IncomingSequence = br.ReadInt32();
@@ -46,12 +53,36 @@ namespace CDP.HalfLifeDemo.Frames
 
             // Message data.
             uint messageDataLength = br.ReadUInt32(); // TODO: error if 0?
-            MessageData = br.ReadBytes((int)messageDataLength);
+
+            if (messageDataLength > 0)
+            {
+                MessageData = br.ReadBytes((int)messageDataLength);
+            }
         }
 
         protected override byte[] WriteContent()
         {
-            throw new NotImplementedException();
+            BitWriter buffer = new BitWriter();
+            buffer.WriteBytes(DemoInfo);
+            buffer.WriteInt(IncomingSequence);
+            buffer.WriteInt(IncomingAcknowledged);
+            buffer.WriteInt(IncomingReliableAcknowledged);
+            buffer.WriteInt(IncomingReliableSequence);
+            buffer.WriteInt(OutgoingSequence);
+            buffer.WriteInt(ReliableSequence);
+            buffer.WriteInt(LastReliableSequence);
+
+            if (MessageData == null)
+            {
+                buffer.WriteUInt(0);
+            }
+            else
+            {
+                buffer.WriteUInt((uint)MessageData.Length);
+                buffer.WriteBytes(MessageData);
+            }
+
+            return buffer.ToArray();
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using CDP.Core;
 
 namespace CDP.HalfLifeDemo
 {
@@ -28,8 +29,19 @@ namespace CDP.HalfLifeDemo
 
         public byte[] Write()
         {
-            // TODO
-            return null;
+            BitWriter buffer = new BitWriter();
+            buffer.WriteByte(Id);
+            buffer.WriteFloat(Timestamp);
+            buffer.WriteUInt(Number);
+
+            byte[] content = WriteContent();
+
+            if (content != null)
+            {
+                buffer.WriteBytes(content);
+            }
+
+            return buffer.ToArray();
         }
 
         protected virtual void ReadContent(BinaryReader br) { }

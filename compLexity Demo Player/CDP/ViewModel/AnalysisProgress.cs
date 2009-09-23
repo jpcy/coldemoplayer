@@ -10,6 +10,7 @@ namespace CDP.ViewModel
         private readonly INavigationService navigationService = Core.ObjectCreator.Get<INavigationService>();
         private readonly Core.Demo demo;
         private readonly Analysis analysisViewModel;
+        private System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
 
         public AnalysisProgress(Core.Demo demo)
         {
@@ -25,8 +26,10 @@ namespace CDP.ViewModel
             analysisViewModel = new Analysis(demo);
         }
 
-         public override void OnNavigateComplete()
+        public override void OnNavigateComplete()
         {
+            sw.Start();
+
             ThreadPool.QueueUserWorkItem(new WaitCallback(o =>
             {
                 demo.Read();
@@ -45,6 +48,8 @@ namespace CDP.ViewModel
 
         void demo_OperationCompleteEvent(object sender, EventArgs e)
         {
+            sw.Stop();
+            System.Windows.MessageBox.Show(sw.Elapsed.ToString());
             RemoveEventHandlers();
             navigationService.Invoke(new Action(() => navigationService.Navigate(new View.Analysis(), analysisViewModel)));
         }

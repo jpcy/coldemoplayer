@@ -13,9 +13,16 @@ namespace CDP.HalfLifeDemo.Frames
             get { return (byte)FrameIds.Unknown; }
         }
 
+        public byte[] Data { get; set; }
+
         protected override void ReadContent(BinaryReader br)
         {
-            br.BaseStream.Seek(84, SeekOrigin.Current);
+            Data = br.ReadBytes(84);
+        }
+
+        protected override byte[] WriteContent()
+        {
+            return Data;
         }
     }
 }
