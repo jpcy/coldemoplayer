@@ -8,11 +8,20 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="0.6*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <view:Header Grid.Row="0" DataContext="{Binding Header}" />
         <view:Address Grid.Row="1" DataContext="{Binding Address}" />
         <view:Demos Grid.Row="2" DataContext="{Binding Demos}" />
-        <view:Demo Grid.Row="3" DataContext="{Binding Demo}" />
+        <GridSplitter Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Stretch" Height="4">
+            <GridSplitter.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Offset="0" Color="#ccd9ea" />
+                    <GradientStop Offset="1" Color="#edf2f9" />
+                </LinearGradientBrush>
+            </GridSplitter.Background>
+        </GridSplitter>
+        <view:Demo Grid.Row="4" DataContext="{Binding Demo}" />
     </Grid>
 </Page>

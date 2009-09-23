@@ -21,6 +21,10 @@ namespace CDP.View
         public Demo()
         {
             InitializeComponent();
+        }
+
+        private void UserControl_Initialized(object sender, EventArgs e)
+        {
             Core.ObjectCreator.Get<IMediator>().Register<Core.Demo>(Messages.SelectedDemoChanged, SelectedDemoChanged, this);
         }
 
