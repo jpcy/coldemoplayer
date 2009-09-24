@@ -29,7 +29,7 @@ namespace CDP.Core
         public abstract string[] Extensions { get; } // e.g. "dem".
         public abstract PlayerColumn[] PlayerColumns { get; }
         public abstract Setting[] Settings { get; }
-        public abstract UserControl SettingsView { get; protected set; }
+        public abstract UserControl SettingsView { get; }
 
         public abstract bool IsValidDemo(Stream stream);
         public abstract Demo CreateDemo();

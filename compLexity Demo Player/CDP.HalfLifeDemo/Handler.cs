@@ -58,7 +58,19 @@ namespace CDP.HalfLifeDemo
             }
         }
 
-        public override UserControl SettingsView { get; protected set; }
+        private UserControl settingsView;
+        public override UserControl SettingsView
+        {
+            get
+            {
+                if (settingsView == null)
+                {
+                    settingsView = new SettingsView { DataContext = new SettingsViewModel() };
+                }
+
+                return settingsView;
+            }
+        }
 
         protected readonly Core.ISettings settings = Core.ObjectCreator.Get<Core.ISettings>();
         protected readonly Core.IFileSystem fileSystem = Core.ObjectCreator.Get<Core.IFileSystem>();
@@ -71,7 +83,6 @@ namespace CDP.HalfLifeDemo
 
         public Handler()
         {
-            SettingsView = new SettingsView { DataContext = new SettingsViewModel() };
             RegisterMessages();
             ReadGameConfig();
         }

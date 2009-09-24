@@ -5,14 +5,13 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{14ABD36D-331F-43C8-8097-18C05B20F06E}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{97005DD0-2A52-4A8B-A2E8-94B8C4D899F8}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CDP.Core</RootNamespace>
-    <AssemblyName>CDP.Core</AssemblyName>
+    <RootNamespace>HalfLifeDemoSystemTest</RootNamespace>
+    <AssemblyName>HalfLifeDemoSystemTest</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkSubset>Client</TargetFrameworkSubset>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,12 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PresentationCore">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="PresentationFramework">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -50,49 +43,24 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="UIAutomationProvider">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="WindowsBase">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BitReader.cs" />
-    <Compile Include="BitWriter.cs" />
-    <Compile Include="DemoManager.cs" />
-    <Compile Include="Demo.cs" />
-    <Compile Include="DemoHandler.cs" />
-    <Compile Include="Extensions\ExceptionExtensions.cs" />
-    <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="FileSystem.cs" />
-    <Compile Include="Launcher.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="NotifyPropertyChanged.cs" />
-    <Compile Include="ObjectCreator.cs" />
-    <Compile Include="ObjectMappings.cs" />
-    <Compile Include="Process.cs" />
-    <Compile Include="ProcessFinder.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RichTextBox.xaml.cs">
-      <DependentUpon>RichTextBox.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Setting.cs" />
-    <Compile Include="Settings.cs" />
-    <Compile Include="SteamGame.cs" />
-    <Compile Include="SteamLauncher.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Vector.cs" />
-    <Compile Include="ViewModelBase.cs" />
-    <Compile Include="FlowDocumentWriter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="RichTextBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    <ProjectReference Include="..\CDP.Core\CDP.Core.csproj">
+      <Project>{14ABD36D-331F-43C8-8097-18C05B20F06E}</Project>
+      <Name>CDP.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CDP.CounterStrikeDemo\CDP.CounterStrikeDemo.csproj">
+      <Project>{77712F28-8EB3-4560-BCD8-096CEA789915}</Project>
+      <Name>CDP.CounterStrikeDemo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CDP.HalfLifeDemo\CDP.HalfLifeDemo.csproj">
+      <Project>{6D554123-E196-4376-9B52-365777B913B8}</Project>
+      <Name>CDP.HalfLifeDemo</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

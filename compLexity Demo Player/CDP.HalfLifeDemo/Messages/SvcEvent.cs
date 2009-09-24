@@ -114,11 +114,7 @@ namespace CDP.HalfLifeDemo.Messages
             {
                 buffer.WriteUnsignedBits(ev.Index, 10);
 
-                if (ev.PacketIndex == null)
-                {
-                    buffer.WriteBoolean(false);
-                }
-                else
+                if (ev.PacketIndex.HasValue)
                 {
                     buffer.WriteBoolean(true);
                     buffer.WriteUnsignedBits((uint)ev.PacketIndex, 11);
@@ -131,17 +127,21 @@ namespace CDP.HalfLifeDemo.Messages
                     {
                         buffer.WriteBoolean(true);
                         eventDeltaStructure.WriteDelta(buffer, ev.Delta);
-                    }
+                    }                    
                 }
-
-                if (ev.FireTime == null)
+                else
                 {
                     buffer.WriteBoolean(false);
+                }
+
+                if (ev.FireTime.HasValue)
+                {
+                    buffer.WriteBoolean(true);
                     buffer.WriteUShort(ev.FireTime.Value);
                 }
                 else
                 {
-                    buffer.WriteBoolean(true);
+                    buffer.WriteBoolean(false);
                 }
             }
 

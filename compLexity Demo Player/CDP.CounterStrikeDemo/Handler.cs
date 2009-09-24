@@ -3,6 +3,7 @@ using System.Linq;
 using System.Xml.Serialization;
 using System.IO;
 using System.Collections.Generic;
+using System.Windows.Controls;
 
 namespace CDP.CounterStrikeDemo
 {
@@ -29,11 +30,24 @@ namespace CDP.CounterStrikeDemo
             }
         }
 
+        private UserControl settingsView;
+        public override UserControl SettingsView
+        {
+            get
+            {
+                if (settingsView == null)
+                {
+                    settingsView = new SettingsView { DataContext = new SettingsViewModel() };
+                }
+
+                return settingsView;
+            }
+        }
+
         private Game game;
 
         public Handler()
         {
-            SettingsView = new SettingsView { DataContext = new SettingsViewModel() };
         }
 
         public override bool IsValidDemo(Stream stream)

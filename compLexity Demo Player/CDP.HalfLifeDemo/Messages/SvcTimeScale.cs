@@ -36,7 +36,7 @@ namespace CDP.HalfLifeDemo.Messages
 
         public override byte[] Write()
         {
-            throw new NotImplementedException();
+            return BitConverter.GetBytes(Multiplier);
         }
 
         public override void Log(StreamWriter log)

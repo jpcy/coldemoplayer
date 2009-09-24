@@ -331,6 +331,11 @@ namespace CDP.HalfLifeDemo
 
         public override void Write(string destinationFileName)
         {
+            Write(destinationFileName, true);
+        }
+
+        public void Write(string destinationFileName, bool canSkipMessages)
+        {
             long lastFrameOffset = 0;
             List<IMessage> lastMessages = new List<IMessage>();
             CurrentTimestamp = 0.0f;
@@ -383,7 +388,7 @@ namespace CDP.HalfLifeDemo
                             {
                                 while (messageReader.CurrentByte < messageReader.Length)
                                 {
-                                    IMessage message = ReadAndWriteMessage(messageReader, messageWriter);
+                                    IMessage message = ReadAndWriteMessage(messageReader, messageWriter, canSkipMessages);
                                     lastMessages.Add(message);
                                 }
 
@@ -537,7 +542,7 @@ namespace CDP.HalfLifeDemo
             return message;
         }
 
-        private IMessage ReadAndWriteMessage(Core.BitReader buffer, BinaryWriter writer)
+        private IMessage ReadAndWriteMessage(Core.BitReader buffer, BinaryWriter writer, bool canSkip)
         {
             IMessage message = ReadMessageHeader(buffer);
             writer.Write(message.Id);
@@ -559,7 +564,7 @@ namespace CDP.HalfLifeDemo
 
             try
             {
-                if (messageCallbacks.Count == 0 && message.CanSkipWhenWriting)
+                if (canSkip && messageCallbacks.Count == 0 && message.CanSkipWhenWriting)
                 {
                     message.Skip(buffer);
                     wasSkipped = true;

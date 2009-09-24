@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CDP.CounterStrikeDemo", "CD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{8761F0A0-BD9F-4EB5-8DF9-E2A546A43692}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HalfLifeDemoSystemTest", "HalfLifeDemoSystemTest\HalfLifeDemoSystemTest.csproj", "{97005DD0-2A52-4A8B-A2E8-94B8C4D899F8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,12 @@ Global
 		{8761F0A0-BD9F-4EB5-8DF9-E2A546A43692}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8761F0A0-BD9F-4EB5-8DF9-E2A546A43692}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8761F0A0-BD9F-4EB5-8DF9-E2A546A43692}.Release|x86.ActiveCfg = Release|Any CPU
+		{97005DD0-2A52-4A8B-A2E8-94B8C4D899F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97005DD0-2A52-4A8B-A2E8-94B8C4D899F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97005DD0-2A52-4A8B-A2E8-94B8C4D899F8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{97005DD0-2A52-4A8B-A2E8-94B8C4D899F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97005DD0-2A52-4A8B-A2E8-94B8C4D899F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97005DD0-2A52-4A8B-A2E8-94B8C4D899F8}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
