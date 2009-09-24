@@ -5,6 +5,11 @@ namespace CDP.ViewModel
 {
     public class Analysis : Core.ViewModelBase
     {
+        public string Header
+        {
+            get { return string.Format("Analysis of \'{0}\'", demo.Name); }
+        }
+
         public UserControl View { get; private set; }
         public Core.ViewModelBase ViewModel { get; private set; }
         public DelegateCommand BackCommand { get; private set; }

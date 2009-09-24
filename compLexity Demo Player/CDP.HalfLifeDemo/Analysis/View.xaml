@@ -7,10 +7,22 @@
         <local:TimestampConverter x:Key="timestampConverter" />
     </UserControl.Resources>
     <TabControl>
-        <TabItem Header="Game Log">
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/CDP;component/Images/gamelog.png" Margin="0,0,4,0" />
+                    <TextBlock>Game log</TextBlock>
+                </StackPanel>                
+            </TabItem.Header>
             <core:RichTextBox Document="{Binding GameLogDocument}" />
         </TabItem>
-        <TabItem Header="Scoreboard">
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/CDP;component/Images/scoreboard.png" Margin="0,0,4,0" />
+                    <TextBlock>Scoreboard</TextBlock>
+                </StackPanel>
+            </TabItem.Header>
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="0.5*" />
@@ -54,7 +66,13 @@
                 </ListView>
             </Grid>
         </TabItem>
-        <TabItem Header="Players">
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/CDP;component/Images/players.png" Margin="0,0,4,0" />
+                    <TextBlock>Players</TextBlock>
+                </StackPanel>
+            </TabItem.Header>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />

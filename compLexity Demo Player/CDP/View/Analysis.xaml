@@ -1,13 +1,19 @@
 ﻿<Page x:Class="CDP.View.Analysis"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:uc="clr-namespace:CDP.UserControls"
     Title="Analysis">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <ContentControl Grid.Row="0" Margin="8" Content="{Binding View}" />
-        <Button Grid.Row="1" HorizontalAlignment="Center" Command="{Binding BackCommand}">Back</Button>
+        <StackPanel Orientation="Horizontal" Margin="8,8,8,0" HorizontalAlignment="Center">
+            <Image Source="/Images/analyse.png" Width="32" Height="32" />
+            <TextBlock Text="{Binding Header}" FontSize="18" VerticalAlignment="Center" />
+        </StackPanel>
+        <ContentControl Grid.Row="1" Margin="8" Content="{Binding View}" />
+        <uc:IconButton Grid.Row="2" HorizontalAlignment="Center" Margin="0,0,0,8" Command="{Binding BackCommand}" IconSource="/Images/back.png">Back</uc:IconButton>
     </Grid>
 </Page>
