@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="CDP.UserControls.Footer"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Background="AliceBlue">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Rectangle Grid.Row="0" Height="4">
+            <Rectangle.Fill>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Offset="0" Color="#ccd9ea" />
+                    <GradientStop Offset="1" Color="#edf2f9" />
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+        <ContentControl Grid.Row="1" Content="{Binding Path=NestedContent, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" />
+    </Grid>
+</UserControl>

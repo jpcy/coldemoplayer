@@ -2,8 +2,26 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:view="clr-namespace:CDP.View"
+    xmlns:uc="clr-namespace:CDP.UserControls"
     Title="Play">
     <Grid>
-        <view:Progress DataContext="{Binding ProgressViewModel}" />
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
+                <Image Source="/Images/play.png" Width="32" Height="32" />
+                <TextBlock Margin="0,0,0,4" VerticalAlignment="Center" Text="{Binding Caption}" FontSize="18" />
+            </StackPanel>
+            <ProgressBar Grid.Row="1" Height="24" MinWidth="300" Minimum="0" Maximum="100" Value="{Binding Progress}" />
+        </Grid>
+        <uc:Footer Grid.Row="1">
+            <uc:IconButton HorizontalAlignment="Center" Margin="0,8,0,8" Command="{Binding CancelCommand}" IconSource="/Images/cancel.png">Cancel</uc:IconButton>
+        </uc:Footer>
     </Grid>
 </Page>

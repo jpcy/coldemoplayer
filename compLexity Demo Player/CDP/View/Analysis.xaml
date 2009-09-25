@@ -14,6 +14,8 @@
             <TextBlock Text="{Binding Header}" FontSize="18" VerticalAlignment="Center" />
         </StackPanel>
         <ContentControl Grid.Row="1" Margin="8" Content="{Binding View}" />
-        <uc:IconButton Grid.Row="2" HorizontalAlignment="Center" Margin="0,0,0,8" Command="{Binding BackCommand}" IconSource="/Images/back.png">Back</uc:IconButton>
+        <uc:Footer Grid.Row="2">
+            <uc:IconButton HorizontalAlignment="Center" Margin="0,8,0,8" Command="{Binding BackCommand}" IconSource="/Images/back.png">Back</uc:IconButton>            
+        </uc:Footer>
     </Grid>
 </Page>

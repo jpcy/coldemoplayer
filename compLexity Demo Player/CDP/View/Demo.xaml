@@ -10,7 +10,13 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TabControl Grid.Row="0">
-            <TabItem Header="Details">
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/CDP;component/Images/details.png" Margin="0,0,4,0" />
+                        <TextBlock>Details</TextBlock>
+                    </StackPanel>
+                </TabItem.Header>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -42,14 +48,26 @@
                     </ItemsControl>
                 </Grid>
             </TabItem>
-            <TabItem Header="Players">
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/CDP;component/Images/players.png" Margin="0,0,4,0" />
+                        <TextBlock>Players</TextBlock>
+                    </StackPanel>
+                </TabItem.Header>
                 <ListView ItemsSource="{Binding Data.Players}">
                     <ListView.View>
                         <GridView x:Name="playersGridView" />
                     </ListView.View>
                 </ListView>
             </TabItem>
-            <TabItem Header="Settings">
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/CDP;component/Images/settings.png" Margin="0,0,4,0" />
+                        <TextBlock>Settings</TextBlock>
+                    </StackPanel>
+                </TabItem.Header>
                 <ContentControl Content="{Binding Data.Handler.SettingsView}" />
             </TabItem>
         </TabControl>

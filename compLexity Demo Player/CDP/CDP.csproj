@@ -95,6 +95,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UserControls\Footer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\IconButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -143,10 +147,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Progress.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -176,6 +176,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="UserControls\Footer.xaml.cs">
+      <DependentUpon>Footer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\IconButton.xaml.cs">
       <DependentUpon>IconButton.xaml</DependentUpon>
     </Compile>
@@ -192,7 +195,6 @@
     <Compile Include="ViewModel\Main.cs" />
     <Compile Include="ViewModel\Options.cs" />
     <Compile Include="ViewModel\Play.cs" />
-    <Compile Include="ViewModel\Progress.cs" />
     <Compile Include="View\Address.xaml.cs">
       <DependentUpon>Address.xaml</DependentUpon>
     </Compile>
@@ -226,9 +228,6 @@
     </Compile>
     <Compile Include="View\Play.xaml.cs">
       <DependentUpon>Play.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\Progress.xaml.cs">
-      <DependentUpon>Progress.xaml</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -326,6 +325,12 @@
     <Resource Include="Images\gamelog.png" />
     <Resource Include="Images\players.png" />
     <Resource Include="Images\scoreboard.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\details.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\settings.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

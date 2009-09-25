@@ -35,12 +35,12 @@
                 </StackPanel>
             </Grid>
         </Grid>
-        <Grid Grid.Row="2" Background="AliceBlue">
-            <DockPanel LastChildFill="False" Margin="20,10,20,10">
+        <uc:Footer Grid.Row="2">
+            <DockPanel LastChildFill="False" Margin="20,8,20,8">
                 <uc:IconButton DockPanel.Dock="Left" IconSource="/Images/cancel.png" Command="{Binding CancelCommand}">Cancel</uc:IconButton>
                 <uc:IconButton DockPanel.Dock="Right" IconSource="/Images/save.png" Command="{Binding ApplyCommand}">Apply</uc:IconButton>
             </DockPanel>
-        </Grid>
+        </uc:Footer>
     </Grid>
 </Page>
 

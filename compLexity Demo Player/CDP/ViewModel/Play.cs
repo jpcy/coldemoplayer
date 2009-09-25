@@ -5,7 +5,23 @@ namespace CDP.ViewModel
 {
     class Play : Core.ViewModelBase
     {
-        public Progress ProgressViewModel { get; private set; }
+        public string Caption
+        {
+            get { return string.Format("Processing \'{0}\' for playback...", demo.Name); }
+        }
+
+        private int progress = 0;
+        public int Progress
+        {
+            get { return progress; }
+            set
+            {
+                progress = value;
+                OnPropertyChanged("Progress");
+            }
+        }
+
+        public DelegateCommand CancelCommand { get; private set; }
 
         private readonly Core.Demo demo;
         private readonly INavigationService navigationService = Core.ObjectCreator.Get<INavigationService>();
@@ -14,14 +30,12 @@ namespace CDP.ViewModel
 
         public Play(Core.Demo demo)
         {
-            ProgressViewModel = new Progress();
-            ProgressViewModel.CancelEvent += ProgressViewModel_CancelEvent;
-
             this.demo = demo;
             demo.ProgressChangedEvent += demo_ProgressChangedEvent;
             demo.OperationErrorEvent += demo_OperationErrorEvent;
             demo.OperationCompleteEvent += demo_OperationCompleteEvent;
             demo.OperationCancelledEvent += demo_OperationCancelledEvent;
+            CancelCommand = new DelegateCommand(CancelCommandExecute);
         }
 
         public override void OnNavigateComplete()
@@ -41,14 +55,14 @@ namespace CDP.ViewModel
             }));
         }
 
-        void ProgressViewModel_CancelEvent(object sender, EventArgs e)
+        public void CancelCommandExecute()
         {
             demo.CancelOperation();
         }
 
         void demo_ProgressChangedEvent(object sender, Core.Demo.ProgressChangedEventArgs e)
         {
-            navigationService.Invoke(new Action<int>(progress => ProgressViewModel.Value = progress), e.Progress);
+            navigationService.Invoke(new Action<int>(p => Progress = p), e.Progress);
         }
 
         void demo_OperationCompleteEvent(object sender, EventArgs e)
@@ -101,7 +115,6 @@ namespace CDP.ViewModel
 
         private void RemoveDemoWriteEventHandlers()
         {
-            ProgressViewModel.CancelEvent -= ProgressViewModel_CancelEvent;
             demo.ProgressChangedEvent -= demo_ProgressChangedEvent;
             demo.OperationErrorEvent -= demo_OperationErrorEvent;
             demo.OperationCompleteEvent -= demo_OperationCompleteEvent;
