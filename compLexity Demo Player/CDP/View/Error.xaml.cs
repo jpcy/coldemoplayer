@@ -14,10 +14,7 @@ using System.Windows.Shapes;
 
 namespace CDP.View
 {
-    /// <summary>
-    /// Interaction logic for Error.xaml
-    /// </summary>
-    public partial class Error : UserControl
+    public partial class Error : Page
     {
         public Error()
         {

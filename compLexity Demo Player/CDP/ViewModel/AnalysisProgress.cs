@@ -73,7 +73,7 @@ namespace CDP.ViewModel
             RemoveEventHandlers();
             navigationService.Invoke(new Action<string, Exception>((msg, ex) =>
             {
-                navigationService.Navigate(new View.AnalysisError(), new AnalysisError(msg, ex));
+                navigationService.Navigate(new View.Error(), new Error(msg, ex));
             }), e.ErrorMessage, e.Exception);
         }
 

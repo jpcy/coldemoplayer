@@ -46,6 +46,7 @@ namespace CDP.ViewModel
             {
                 // TODO: proper message page
                 System.Windows.MessageBox.Show(launcher.Message);
+                navigationService.Home();
                 return;
             }
 
@@ -109,7 +110,7 @@ namespace CDP.ViewModel
             RemoveDemoWriteEventHandlers();
             navigationService.Invoke(new Action<string, Exception>((msg, ex) =>
             {
-                //navigationService.Navigate(new View.AnalysisError(), new AnalysisError(msg, ex));
+                navigationService.Navigate(new View.Error(), new Error(msg, ex));
             }), e.ErrorMessage, e.Exception);
         }
 

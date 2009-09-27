@@ -111,10 +111,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\AnalysisError.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="View\AnalysisProgress.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -128,8 +124,8 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Error.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\Header.xaml">
       <SubType>Designer</SubType>
@@ -184,7 +180,6 @@
     </Compile>
     <Compile Include="ViewModel\Address.cs" />
     <Compile Include="ViewModel\Analysis.cs" />
-    <Compile Include="ViewModel\AnalysisError.cs" />
     <Compile Include="ViewModel\AnalysisProgress.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -200,9 +195,6 @@
     </Compile>
     <Compile Include="View\Analysis.xaml.cs">
       <DependentUpon>Analysis.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\AnalysisError.xaml.cs">
-      <DependentUpon>AnalysisError.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\AnalysisProgress.xaml.cs">
       <DependentUpon>AnalysisProgress.xaml</DependentUpon>
@@ -331,6 +323,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\settings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\ok.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\error.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
