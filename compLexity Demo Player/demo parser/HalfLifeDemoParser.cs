@@ -992,7 +992,7 @@ namespace compLexity_Demo_Player
                     break;
 
                 case 27: // TE_DLIGHT
-                    Seek(13);
+                    Seek(12);
                     break;
 
                 case 28: // TE_ELIGHT
