@@ -25,13 +25,15 @@ namespace CDP.HalfLifeDemo.Frames
 
         public override void Read(BinaryReader br)
         {
-            Core.BitReader bitReader = new Core.BitReader(br.ReadBytes(commandLength));
+            BitReader bitReader = new BitReader(br.ReadBytes(commandLength));
             Command = bitReader.ReadString();
         }
 
         public override void Write(BinaryWriter bw)
         {
-            bw.Write(Command);
+            BitWriter bitWriter = new BitWriter();
+            bitWriter.WriteString(Command, commandLength);
+            bw.Write(bitWriter.ToArray());
         }
     }
 }

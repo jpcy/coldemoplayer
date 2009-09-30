@@ -23,6 +23,18 @@ namespace CDP.HalfLifeDemo
             }
         }
 
+        private class FrameCallback
+        {
+            public byte FrameId { get; set; }
+            public object Delegate { get; set; }
+
+            public void Fire(Frame frame)
+            {
+                MethodInfo methodInfo = Delegate.GetType().GetMethod("Invoke");
+                methodInfo.Invoke(Delegate, new object[] { frame });
+            }
+        }
+
         private class UserMessageDefinition
         {
             public byte Id { get; set; }
@@ -146,6 +158,7 @@ namespace CDP.HalfLifeDemo
         private uint directoryEntriesOffset;
         protected string clientDllChecksum;
         private readonly List<MessageCallback> messageCallbacks;
+        private readonly List<FrameCallback> frameCallbacks;
         private readonly Dictionary<string, DeltaStructure> deltaStructures;
         private readonly List<UserMessageDefinition> userMessageDefinitions;
 
@@ -162,6 +175,7 @@ namespace CDP.HalfLifeDemo
             Details = new List<Detail>();
             Players = new ArrayList();
             messageCallbacks = new List<MessageCallback>();
+            frameCallbacks = new List<FrameCallback>();
             deltaStructures = new Dictionary<string, DeltaStructure>();
             userMessageDefinitions = new List<UserMessageDefinition>();
 
@@ -259,6 +273,7 @@ namespace CDP.HalfLifeDemo
             finally
             {
                 messageCallbacks.Clear();
+                frameCallbacks.Clear();
             }
 
             OnOperationComplete();
@@ -329,6 +344,7 @@ namespace CDP.HalfLifeDemo
             finally
             {
                 messageCallbacks.Clear();
+                frameCallbacks.Clear();
             }
 
             if (IsOperationCancelled())
@@ -354,6 +370,7 @@ namespace CDP.HalfLifeDemo
 
             try
             {
+                AddFrameCallback<Frames.ClientCommand>(Write_ClientCommand);
                 ResetOperationCancelledState();
                 ResetProgress();
 
@@ -477,6 +494,7 @@ namespace CDP.HalfLifeDemo
             finally
             {
                 messageCallbacks.Clear();
+                frameCallbacks.Clear();
             }
 
             if (IsOperationCancelled())
@@ -536,14 +554,20 @@ namespace CDP.HalfLifeDemo
         private Frame ReadFrame(BinaryReader br)
         {
             Frame frame = ReadFrameHeader(br);
+            List<FrameCallback> frameCallbacks = FindFrameCallbacks(frame);
 
-            if (frame.CanSkip)
+            if (frameCallbacks.Count == 0 && frame.CanSkip)
             {
                 frame.Skip(br);
             }
             else
             {
                 frame.Read(br);
+            }
+
+            foreach (FrameCallback frameCallback in frameCallbacks)
+            {
+                frameCallback.Fire(frame);
             }
 
             return frame;
@@ -552,20 +576,31 @@ namespace CDP.HalfLifeDemo
         private Frame ReadAndWriteFrame(BinaryReader br, BinaryWriter bw)
         {
             Frame frame = ReadFrameHeader(br);
-            frame.WriteHeader(bw);
+            List<FrameCallback> frameCallbacks = FindFrameCallbacks(frame);
 
-            if (frame.CanSkip)
+            if (frameCallbacks.Count == 0 && frame.CanSkip)
             {
                 long frameStartOffset = br.BaseStream.Position;
                 frame.Skip(br);
                 long frameFinishOffset = br.BaseStream.Position;
                 br.BaseStream.Seek(frameStartOffset, SeekOrigin.Begin);
+                frame.WriteHeader(bw);
                 bw.Write(br.ReadBytes((int)(frameFinishOffset - frameStartOffset)));
             }
             else
             {
                 frame.Read(br);
-                frame.Write(bw);
+
+                foreach (FrameCallback frameCallback in frameCallbacks)
+                {
+                    frameCallback.Fire(frame);
+                }
+
+                if (!frame.Remove)
+                {
+                    frame.WriteHeader(bw);
+                    frame.Write(bw);
+                }
             }
 
             return frame;
@@ -738,6 +773,26 @@ namespace CDP.HalfLifeDemo
             }
 
             messageCallbacks.Add(callback);
+        }
+        #endregion
+
+        #region Frame callbacks
+        private List<FrameCallback> FindFrameCallbacks(Frame frame)
+        {
+            return frameCallbacks.FindAll(fc => fc.FrameId == frame.Id);
+        }
+
+        public void AddFrameCallback<T>(Action<T> method) where T : Frame
+        {
+            FrameCallback callback = new FrameCallback
+            {
+                Delegate = method
+            };
+
+            // Instantiate the frame type to get the ID.
+            Frame frame = (Frame)Activator.CreateInstance(typeof(T));
+            callback.FrameId = frame.Id;
+            frameCallbacks.Add(callback);
         }
         #endregion
 
@@ -917,6 +972,16 @@ namespace CDP.HalfLifeDemo
             IsHltv = true;
             Perspective = "HLTV";
             AddDetail("Perspective", Perspective);
+        }
+        #endregion
+
+        #region Write frame callbacks
+        private void Write_ClientCommand(Frames.ClientCommand frame)
+        {
+            if (Perspective == "POV" && (bool)settings["HlRemoveShowscores"] && (frame.Command == "+showscores" || frame.Command == "-showscores"))
+            {
+                frame.Remove = true;
+            }
         }
         #endregion
     }

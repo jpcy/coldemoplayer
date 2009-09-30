@@ -21,6 +21,8 @@ namespace CDP.HalfLifeDemo
             get { return true; }
         }
 
+        public bool Remove { get; set; }
+
         protected uint networkProtocol;
 
         public void ReadHeader(BinaryReader br, uint networkProtocol)
