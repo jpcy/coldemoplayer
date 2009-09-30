@@ -118,13 +118,13 @@ namespace CDP.ViewModel
 
         void demo_OperationErrorEvent(object sender, Core.Demo.OperationErrorEventArgs e)
         {
-            navigationService.Invoke((demo, window, errorMessage) => 
+            navigationService.Invoke(() => 
             {
+                Core.Demo demo = (Core.Demo)sender;
                 demo.OperationErrorEvent -= demo_OperationErrorEvent;
                 demo.OperationCompleteEvent -= demo_OperationCompleteEvent;
-                System.Windows.MessageBox.Show(window, errorMessage);
-            },
-            (Core.Demo)sender, navigationService.Window, e.ErrorMessage);
+                navigationService.OpenModalWindow(new View.Message(), new Message(e.ErrorMessage, e.Exception));
+            });
         }
 
         void demo_OperationCompleteEvent(object sender, EventArgs e)

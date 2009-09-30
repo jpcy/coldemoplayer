@@ -20,6 +20,8 @@ namespace CDP
         void ShowWindow();
         void HideWindow();
         string BrowseForFile(string fileName, string initialPath);
+        void OpenModalWindow(Page view, Core.ViewModelBase viewModel);
+        void CloseModalWindow(Core.ViewModelBase viewModel);
         void Invoke(Action action);
         void Invoke<T>(Action<T> action, T arg);
         void Invoke<T1, T2>(Action<T1, T2> action, T1 arg1, T2 arg2);
@@ -39,9 +41,15 @@ namespace CDP
         }
 
         private readonly Stack<Page> pages = new Stack<Page>();
+        private readonly List<Window> modalWindows = new List<Window>();
 
         public void Navigate(Page view, Core.ViewModelBase viewModel)
         {
+            if (modalWindows.Count > 0)
+            {
+                throw new InvalidOperationException("Cannot navigate within a modal window.");
+            }
+
             if (view == null)
             {
                 throw new ArgumentNullException("view");
@@ -60,6 +68,11 @@ namespace CDP
 
         public void Home()
         {
+            if (modalWindows.Count > 0)
+            {
+                throw new InvalidOperationException("Cannot navigate within a modal window.");
+            }
+
             if (pages.Count == 0)
             {
                 throw new InvalidOperationException("Cannot go to the home page when no pages have been navigated to yet.");
@@ -75,6 +88,11 @@ namespace CDP
 
         public void Back()
         {
+            if (modalWindows.Count > 0)
+            {
+                throw new InvalidOperationException("Cannot navigate within a modal window.");
+            }
+
             if (pages.Count > 1)
             {
                 pages.Pop();
@@ -84,11 +102,21 @@ namespace CDP
 
         public void ShowWindow()
         {
+            if (modalWindows.Count > 0)
+            {
+                throw new InvalidOperationException("Cannot show the main window when a modal window is active.");
+            }
+
             Window.Show();
         }
 
         public void HideWindow()
         {
+            if (modalWindows.Count > 0)
+            {
+                throw new InvalidOperationException("Cannot hide the main window when a modal window is active.");
+            }
+
             Window.Hide();
         }
 
@@ -108,6 +136,37 @@ namespace CDP
             }
 
             return null;
+        }
+
+        public void OpenModalWindow(Page view, Core.ViewModelBase viewModel)
+        {
+            if (view == null)
+            {
+                throw new ArgumentNullException("view");
+            }
+
+            if (viewModel == null)
+            {
+                throw new ArgumentNullException("viewModel");
+            }
+
+            view.DataContext = viewModel;
+            Window window = new ModalWindow();
+            window.Owner = Window;
+            window.Content = view;
+            modalWindows.Add(window);
+            window.ShowDialog();
+        }
+
+        public void CloseModalWindow(Core.ViewModelBase viewModel)
+        {
+            Window window = modalWindows.FirstOrDefault(w => ((Page)w.Content).DataContext == viewModel);
+
+            if (window != null)
+            {
+                modalWindows.Remove(window);
+                window.Close();
+            }
         }
 
         public void Invoke(Action action)

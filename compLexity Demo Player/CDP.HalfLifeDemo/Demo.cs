@@ -253,7 +253,7 @@ namespace CDP.HalfLifeDemo
             }
             catch (Exception ex)
             {
-                OnOperationError(null, ex);
+                OnOperationError(FileName, ex);
                 return;
             }
             finally

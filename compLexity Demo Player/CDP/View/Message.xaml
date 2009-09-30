@@ -1,0 +1,19 @@
+﻿<Page x:Class="CDP.View.Message"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:view="clr-namespace:CDP.View"
+    xmlns:uc="clr-namespace:CDP.UserControls"
+    Title="Message">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBox Margin="8" Style="{StaticResource MessageTextBox}" Text="{Binding Text, Mode=OneWay}" />
+        </Grid>
+        <uc:Footer Grid.Row="1">
+            <uc:IconButton HorizontalAlignment="Center" Margin="0,8,0,8" Command="{Binding OkCommand}" IconSource="/Images/ok.png">OK</uc:IconButton>
+        </uc:Footer>
+    </Grid>
+</Page>

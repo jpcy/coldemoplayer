@@ -31,7 +31,7 @@ namespace CDP.Core
 
             public string ErrorMessage
             {
-                get { return errorMessage ?? exception.Message; }
+                get { return errorMessage; }
             }
 
             public OperationErrorEventArgs(string errorMessage)
