@@ -127,6 +127,7 @@
     <Compile Include="Messages\SvcUpdateUserInfo.cs" />
     <Compile Include="Messages\SvcVoiceData.cs" />
     <Compile Include="Messages\SvcVoiceInit.cs" />
+    <Compile Include="Messages\SvcWeaponAnim.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>

@@ -158,6 +158,7 @@ namespace CDP.HalfLifeDemo
             RegisterEngineMessage(typeof(Messages.SvcSpawnStaticSound));
             RegisterEngineMessage(typeof(Messages.SvcIntermission));
             RegisterEngineMessage(typeof(Messages.SvcCdTrack));
+            RegisterEngineMessage(typeof(Messages.SvcWeaponAnim));
             RegisterEngineMessage(typeof(Messages.SvcNewUserMessage));
             RegisterEngineMessage(typeof(Messages.SvcPacketEntities));
             RegisterEngineMessage(typeof(Messages.SvcDeltaPacketEntities));
