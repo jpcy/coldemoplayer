@@ -12,6 +12,7 @@ namespace CDP.HalfLifeDemo
         string Name { get; }
         bool CanSkipWhenWriting { get; }
         Demo Demo { set; }
+        bool Remove { get; set; }
 
         void Skip(Core.BitReader buffer);
         void Read(Core.BitReader buffer);

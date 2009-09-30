@@ -1,4 +1,5 @@
 ﻿using System;
+using CDP.HalfLifeDemo.UserMessages;
 
 namespace CDP.CounterStrikeDemo
 {
@@ -42,6 +43,20 @@ namespace CDP.CounterStrikeDemo
             if (Game != null)
             {
                 Version = (Versions)Game.GetVersion(clientDllChecksum);
+            }
+        }
+
+        public override void Write(string destinationFileName)
+        {
+            AddMessageCallback<ScreenFade>(Write_ScreenFade);
+            base.Write(destinationFileName);
+        }
+
+        private void Write_ScreenFade(ScreenFade message)
+        {
+            if (Perspective == "POV" && (bool)settings["CsRemoveFadeToBlack"] && message.Duration == 0x3000 && message.HoldTime == 0x3000 && message.Flags == (ScreenFade.FlagBits.Out | ScreenFade.FlagBits.StayOut) && message.Colour == 0xFF000000)
+            {
+                message.Remove = true;
             }
         }
     }

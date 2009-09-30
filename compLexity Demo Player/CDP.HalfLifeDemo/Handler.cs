@@ -181,6 +181,7 @@ namespace CDP.HalfLifeDemo
             RegisterUserMessage(typeof(UserMessages.ResetHud));
             RegisterUserMessage(typeof(UserMessages.SayText));
             RegisterUserMessage(typeof(UserMessages.ScoreInfo));
+            RegisterUserMessage(typeof(UserMessages.ScreenFade));
             RegisterUserMessage(typeof(UserMessages.TeamInfo));
             RegisterUserMessage(typeof(UserMessages.TeamScore));
             RegisterUserMessage(typeof(UserMessages.TextMsg));

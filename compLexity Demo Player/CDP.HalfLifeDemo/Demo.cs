@@ -638,8 +638,8 @@ namespace CDP.HalfLifeDemo
         private IMessage ReadAndWriteMessage(Core.BitReader reader, Core.BitWriter writer, bool canSkip)
         {
             IMessage message = ReadMessageHeader(reader);
-            writer.WriteByte(message.Id);
             UserMessage userMessage = message as UserMessage;
+            byte? userMessageLength = null;
 
             if (userMessage != null)
             {
@@ -647,7 +647,7 @@ namespace CDP.HalfLifeDemo
 
                 if (definition.Length == -1)
                 {
-                    writer.WriteByte(userMessage.Length);
+                    userMessageLength = userMessage.Length;
                 }
             }
 
@@ -678,18 +678,29 @@ namespace CDP.HalfLifeDemo
                 messageCallback.Fire(message);
             }
 
-            if (wasSkipped)
+            // Write the message if a message callback hasn't flagged it for removal.
+            if (!message.Remove)
             {
-                int length = reader.CurrentByte - startPosition;
+                writer.WriteByte(message.Id);
 
-                if (length > 0)
+                if (userMessageLength.HasValue)
                 {
-                    writer.WriteBytes(reader.Buffer, startPosition, length);
+                    writer.WriteByte(userMessageLength.Value);
                 }
-            }
-            else
-            {
-                message.Write(writer);
+
+                if (wasSkipped)
+                {
+                    int length = reader.CurrentByte - startPosition;
+
+                    if (length > 0)
+                    {
+                        writer.WriteBytes(reader.Buffer, startPosition, length);
+                    }
+                }
+                else
+                {
+                    message.Write(writer);
+                }
             }
 
             return message;

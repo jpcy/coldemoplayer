@@ -16,6 +16,8 @@ namespace CDP.HalfLifeDemo
             set { demo = value; }
         }
 
+        public bool Remove { get; set; }
+
         protected Demo demo;
 
         public abstract void Skip(Core.BitReader buffer);
