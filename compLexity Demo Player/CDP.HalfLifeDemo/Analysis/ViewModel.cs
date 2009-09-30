@@ -192,7 +192,7 @@ namespace CDP.HalfLifeDemo.Analysis
             string killerName = ((killer == null || killer.Name == null) ? "UNKNOWN" : killer.Name);
             string victimName = ((victim == null || victim.Name == null) ? "UNKNOWN" : victim.Name);
             string killerTeamName = (killer == null ? null : killer.TeamName);
-            string victimTeamName = (killer == null ? null : victim.TeamName);
+            string victimTeamName = (victim == null ? null : victim.TeamName);
 
             GameLogWriteTimestamp();
 
