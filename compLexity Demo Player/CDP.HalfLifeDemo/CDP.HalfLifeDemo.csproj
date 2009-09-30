@@ -64,6 +64,8 @@
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>
     <Compile Include="Analysis\ViewModel.cs" />
+    <Compile Include="BitReaderExtensions.cs" />
+    <Compile Include="BitWriterExtensions.cs" />
     <Compile Include="Delta.cs" />
     <Compile Include="Demo.cs" />
     <Compile Include="DirectoryEntry.cs" />
@@ -79,7 +81,6 @@
     <Compile Include="EngineMessage.cs" />
     <Compile Include="IMessage.cs" />
     <Compile Include="Launcher.cs" />
-    <Compile Include="MessageFrame.cs" />
     <Compile Include="Frames\Loading.cs" />
     <Compile Include="Frames\Playback.cs" />
     <Compile Include="Handler.cs" />

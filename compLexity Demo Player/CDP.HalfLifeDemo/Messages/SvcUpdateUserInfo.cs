@@ -56,9 +56,8 @@ namespace CDP.HalfLifeDemo.Messages
             }
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
-            BitWriter buffer = new BitWriter();
             buffer.WriteByte(Slot);
             buffer.WriteInt(EntityId);
             buffer.WriteString(Info);
@@ -71,8 +70,6 @@ namespace CDP.HalfLifeDemo.Messages
             {
                 buffer.WriteBytes(Checksum);
             }
-
-            return buffer.ToArray();
         }
 
         public override void Log(StreamWriter log)

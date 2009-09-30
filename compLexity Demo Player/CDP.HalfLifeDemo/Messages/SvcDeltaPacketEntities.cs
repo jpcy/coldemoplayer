@@ -65,11 +65,11 @@ namespace CDP.HalfLifeDemo.Messages
 
                 if (buffer.ReadBoolean())
                 {
-                    entityId = buffer.ReadUnsignedBits(11);
+                    entityId = buffer.ReadUBits(11);
                 }
                 else
                 {
-                    entityId += buffer.ReadUnsignedBits(6);
+                    entityId += buffer.ReadUBits(6);
                 }
 
                 if (!remove)
@@ -142,11 +142,11 @@ namespace CDP.HalfLifeDemo.Messages
                 // 3) absolute (11 bits).
                 if (buffer.ReadBoolean())
                 {
-                    entityId = buffer.ReadUnsignedBits(11);
+                    entityId = buffer.ReadUBits(11);
                 }
                 else
                 {
-                    entityId += buffer.ReadUnsignedBits(6);
+                    entityId += buffer.ReadUBits(6);
                 }
 
                 if (!entity.Remove)
@@ -187,9 +187,8 @@ namespace CDP.HalfLifeDemo.Messages
             buffer.SeekRemainingBitsInCurrentByte();
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
-            BitWriter buffer = new BitWriter();
             buffer.WriteUShort(MaxEntities);
             buffer.WriteByte(DeltaSequenceNumber);
 
@@ -197,7 +196,7 @@ namespace CDP.HalfLifeDemo.Messages
             {
                 buffer.WriteBoolean(entity.Remove);
                 buffer.WriteBoolean(true);
-                buffer.WriteUnsignedBits(entity.Id, 11);
+                buffer.WriteUBits(entity.Id, 11);
 
                 if (!entity.Remove)
                 {
@@ -230,7 +229,6 @@ namespace CDP.HalfLifeDemo.Messages
             }
 
             buffer.WriteUShort(0);
-            return buffer.ToArray();
         }
 
         public override void Log(StreamWriter log)

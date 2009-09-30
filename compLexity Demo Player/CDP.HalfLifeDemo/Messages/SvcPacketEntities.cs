@@ -67,11 +67,11 @@ namespace CDP.HalfLifeDemo.Messages
                 {
                     if (buffer.ReadBoolean())
                     {
-                        entityId = buffer.ReadUnsignedBits(11);
+                        entityId = buffer.ReadUBits(11);
                     }
                     else
                     {
-                        entityId += buffer.ReadUnsignedBits(6);
+                        entityId += buffer.ReadUBits(6);
                     }
                 }
 
@@ -144,11 +144,11 @@ namespace CDP.HalfLifeDemo.Messages
                 {
                     if (buffer.ReadBoolean())
                     {
-                        entityId = buffer.ReadUnsignedBits(11);
+                        entityId = buffer.ReadUBits(11);
                     }
                     else
                     {
-                        entityId += buffer.ReadUnsignedBits(6);
+                        entityId += buffer.ReadUBits(6);
                     }                    
                 }
 
@@ -157,14 +157,14 @@ namespace CDP.HalfLifeDemo.Messages
                 if (demo.GameFolderName == "tfc")
                 {
                     // TODO: look into this. Does TFC simply use some feature other games don't or is it a fork of the Half-Life engine. Probably the former.
-                    entity.Unknown = buffer.ReadUnsignedBits(1);
+                    entity.Unknown = buffer.ReadUBits(1);
                 }
 
                 entity.Custom = buffer.ReadBoolean();
 
                 if (buffer.ReadBoolean())
                 {
-                    entity.BaselineIndex = buffer.ReadUnsignedBits(6);
+                    entity.BaselineIndex = buffer.ReadUBits(6);
                 }
 
                 string typeName = "entity_state_t";
@@ -187,20 +187,19 @@ namespace CDP.HalfLifeDemo.Messages
             buffer.SeekRemainingBitsInCurrentByte();
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
-            BitWriter buffer = new BitWriter();
             buffer.WriteUShort(MaxEntities); // TODO: should this be set to Entities.Count?
 
             foreach (Entity entity in Entities)
             {
                 buffer.WriteBoolean(false);
                 buffer.WriteBoolean(true);
-                buffer.WriteUnsignedBits(entity.Id, 11);
+                buffer.WriteUBits(entity.Id, 11);
 
                 if (demo.GameFolderName == "tfc")
                 {
-                    buffer.WriteUnsignedBits(entity.Unknown, 1);
+                    buffer.WriteUBits(entity.Unknown, 1);
                 }
 
                 buffer.WriteBoolean(entity.Custom);
@@ -212,7 +211,7 @@ namespace CDP.HalfLifeDemo.Messages
                 else
                 {
                     buffer.WriteBoolean(true);
-                    buffer.WriteUnsignedBits(entity.BaselineIndex.Value, 6);
+                    buffer.WriteUBits(entity.BaselineIndex.Value, 6);
                 }
 
                 string typeName = "entity_state_t";
@@ -231,7 +230,6 @@ namespace CDP.HalfLifeDemo.Messages
             }
 
             buffer.WriteUShort(0);
-            return buffer.ToArray();
         }
 
         public override void Log(StreamWriter log)

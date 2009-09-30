@@ -45,17 +45,14 @@ namespace CDP.HalfLifeDemo.Messages
             }
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
-            BitWriter buffer = new BitWriter();
             buffer.WriteByte(Command);
 
             if (Command == 2)
             {
                 buffer.WriteBytes(CommandData);
             }
-
-            return buffer.ToArray();
         }
 
         public override void Log(StreamWriter log)

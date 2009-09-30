@@ -77,14 +77,14 @@ namespace UnitTests.Core
         [ExpectedException(typeof(ArgumentException))]
         public void ReadUnsignedBits_NegativeNumberOfBits()
         {
-            blankReader.ReadUnsignedBits(-1);
+            blankReader.ReadUBits(-1);
         }
 
         [Test]
         [ExpectedException(typeof(ArgumentException))]
         public void ReadUnsignedBits_NumberOfBitsTooHigh()
         {
-            blankReader.ReadUnsignedBits(33);
+            blankReader.ReadUBits(33);
         }
 
         [Test]
@@ -93,7 +93,7 @@ namespace UnitTests.Core
         {
             BitReader reader = new BitReader(new byte[4]);
             reader.SeekBits(1);
-            reader.ReadUnsignedBits(32);
+            reader.ReadUBits(32);
         }
 
         [Test]
@@ -102,7 +102,7 @@ namespace UnitTests.Core
             ulong value = (ulong)uintTestValue << 1;
             BitReader reader = new BitReader(BitConverter.GetBytes(value));
             reader.SeekBits(1);
-            Assert.That(reader.ReadUnsignedBits(32), Is.EqualTo(uintTestValue));
+            Assert.That(reader.ReadUBits(32), Is.EqualTo(uintTestValue));
             Assert.That(reader.CurrentBit, Is.EqualTo(33));
         }
 
@@ -110,7 +110,7 @@ namespace UnitTests.Core
         public void ReadUnsignedBits_LittleEndian_ByteAligned()
         {
             BitReader reader = new BitReader(BitConverter.GetBytes(uintTestValue));
-            Assert.That(reader.ReadUnsignedBits(32), Is.EqualTo(uintTestValue));
+            Assert.That(reader.ReadUBits(32), Is.EqualTo(uintTestValue));
             Assert.That(reader.CurrentBit, Is.EqualTo(32));
         }
 
@@ -133,7 +133,7 @@ namespace UnitTests.Core
 
             BitReader reader = new BitReader(bigEndianBuffer);
             reader.Endian = BitReader.Endians.Big;
-            Assert.That(reader.ReadUnsignedBits(32), Is.EqualTo(uintTestValue));
+            Assert.That(reader.ReadUBits(32), Is.EqualTo(uintTestValue));
             Assert.That(reader.CurrentBit, Is.EqualTo(32));
         }
 

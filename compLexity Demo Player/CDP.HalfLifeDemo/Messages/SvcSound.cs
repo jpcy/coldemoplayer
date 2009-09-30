@@ -47,7 +47,7 @@ namespace CDP.HalfLifeDemo.Messages
                 buffer.Endian = BitReader.Endians.Big;
             }
 
-            FlagBits flags = (FlagBits)buffer.ReadUnsignedBits(9);
+            FlagBits flags = (FlagBits)buffer.ReadUBits(9);
 
             if ((flags & FlagBits.Volume) == FlagBits.Volume)
             {
@@ -70,7 +70,7 @@ namespace CDP.HalfLifeDemo.Messages
                 buffer.SeekBytes(1);
             }
 
-            buffer.ReadVectorCoord(true);
+            buffer.ReadVectorCoord();
 
             if ((flags & FlagBits.Pitch) == FlagBits.Pitch)
             {
@@ -87,7 +87,7 @@ namespace CDP.HalfLifeDemo.Messages
                 buffer.Endian = BitReader.Endians.Big;
             }
 
-            FlagBits flags = (FlagBits)buffer.ReadUnsignedBits(9);
+            FlagBits flags = (FlagBits)buffer.ReadUBits(9);
 
             if ((flags & FlagBits.Volume) == FlagBits.Volume)
             {
@@ -99,8 +99,8 @@ namespace CDP.HalfLifeDemo.Messages
                 Attenuation = buffer.ReadByte();
             }
 
-            Channel = buffer.ReadUnsignedBits(3);
-            Edict = buffer.ReadUnsignedBits(11);
+            Channel = buffer.ReadUBits(3);
+            Edict = buffer.ReadUBits(11);
 
             if ((flags & FlagBits.Index) == FlagBits.Index)
             {
@@ -111,7 +111,7 @@ namespace CDP.HalfLifeDemo.Messages
                 Index = buffer.ReadByte();
             }
 
-            Position = new Core.Vector(buffer.ReadVectorCoord(true));
+            Position = new Core.Vector(buffer.ReadVectorCoord());
 
             if ((flags & FlagBits.Pitch) == FlagBits.Pitch)
             {
@@ -121,7 +121,7 @@ namespace CDP.HalfLifeDemo.Messages
             buffer.SeekRemainingBitsInCurrentByte();
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
             FlagBits flags = FlagBits.None;
 
@@ -145,8 +145,7 @@ namespace CDP.HalfLifeDemo.Messages
                 flags |= FlagBits.Pitch;
             }
 
-            BitWriter buffer = new BitWriter();
-            buffer.WriteUnsignedBits((uint)flags, 9);
+            buffer.WriteUBits((uint)flags, 9);
 
             if ((flags & FlagBits.Volume) == FlagBits.Volume)
             {
@@ -158,8 +157,8 @@ namespace CDP.HalfLifeDemo.Messages
                 buffer.WriteByte(Attenuation.Value);
             }
 
-            buffer.WriteUnsignedBits(Channel, 3);
-            buffer.WriteUnsignedBits(Edict, 11);
+            buffer.WriteUBits(Channel, 3);
+            buffer.WriteUBits(Edict, 11);
 
             if ((flags & FlagBits.Index) == FlagBits.Index)
             {
@@ -170,14 +169,12 @@ namespace CDP.HalfLifeDemo.Messages
                 buffer.WriteByte((byte)Index);
             }
 
-            buffer.WriteVectorCoord(true, Position.ToArray());
+            buffer.WriteVectorCoord(Position.ToArray());
 
             if ((flags & FlagBits.Pitch) == FlagBits.Pitch)
             {
                 buffer.WriteByte(Pitch.Value);
             }
-
-            return buffer.ToArray();
         }
 
         public override void Log(StreamWriter log)

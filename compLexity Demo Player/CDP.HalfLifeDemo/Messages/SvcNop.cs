@@ -28,9 +28,8 @@ namespace CDP.HalfLifeDemo.Messages
         {
         }
 
-        public override byte[] Write()
+        public override void Write(Core.BitWriter buffer)
         {
-            return null;
         }
 
         public override void Log(StreamWriter log)

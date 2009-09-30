@@ -17,14 +17,19 @@ namespace CDP.HalfLifeDemo.Frames
 
         public byte[] Data { get; set; }
 
-        protected override void ReadContent(BinaryReader br)
+        public override void Skip(BinaryReader br)
+        {
+            br.BaseStream.Seek(8, SeekOrigin.Current);
+        }
+
+        public override void Read(BinaryReader br)
         {
             Data = br.ReadBytes(8);
         }
 
-        protected override byte[] WriteContent()
+        public override void Write(BinaryWriter bw)
         {
-            return Data;
+            bw.Write(Data);
         }
     }
 }

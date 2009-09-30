@@ -26,7 +26,7 @@ namespace CDP.HalfLifeDemo
         }
 
         public abstract void Read(Core.BitReader buffer);
-        public abstract byte[] Write();
+        public abstract void Write(Core.BitWriter buffer);
         public abstract void Log(StreamWriter log);
     }
 }

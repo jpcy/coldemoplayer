@@ -35,12 +35,10 @@ namespace CDP.HalfLifeDemo.Messages
             Unknown = buffer.ReadUInt();
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
-            BitWriter buffer = new BitWriter();
             buffer.WriteUInt(ServerProcessCount);
             buffer.WriteUInt(Unknown);
-            return buffer.ToArray();
         }
 
         public override void Log(System.IO.StreamWriter log)

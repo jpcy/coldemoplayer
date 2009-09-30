@@ -80,9 +80,8 @@ namespace CDP.HalfLifeDemo.Messages
             }
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
-            BitWriter buffer = new BitWriter();
             buffer.WriteByte(Slot);
             buffer.WriteByte((byte)Type);
             buffer.WriteString(FileName);
@@ -94,8 +93,6 @@ namespace CDP.HalfLifeDemo.Messages
             {
                 buffer.WriteBytes(Hash);
             }
-
-            return buffer.ToArray();
         }
 
         public override void Log(StreamWriter log)

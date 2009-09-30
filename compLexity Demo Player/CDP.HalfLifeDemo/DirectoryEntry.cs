@@ -22,6 +22,11 @@ namespace CDP.HalfLifeDemo
         public int Offset { get; set; }
         public int Length { get; set; }
 
+        public DirectoryEntry()
+        {
+            CdTrack = -1;
+        }
+
         public void Read(byte[] buffer)
         {
             BitReader br = new BitReader(buffer);

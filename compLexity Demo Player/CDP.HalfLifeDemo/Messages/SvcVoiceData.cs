@@ -39,9 +39,8 @@ namespace CDP.HalfLifeDemo.Messages
             Data = buffer.ReadBytes(length);
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
-            BitWriter buffer = new BitWriter();
             buffer.WriteByte(Slot);
 
             if (Data == null)
@@ -53,8 +52,6 @@ namespace CDP.HalfLifeDemo.Messages
                 buffer.WriteUShort((ushort)Data.Length);
                 buffer.WriteBytes(Data);
             }
-
-            return buffer.ToArray();
         }
 
         public override void Log(StreamWriter log)

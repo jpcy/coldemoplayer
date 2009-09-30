@@ -15,7 +15,7 @@ namespace CDP.HalfLifeDemo
 
         void Skip(Core.BitReader buffer);
         void Read(Core.BitReader buffer);
-        byte[] Write();
+        void Write(Core.BitWriter buffer);
         void Log(StreamWriter log);
     }
 }

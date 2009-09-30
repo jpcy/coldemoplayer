@@ -39,16 +39,12 @@ namespace CDP.HalfLifeDemo.Messages
             }
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
-            BitWriter writer = new BitWriter();
-
             for (int i = 0; i < 3; i++)
             {
-                writer.WriteShort((short)(Angle[i] * (((1 << 16) - 1) / 360.0f)));
+                buffer.WriteShort((short)(Angle[i] * (((1 << 16) - 1) / 360.0f)));
             }
-
-            return writer.ToArray();
         }
 
         public override void Log(StreamWriter log)

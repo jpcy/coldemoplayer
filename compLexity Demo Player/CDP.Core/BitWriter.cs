@@ -20,7 +20,7 @@ namespace CDP.Core
             return data.ToArray();
         }
 
-        public void WriteUnsignedBits(uint value, int nBits)
+        public void WriteUBits(uint value, int nBits)
         {
             if (nBits < 0 || nBits > 32)
             {
@@ -29,6 +29,20 @@ namespace CDP.Core
 
             int currentByte = currentBit / 8;
             int bitOffset = currentBit - (currentByte * 8);
+
+            // See if the fast method can be used (offset is byte-aligned, nBits is a multiple of 8).
+            if (bitOffset == 0 && (nBits % 8) == 0)
+            {
+                int nBytesToWrite = nBits / 8;
+
+                for (int i = 0; i < nBytesToWrite; i++)
+                {
+                    data.Add((byte)((value >> i * 8) & 0xFF));
+                }
+
+                currentBit += nBits;
+                return;
+            }
 
             // calculate how many bits need to be written to the current byte
             int bitsToWriteToCurrentByte = 8 - bitOffset;
@@ -95,8 +109,8 @@ namespace CDP.Core
 
         public void WriteBits(int value, int nBits)
         {
-            WriteUnsignedBits((uint)value, nBits - 1);
-            WriteUnsignedBits(value < 0 ? 1u : 0u, 1);
+            WriteUBits((uint)value, nBits - 1);
+            WriteUBits(value < 0 ? 1u : 0u, 1);
         }
 
         public void WriteBoolean(bool value)
@@ -118,7 +132,7 @@ namespace CDP.Core
 
         public void WriteByte(byte value)
         {
-            WriteUnsignedBits((uint)value, 8);
+            WriteUBits((uint)value, 8);
         }
 
         public void WriteSByte(sbyte value)
@@ -128,9 +142,25 @@ namespace CDP.Core
 
         public void WriteBytes(byte[] values)
         {
-            for (int i = 0; i < values.Length; i++)
+            data.AddRange(values);
+            currentBit += values.Length * 8;
+        }
+
+        public void WriteBytes(byte[] buffer, int start, int count)
+        {
+            if (start < 0 || start > buffer.Length - 1)
             {
-                WriteByte(values[i]);
+                throw new ArgumentOutOfRangeException("start");
+            }
+
+            if (count <= 0)
+            {
+                throw new ArgumentException("count");
+            }
+
+            for (int i = start; i < start + count; i++)
+            {
+                WriteByte(buffer[i]);
             }
         }
 
@@ -150,7 +180,7 @@ namespace CDP.Core
 
         public void WriteUShort(ushort value)
         {
-            WriteUnsignedBits((uint)value, 16);
+            WriteUBits((uint)value, 16);
         }
 
         public void WriteInt(int value)
@@ -160,7 +190,7 @@ namespace CDP.Core
 
         public void WriteUInt(uint value)
         {
-            WriteUnsignedBits(value, 32);
+            WriteUBits(value, 32);
         }
 
         public void WriteFloat(float value)
@@ -170,13 +200,11 @@ namespace CDP.Core
 
         public void WriteString(string value)
         {
-            for (int i = 0; i < value.Length; i++)
+            if (!string.IsNullOrEmpty(value))
             {
-                // ascii
-                WriteByte((byte)value[i]);
+                WriteBytes(Encoding.ASCII.GetBytes(value));
             }
 
-            // null terminator
             WriteByte(0);
         }
 
@@ -193,45 +221,6 @@ namespace CDP.Core
             for (int i = 0; i < length - (value.Length + 1); i++)
             {
                 WriteByte(0);
-            }
-        }
-
-        public void WriteVectorCoord(bool goldSrc, float[] coord)
-        {
-            WriteBoolean(true);
-            WriteBoolean(true);
-            WriteBoolean(true);
-            WriteCoord(goldSrc, coord[0]);
-            WriteCoord(goldSrc, coord[1]);
-            WriteCoord(goldSrc, coord[2]);
-        }
-
-        public void WriteCoord(bool goldSrc, float value)
-        {
-            WriteBoolean(true); // int flag
-            WriteBoolean(true); // fraction flag
-
-            // sign
-            if (value < 0.0f)
-            {
-                WriteBoolean(true);
-            }
-            else
-            {
-                WriteBoolean(false);
-            }
-
-            uint intValue = (uint)value;
-
-            if (goldSrc)
-            {
-                WriteUnsignedBits(intValue, 12);
-                WriteUnsignedBits(0, 3); // FIXME
-            }
-            else
-            {
-                WriteUnsignedBits(intValue - 1, 14);
-                WriteUnsignedBits(0, 5); // FIXME
             }
         }
     }

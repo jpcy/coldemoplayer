@@ -32,14 +32,12 @@ namespace CDP.HalfLifeDemo.UserMessages
             WeaponName = buffer.ReadString();
         }
 
-        public override byte[] Write()
+        public override void  Write(BitWriter buffer)
         {
-            BitWriter buffer = new BitWriter();
             buffer.WriteByte(KillerSlot);
             buffer.WriteByte(VictimSlot);
             buffer.WriteByte((byte)(Headshot ? 1 : 0));
             buffer.WriteString(WeaponName);
-            return buffer.ToArray();
         }
 
         public override void Log(StreamWriter log)

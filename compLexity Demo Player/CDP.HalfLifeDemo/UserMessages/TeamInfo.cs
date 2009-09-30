@@ -26,12 +26,10 @@ namespace CDP.HalfLifeDemo.UserMessages
             TeamName = buffer.ReadString();
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
-            BitWriter buffer = new BitWriter();
             buffer.WriteByte(Slot);
             buffer.WriteString(TeamName);
-            return buffer.ToArray();
         }
 
         public override void Log(StreamWriter log)

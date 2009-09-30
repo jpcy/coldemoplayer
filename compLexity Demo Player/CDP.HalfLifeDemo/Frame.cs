@@ -16,36 +16,30 @@ namespace CDP.HalfLifeDemo
         {
             get { return false; }
         }
+        public virtual bool CanSkip
+        {
+            get { return true; }
+        }
 
         protected uint networkProtocol;
 
-        public void Read(BinaryReader br, uint networkProtocol)
+        public void ReadHeader(BinaryReader br, uint networkProtocol)
         {
             this.networkProtocol = networkProtocol;
             Timestamp = br.ReadSingle();
             Number = br.ReadUInt32();
-            ReadContent(br);
         }
 
-        public byte[] Write()
+        public void WriteHeader(BinaryWriter bw)
         {
-            BitWriter buffer = new BitWriter();
-            buffer.WriteByte(Id);
-            buffer.WriteFloat(Timestamp);
-            buffer.WriteUInt(Number);
-
-            byte[] content = WriteContent();
-
-            if (content != null)
-            {
-                buffer.WriteBytes(content);
-            }
-
-            return buffer.ToArray();
+            bw.Write(Id);
+            bw.Write(Timestamp);
+            bw.Write(Number);
         }
 
-        protected virtual void ReadContent(BinaryReader br) { }
-        protected virtual byte[] WriteContent() { return null; }
+        public virtual void Skip(BinaryReader br) { }
+        public virtual void Read(BinaryReader br) { }
+        public virtual void Write(BinaryWriter bw) { }
     }
 
     public enum FrameIds : byte

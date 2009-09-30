@@ -34,9 +34,9 @@ namespace CDP.HalfLifeDemo.Messages
             Multiplier = buffer.ReadFloat();
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
-            return BitConverter.GetBytes(Multiplier);
+            buffer.WriteFloat(Multiplier);
         }
 
         public override void Log(StreamWriter log)

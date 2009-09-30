@@ -36,12 +36,10 @@ namespace CDP.HalfLifeDemo.Messages
             LoopTrack = buffer.ReadByte();
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
-            BitWriter buffer = new BitWriter();
             buffer.WriteByte(Track);
             buffer.WriteByte(LoopTrack);
-            return buffer.ToArray();
         }
 
         public override void Log(StreamWriter log)

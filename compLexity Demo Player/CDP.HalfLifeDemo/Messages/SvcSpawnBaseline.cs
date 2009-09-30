@@ -42,14 +42,14 @@ namespace CDP.HalfLifeDemo.Messages
 
             while (true)
             {
-                uint id = buffer.ReadUnsignedBits(11);
+                uint id = buffer.ReadUBits(11);
 
                 if (id == (1 << 11) - 1) // All 1's.
                 {
                     break;
                 }
 
-                uint type = buffer.ReadUnsignedBits(2);
+                uint type = buffer.ReadUBits(2);
                 string typeName = "custom_entity_state_t";
 
                 if ((type & 1) != 0)
@@ -68,14 +68,14 @@ namespace CDP.HalfLifeDemo.Messages
                 structure.SkipDelta(buffer);
             }
 
-            uint footer = buffer.ReadUnsignedBits(5);
+            uint footer = buffer.ReadUBits(5);
 
             if (footer != (1 << 5) - 1) // All 1's.
             {
                 throw new ApplicationException(string.Format("Bad svc_spawnbaseline footer \"{0}\".", footer));
             }
 
-            uint nExtraEntityDeltas = buffer.ReadUnsignedBits(6);
+            uint nExtraEntityDeltas = buffer.ReadUBits(6);
             DeltaStructure entityStateStructure = demo.FindDeltaStructure("entity_state_t");
 
             for (int i = 0; i < nExtraEntityDeltas; i++)
@@ -97,7 +97,7 @@ namespace CDP.HalfLifeDemo.Messages
 
             while (true)
             {
-                uint id = buffer.ReadUnsignedBits(11);
+                uint id = buffer.ReadUBits(11);
 
                 if (id == (1 << 11) - 1) // All 1's.
                 {
@@ -109,7 +109,7 @@ namespace CDP.HalfLifeDemo.Messages
                     Id = id
                 };
 
-                entity.Type = buffer.ReadUnsignedBits(2);
+                entity.Type = buffer.ReadUBits(2);
                 string typeName = "custom_entity_state_t";
 
                 if ((entity.Type & 1) != 0)
@@ -130,14 +130,14 @@ namespace CDP.HalfLifeDemo.Messages
                 Entities.Add(entity);
             }
 
-            uint footer = buffer.ReadUnsignedBits(5);
+            uint footer = buffer.ReadUBits(5);
 
             if (footer != (1 << 5) - 1) // All 1's.
             {
                 throw new ApplicationException(string.Format("Bad svc_spawnbaseline footer \"{0}\".", footer));
             }
 
-            uint nExtraEntityDeltas = buffer.ReadUnsignedBits(6);
+            uint nExtraEntityDeltas = buffer.ReadUBits(6);
             ExtraEntityDeltas = new List<Delta>((int)nExtraEntityDeltas);
             DeltaStructure entityStateStructure = demo.FindDeltaStructure("entity_state_t");
 
@@ -151,14 +151,12 @@ namespace CDP.HalfLifeDemo.Messages
             buffer.SeekRemainingBitsInCurrentByte();
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
-            BitWriter buffer = new BitWriter();
-
             foreach (Entity entity in Entities)
             {
-                buffer.WriteUnsignedBits(entity.Id, 11);
-                buffer.WriteUnsignedBits(entity.Type, 2);
+                buffer.WriteUBits(entity.Id, 11);
+                buffer.WriteUBits(entity.Type, 2);
 
                 string typeName = "custom_entity_state_t";
 
@@ -178,17 +176,15 @@ namespace CDP.HalfLifeDemo.Messages
                 structure.WriteDelta(buffer, entity.Delta);
             }
 
-            buffer.WriteUnsignedBits((1 << 16) - 1, 16);
+            buffer.WriteUBits((1 << 16) - 1, 16);
 
-            buffer.WriteUnsignedBits((uint)ExtraEntityDeltas.Count, 6);
+            buffer.WriteUBits((uint)ExtraEntityDeltas.Count, 6);
             DeltaStructure entityStateStructure = demo.FindDeltaStructure("entity_state_t");
 
             foreach (Delta delta in ExtraEntityDeltas)
             {
                 entityStateStructure.WriteDelta(buffer, delta);
             }
-
-            return buffer.ToArray();
         }
 
         public override void Log(StreamWriter log)

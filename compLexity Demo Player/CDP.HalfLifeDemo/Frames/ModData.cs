@@ -17,7 +17,13 @@ namespace CDP.HalfLifeDemo.Frames
 
         public byte[] Data { get; set; }
 
-        protected override void ReadContent(BinaryReader br)
+        public override void Skip(BinaryReader br)
+        {
+            uint length = br.ReadUInt32();
+            br.BaseStream.Seek(length, SeekOrigin.Current);
+        }
+
+        public override void Read(BinaryReader br)
         {
             uint length = br.ReadUInt32();
 
@@ -27,21 +33,17 @@ namespace CDP.HalfLifeDemo.Frames
             }
         }
 
-        protected override byte[] WriteContent()
+        public override void Write(BinaryWriter bw)
         {
-            BitWriter buffer = new BitWriter();
-
             if (Data == null)
             {
-                buffer.WriteUInt(0);
+                bw.Write(0u);
             }
             else
             {
-                buffer.WriteUInt((uint)Data.Length);
-                buffer.WriteBytes(Data);
+                bw.Write((uint)Data.Length);
+                bw.Write(Data);
             }
-
-            return buffer.ToArray();
         }
     }
 }

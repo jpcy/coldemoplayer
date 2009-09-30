@@ -40,7 +40,7 @@ namespace CDP.HalfLifeDemo.Messages
                 buffer.Endian = BitReader.Endians.Big;
             }
 
-            uint nEvents = buffer.ReadUnsignedBits(5);
+            uint nEvents = buffer.ReadUBits(5);
             DeltaStructure eventDeltaStructure = demo.FindDeltaStructure("event_t");
 
             for (int i = 0; i < nEvents; i++)
@@ -73,18 +73,18 @@ namespace CDP.HalfLifeDemo.Messages
                 buffer.Endian = BitReader.Endians.Big;
             }
 
-            uint nEvents = buffer.ReadUnsignedBits(5);
+            uint nEvents = buffer.ReadUBits(5);
             Events = new List<Event>();
             DeltaStructure eventDeltaStructure = demo.FindDeltaStructure("event_t");
 
             for (int i = 0; i < nEvents; i++)
             {
                 Event ev = new Event();
-                ev.Index = buffer.ReadUnsignedBits(10);
+                ev.Index = buffer.ReadUBits(10);
 
                 if (buffer.ReadBoolean())
                 {
-                    ev.PacketIndex = buffer.ReadUnsignedBits(11);
+                    ev.PacketIndex = buffer.ReadUBits(11);
 
                     if (buffer.ReadBoolean())
                     {
@@ -104,20 +104,19 @@ namespace CDP.HalfLifeDemo.Messages
             buffer.SeekRemainingBitsInCurrentByte();
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
-            BitWriter buffer = new BitWriter();
-            buffer.WriteUnsignedBits((uint)Events.Count, 5);
+            buffer.WriteUBits((uint)Events.Count, 5);
             DeltaStructure eventDeltaStructure = demo.FindDeltaStructure("event_t");
 
             foreach (Event ev in Events)
             {
-                buffer.WriteUnsignedBits(ev.Index, 10);
+                buffer.WriteUBits(ev.Index, 10);
 
                 if (ev.PacketIndex.HasValue)
                 {
                     buffer.WriteBoolean(true);
-                    buffer.WriteUnsignedBits((uint)ev.PacketIndex, 11);
+                    buffer.WriteUBits((uint)ev.PacketIndex, 11);
 
                     if (ev.Delta == null)
                     {
@@ -144,8 +143,6 @@ namespace CDP.HalfLifeDemo.Messages
                     buffer.WriteBoolean(false);
                 }
             }
-
-            return buffer.ToArray();
         }
 
         public override void Log(StreamWriter log)

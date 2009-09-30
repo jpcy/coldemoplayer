@@ -32,7 +32,12 @@ namespace CDP.HalfLifeDemo.Frames
         public uint WeaponBitmask { get; set; }
         public float Fov { get; set; }
 
-        protected override void ReadContent(BinaryReader br)
+        public override void Skip(BinaryReader br)
+        {
+            br.BaseStream.Seek(32, SeekOrigin.Current);
+        }
+
+        public override void Read(BinaryReader br)
         {
             Origin = new Core.Vector();
             Origin.X = br.ReadSingle();
@@ -46,18 +51,16 @@ namespace CDP.HalfLifeDemo.Frames
             Fov = br.ReadSingle();
         }
 
-        protected override byte[] WriteContent()
+        public override void Write(BinaryWriter bw)
         {
-            BitWriter buffer = new BitWriter();
-            buffer.WriteFloat(Origin.X);
-            buffer.WriteFloat(Origin.Y);
-            buffer.WriteFloat(Origin.Z);
-            buffer.WriteFloat(ViewAngles.X);
-            buffer.WriteFloat(ViewAngles.Y);
-            buffer.WriteFloat(ViewAngles.Z);
-            buffer.WriteUInt(WeaponBitmask);
-            buffer.WriteFloat(Fov);
-            return buffer.ToArray();
+            bw.Write(Origin.X);
+            bw.Write(Origin.Y);
+            bw.Write(Origin.Z);
+            bw.Write(ViewAngles.X);
+            bw.Write(ViewAngles.Y);
+            bw.Write(ViewAngles.Z);
+            bw.Write(WeaponBitmask);
+            bw.Write(Fov);
         }
     }
 }

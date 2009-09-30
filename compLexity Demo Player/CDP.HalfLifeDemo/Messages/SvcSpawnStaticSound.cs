@@ -52,9 +52,8 @@ namespace CDP.HalfLifeDemo.Messages
             Flags = buffer.ReadByte();
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
-            BitWriter buffer = new BitWriter();
             buffer.WriteShort((short)(Position.X * 8.0f));
             buffer.WriteShort((short)(Position.Y * 8.0f));
             buffer.WriteShort((short)(Position.Z * 8.0f));
@@ -64,7 +63,6 @@ namespace CDP.HalfLifeDemo.Messages
             buffer.WriteUShort(Edict);
             buffer.WriteByte(Pitch);
             buffer.WriteByte(Flags);
-            return buffer.ToArray();
         }
 
         public override void Log(StreamWriter log)

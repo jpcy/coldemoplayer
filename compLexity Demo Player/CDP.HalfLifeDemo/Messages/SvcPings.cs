@@ -60,29 +60,26 @@ namespace CDP.HalfLifeDemo.Messages
             {
                 Clients.Add(new Client
                 {
-                    Slot = buffer.ReadUnsignedBits(5),
-                    Ping = buffer.ReadUnsignedBits(12),
-                    Loss = buffer.ReadUnsignedBits(7)
+                    Slot = buffer.ReadUBits(5),
+                    Ping = buffer.ReadUBits(12),
+                    Loss = buffer.ReadUBits(7)
                 });
             }
 
             buffer.SeekRemainingBitsInCurrentByte();
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
-            BitWriter buffer = new BitWriter();
-
             foreach (Client client in Clients)
             {
                 buffer.WriteBoolean(true);
-                buffer.WriteUnsignedBits(client.Slot, 5);
-                buffer.WriteUnsignedBits(client.Ping, 12);
-                buffer.WriteUnsignedBits(client.Loss, 7);
+                buffer.WriteUBits(client.Slot, 5);
+                buffer.WriteUBits(client.Ping, 12);
+                buffer.WriteUBits(client.Loss, 7);
             }
 
             buffer.WriteBoolean(false);
-            return buffer.ToArray();
         }
 
         public override void Log(StreamWriter log)

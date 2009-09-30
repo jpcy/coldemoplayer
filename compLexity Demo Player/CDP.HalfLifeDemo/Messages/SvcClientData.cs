@@ -101,11 +101,11 @@ namespace CDP.HalfLifeDemo.Messages
 
                 if (demo.NetworkProtocol < 47) // TODO: beta steam detection
                 {
-                    weapon.Index = buffer.ReadUnsignedBits(5);
+                    weapon.Index = buffer.ReadUBits(5);
                 }
                 else
                 {
-                    weapon.Index = buffer.ReadUnsignedBits(6);
+                    weapon.Index = buffer.ReadUBits(6);
                 }
 
                 weapon.Delta = weaponStructure.CreateDelta();
@@ -117,14 +117,12 @@ namespace CDP.HalfLifeDemo.Messages
             buffer.Endian = BitReader.Endians.Little;
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
             if (demo.IsHltv)
             {
-                return null;
+                return;
             }
-
-            BitWriter buffer = new BitWriter();
 
             if (DeltaSequenceNumber == null)
             {
@@ -143,12 +141,11 @@ namespace CDP.HalfLifeDemo.Messages
             foreach (Weapon weapon in Weapons)
             {
                 buffer.WriteBoolean(true);
-                buffer.WriteUnsignedBits(weapon.Index, 6);
+                buffer.WriteUBits(weapon.Index, 6);
                 weaponStructure.WriteDelta(buffer, weapon.Delta);
             }
 
             buffer.WriteBoolean(false);
-            return buffer.ToArray();
         }
 
         public override void Log(StreamWriter log)

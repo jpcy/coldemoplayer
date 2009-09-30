@@ -34,9 +34,9 @@ namespace CDP.HalfLifeDemo.Messages
             Number = buffer.ReadByte(); // Always 1.
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
-            return new byte[] { Number };
+            buffer.WriteByte(Number);
         }
 
         public override void Log(StreamWriter log)

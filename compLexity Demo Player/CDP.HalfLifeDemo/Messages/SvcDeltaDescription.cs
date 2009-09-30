@@ -69,9 +69,8 @@ namespace CDP.HalfLifeDemo.Messages
             buffer.SeekRemainingBitsInCurrentByte();
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
-            BitWriter buffer = new BitWriter();
             buffer.WriteString(Structure.Name);
             buffer.WriteUShort((ushort)Structure.NumEntries);
             DeltaStructure deltaDescription = demo.FindDeltaStructure("delta_description_t");
@@ -81,8 +80,6 @@ namespace CDP.HalfLifeDemo.Messages
             {
                 deltaDescription.WriteDelta(buffer, Deltas[i]);
             }
-
-            return buffer.ToArray();
         }
 
         public override void Log(StreamWriter log)

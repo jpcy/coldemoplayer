@@ -36,12 +36,10 @@ namespace CDP.HalfLifeDemo.Messages
             Cheats = buffer.ReadByte();
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
-            BitWriter buffer = new BitWriter();
             buffer.WriteString(ClientFallback);
             buffer.WriteByte(Cheats);
-            return buffer.ToArray();
         }
 
         public override void Log(System.IO.StreamWriter log)

@@ -19,7 +19,14 @@ namespace CDP.HalfLifeDemo.Frames
         public byte[] FileName { get; set; }
         public byte[] Unknown2 { get; set; }
 
-        protected override void ReadContent(BinaryReader br)
+        public override void Skip(BinaryReader br)
+        {
+            br.BaseStream.Seek(4, SeekOrigin.Current);
+            uint length = br.ReadUInt32();
+            br.BaseStream.Seek(length + 16, SeekOrigin.Current);
+        }
+
+        public override void Read(BinaryReader br)
         {
             Unknown1 = br.ReadInt32();
             FileNameLength = br.ReadUInt32();
@@ -27,14 +34,12 @@ namespace CDP.HalfLifeDemo.Frames
             Unknown2 = br.ReadBytes(16);
         }
 
-        protected override byte[] WriteContent()
+        public override void Write(BinaryWriter bw)
         {
-            BitWriter buffer = new BitWriter();
-            buffer.WriteInt(Unknown1);
-            buffer.WriteUInt(FileNameLength); // should be FileName.Length?
-            buffer.WriteBytes(FileName);
-            buffer.WriteBytes(Unknown2);
-            return buffer.ToArray();
+            bw.Write(Unknown1);
+            bw.Write(FileNameLength); // should be FileName.Length?
+            bw.Write(FileName);
+            bw.Write(Unknown2);
         }
     }
 }

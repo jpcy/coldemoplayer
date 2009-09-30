@@ -18,17 +18,20 @@ namespace CDP.HalfLifeDemo.Frames
 
         private const int commandLength = 64;
 
-        protected override void ReadContent(BinaryReader br)
+        public override void Skip(BinaryReader br)
+        {
+            br.BaseStream.Seek(commandLength, SeekOrigin.Current);
+        }
+
+        public override void Read(BinaryReader br)
         {
             Core.BitReader bitReader = new Core.BitReader(br.ReadBytes(commandLength));
             Command = bitReader.ReadString();
         }
 
-        protected override byte[] WriteContent()
+        public override void Write(BinaryWriter bw)
         {
-            BitWriter buffer = new BitWriter();
-            buffer.WriteString(Command);
-            return buffer.ToArray();
+            bw.Write(Command);
         }
     }
 }

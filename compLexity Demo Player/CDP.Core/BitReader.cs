@@ -134,7 +134,7 @@ namespace CDP.Core
         }
 
         // HL 1.1.0.6 bit reading (big endian byte and bit order)
-        private uint ReadUnsignedBitsBigEndian(int nBits)
+        private uint ReadUBitsBigEndian(int nBits)
         {
             int bitOffset = currentBit % 8;
             int nBitsToRead = bitOffset + nBits;
@@ -158,7 +158,30 @@ namespace CDP.Core
             return (uint)currentValue;
         }
 
-        private uint ReadUnsignedBitsLittleEndian(int nBits)
+        private uint ReadUBitsLittleEndianByteAligned(int nBits)
+        {
+            if (nBits % 8 != 0)
+            {
+                throw new ArgumentException("Must be a multiple of 8.", "nBits");
+            }
+
+            if (currentBit % 8 != 0)
+            {
+                throw new InvalidOperationException("Current bit is not byte-aligned.");
+            }
+
+            uint result = 0;
+
+            for (int i = 0; i < nBits / 8; i++)
+            {
+                result += (uint)(Buffer[CurrentByte] << (i * 8));
+                currentBit += 8;
+            }
+
+            return result;
+        }
+
+        private uint ReadUBitsLittleEndian(int nBits)
         {
             /* Example:
              * 
@@ -204,7 +227,7 @@ namespace CDP.Core
             return (uint)currentValue;
         }
 
-        public uint ReadUnsignedBits(int nBits)
+        public uint ReadUBits(int nBits)
         {
             if (nBits <= 0 || nBits > 32)
             {
@@ -219,22 +242,29 @@ namespace CDP.Core
 
             if (Endian == Endians.Little)
             {
-                return ReadUnsignedBitsLittleEndian(nBits);
+                if (currentBit % 8 == 0 && nBits % 8 == 0)
+                {
+                    return ReadUBitsLittleEndianByteAligned(nBits);
+                }
+                else
+                {
+                    return ReadUBitsLittleEndian(nBits);
+                }
             }
             else
             {
-                return ReadUnsignedBitsBigEndian(nBits);
+                return ReadUBitsBigEndian(nBits);
             }
         }
 
-        public uint ReadUnsignedBits(uint nBits)
+        public uint ReadUBits(uint nBits)
         {
-            return ReadUnsignedBits((int)nBits);
+            return ReadUBits((int)nBits);
         }
 
         public int ReadBits(int nBits)
         {
-            int result = (int)ReadUnsignedBits(nBits - 1);
+            int result = (int)ReadUBits(nBits - 1);
 
             if (ReadBoolean())
             {
@@ -266,7 +296,7 @@ namespace CDP.Core
 
         public byte ReadByte()
         {
-            return (byte)ReadUnsignedBits(8);
+            return (byte)ReadUBits(8);
         }
 
         public sbyte ReadSByte()
@@ -274,8 +304,18 @@ namespace CDP.Core
             return (sbyte)ReadBits(8);
         }
 
+        public byte[] ReadBytes(uint nBytes)
+        {
+            return ReadBytes((int)nBytes);
+        }
+
         public byte[] ReadBytes(int nBytes)
         {
+            if (nBytes <= 0)
+            {
+                throw new ArgumentOutOfRangeException("Must be a positive integer.", "nBytes");
+            }
+
             byte[] result = new byte[nBytes];
 
             for (int i = 0; i < nBytes; i++)
@@ -305,7 +345,7 @@ namespace CDP.Core
 
         public ushort ReadUShort()
         {
-            return (ushort)ReadUnsignedBits(16);
+            return (ushort)ReadUBits(16);
         }
 
         public int ReadInt()
@@ -315,7 +355,7 @@ namespace CDP.Core
 
         public uint ReadUInt()
         {
-            return ReadUnsignedBits(32);
+            return ReadUBits(32);
         }
 
         public float ReadFloat()
@@ -359,97 +399,6 @@ namespace CDP.Core
             }
 
             return Encoding.UTF8.GetString(bytes.ToArray());
-        }
-
-        public float[] ReadVectorCoord()
-        {
-            return ReadVectorCoord(false);
-        }
-
-        public float[] ReadVectorCoord(bool goldSrc)
-        {
-            bool xFlag = ReadBoolean();
-            bool yFlag = ReadBoolean();
-            bool zFlag = ReadBoolean();
-
-            float[] result = new float[3];
-
-            if (xFlag)
-            {
-                result[0] = ReadBitCoord(goldSrc);
-            }
-
-            if (yFlag)
-            {
-                result[1] = ReadBitCoord(goldSrc);
-            }
-
-            if (zFlag)
-            {
-                result[2] = ReadBitCoord(goldSrc);
-            }
-
-            return result;
-        }
-
-        public float ReadCoord()
-        {
-            return ReadShort() / 8.0f;
-        }
-
-        public float ReadBitCoord()
-        {
-            return ReadBitCoord(false);
-        }
-
-        public float ReadBitCoord(bool goldSrc)
-        {
-            bool intFlag = ReadBoolean();
-            bool fractionFlag = ReadBoolean();
-
-            float value = 0.0f;
-
-            if (!intFlag && !fractionFlag)
-            {
-                return value;
-            }
-
-            bool sign = ReadBoolean();
-            uint intValue = 0;
-            uint fractionValue = 0;
-
-            if (intFlag)
-            {
-                if (goldSrc)
-                {
-                    intValue = ReadUnsignedBits(12);
-                }
-                else
-                {
-                    intValue = ReadUnsignedBits(14) + 1;
-                }
-            }
-
-            if (fractionFlag)
-            {
-                if (goldSrc)
-                {
-                    fractionValue = ReadUnsignedBits(3);
-                }
-                else
-                {
-                    fractionValue = ReadUnsignedBits(5);
-                }
-            }
-
-            value = intValue + ((float)fractionValue * 1.0f / 32.0f);
-
-            if (sign)
-            {
-                value = -value;
-            }
-
-            return value;
         }
     }
 }

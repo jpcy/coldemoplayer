@@ -53,23 +53,22 @@ namespace CDP.HalfLifeDemo.Messages
                 buffer.Endian = BitReader.Endians.Big;
             }
 
-            Index = buffer.ReadUnsignedBits(10);
+            Index = buffer.ReadUBits(10);
             DeltaStructure eventDeltaStructure = demo.FindDeltaStructure("event_t");
             Delta = eventDeltaStructure.CreateDelta();
             eventDeltaStructure.ReadDelta(buffer, Delta);
 
             if (buffer.ReadBoolean())
             {
-                Delay = buffer.ReadUnsignedBits(16) / 100.0f;
+                Delay = buffer.ReadUBits(16) / 100.0f;
             }
 
             buffer.SeekRemainingBitsInCurrentByte();
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
-            BitWriter buffer = new BitWriter();
-            buffer.WriteUnsignedBits(Index, 10);
+            buffer.WriteUBits(Index, 10);
             DeltaStructure eventDeltaStructure = demo.FindDeltaStructure("event_t");
             eventDeltaStructure.WriteDelta(buffer, Delta);
 
@@ -80,10 +79,8 @@ namespace CDP.HalfLifeDemo.Messages
             else
             {
                 buffer.WriteBoolean(true);
-                buffer.WriteUnsignedBits((uint)(Delay * 100.0f), 16);
+                buffer.WriteUBits((uint)(Delay * 100.0f), 16);
             }
-
-            return buffer.ToArray();
         }
 
         public override void Log(StreamWriter log)

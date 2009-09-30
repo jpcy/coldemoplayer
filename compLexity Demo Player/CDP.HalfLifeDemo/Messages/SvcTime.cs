@@ -34,11 +34,9 @@ namespace CDP.HalfLifeDemo.Messages
             Timestamp = buffer.ReadFloat();
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
-            BitWriter buffer = new BitWriter();
             buffer.WriteFloat(Timestamp);
-            return buffer.ToArray();
         }
 
         public override void Log(StreamWriter log)

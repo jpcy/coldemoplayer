@@ -38,13 +38,11 @@ namespace CDP.HalfLifeDemo.Messages
             UserMessageName = buffer.ReadString(16);
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
-            BitWriter buffer = new BitWriter();
             buffer.WriteByte(UserMessageId);
             buffer.WriteSByte(UserMessageLength);
             buffer.WriteString(UserMessageName, 16);
-            return buffer.ToArray();
         }
 
         public override void Log(StreamWriter log)

@@ -122,9 +122,8 @@ namespace CDP.HalfLifeDemo.Messages
             }
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
-            BitWriter buffer = new BitWriter();
             buffer.WriteUInt(Demo.NewestNetworkProtocol);
             buffer.WriteUInt(ProcessCount);
             buffer.WriteUInt(MungedMapChecksum);
@@ -137,7 +136,6 @@ namespace CDP.HalfLifeDemo.Messages
             buffer.WriteString(MapName);
             buffer.WriteString(MapCycle);
             buffer.WriteByte(0); // extra flag
-            return buffer.ToArray();
         }
 
         public override void Log(StreamWriter log)

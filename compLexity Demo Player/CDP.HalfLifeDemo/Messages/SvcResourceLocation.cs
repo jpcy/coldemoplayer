@@ -35,11 +35,9 @@ namespace CDP.HalfLifeDemo.Messages
             Url = buffer.ReadString();
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
-            BitWriter buffer = new BitWriter();
             buffer.WriteString(Url);
-            return buffer.ToArray();
         }
 
         public override void Log(StreamWriter log)

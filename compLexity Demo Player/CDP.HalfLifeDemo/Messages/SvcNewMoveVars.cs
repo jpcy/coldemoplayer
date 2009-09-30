@@ -84,9 +84,8 @@ namespace CDP.HalfLifeDemo.Messages
             SkyName = buffer.ReadString();
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
-            BitWriter buffer = new BitWriter();
             buffer.WriteFloat(Gravity);
             buffer.WriteFloat(StopSpeed);
             buffer.WriteFloat(MaxSpeed);
@@ -113,7 +112,6 @@ namespace CDP.HalfLifeDemo.Messages
             buffer.WriteFloat(SkyVector.Y);
             buffer.WriteFloat(SkyVector.Z);
             buffer.WriteString(SkyName);
-            return buffer.ToArray();
         }
 
         public override void Log(StreamWriter log)

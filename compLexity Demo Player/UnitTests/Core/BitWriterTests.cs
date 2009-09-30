@@ -46,35 +46,35 @@ namespace UnitTests.Core
         [ExpectedException(typeof(ArgumentException))]
         public void WriteUnsignedBits_nBitsTooLow()
         {
-            writer.WriteUnsignedBits(0, -1);
+            writer.WriteUBits(0, -1);
         }
 
         [Test]
         [ExpectedException(typeof(ArgumentException))]
         public void WriteUnsignedBits_nBitsTooHigh()
         {
-            writer.WriteUnsignedBits(0, 33);
+            writer.WriteUBits(0, 33);
         }
 
         [Test]
         public void WriteUnsignedBits_ByteAligned()
         {
-            writer.WriteUnsignedBits(testUBits, nTestBits);
+            writer.WriteUBits(testUBits, nTestBits);
             Assert.That(writer.ToArray().Length, Is.EqualTo(CalculateNumberOfBytes(nTestBits)));
             BitReader reader = new BitReader(writer.ToArray());
-            Assert.That(reader.ReadUnsignedBits(nTestBits), Is.EqualTo(testUBits));
+            Assert.That(reader.ReadUBits(nTestBits), Is.EqualTo(testUBits));
         }
 
         [Test]
         public void WriteUnsignedBits_NotByteAligned()
         {
             const int nDummyBits = 2;
-            writer.WriteUnsignedBits(0, nDummyBits);
-            writer.WriteUnsignedBits(testUBits, nTestBits);
+            writer.WriteUBits(0, nDummyBits);
+            writer.WriteUBits(testUBits, nTestBits);
             Assert.That(writer.ToArray().Length, Is.EqualTo(CalculateNumberOfBytes(nDummyBits + nTestBits)));
             BitReader reader = new BitReader(writer.ToArray());
             reader.SeekBits(nDummyBits);
-            Assert.That(reader.ReadUnsignedBits(nTestBits), Is.EqualTo(testUBits));
+            Assert.That(reader.ReadUBits(nTestBits), Is.EqualTo(testUBits));
         }
 
         [Test]
@@ -214,21 +214,6 @@ namespace UnitTests.Core
             byte[] temp = new byte[totalLength];
             Array.Copy(Encoding.ASCII.GetBytes(testString), temp, testString.Length);
             Assert.That(writer.ToArray(), Is.EqualTo(temp));
-        }
-
-        [Test]
-        public void WriteVectorCoord()
-        {
-        }
-
-        [Test]
-        public void WriteCoord()
-        {
-        }
-
-        [Test]
-        public void WriteCoord_GoldSrc()
-        {
         }
     }
 }

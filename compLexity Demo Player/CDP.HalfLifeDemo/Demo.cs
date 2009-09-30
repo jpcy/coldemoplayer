@@ -152,6 +152,8 @@ namespace CDP.HalfLifeDemo
         protected readonly Core.ISettings settings = Core.ObjectCreator.Get<Core.ISettings>();
         protected readonly Core.IFileSystem fileSystem = Core.ObjectCreator.Get<Core.IFileSystem>();
 
+        private const int fileBufferSize = 4096;
+
         public Demo()
         {
             Perspective = "POV";
@@ -186,7 +188,7 @@ namespace CDP.HalfLifeDemo
                 AddMessageCallback<Messages.SvcHltv>(Load_Hltv);
                 ResetProgress();
 
-                using (FileStream stream = File.OpenRead(FileName))
+                using (FileStream stream = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.None, fileBufferSize, FileOptions.SequentialScan))
                 using (BinaryReader br = new BinaryReader(stream))
                 {
                     long streamLength = stream.Length;
@@ -232,11 +234,16 @@ namespace CDP.HalfLifeDemo
                         }
                         else if (frame.HasMessages)
                         {
-                            Core.BitReader messageReader = new Core.BitReader(((MessageFrame)frame).MessageData);
+                            uint messageDataLength = br.ReadUInt32();
 
-                            while (messageReader.CurrentByte < messageReader.Length)
+                            if (messageDataLength > 0)
                             {
-                                ReadMessage(messageReader);
+                                Core.BitReader messageReader = new Core.BitReader(br.ReadBytes((int)messageDataLength));
+
+                                while (messageReader.CurrentByte < messageReader.Length)
+                                {
+                                    ReadMessage(messageReader);
+                                }
                             }
                         }
 
@@ -268,7 +275,7 @@ namespace CDP.HalfLifeDemo
                 ResetOperationCancelledState();
                 ResetProgress();
 
-                using (FileStream stream = File.OpenRead(FileName))
+                using (FileStream stream = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.None, fileBufferSize, FileOptions.SequentialScan))
                 using (BinaryReader br = new BinaryReader(stream))
                 {
                     long streamLength = stream.Length;
@@ -282,12 +289,17 @@ namespace CDP.HalfLifeDemo
 
                         if (frame.HasMessages)
                         {
-                            Core.BitReader messageReader = new Core.BitReader(((MessageFrame)frame).MessageData);
-                            lastMessages.Clear();
+                            uint messageDataLength = br.ReadUInt32();
 
-                            while (messageReader.CurrentByte < messageReader.Length)
+                            if (messageDataLength > 0)
                             {
-                                lastMessages.Add(ReadMessage(messageReader));
+                                Core.BitReader messageReader = new Core.BitReader(br.ReadBytes((int)messageDataLength));
+                                lastMessages.Clear();
+
+                                while (messageReader.CurrentByte < messageReader.Length)
+                                {
+                                    lastMessages.Add(ReadMessage(messageReader));
+                                }
                             }
                         }
 
@@ -345,9 +357,9 @@ namespace CDP.HalfLifeDemo
                 ResetOperationCancelledState();
                 ResetProgress();
 
-                using (FileStream inputStream = File.OpenRead(FileName))
+                using (FileStream inputStream = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.None, fileBufferSize, FileOptions.SequentialScan))
                 using (BinaryReader br = new BinaryReader(inputStream))
-                using (FileStream outputStream = File.OpenWrite(destinationFileName))
+                using (FileStream outputStream = new FileStream(destinationFileName, FileMode.Create, FileAccess.Write, FileShare.None, fileBufferSize, FileOptions.SequentialScan))
                 using (BinaryWriter bw = new BinaryWriter(outputStream))
                 {
                     long streamLength = inputStream.Length;
@@ -364,10 +376,12 @@ namespace CDP.HalfLifeDemo
 
                     while (true)
                     {
+                        // Read and write frame.
                         lastFrameOffset = inputStream.Position;
-                        Frame frame = ReadFrame(br);
+                        Frame frame = ReadAndWriteFrame(br, bw);
                         CurrentTimestamp = frame.Timestamp;
 
+                        // Handle a frame's message block.
                         if (frame.HasMessages)
                         {
                             if (foundPlaybackSegment)
@@ -377,26 +391,32 @@ namespace CDP.HalfLifeDemo
                             else if (frame is Frames.Playback)
                             {
                                 foundPlaybackSegment = true;
-                                playbackSegmentOffset = (uint)outputStream.Position;
+                                playbackSegmentOffset = (uint)lastFrameOffset;
                             }
 
-                            Core.BitReader messageReader = new Core.BitReader(((MessageFrame)frame).MessageData);
-                            lastMessages.Clear();
+                            uint messageDataLength = br.ReadUInt32();
 
-                            using (MemoryStream ms = new MemoryStream())
-                            using (BinaryWriter messageWriter = new BinaryWriter(ms))
+                            if (messageDataLength > 0)
                             {
+                                Core.BitReader messageReader = new Core.BitReader(br.ReadBytes((int)messageDataLength));
+                                Core.BitWriter messageWriter = new Core.BitWriter();
+                                lastMessages.Clear();
+
                                 while (messageReader.CurrentByte < messageReader.Length)
                                 {
                                     IMessage message = ReadAndWriteMessage(messageReader, messageWriter, canSkipMessages);
                                     lastMessages.Add(message);
                                 }
 
-                                ((MessageFrame)frame).MessageData = ms.ToArray();
+                                byte[] messageBlock = messageWriter.ToArray();
+                                bw.Write((uint)messageBlock.Length);
+                                bw.Write(messageBlock);
+                            }
+                            else
+                            {
+                                bw.Write(0u);
                             }
                         }
-
-                        bw.Write(frame.Write());
 
                         if ((!IsCorrupt && inputStream.Position >= directoryEntriesOffset) || inputStream.Position == streamLength)
                         {
@@ -499,7 +519,7 @@ namespace CDP.HalfLifeDemo
             AddDetail("Duration", Duration);
         }
 
-        private Frame ReadFrame(BinaryReader br)
+        private Frame ReadFrameHeader(BinaryReader br)
         {
             byte id = br.ReadByte();
             Frame frame = handler.CreateFrame(id);
@@ -509,7 +529,45 @@ namespace CDP.HalfLifeDemo
                 throw new ApplicationException(string.Format("Unknown frame type \"{0}\".", id));
             }
 
-            frame.Read(br, NetworkProtocol);
+            frame.ReadHeader(br, NetworkProtocol);
+            return frame;
+        }
+
+        private Frame ReadFrame(BinaryReader br)
+        {
+            Frame frame = ReadFrameHeader(br);
+
+            if (frame.CanSkip)
+            {
+                frame.Skip(br);
+            }
+            else
+            {
+                frame.Read(br);
+            }
+
+            return frame;
+        }
+
+        private Frame ReadAndWriteFrame(BinaryReader br, BinaryWriter bw)
+        {
+            Frame frame = ReadFrameHeader(br);
+            frame.WriteHeader(bw);
+
+            if (frame.CanSkip)
+            {
+                long frameStartOffset = br.BaseStream.Position;
+                frame.Skip(br);
+                long frameFinishOffset = br.BaseStream.Position;
+                br.BaseStream.Seek(frameStartOffset, SeekOrigin.Begin);
+                bw.Write(br.ReadBytes((int)(frameFinishOffset - frameStartOffset)));
+            }
+            else
+            {
+                frame.Read(br);
+                frame.Write(bw);
+            }
+
             return frame;
         }
 
@@ -542,10 +600,10 @@ namespace CDP.HalfLifeDemo
             return message;
         }
 
-        private IMessage ReadAndWriteMessage(Core.BitReader buffer, BinaryWriter writer, bool canSkip)
+        private IMessage ReadAndWriteMessage(Core.BitReader reader, Core.BitWriter writer, bool canSkip)
         {
-            IMessage message = ReadMessageHeader(buffer);
-            writer.Write(message.Id);
+            IMessage message = ReadMessageHeader(reader);
+            writer.WriteByte(message.Id);
             UserMessage userMessage = message as UserMessage;
 
             if (userMessage != null)
@@ -554,30 +612,30 @@ namespace CDP.HalfLifeDemo
 
                 if (definition.Length == -1)
                 {
-                    writer.Write(userMessage.Length);
+                    writer.WriteByte(userMessage.Length);
                 }
             }
 
             List<MessageCallback> messageCallbacks = FindMessageCallbacks(message);
-            int startPosition = buffer.CurrentByte;
+            int startPosition = reader.CurrentByte;
             bool wasSkipped;
 
             try
             {
                 if (canSkip && messageCallbacks.Count == 0 && message.CanSkipWhenWriting)
                 {
-                    message.Skip(buffer);
+                    message.Skip(reader);
                     wasSkipped = true;
                 }
                 else
                 {
-                    message.Read(buffer);
+                    message.Read(reader);
                     wasSkipped = false;
                 }
             }
             finally
             {
-                buffer.Endian = Core.BitReader.Endians.Little;
+                reader.Endian = Core.BitReader.Endians.Little;
             }
 
             foreach (MessageCallback messageCallback in messageCallbacks)
@@ -587,21 +645,16 @@ namespace CDP.HalfLifeDemo
 
             if (wasSkipped)
             {
-                int length = buffer.CurrentByte - startPosition;
+                int length = reader.CurrentByte - startPosition;
 
                 if (length > 0)
                 {
-                    writer.Write(buffer.Buffer, startPosition, length);
+                    writer.WriteBytes(reader.Buffer, startPosition, length);
                 }
             }
             else
             {
-                byte[] data = message.Write();
-
-                if (data != null)
-                {
-                    writer.Write(data);
-                }
+                message.Write(writer);
             }
 
             return message;

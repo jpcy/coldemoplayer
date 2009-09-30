@@ -102,7 +102,7 @@ namespace CDP.HalfLifeDemo
 
         public void SkipDelta(Core.BitReader buffer)
         {
-            uint nBitmaskBytes = buffer.ReadUnsignedBits(3);
+            uint nBitmaskBytes = buffer.ReadUBits(3);
             // TODO: error check nBitmaskBytes against nEntries
 
             if (nBitmaskBytes == 0)
@@ -145,7 +145,7 @@ namespace CDP.HalfLifeDemo
         public void ReadDelta(Core.BitReader buffer, Delta delta, out byte[] bitmaskBytes)
         {
             // read bitmask
-            uint nBitmaskBytes = buffer.ReadUnsignedBits(3);
+            uint nBitmaskBytes = buffer.ReadUBits(3);
             // TODO: error check nBitmaskBytes against nEntries
 
             if (nBitmaskBytes == 0)
@@ -220,11 +220,11 @@ namespace CDP.HalfLifeDemo
         {
             if (bitmaskBytes == null) // no bitmask bytes
             {
-                buffer.WriteUnsignedBits(0, 3);
+                buffer.WriteUBits(0, 3);
                 return;
             }
 
-            buffer.WriteUnsignedBits((uint)bitmaskBytes.Length, 3);
+            buffer.WriteUBits((uint)bitmaskBytes.Length, 3);
 
             for (int i = 0; i < bitmaskBytes.Length; i++)
             {
@@ -313,12 +313,12 @@ namespace CDP.HalfLifeDemo
                     bitsToRead--;
                 }
 
-                return (float)buffer.ReadUnsignedBits(bitsToRead) / e.Divisor * (negative ? -1.0f : 1.0f);
+                return (float)buffer.ReadUBits(bitsToRead) / e.Divisor * (negative ? -1.0f : 1.0f);
             }
 
             if ((e.Flags & EntryFlags.Angle) != 0)
             {
-                return (float)(buffer.ReadUnsignedBits((int)e.nBits) * (360.0f / (float)(1 << (int)e.nBits)));
+                return (float)(buffer.ReadUBits((int)e.nBits) * (360.0f / (float)(1 << (int)e.nBits)));
             }
 
             if ((e.Flags & EntryFlags.String) != 0)
@@ -332,12 +332,12 @@ namespace CDP.HalfLifeDemo
         private int ParseInt(Core.BitReader buffer, Entry e)
         {
             bool negative = buffer.ReadBoolean();
-            return (int)buffer.ReadUnsignedBits((int)e.nBits - 1) / (int)e.Divisor * (negative ? -1 : 1);
+            return (int)buffer.ReadUBits((int)e.nBits - 1) / (int)e.Divisor * (negative ? -1 : 1);
         }
 
         private uint ParseUnsignedInt(Core.BitReader buffer, Entry e)
         {
-            return buffer.ReadUnsignedBits((int)e.nBits) / (uint)e.Divisor;
+            return buffer.ReadUBits((int)e.nBits) / (uint)e.Divisor;
         }
 
         private void WriteEntry(Delta delta, Core.BitWriter buffer, Entry e)
@@ -384,7 +384,7 @@ namespace CDP.HalfLifeDemo
             }
             else if ((e.Flags & EntryFlags.Angle) != 0)
             {
-                buffer.WriteUnsignedBits((uint)((float)value / (360.0f / (float)(1 << (int)e.nBits))), (int)e.nBits);
+                buffer.WriteUBits((uint)((float)value / (360.0f / (float)(1 << (int)e.nBits))), (int)e.nBits);
             }
             else if ((e.Flags & EntryFlags.String) != 0)
             {
@@ -401,7 +401,7 @@ namespace CDP.HalfLifeDemo
                     bitsToWrite--;
                 }
 
-                buffer.WriteUnsignedBits((uint)(Math.Abs(writeValue) * e.Divisor), bitsToWrite);
+                buffer.WriteUBits((uint)(Math.Abs(writeValue) * e.Divisor), bitsToWrite);
             }
             else
             {
@@ -414,13 +414,13 @@ namespace CDP.HalfLifeDemo
             int writeValue = value * (int)e.Divisor;
 
             buffer.WriteBoolean(writeValue < 0);
-            buffer.WriteUnsignedBits((uint)Math.Abs(writeValue), (int)e.nBits - 1);
+            buffer.WriteUBits((uint)Math.Abs(writeValue), (int)e.nBits - 1);
         }
 
         private void WriteUnsignedInt(Core.BitWriter buffer, Entry e, uint value)
         {
             uint writeValue = value * (uint)e.Divisor;
-            buffer.WriteUnsignedBits((uint)Math.Abs(writeValue), (int)e.nBits);
+            buffer.WriteUBits((uint)Math.Abs(writeValue), (int)e.nBits);
         }
     }
 }

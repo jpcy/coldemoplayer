@@ -69,14 +69,14 @@ namespace CDP.HalfLifeDemo.Messages
                 buffer.Endian = BitReader.Endians.Big;
             }
 
-            uint nEntries = buffer.ReadUnsignedBits(12);
+            uint nEntries = buffer.ReadUBits(12);
 
             for (int i = 0; i < nEntries; i++)
             {
                 buffer.SeekBits(4);
                 buffer.SeekString();
                 buffer.SeekBits(36);
-                Resource.FlagBits flags = (Resource.FlagBits)buffer.ReadUnsignedBits(3);
+                Resource.FlagBits flags = (Resource.FlagBits)buffer.ReadUBits(3);
 
                 if ((flags & Resource.FlagBits.Custom) == Resource.FlagBits.Custom)
                 {
@@ -110,17 +110,17 @@ namespace CDP.HalfLifeDemo.Messages
                 buffer.Endian = BitReader.Endians.Big;
             }
 
-            uint nEntries = buffer.ReadUnsignedBits(12);
+            uint nEntries = buffer.ReadUBits(12);
             Resources = new List<Resource>((int)nEntries);
 
             for (int i = 0; i < nEntries; i++)
             {
                 Resource resource = new Resource();
-                resource.Type = (Resource.Types)buffer.ReadUnsignedBits(4);
+                resource.Type = (Resource.Types)buffer.ReadUBits(4);
                 resource.Name = buffer.ReadString();
-                resource.Index = buffer.ReadUnsignedBits(12);
-                resource.DownloadSize = buffer.ReadUnsignedBits(24);
-                resource.Flags = (Resource.FlagBits)buffer.ReadUnsignedBits(3);
+                resource.Index = buffer.ReadUBits(12);
+                resource.DownloadSize = buffer.ReadUBits(24);
+                resource.Flags = (Resource.FlagBits)buffer.ReadUBits(3);
 
                 if ((resource.Flags & Resource.FlagBits.Custom) == Resource.FlagBits.Custom)
                 {
@@ -145,7 +145,7 @@ namespace CDP.HalfLifeDemo.Messages
                 while (buffer.ReadBoolean())
                 {
                     uint nBits = (buffer.ReadBoolean() ? 5u : 10u);
-                    uint index = buffer.ReadUnsignedBits(nBits) + currentIndex;
+                    uint index = buffer.ReadUBits(nBits) + currentIndex;
                     ConsistencyList.Add(index);
                     currentIndex = index;
                 }
@@ -154,18 +154,17 @@ namespace CDP.HalfLifeDemo.Messages
             buffer.SeekRemainingBitsInCurrentByte();
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
-            BitWriter buffer = new BitWriter();
-            buffer.WriteUnsignedBits((uint)Resources.Count, 12);
+            buffer.WriteUBits((uint)Resources.Count, 12);
 
             foreach (Resource resource in Resources)
             {
-                buffer.WriteUnsignedBits((uint)resource.Type, 4);
+                buffer.WriteUBits((uint)resource.Type, 4);
                 buffer.WriteString(resource.Name);
-                buffer.WriteUnsignedBits(resource.Index, 12);
-                buffer.WriteUnsignedBits(resource.DownloadSize, 24);
-                buffer.WriteUnsignedBits((uint)resource.Flags, 3);
+                buffer.WriteUBits(resource.Index, 12);
+                buffer.WriteUBits(resource.DownloadSize, 24);
+                buffer.WriteUBits((uint)resource.Flags, 3);
 
                 if ((resource.Flags & Resource.FlagBits.Custom) == Resource.FlagBits.Custom)
                 {
@@ -195,8 +194,6 @@ namespace CDP.HalfLifeDemo.Messages
                 // No need to write the consistency list, at least for now.
                 buffer.WriteBoolean(false);
             }
-
-            return buffer.ToArray();
         }
 
         public override void Log(StreamWriter log)

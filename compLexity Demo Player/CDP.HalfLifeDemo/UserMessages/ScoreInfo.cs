@@ -32,15 +32,13 @@ namespace CDP.HalfLifeDemo.UserMessages
             TeamId = buffer.ReadShort();
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
-            BitWriter buffer = new BitWriter();
             buffer.WriteByte(Slot);
             buffer.WriteShort(Frags);
             buffer.WriteShort(Deaths);
             buffer.WriteShort(Dummy);
             buffer.WriteShort(TeamId);
-            return buffer.ToArray();
         }
 
         public override void Log(StreamWriter log)

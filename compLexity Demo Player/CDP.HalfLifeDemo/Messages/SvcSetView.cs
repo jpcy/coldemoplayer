@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using BitReader = CDP.Core.BitReader;
+using BitWriter = CDP.Core.BitWriter;
 
 namespace CDP.HalfLifeDemo.Messages
 {
@@ -33,9 +34,9 @@ namespace CDP.HalfLifeDemo.Messages
             EntityId = buffer.ReadShort();
         }
 
-        public override byte[] Write()
+        public override void Write(BitWriter buffer)
         {
-            return BitConverter.GetBytes(EntityId);
+            buffer.WriteShort(EntityId);
         }
 
         public override void Log(StreamWriter log)
