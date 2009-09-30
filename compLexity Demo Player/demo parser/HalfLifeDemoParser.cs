@@ -1105,7 +1105,7 @@ namespace compLexity_Demo_Player
                     break;
 
                 case 122: // TE_PARTICLEBURST
-                    Seek(6);
+                    Seek(10);
                     break;
 
                 case 123: // TE_FIREFIELD
