@@ -25,6 +25,7 @@ namespace CDP.HalfLifeDemo.Analysis
             this.demo.AddMessageCallback<UserMessages.DeathMsg>(MessageDeathMsg);
             this.demo.AddMessageCallback<UserMessages.SayText>(MessageSayText);
             this.demo.AddMessageCallback<UserMessages.ScoreInfo>(MessageScoreInfo);
+            this.demo.AddMessageCallback<UserMessages.ResetHud>(MessageResetHud);
             this.demo.AddMessageCallback<UserMessages.TeamInfo>(MessageTeamInfo);
             this.demo.AddMessageCallback<UserMessages.TeamScore>(MessageTeamScore);
             this.demo.AddMessageCallback<UserMessages.TextMsg>(MessageTextMsg);
@@ -284,6 +285,14 @@ namespace CDP.HalfLifeDemo.Analysis
             {
                 player.Frags = message.Frags;
                 player.Deaths = message.Deaths;
+            }
+        }
+
+        private void MessageResetHud(UserMessages.ResetHud message)
+        {
+            if (demo.NetworkProtocol <= 43)
+            {
+                NewRound();
             }
         }
 
