@@ -274,11 +274,11 @@ namespace CDP.HalfLifeDemo
                         }
                         else if (frame.HasMessages)
                         {
-                            uint messageDataLength = br.ReadUInt32();
-
-                            if (messageDataLength > 0)
+                            byte[] messageBlock = ReadMessageBlock(br);
+                            
+                            if (messageBlock != null)
                             {
-                                Core.BitReader messageReader = new Core.BitReader(br.ReadBytes((int)messageDataLength));
+                                Core.BitReader messageReader = new Core.BitReader(messageBlock);
 
                                 while (messageReader.CurrentByte < messageReader.Length)
                                 {
@@ -337,11 +337,11 @@ namespace CDP.HalfLifeDemo
 
                         if (frame.HasMessages)
                         {
-                            uint messageDataLength = br.ReadUInt32();
+                            byte[] messageBlock = ReadMessageBlock(br);
 
-                            if (messageDataLength > 0)
+                            if (messageBlock != null)
                             {
-                                Core.BitReader messageReader = new Core.BitReader(br.ReadBytes((int)messageDataLength));
+                                Core.BitReader messageReader = new Core.BitReader(messageBlock);
 
                                 while (messageReader.CurrentByte < messageReader.Length)
                                 {
@@ -450,11 +450,11 @@ namespace CDP.HalfLifeDemo
                                 playbackSegmentOffset = (uint)lastFrameOffset;
                             }
 
-                            uint messageDataLength = br.ReadUInt32();
+                            byte[] messageBlock = ReadMessageBlock(br);
 
-                            if (messageDataLength > 0)
+                            if (messageBlock !=null)
                             {
-                                Core.BitReader messageReader = new Core.BitReader(br.ReadBytes((int)messageDataLength));
+                                Core.BitReader messageReader = new Core.BitReader(messageBlock);
                                 Core.BitWriter messageWriter = new Core.BitWriter();
 
                                 while (messageReader.CurrentByte < messageReader.Length)
@@ -469,7 +469,7 @@ namespace CDP.HalfLifeDemo
                                     }
                                 }
 
-                                byte[] messageBlock = messageWriter.ToArray();
+                                messageBlock = messageWriter.ToArray();
                                 bw.Write((uint)messageBlock.Length);
                                 bw.Write(messageBlock);
                             }
@@ -652,6 +652,25 @@ namespace CDP.HalfLifeDemo
             }
 
             return frame;
+        }
+
+        private byte[] ReadMessageBlock(BinaryReader br)
+        {
+            uint length = br.ReadUInt32();
+
+            if (length > (1<<16))
+            {
+                throw new ApplicationException("Message data length too large.");
+            }
+
+            byte[] data = null;
+
+            if (length > 0)
+            {
+                data = br.ReadBytes((int)length);
+            }
+
+            return data;
         }
 
         private IMessage ReadMessage(Core.BitReader buffer)
