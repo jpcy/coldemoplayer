@@ -27,6 +27,9 @@ namespace HalfLifeDemoSystemTest
         private static Stopwatch stopwatch = new Stopwatch();
         private static string selectedPath;
         private static readonly string tempDemoFileName = "demo.tmp";
+        private static bool writeNoSkipping;
+        private static int errorCount = 0;
+        private static int okCount = 0;
 
         static void Main(string[] args)
         {
@@ -47,17 +50,34 @@ namespace HalfLifeDemoSystemTest
                 return;
             }
 
+            Console.Write("Test write without skipping (Y/N)? ");
+            writeNoSkipping = (Console.ReadKey().KeyChar == 'Y' ? true : false);
+            Console.WriteLine();
+
             ObjectMappings.Initialise();
-            settings = ObjectCreator.Get<ISettings>();
             demoManager = ObjectCreator.Get<IDemoManager>();
             demoManager.AddPlugin(0, new CDP.HalfLifeDemo.Handler());
             demoManager.AddPlugin(1, new CDP.CounterStrikeDemo.Handler());
             fileSystem = ObjectCreator.Get<IFileSystem>();
 
+            settings = ObjectCreator.Get<ISettings>();
+
+            foreach (Setting setting in demoManager.GetAllDemoHandlerSettings())
+            {
+                settings.Add(setting);
+            }
+
+            settings.Load();
+
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
             using (log = new StreamWriter(Path.Combine(selectedPath, "cdptestresult.log")))
             {
                 EnumerateFolder(selectedPath);
             }
+
+            sw.Stop();
 
             string tempDemoFullPath = Path.Combine(selectedPath, tempDemoFileName);
 
@@ -66,7 +86,11 @@ namespace HalfLifeDemoSystemTest
                 File.Delete(tempDemoFullPath);
             }
 
-            Console.WriteLine("Tests complete. Press and key to continue.");
+            Console.WriteLine("Tests complete.");
+            Console.WriteLine("\tElapsed time: {0}", sw.Elapsed);
+            Console.WriteLine("\t{0} demos are OK.", okCount);
+            Console.WriteLine("\t{0} demos with errors.", errorCount);
+            Console.WriteLine("Press and key to continue.");
             Console.ReadKey();
         }
 
@@ -97,6 +121,7 @@ namespace HalfLifeDemoSystemTest
 
                 if (demoError)
                 {
+                    errorCount++;
                     continue;
                 }
 
@@ -109,6 +134,7 @@ namespace HalfLifeDemoSystemTest
 
                 if (demoError)
                 {
+                    errorCount++;
                     continue;
                 }
 
@@ -121,15 +147,21 @@ namespace HalfLifeDemoSystemTest
 
                 if (demoError)
                 {
+                    errorCount++;
                     continue;
                 }
 
                 // Write (no skipping messages).
-                currentDemoOperation = DemoOperations.WriteNoSkipping;
-                Write("\tWrite (no skipping): ");
-                stopwatch.Reset();
-                stopwatch.Start();
-                demo.Write(Path.Combine(selectedPath, tempDemoFileName), false);
+                if (writeNoSkipping)
+                {
+                    currentDemoOperation = DemoOperations.WriteNoSkipping;
+                    Write("\tWrite (no skipping): ");
+                    stopwatch.Reset();
+                    stopwatch.Start();
+                    demo.Write(Path.Combine(selectedPath, tempDemoFileName), false);
+                }
+
+                okCount++;
             }
 
             foreach (string folder in Directory.GetDirectories(path))
@@ -144,7 +176,7 @@ namespace HalfLifeDemoSystemTest
             WriteLine("ERROR\n");
             WriteLine(e.Exception.ToLogString(e.ErrorMessage));
 
-            if (currentDemoOperation == DemoOperations.Last)
+            if (currentDemoOperation == DemoOperations.Last || (writeNoSkipping && currentDemoOperation == DemoOperations.Write))
             {
                 LastOperation((Demo)sender);
             }
@@ -155,7 +187,7 @@ namespace HalfLifeDemoSystemTest
             stopwatch.Stop();
             WriteLine("OK [{0}]", stopwatch.Elapsed.ToString());
 
-            if (currentDemoOperation == DemoOperations.Last)
+            if (currentDemoOperation == DemoOperations.Last || (writeNoSkipping && currentDemoOperation == DemoOperations.Write))
             {
                 LastOperation((Demo)sender);
             }
@@ -164,6 +196,7 @@ namespace HalfLifeDemoSystemTest
         static void LastOperation(Demo demo)
         {
             WriteLine("----------------------------------------");
+            log.Flush();
             demo.OperationCompleteEvent -= demo_OperationCompleteEvent;
             demo.OperationErrorEvent -= demo_OperationErrorEvent;
         }
