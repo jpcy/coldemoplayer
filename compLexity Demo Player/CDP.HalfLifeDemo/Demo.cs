@@ -552,7 +552,7 @@ namespace CDP.HalfLifeDemo
             }
         }
 
-        #region Reading
+        #region Reading and writing
         private void ReadDirectoryEntries(long offset, BinaryReader br)
         {
             // offset + nEntries + 2 directory entries.
@@ -706,10 +706,12 @@ namespace CDP.HalfLifeDemo
         {
             IMessage message = ReadMessageHeader(reader);
             UserMessage userMessage = message as UserMessage;
+            byte messageId = message.Id;
             byte? userMessageLength = null;
 
             if (userMessage != null)
             {
+                messageId = GetUserMessageId(message.Name);
                 UserMessageDefinition definition = userMessageDefinitions.FirstOrDefault(umd => umd.Id == message.Id);
 
                 if (definition.Length == -1)
@@ -748,7 +750,7 @@ namespace CDP.HalfLifeDemo
             // Write the message if a message callback hasn't flagged it for removal.
             if (!message.Remove)
             {
-                writer.WriteByte(message.Id);
+                writer.WriteByte(messageId);
 
                 if (userMessageLength.HasValue)
                 {
@@ -824,6 +826,22 @@ namespace CDP.HalfLifeDemo
             }
 
             return message;
+        }
+
+        /// <summary>
+        /// Provides a new user message ID to use when writing a demo.
+        /// </summary>
+        /// <remarks>
+        /// In order to play a demo after a listen server has been started, the demo user message ID should be changed to match the current mod version's; the Half-Life engine doesn't support re-registering of user messages (new messages are ignored).
+        /// 
+        /// svc_newusermsg messages will also have to be re-written to match the new IDs. This is the responsiblity of the individual mod.
+        /// </remarks>
+        /// <param name="userMessageName">The user message name.</param>
+        /// <returns>A new user message ID.</returns>
+        protected virtual byte GetUserMessageId(string userMessageName)
+        {
+            // Provide defaults.
+            return userMessageDefinitions.First(umd => umd.Name == userMessageName).Id;
         }
         #endregion
 

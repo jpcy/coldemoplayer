@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+using CDP.HalfLifeDemo.Messages;
 using CDP.HalfLifeDemo.UserMessages;
 
 namespace CDP.CounterStrikeDemo
@@ -36,20 +39,53 @@ namespace CDP.CounterStrikeDemo
             get { return true; }
         }
 
+        // Old user messages that don't exist in the current version of Counter-Strike.
+        private Dictionary<string, byte> extraUserMessages = new Dictionary<string, byte>();
+
         public override void Load()
         {
             base.Load();
-
-            if (Game != null)
-            {
-                Version = (Versions)Game.GetVersion(clientDllChecksum);
-            }
+            Version = (Versions)Game.GetVersion(clientDllChecksum);
         }
 
         public override void Write(string destinationFileName)
         {
+            AddMessageCallback<SvcNewUserMessage>(Write_NewUserMessage);
             AddMessageCallback<ScreenFade>(Write_ScreenFade);
             base.Write(destinationFileName);
+        }
+
+        protected override byte GetUserMessageId(string userMessageName)
+        {
+            CounterStrikeDemo.Game.UserMessage[] userMessages = ((CounterStrikeDemo.Game)Game).UserMessages;
+            CounterStrikeDemo.Game.UserMessage userMessage = userMessages.FirstOrDefault(um => um.Name == userMessageName);
+
+            if (userMessage == null)
+            {
+                if (extraUserMessages.ContainsKey(userMessageName))
+                {
+                    return extraUserMessages[userMessageName];
+                }
+
+                // Find the the first free user message ID.
+                for (byte i = 0; i < 255; i++)
+                {
+                    if (userMessages.FirstOrDefault(um => um.Id == i) == null)
+                    {
+                        extraUserMessages.Add(userMessageName, i);
+                        return i;
+                    }
+                }
+
+                throw new ApplicationException("No free user message indices.");
+            }
+
+            return userMessage.Id;
+        }
+
+        private void Write_NewUserMessage(SvcNewUserMessage message)
+        {
+            message.UserMessageId = GetUserMessageId(message.UserMessageName);
         }
 
         private void Write_ScreenFade(ScreenFade message)
