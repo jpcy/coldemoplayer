@@ -29,7 +29,7 @@ namespace CDP.Core.Extensions
                         appendExceptionInfo(e.InnerException);
                     }
 
-                    result += e.Message + "\n\n" + "Inner Exception: " + (e != exception).ToString() + "\n\n" + "Source: " + e.Source + "\n\n" + "Type: " + e.GetType().ToString() + "\n\n" + e.StackTrace;
+                    result += e.Message + "\n\n" + "Inner Exception: " + (e != exception).ToString() + "\n\n" + "Source: " + e.Source + "\n\n" + "Type: " + e.GetType().ToString() + "\n\n" + e.StackTrace + "\n\n";
                 };
 
                 appendExceptionInfo(exception);

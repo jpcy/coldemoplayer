@@ -19,6 +19,12 @@ namespace CDP.ViewModel
             }
 
             Message = errorMessage ?? exception.Message;
+
+            if (Message.Contains("\n"))
+            {
+                Message = "Error";
+            }
+
             Exception = exception.ToLogString(errorMessage);
             OkCommand = new DelegateCommand(OkCommandExecute);
         }

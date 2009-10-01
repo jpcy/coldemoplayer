@@ -10,6 +10,29 @@ namespace CDP.HalfLifeDemo
 {
     public class Demo : Core.Demo
     {
+        public class MessageException : Exception
+        {
+            private readonly string message;
+
+            public override string Message
+            {
+                get { return message; }
+            }
+
+            public MessageException(IEnumerable<IMessage> messageHistory, Exception innerException) : base(null, innerException)
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendFormat("Last {0} messages:\n", messageHistoryMaxLength);
+
+                foreach (IMessage m in messageHistory)
+                {
+                    sb.AppendFormat("{0} [{1}]\n", m.Name, m.Id);
+                }
+
+                message = sb.ToString();
+            }
+        }
+
         private class MessageCallback
         {
             public byte EngineMessageId { get; set; }
@@ -162,6 +185,9 @@ namespace CDP.HalfLifeDemo
         private readonly Dictionary<string, DeltaStructure> deltaStructures;
         private readonly List<UserMessageDefinition> userMessageDefinitions;
 
+        private const int messageHistoryMaxLength = 16;
+        private readonly Queue<IMessage> messageHistory = new Queue<IMessage>(messageHistoryMaxLength);
+
         protected readonly Core.ISettings settings = Core.ObjectCreator.Get<Core.ISettings>();
         protected readonly Core.IFileSystem fileSystem = Core.ObjectCreator.Get<Core.IFileSystem>();
 
@@ -256,7 +282,14 @@ namespace CDP.HalfLifeDemo
 
                                 while (messageReader.CurrentByte < messageReader.Length)
                                 {
-                                    ReadMessage(messageReader);
+                                    try
+                                    {
+                                        ReadMessage(messageReader);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        throw new MessageException(messageHistory, ex);
+                                    }
                                 }
                             }
                         }
@@ -272,6 +305,7 @@ namespace CDP.HalfLifeDemo
             }
             finally
             {
+                messageHistory.Clear();
                 messageCallbacks.Clear();
                 frameCallbacks.Clear();
             }
@@ -282,7 +316,6 @@ namespace CDP.HalfLifeDemo
         public override void Read()
         {
             long lastFrameOffset = 0;
-            List<IMessage> lastMessages = new List<IMessage>();
             CurrentTimestamp = 0.0f;
 
             try
@@ -309,11 +342,17 @@ namespace CDP.HalfLifeDemo
                             if (messageDataLength > 0)
                             {
                                 Core.BitReader messageReader = new Core.BitReader(br.ReadBytes((int)messageDataLength));
-                                lastMessages.Clear();
 
                                 while (messageReader.CurrentByte < messageReader.Length)
                                 {
-                                    lastMessages.Add(ReadMessage(messageReader));
+                                    try
+                                    {
+                                        ReadMessage(messageReader);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        throw new MessageException(messageHistory, ex);
+                                    }
                                 }
                             }
                         }
@@ -337,12 +376,13 @@ namespace CDP.HalfLifeDemo
             {
                 if (!IsOperationCancelled())
                 {
-                    OnOperationError(string.Format("Frame offset: {0}\n\n{1}", lastFrameOffset, CreateMessageLog(lastMessages)), ex);
+                    OnOperationError(FileName, ex);
                     return;
                 }
             }
             finally
             {
+                messageHistory.Clear();
                 messageCallbacks.Clear();
                 frameCallbacks.Clear();
             }
@@ -365,7 +405,6 @@ namespace CDP.HalfLifeDemo
         public void Write(string destinationFileName, bool canSkipMessages)
         {
             long lastFrameOffset = 0;
-            List<IMessage> lastMessages = new List<IMessage>();
             CurrentTimestamp = 0.0f;
 
             try
@@ -417,12 +456,17 @@ namespace CDP.HalfLifeDemo
                             {
                                 Core.BitReader messageReader = new Core.BitReader(br.ReadBytes((int)messageDataLength));
                                 Core.BitWriter messageWriter = new Core.BitWriter();
-                                lastMessages.Clear();
 
                                 while (messageReader.CurrentByte < messageReader.Length)
                                 {
-                                    IMessage message = ReadAndWriteMessage(messageReader, messageWriter, canSkipMessages);
-                                    lastMessages.Add(message);
+                                    try
+                                    {
+                                        ReadAndWriteMessage(messageReader, messageWriter, canSkipMessages);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        throw new MessageException(messageHistory, ex);
+                                    }
                                 }
 
                                 byte[] messageBlock = messageWriter.ToArray();
@@ -487,12 +531,13 @@ namespace CDP.HalfLifeDemo
             {
                 if (!IsOperationCancelled())
                 {
-                    OnOperationError(string.Format("Frame offset: {0}\n\n{1}", lastFrameOffset, CreateMessageLog(lastMessages)), ex);
+                    OnOperationError(FileName, ex);
                     return;
                 }
             }
             finally
             {
+                messageHistory.Clear();
                 messageCallbacks.Clear();
                 frameCallbacks.Clear();
             }
@@ -569,6 +614,9 @@ namespace CDP.HalfLifeDemo
             {
                 frameCallback.Fire(frame);
             }
+
+            // New frame, clear the message history.
+            messageHistory.Clear();
 
             return frame;
         }
@@ -749,6 +797,13 @@ namespace CDP.HalfLifeDemo
             }
 
             message.Demo = this;
+            messageHistory.Enqueue(message);
+
+            if (messageHistory.Count > messageHistoryMaxLength)
+            {
+                messageHistory.Dequeue();
+            }
+
             return message;
         }
         #endregion
@@ -864,18 +919,6 @@ namespace CDP.HalfLifeDemo
             }
 
             detail.Value = value;
-        }
-
-        private string CreateMessageLog(IEnumerable<IMessage> messages)
-        {
-            StringBuilder sb = new StringBuilder();
-
-            foreach (IMessage message in messages)
-            {
-                sb.AppendFormat("{0} [{1}]\n", message.Name, message.Id);
-            }
-
-            return sb.ToString();
         }
 
         #region Load message callbacks
