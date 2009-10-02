@@ -123,68 +123,68 @@ namespace CDP.HalfLifeDemo
         protected virtual void RegisterMessages()
         {
             // Register frames.
-            RegisterFrame(typeof(Frames.Loading));
-            RegisterFrame(typeof(Frames.Playback));
-            RegisterFrame(typeof(Frames.PlaybackSegmentStart));
-            RegisterFrame(typeof(Frames.ClientCommand));
-            RegisterFrame(typeof(Frames.ClientData));
-            RegisterFrame(typeof(Frames.EndOfSegment));
-            RegisterFrame(typeof(Frames.Unknown));
-            RegisterFrame(typeof(Frames.WeaponChange));
-            RegisterFrame(typeof(Frames.PlaySound));
-            RegisterFrame(typeof(Frames.ModData));
+            RegisterFrame<Frames.Loading>();
+            RegisterFrame<Frames.Playback>();
+            RegisterFrame<Frames.PlaybackSegmentStart>();
+            RegisterFrame<Frames.ClientCommand>();
+            RegisterFrame<Frames.ClientData>();
+            RegisterFrame<Frames.EndOfSegment>();
+            RegisterFrame<Frames.Unknown>();
+            RegisterFrame<Frames.WeaponChange>();
+            RegisterFrame<Frames.PlaySound>();
+            RegisterFrame<Frames.ModData>();
 
             // Register engine messages.
-            RegisterEngineMessage(typeof(Messages.SvcNop));
-            RegisterEngineMessage(typeof(Messages.SvcEvent));
-            RegisterEngineMessage(typeof(Messages.SvcSetView));
-            RegisterEngineMessage(typeof(Messages.SvcSound));
-            RegisterEngineMessage(typeof(Messages.SvcTime));
-            RegisterEngineMessage(typeof(Messages.SvcPrint));
-            RegisterEngineMessage(typeof(Messages.SvcStuffText));
-            RegisterEngineMessage(typeof(Messages.SvcSetAngle));
-            RegisterEngineMessage(typeof(Messages.SvcServerInfo));
-            RegisterEngineMessage(typeof(Messages.SvcLightStyle));
-            RegisterEngineMessage(typeof(Messages.SvcUpdateUserInfo));
-            RegisterEngineMessage(typeof(Messages.SvcDeltaDescription));
-            RegisterEngineMessage(typeof(Messages.SvcClientData));
-            RegisterEngineMessage(typeof(Messages.SvcPings));
-            RegisterEngineMessage(typeof(Messages.SvcEventReliable));
-            RegisterEngineMessage(typeof(Messages.SvcSpawnBaseline));
-            RegisterEngineMessage(typeof(Messages.SvcTempEntity));
-            RegisterEngineMessage(typeof(Messages.SvcSetPause));
-            RegisterEngineMessage(typeof(Messages.SvcSignOnNum));
-            RegisterEngineMessage(typeof(Messages.SvcCenterPrint));
-            RegisterEngineMessage(typeof(Messages.SvcSpawnStaticSound));
-            RegisterEngineMessage(typeof(Messages.SvcIntermission));
-            RegisterEngineMessage(typeof(Messages.SvcCdTrack));
-            RegisterEngineMessage(typeof(Messages.SvcWeaponAnim));
-            RegisterEngineMessage(typeof(Messages.SvcNewUserMessage));
-            RegisterEngineMessage(typeof(Messages.SvcPacketEntities));
-            RegisterEngineMessage(typeof(Messages.SvcDeltaPacketEntities));
-            RegisterEngineMessage(typeof(Messages.SvcChoke));
-            RegisterEngineMessage(typeof(Messages.SvcResourceList));
-            RegisterEngineMessage(typeof(Messages.SvcNewMoveVars));
-            RegisterEngineMessage(typeof(Messages.SvcResourceRequest));
-            RegisterEngineMessage(typeof(Messages.SvcCustomization));
-            RegisterEngineMessage(typeof(Messages.SvcFileTransferFailed));
-            RegisterEngineMessage(typeof(Messages.SvcHltv));
-            RegisterEngineMessage(typeof(Messages.SvcDirector));
-            RegisterEngineMessage(typeof(Messages.SvcVoiceInit));
-            RegisterEngineMessage(typeof(Messages.SvcVoiceData));
-            RegisterEngineMessage(typeof(Messages.SvcSendExtraInfo));
-            RegisterEngineMessage(typeof(Messages.SvcTimeScale));
-            RegisterEngineMessage(typeof(Messages.SvcResourceLocation));
+            RegisterEngineMessage<Messages.SvcNop>();
+            RegisterEngineMessage<Messages.SvcEvent>();
+            RegisterEngineMessage<Messages.SvcSetView>();
+            RegisterEngineMessage<Messages.SvcSound>();
+            RegisterEngineMessage<Messages.SvcTime>();
+            RegisterEngineMessage<Messages.SvcPrint>();
+            RegisterEngineMessage<Messages.SvcStuffText>();
+            RegisterEngineMessage<Messages.SvcSetAngle>();
+            RegisterEngineMessage<Messages.SvcServerInfo>();
+            RegisterEngineMessage<Messages.SvcLightStyle>();
+            RegisterEngineMessage<Messages.SvcUpdateUserInfo>();
+            RegisterEngineMessage<Messages.SvcDeltaDescription>();
+            RegisterEngineMessage<Messages.SvcClientData>();
+            RegisterEngineMessage<Messages.SvcPings>();
+            RegisterEngineMessage<Messages.SvcEventReliable>();
+            RegisterEngineMessage<Messages.SvcSpawnBaseline>();
+            RegisterEngineMessage<Messages.SvcTempEntity>();
+            RegisterEngineMessage<Messages.SvcSetPause>();
+            RegisterEngineMessage<Messages.SvcSignOnNum>();
+            RegisterEngineMessage<Messages.SvcCenterPrint>();
+            RegisterEngineMessage<Messages.SvcSpawnStaticSound>();
+            RegisterEngineMessage<Messages.SvcIntermission>();
+            RegisterEngineMessage<Messages.SvcCdTrack>();
+            RegisterEngineMessage<Messages.SvcWeaponAnim>();
+            RegisterEngineMessage<Messages.SvcNewUserMessage>();
+            RegisterEngineMessage<Messages.SvcPacketEntities>();
+            RegisterEngineMessage<Messages.SvcDeltaPacketEntities>();
+            RegisterEngineMessage<Messages.SvcChoke>();
+            RegisterEngineMessage<Messages.SvcResourceList>();
+            RegisterEngineMessage<Messages.SvcNewMoveVars>();
+            RegisterEngineMessage<Messages.SvcResourceRequest>();
+            RegisterEngineMessage<Messages.SvcCustomization>();
+            RegisterEngineMessage<Messages.SvcFileTransferFailed>();
+            RegisterEngineMessage<Messages.SvcHltv>();
+            RegisterEngineMessage<Messages.SvcDirector>();
+            RegisterEngineMessage<Messages.SvcVoiceInit>();
+            RegisterEngineMessage<Messages.SvcVoiceData>();
+            RegisterEngineMessage<Messages.SvcSendExtraInfo>();
+            RegisterEngineMessage<Messages.SvcTimeScale>();
+            RegisterEngineMessage<Messages.SvcResourceLocation>();
 
             // Register user messages.
-            RegisterUserMessage(typeof(UserMessages.DeathMsg));
-            RegisterUserMessage(typeof(UserMessages.ResetHud));
-            RegisterUserMessage(typeof(UserMessages.SayText));
-            RegisterUserMessage(typeof(UserMessages.ScoreInfo));
-            RegisterUserMessage(typeof(UserMessages.ScreenFade));
-            RegisterUserMessage(typeof(UserMessages.TeamInfo));
-            RegisterUserMessage(typeof(UserMessages.TeamScore));
-            RegisterUserMessage(typeof(UserMessages.TextMsg));
+            RegisterUserMessage<UserMessages.DeathMsg>();
+            RegisterUserMessage<UserMessages.ResetHud>();
+            RegisterUserMessage<UserMessages.SayText>();
+            RegisterUserMessage<UserMessages.ScoreInfo>();
+            RegisterUserMessage<UserMessages.ScreenFade>();
+            RegisterUserMessage<UserMessages.TeamInfo>();
+            RegisterUserMessage<UserMessages.TeamScore>();
+            RegisterUserMessage<UserMessages.TextMsg>();
         }
 
         protected virtual void ReadGameConfig()
@@ -236,39 +236,30 @@ namespace CDP.HalfLifeDemo
 
             return (UserMessage)Activator.CreateInstance(userMessages[name]);
         }
-
-        private void RegisterFrame(Type type)
+        
+        private void RegisterFrame<T>() where T : Frame
         {
-            Frame instance = Activator.CreateInstance(type) as Frame;
-
-            if (instance == null)
-            {
-                throw new ApplicationException("Specified type does not inherit from Frame.");
-            }
-
-            frames.Add(instance.Id, type);
+            Frame instance = (Frame)Activator.CreateInstance(typeof(T));
+            frames.Add(instance.Id, typeof(T));
         }
 
-        private void RegisterEngineMessage(Type type)
+        protected void RegisterEngineMessage<T>() where T : EngineMessage
         {
-            EngineMessage instance = Activator.CreateInstance(type) as EngineMessage;
+            EngineMessage instance = (EngineMessage)Activator.CreateInstance(typeof(T));
 
-            if (instance == null)
+            // Remove if the user message is already registered.
+            // This allows game-specific handlers to override generic base handlers.
+            if (engineMessages.ContainsKey(instance.Id))
             {
-                throw new ApplicationException("Specified type does not inherit from EngineMessage.");
+                engineMessages.Remove(instance.Id);
             }
 
-            engineMessages.Add(instance.Id, type);
+            engineMessages.Add(instance.Id, typeof(T));
         }
 
-        protected void RegisterUserMessage(Type type)
+        protected void RegisterUserMessage<T>() where T : UserMessage
         {
-            UserMessage instance = Activator.CreateInstance(type) as UserMessage;
-
-            if (instance == null)
-            {
-                throw new ApplicationException("Specified type does not inherit from UserMessage.");
-            }
+            UserMessage instance = (UserMessage)Activator.CreateInstance(typeof(T));
 
             // Remove if the user message is already registered.
             // This allows game-specific handlers to override generic base handlers.
@@ -277,7 +268,7 @@ namespace CDP.HalfLifeDemo
                 userMessages.Remove(instance.Name);
             }
 
-            userMessages.Add(instance.Name, type);
+            userMessages.Add(instance.Name, typeof(T));
         }
     }
 }
