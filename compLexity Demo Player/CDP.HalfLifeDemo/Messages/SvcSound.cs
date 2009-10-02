@@ -175,6 +175,8 @@ namespace CDP.HalfLifeDemo.Messages
             {
                 buffer.WriteByte(Pitch.Value);
             }
+
+            buffer.PadRemainingBitsInCurrentByte();
         }
 
         public override void Log(StreamWriter log)

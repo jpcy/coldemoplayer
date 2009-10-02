@@ -80,6 +80,8 @@ namespace CDP.HalfLifeDemo.Messages
             {
                 deltaDescription.WriteDelta(buffer, Deltas[i]);
             }
+
+            buffer.PadRemainingBitsInCurrentByte();
         }
 
         public override void Log(StreamWriter log)

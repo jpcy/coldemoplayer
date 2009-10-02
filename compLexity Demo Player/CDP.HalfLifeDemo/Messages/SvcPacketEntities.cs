@@ -230,6 +230,7 @@ namespace CDP.HalfLifeDemo.Messages
             }
 
             buffer.WriteUShort(0);
+            buffer.PadRemainingBitsInCurrentByte();
         }
 
         public override void Log(StreamWriter log)

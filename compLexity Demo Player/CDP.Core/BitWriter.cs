@@ -200,11 +200,13 @@ namespace CDP.Core
 
         public void WriteString(string value)
         {
-            if (!string.IsNullOrEmpty(value))
+            for (int i = 0; i < value.Length; i++)
             {
-                WriteBytes(Encoding.ASCII.GetBytes(value));
+                // ascii
+                WriteByte((byte)value[i]);
             }
 
+            // null terminator
             WriteByte(0);
         }
 
@@ -221,6 +223,16 @@ namespace CDP.Core
             for (int i = 0; i < length - (value.Length + 1); i++)
             {
                 WriteByte(0);
+            }
+        }
+
+        public void PadRemainingBitsInCurrentByte()
+        {
+            int bitOffset = currentBit % 8;
+
+            if (bitOffset != 0)
+            {
+                currentBit += 8 - bitOffset;
             }
         }
     }

@@ -194,6 +194,8 @@ namespace CDP.HalfLifeDemo.Messages
                 // No need to write the consistency list, at least for now.
                 buffer.WriteBoolean(false);
             }
+
+            buffer.PadRemainingBitsInCurrentByte();
         }
 
         public override void Log(StreamWriter log)

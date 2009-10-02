@@ -80,6 +80,7 @@ namespace CDP.HalfLifeDemo.Messages
             }
 
             buffer.WriteBoolean(false);
+            buffer.PadRemainingBitsInCurrentByte();
         }
 
         public override void Log(StreamWriter log)

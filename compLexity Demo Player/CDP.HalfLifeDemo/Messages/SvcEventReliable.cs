@@ -81,6 +81,8 @@ namespace CDP.HalfLifeDemo.Messages
                 buffer.WriteBoolean(true);
                 buffer.WriteUBits((uint)(Delay * 100.0f), 16);
             }
+
+            buffer.PadRemainingBitsInCurrentByte();
         }
 
         public override void Log(StreamWriter log)

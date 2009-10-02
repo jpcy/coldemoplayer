@@ -57,7 +57,7 @@ namespace CDP.HalfLifeDemo.Messages
 
             while (buffer.ReadBoolean())
             {
-                if (demo.NetworkProtocol < 47) // TODO: beta steam detection
+                if (demo.NetworkProtocol < 47)
                 {
                     buffer.SeekBits(5);
                 }
@@ -99,7 +99,7 @@ namespace CDP.HalfLifeDemo.Messages
             {
                 Weapon weapon = new Weapon();
 
-                if (demo.NetworkProtocol < 47) // TODO: beta steam detection
+                if (demo.NetworkProtocol < 47)
                 {
                     weapon.Index = buffer.ReadUBits(5);
                 }
@@ -114,7 +114,6 @@ namespace CDP.HalfLifeDemo.Messages
             }
 
             buffer.SeekRemainingBitsInCurrentByte();
-            buffer.Endian = BitReader.Endians.Little;
         }
 
         public override void Write(BitWriter buffer)
@@ -146,6 +145,7 @@ namespace CDP.HalfLifeDemo.Messages
             }
 
             buffer.WriteBoolean(false);
+            buffer.PadRemainingBitsInCurrentByte();
         }
 
         public override void Log(StreamWriter log)

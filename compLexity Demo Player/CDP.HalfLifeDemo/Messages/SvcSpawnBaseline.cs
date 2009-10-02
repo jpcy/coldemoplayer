@@ -185,6 +185,8 @@ namespace CDP.HalfLifeDemo.Messages
             {
                 entityStateStructure.WriteDelta(buffer, delta);
             }
+
+            buffer.PadRemainingBitsInCurrentByte();
         }
 
         public override void Log(StreamWriter log)
