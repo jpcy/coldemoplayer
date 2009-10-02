@@ -81,6 +81,7 @@ namespace CDP.CounterStrikeDemo
         protected override void RegisterMessages()
         {
             base.RegisterMessages();
+            RegisterEngineMessage<Messages.SvcClientData>();
         }
 
         protected override void ReadGameConfig()

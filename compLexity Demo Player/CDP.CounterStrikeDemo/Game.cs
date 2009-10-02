@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 using System.Linq;
+using CDP.Core.Extensions;
 
 namespace CDP.CounterStrikeDemo
 {
@@ -62,11 +63,11 @@ namespace CDP.CounterStrikeDemo
 
             if (version == null)
             {
-                return (int)Demo.Versions.CounterStrike16;
+                version = Versions.First(v => v.Checksum == "default");
             }
 
             // Translate the string names defined in the XML config file (e.g. "1.3") to the enumeration Versions (e.g. "CounterStrike13").
-            return (int)Enum.Parse(typeof(Demo.Versions), "CounterStrike" + version.Name.Replace(".", string.Empty));
+            return (int)Enum.Parse(typeof(Demo.Versions), "CounterStrike" + version.Name.RemoveChars('.');
         }
     }
 }
