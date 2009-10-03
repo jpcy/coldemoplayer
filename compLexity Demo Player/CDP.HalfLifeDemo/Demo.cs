@@ -437,17 +437,19 @@ namespace CDP.HalfLifeDemo
                         Frame frame = ReadAndWriteFrame(br, bw);
                         CurrentTimestamp = frame.Timestamp;
 
+                        // Remember the offset of the start of the playback segment.
+                        if (!foundPlaybackSegment && frame is Frames.PlaybackSegmentStart)
+                        {
+                            foundPlaybackSegment = true;
+                            playbackSegmentOffset = (uint)lastFrameOffset;
+                        }
+
                         // Handle a frame's message block.
                         if (frame.HasMessages)
                         {
                             if (foundPlaybackSegment)
                             {
                                 nPlaybackFrames++;
-                            }
-                            else if (frame is Frames.Playback)
-                            {
-                                foundPlaybackSegment = true;
-                                playbackSegmentOffset = (uint)lastFrameOffset;
                             }
 
                             byte[] messageBlock = ReadMessageBlock(br);
@@ -614,7 +616,7 @@ namespace CDP.HalfLifeDemo
 
             if (frame == null)
             {
-                throw new ApplicationException(string.Format("Unknown frame type \"{0}\".", id));
+                throw new ApplicationException(string.Format("Unknown frame type \"{0}\" at offset \"{1}\"", id, br.BaseStream.Position - 1));
             }
 
             frame.ReadHeader(br, NetworkProtocol);
