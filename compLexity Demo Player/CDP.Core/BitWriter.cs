@@ -210,10 +210,13 @@ namespace CDP.Core
 
         public void WriteString(string value)
         {
-            for (int i = 0; i < value.Length; i++)
+            if (!string.IsNullOrEmpty(value))
             {
-                // ascii
-                WriteByte((byte)value[i]);
+                for (int i = 0; i < value.Length; i++)
+                {
+                    // ascii
+                    WriteByte((byte)value[i]);
+                }
             }
 
             // null terminator
