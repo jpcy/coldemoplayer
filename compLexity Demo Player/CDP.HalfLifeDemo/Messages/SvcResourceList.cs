@@ -190,10 +190,10 @@ namespace CDP.HalfLifeDemo.Messages
                     buffer.WriteBoolean(true);
                     buffer.WriteBytes(resource.Reserved);
                 }
-
-                // No need to write the consistency list, at least for now.
-                buffer.WriteBoolean(false);
             }
+
+            // No need to write the consistency list, at least for now.
+            buffer.WriteBoolean(false);
 
             buffer.PadRemainingBitsInCurrentByte();
         }

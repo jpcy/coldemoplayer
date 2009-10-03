@@ -433,7 +433,7 @@ namespace CDP.HalfLifeDemo
                     while (true)
                     {
                         // Read and write frame.
-                        lastFrameOffset = inputStream.Position;
+                        lastFrameOffset = outputStream.Position;
                         Frame frame = ReadAndWriteFrame(br, bw);
                         CurrentTimestamp = frame.Timestamp;
 
@@ -584,6 +584,9 @@ namespace CDP.HalfLifeDemo
 
         private Frame ReadFrameHeader(BinaryReader br)
         {
+            // New frame, clear the message history.
+            messageHistory.Clear();
+
             byte id = br.ReadByte();
             Frame frame = handler.CreateFrame(id);
 
@@ -615,9 +618,6 @@ namespace CDP.HalfLifeDemo
                 frameCallback.Fire(frame);
             }
 
-            // New frame, clear the message history.
-            messageHistory.Clear();
-
             return frame;
         }
 
@@ -630,10 +630,14 @@ namespace CDP.HalfLifeDemo
             {
                 long frameStartOffset = br.BaseStream.Position;
                 frame.Skip(br);
-                long frameFinishOffset = br.BaseStream.Position;
-                br.BaseStream.Seek(frameStartOffset, SeekOrigin.Begin);
+                int frameLength = (int)(br.BaseStream.Position - frameStartOffset);
                 frame.WriteHeader(bw);
-                bw.Write(br.ReadBytes((int)(frameFinishOffset - frameStartOffset)));
+
+                if (frameLength > 0)
+                {
+                    br.BaseStream.Seek(frameStartOffset, SeekOrigin.Begin);
+                    bw.Write(br.ReadBytes(frameLength));
+                }
             }
             else
             {

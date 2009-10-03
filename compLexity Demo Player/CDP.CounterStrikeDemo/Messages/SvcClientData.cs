@@ -18,9 +18,6 @@ namespace CDP.CounterStrikeDemo.Messages
 
         public override void Skip(BitReader buffer)
         {
-            Read(buffer);
-            return;
-
             if (demo.IsHltv)
             {
                 return;
