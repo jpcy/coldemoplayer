@@ -29,7 +29,7 @@ namespace CDP.HalfLifeDemo.Messages
         {
             buffer.SeekString();
 
-            if (demo.NetworkProtocol >= 46)
+            if (demo.NetworkProtocol >= 46 && buffer.BytesLeft > 0)
             {
                 byte quality = buffer.ReadByte();
 
@@ -43,16 +43,20 @@ namespace CDP.HalfLifeDemo.Messages
         public override void Read(BitReader buffer)
         {
             Codec = buffer.ReadString();
+            Quality = 5;
 
-            if (demo.NetworkProtocol >= 46)
+            if (demo.NetworkProtocol >= 46 && buffer.BytesLeft > 0)
             {
-                Quality = buffer.ReadByte();
+                byte quality = buffer.ReadByte();
 
                 // In the transition of the Half-Life engine to Steam, Valve made changes to the network protocol without incrementing the actual network protocol number. Before Steam there was no quality byte. This is the only non-mod-specific way of handling this.
                 if (Quality < 1 || Quality > 5)
                 {
                     buffer.SeekBytes(-1);
-                    Quality = 5;
+                }
+                else
+                {
+                    Quality = quality;
                 }
             }
         }
