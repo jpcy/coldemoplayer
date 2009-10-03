@@ -559,8 +559,7 @@ namespace CDP.HalfLifeDemo
             // Don't check if there's anything following the directory entries, it could be used for meta-data in the future.
             if (br.BaseStream.Length < offset + 4 + DirectoryEntry.SizeInBytes * 2)
             {
-                IsCorrupt = true;
-                return;
+                goto corrupt;
             }
 
             br.BaseStream.Seek(offset, SeekOrigin.Begin);
@@ -569,17 +568,40 @@ namespace CDP.HalfLifeDemo
 
             if (nEntries != 2)
             {
-                IsCorrupt = true;
-                return;
+                goto corrupt;
             }
 
-            // Skip "LOADING".
-            br.BaseStream.Seek(DirectoryEntry.SizeInBytes, SeekOrigin.Current);
-
+            DirectoryEntry loading = new DirectoryEntry();
+            loading.Read(br.ReadBytes(DirectoryEntry.SizeInBytes));
             DirectoryEntry playback = new DirectoryEntry();
             playback.Read(br.ReadBytes(DirectoryEntry.SizeInBytes));
+
+            // Verify loading segment offset. It immediately follows the header, so it should be equal to the header size.
+            if (loading.Offset != Header.SizeInBytes)
+            {
+                goto corrupt;
+            }
+
+            // Verify loading segment length. Offset + length should be equal to playback segment offset.
+            if (loading.Offset + loading.Length != playback.Offset)
+            {
+                goto corrupt;
+            }
+
+            // Verify first byte at playback segment offset (should be frame ID '2', playback segment start).
+            br.BaseStream.Seek(playback.Offset, SeekOrigin.Begin);
+
+            if (br.ReadByte() != (byte)FrameIds.PlaybackSegmentStart)
+            {
+                goto corrupt;
+            }
+
             Duration = TimeSpan.FromSeconds(Math.Abs(playback.Duration));
             AddDetail("Duration", Duration);
+            return;
+
+            corrupt:
+            IsCorrupt = true;
         }
 
         private Frame ReadFrameHeader(BinaryReader br)
