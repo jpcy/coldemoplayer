@@ -187,7 +187,29 @@ namespace CDP.HalfLifeDemo
 
         public byte[] CreateDeltaBitmask(Delta delta)
         {
-            uint nBitmaskBytes = (uint)((entries.Count / 8) + (entries.Count % 8 > 0 ? 1 : 0));
+            // Find the index of the last entry with a value.
+            int? lastEntryWithValueIndex = null;
+
+            for (int i = 0; i < entries.Count; i++)
+            {
+                if (delta.FindEntryValue(entries[i].Name) != null)
+                {
+                    lastEntryWithValueIndex = i + 1;
+                }
+            }
+
+            if (lastEntryWithValueIndex == null)
+            {
+                return null;
+            }
+
+            uint nBitmaskBytes = (uint)(lastEntryWithValueIndex / 8);
+
+            if (lastEntryWithValueIndex % 8 > 0)
+            {
+                nBitmaskBytes++;
+            }
+
             byte[] bitmaskBytes = new byte[nBitmaskBytes];
 
             for (int i = 0; i < bitmaskBytes.Length; i++)
@@ -313,12 +335,12 @@ namespace CDP.HalfLifeDemo
                     bitsToRead--;
                 }
 
-                return (float)buffer.ReadUBits(bitsToRead) / e.Divisor * (negative ? -1.0f : 1.0f);
+                return buffer.ReadUBits(bitsToRead) / e.Divisor * (negative ? -1.0f : 1.0f);
             }
 
             if ((e.Flags & EntryFlags.Angle) != 0)
             {
-                return (float)(buffer.ReadUBits((int)e.nBits) * (360.0f / (float)(1 << (int)e.nBits)));
+                return buffer.ReadUBits((int)e.nBits) * (360.0f / (float)(1 << (int)e.nBits));
             }
 
             if ((e.Flags & EntryFlags.String) != 0)
@@ -401,7 +423,7 @@ namespace CDP.HalfLifeDemo
                     bitsToWrite--;
                 }
 
-                buffer.WriteUBits((uint)(Math.Abs(writeValue) * e.Divisor), bitsToWrite);
+                buffer.WriteUBits((uint)Math.Abs(new decimal(writeValue * e.Divisor)), bitsToWrite);
             }
             else
             {
