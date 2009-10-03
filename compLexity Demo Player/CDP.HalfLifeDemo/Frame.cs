@@ -21,6 +21,12 @@ namespace CDP.HalfLifeDemo
             get { return true; }
         }
 
+        protected Demo demo;
+        public Demo Demo
+        {
+            set { demo = value; }
+        }
+
         public bool Remove { get; set; }
 
         protected uint networkProtocol;

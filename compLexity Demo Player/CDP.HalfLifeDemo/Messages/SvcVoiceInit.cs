@@ -50,7 +50,7 @@ namespace CDP.HalfLifeDemo.Messages
                 byte quality = buffer.ReadByte();
 
                 // In the transition of the Half-Life engine to Steam, Valve made changes to the network protocol without incrementing the actual network protocol number. Before Steam there was no quality byte. This is the only non-mod-specific way of handling this.
-                if (Quality < 1 || Quality > 5)
+                if (quality < 1 || quality > 5)
                 {
                     buffer.SeekBytes(-1);
                 }

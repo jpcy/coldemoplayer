@@ -30,20 +30,22 @@ namespace CDP.HalfLifeDemo.Frames
         // See: Quake, client/net.h
         public byte[] SequenceInfo { get; set; }
 
+        private const int demoInfoLength = 436;
+
         public override void Read(BinaryReader br)
         {
-            int demoInfoLength;
-
             if (networkProtocol <= 43)
             {
-                demoInfoLength = 532;
+                DemoInfo = new byte[demoInfoLength];
+                br.BaseStream.Read(DemoInfo, 0, 28);
+                br.BaseStream.Seek(489, SeekOrigin.Current);
+                br.BaseStream.Read(DemoInfo, 421, 15);
             }
             else
             {
-                demoInfoLength = 436;
+                DemoInfo = br.ReadBytes(demoInfoLength);
             }
 
-            DemoInfo = br.ReadBytes(demoInfoLength);
             SequenceInfo = br.ReadBytes(28);
         }
 

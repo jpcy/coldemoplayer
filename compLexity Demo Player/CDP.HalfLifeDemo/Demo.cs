@@ -619,6 +619,7 @@ namespace CDP.HalfLifeDemo
                 throw new ApplicationException(string.Format("Unknown frame type \"{0}\" at offset \"{1}\"", id, br.BaseStream.Position - 1));
             }
 
+            frame.Demo = this;
             frame.ReadHeader(br, NetworkProtocol);
             return frame;
         }
