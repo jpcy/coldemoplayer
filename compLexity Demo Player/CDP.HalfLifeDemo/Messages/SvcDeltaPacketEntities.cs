@@ -206,12 +206,6 @@ namespace CDP.HalfLifeDemo.Messages
                     }
 
                     buffer.WriteBoolean(entity.Custom);
-
-                    if (demo.NetworkProtocol <= 43)
-                    {
-                        buffer.WriteBoolean(entity.Unknown2);
-                    }
-
                     string typeName = "entity_state_t";
 
                     if (entity.Id > 0 && entity.Id <= demo.MaxClients)
