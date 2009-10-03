@@ -5,16 +5,16 @@ using BitWriter = CDP.Core.BitWriter;
 
 namespace CDP.HalfLifeDemo.Messages
 {
-    public class SvcSetAngle : EngineMessage
+    public class SvcAddAngle : EngineMessage
     {
         public override byte Id
         {
-            get { return (byte)EngineMessageIds.svc_setangle; }
+            get { return (byte)EngineMessageIds.svc_addangle; }
         }
 
         public override string Name
         {
-            get { return "svc_setangle"; }
+            get { return "svc_addangle"; }
         }
 
         public override bool CanSkipWhenWriting
@@ -22,29 +22,21 @@ namespace CDP.HalfLifeDemo.Messages
             get { return true; }
         }
 
-        public float[] Angle { get; set; }
+        public float Angle { get; set; }
 
         public override void Skip(BitReader buffer)
         {
-            buffer.SeekBytes(6);
+            buffer.SeekBytes(2);
         }
 
         public override void Read(BitReader buffer)
         {
-            Angle = new float[3];
-
-            for (int i = 0; i < 3; i++)
-            {
-                Angle[i] = buffer.ReadHiresAngle();
-            }
+            Angle = buffer.ReadHiresAngle();
         }
 
         public override void Write(BitWriter buffer)
         {
-            for (int i = 0; i < 3; i++)
-            {
-                buffer.WriteHiresAngle(Angle[i]);
-            }
+            buffer.WriteHiresAngle(Angle);
         }
 
         public override void Log(StreamWriter log)

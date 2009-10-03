@@ -39,5 +39,11 @@ namespace CDP.HalfLifeDemo
             bitWriter.WriteCoord(coord[1]);
             bitWriter.WriteCoord(coord[2]);
         }
+
+        public static void WriteHiresAngle(this BitWriter bitWriter, float angle)
+        {
+            // angle / (360 / 2 ^ 16)
+            bitWriter.WriteShort((short)(angle / 0.0054931640625f));
+        }
     }
 }

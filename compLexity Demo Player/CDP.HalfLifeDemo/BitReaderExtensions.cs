@@ -70,5 +70,11 @@ namespace CDP.HalfLifeDemo
 
             return value;
         }
+
+        public static float ReadHiresAngle(this BitReader bitReader)
+        {
+            // short * 360 / 2 ^ 16
+            return bitReader.ReadShort() * 0.0054931640625f;
+        }
     }
 }

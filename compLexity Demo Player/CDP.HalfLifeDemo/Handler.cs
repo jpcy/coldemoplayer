@@ -159,6 +159,7 @@ namespace CDP.HalfLifeDemo
             RegisterEngineMessage<Messages.SvcIntermission>();
             RegisterEngineMessage<Messages.SvcCdTrack>();
             RegisterEngineMessage<Messages.SvcWeaponAnim>();
+            RegisterEngineMessage<Messages.SvcAddAngle>();
             RegisterEngineMessage<Messages.SvcNewUserMessage>();
             RegisterEngineMessage<Messages.SvcPacketEntities>();
             RegisterEngineMessage<Messages.SvcDeltaPacketEntities>();
