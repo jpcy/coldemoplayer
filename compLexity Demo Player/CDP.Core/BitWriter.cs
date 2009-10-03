@@ -142,8 +142,18 @@ namespace CDP.Core
 
         public void WriteBytes(byte[] values)
         {
-            data.AddRange(values);
-            currentBit += values.Length * 8;
+            if (currentBit % 8 == 0)
+            {
+                data.AddRange(values);
+                currentBit += values.Length * 8;
+            }
+            else
+            {
+                for (int i = 0; i < values.Length; i++)
+                {
+                    WriteByte(values[i]);
+                }
+            }
         }
 
         public void WriteBytes(byte[] buffer, int start, int count)
