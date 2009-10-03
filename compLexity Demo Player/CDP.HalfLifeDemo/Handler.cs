@@ -157,6 +157,7 @@ namespace CDP.HalfLifeDemo
             RegisterEngineMessage<Messages.SvcCenterPrint>();
             RegisterEngineMessage<Messages.SvcSpawnStaticSound>();
             RegisterEngineMessage<Messages.SvcIntermission>();
+            RegisterEngineMessage<Messages.SvcFinale>();
             RegisterEngineMessage<Messages.SvcCdTrack>();
             RegisterEngineMessage<Messages.SvcWeaponAnim>();
             RegisterEngineMessage<Messages.SvcRoomType>();

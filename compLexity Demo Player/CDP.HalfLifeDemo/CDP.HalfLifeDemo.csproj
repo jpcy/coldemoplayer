@@ -100,6 +100,7 @@
     </Compile>
     <Compile Include="Messages\SvcEventReliable.cs" />
     <Compile Include="Messages\SvcFileTransferFailed.cs" />
+    <Compile Include="Messages\SvcFinale.cs" />
     <Compile Include="Messages\SvcHltv.cs" />
     <Compile Include="Messages\SvcIntermission.cs" />
     <Compile Include="Messages\SvcLightStyle.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="Messages\SvcResourceList.cs" />
     <Compile Include="Messages\SvcResourceLocation.cs" />
     <Compile Include="Messages\SvcResourceRequest.cs" />
+    <Compile Include="Messages\SvcRoomType.cs" />
     <Compile Include="Messages\SvcSendExtraInfo.cs" />
     <Compile Include="Messages\SvcServerInfo.cs" />
     <Compile Include="Messages\SvcSetAngle.cs" />
