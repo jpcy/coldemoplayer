@@ -68,7 +68,7 @@ namespace CDP.CounterStrikeDemo
                 }
 
                 // Find the the first free user message ID.
-                for (byte i = 0; i < 255; i++)
+                for (byte i = (byte)(Demo.MaxEngineMessageId + 1); i < 255; i++)
                 {
                     if (userMessages.FirstOrDefault(um => um.Id == i) == null)
                     {

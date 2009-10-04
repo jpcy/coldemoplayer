@@ -954,8 +954,8 @@ namespace CDP.HalfLifeDemo
         {
             // Some demos contain duplicate user message definitions.
             // Example: http://www.gotfrag.com/cs/demos/13
-            // Some poorly written server mods have many copies of the same user message registered with different id's, so always remove a message definition if one with a matching name already exists.
-            UserMessageDefinition userMessageDefinition = userMessageDefinitions.SingleOrDefault(umd => umd.Name == name);
+            // Some poorly written server mods have many copies of the same user message registered with different IDs.
+            UserMessageDefinition userMessageDefinition = userMessageDefinitions.SingleOrDefault(umd => umd.Id == id);
 
             if (userMessageDefinition != null)
             {
