@@ -735,18 +735,13 @@ namespace CDP.HalfLifeDemo
         {
             IMessage message = ReadMessageHeader(reader);
             UserMessage userMessage = message as UserMessage;
-            byte messageId = message.Id;
-            byte? userMessageLength = null;
+
+            // User message IDs are changed to match the current version of the specific mod.
+            byte newMessageId = message.Id;
 
             if (userMessage != null)
             {
-                messageId = GetUserMessageId(message.Name);
-                UserMessageDefinition definition = userMessageDefinitions.FirstOrDefault(umd => umd.Id == message.Id);
-
-                if (definition.Length == -1)
-                {
-                    userMessageLength = userMessage.Length;
-                }
+                newMessageId = GetUserMessageId(message.Name);
             }
 
             List<MessageCallback> messageCallbacks = FindMessageCallbacks(message);
@@ -779,11 +774,16 @@ namespace CDP.HalfLifeDemo
             // Write the message if a message callback hasn't flagged it for removal.
             if (!message.Remove)
             {
-                writer.WriteByte(messageId);
+                writer.WriteByte(newMessageId);
 
-                if (userMessageLength.HasValue)
+                if (userMessage != null)
                 {
-                    writer.WriteByte(userMessageLength.Value);
+                    UserMessageDefinition definition = userMessageDefinitions.Single(umd => umd.Id == message.Id);
+
+                    if (definition.Length == -1)
+                    {
+                        writer.WriteByte(userMessage.Length);
+                    }
                 }
 
                 if (wasSkipped)

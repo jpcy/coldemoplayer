@@ -70,7 +70,7 @@ namespace CDP.CounterStrikeDemo
                 // Find the the first free user message ID.
                 for (byte i = (byte)(Demo.MaxEngineMessageId + 1); i < 255; i++)
                 {
-                    if (userMessages.FirstOrDefault(um => um.Id == i) == null)
+                    if (userMessages.FirstOrDefault(um => um.Id == i) == null && !extraUserMessages.ContainsValue(i))
                     {
                         extraUserMessages.Add(userMessageName, i);
                         return i;
