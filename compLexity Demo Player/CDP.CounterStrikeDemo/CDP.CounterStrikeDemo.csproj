@@ -67,6 +67,7 @@
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="SettingsViewModel.cs" />
+    <Compile Include="UserMessages\SendAudio.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CDP.Core\CDP.Core.csproj">
