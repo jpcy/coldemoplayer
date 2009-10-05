@@ -51,6 +51,12 @@ namespace CDP.CounterStrikeDemo
         public override void Write(string destinationFileName)
         {
             AddMessageCallback<SvcNewUserMessage>(Write_NewUserMessage);
+
+            if (Version != Versions.CounterStrike16)
+            {
+                AddMessageCallback<SvcResourceList>(Write_ResourceList);
+            }
+
             AddMessageCallback<ScreenFade>(Write_ScreenFade);
             base.Write(destinationFileName);
         }
@@ -86,6 +92,21 @@ namespace CDP.CounterStrikeDemo
         private void Write_NewUserMessage(SvcNewUserMessage message)
         {
             message.UserMessageId = GetUserMessageId(message.UserMessageName);
+        }
+
+        private void Write_ResourceList(SvcResourceList message)
+        {
+            CounterStrikeDemo.Game.Resource[] blacklist = ((CounterStrikeDemo.Game)Game).ResourceBlacklist;
+            message.Resources.RemoveAll(r => blacklist.FirstOrDefault(blr => r.Name == blr.Name) != null);
+
+            foreach (SvcResourceList.Resource resource in message.Resources)
+            {
+                // Old CS versions use seperate models for left and right handed weapon models.
+                if (resource.Name.EndsWith("_r.mdl"))
+                {
+                    resource.Name = resource.Name.Replace("_r.mdl", ".mdl");
+                }
+            }
         }
 
         private void Write_ScreenFade(ScreenFade message)
