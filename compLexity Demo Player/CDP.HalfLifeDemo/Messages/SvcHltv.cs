@@ -31,6 +31,7 @@ namespace CDP.HalfLifeDemo.Messages
 
             if (command == 2)
             {
+                Remove = true;
                 buffer.SeekBytes(8);
             }
         }
@@ -41,6 +42,7 @@ namespace CDP.HalfLifeDemo.Messages
 
             if (Command == 2)
             {
+                Remove = true;
                 CommandData = buffer.ReadBytes(8);
             }
         }

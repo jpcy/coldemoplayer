@@ -22,6 +22,10 @@ namespace CDP.HalfLifeDemo.Messages
             get { return true; }
         }
 
+        public const byte DRC_CMD_START = 1;
+        public const byte DRC_CMD_MODE = 3;
+        public const byte OBS_IN_EYE = 4;
+
         public byte[] Data { get; set; }
 
         public override void Skip(BitReader buffer)

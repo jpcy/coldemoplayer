@@ -193,6 +193,15 @@ namespace CDP.HalfLifeDemo
 
         private const int fileBufferSize = 4096;
 
+        // Pre-write.
+        private int currentFrameIndex;
+        private int firstFrameToWriteIndex;
+
+        // Writing.
+        private readonly List<IMessage> messagesToInsert = new List<IMessage>();
+        private bool haveInsertedSvcDirectorMessage;
+        private bool haveParsedSvcDirectorMessage;
+
         public Demo()
         {
             Perspective = "POV";
@@ -274,24 +283,7 @@ namespace CDP.HalfLifeDemo
                         }
                         else if (frame.HasMessages)
                         {
-                            byte[] messageBlock = ReadMessageBlock(br);
-                            
-                            if (messageBlock != null)
-                            {
-                                Core.BitReader messageReader = new Core.BitReader(messageBlock);
-
-                                while (messageReader.CurrentByte < messageReader.Length)
-                                {
-                                    try
-                                    {
-                                        ReadMessage(messageReader);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        throw new MessageException(messageHistory, ex);
-                                    }
-                                }
-                            }
+                            ReadMessagesInMessageBlock(ReadMessageBlock(br));
                         }
 
                         UpdateProgress(stream.Position, streamLength);
@@ -337,24 +329,7 @@ namespace CDP.HalfLifeDemo
 
                         if (frame.HasMessages)
                         {
-                            byte[] messageBlock = ReadMessageBlock(br);
-
-                            if (messageBlock != null)
-                            {
-                                Core.BitReader messageReader = new Core.BitReader(messageBlock);
-
-                                while (messageReader.CurrentByte < messageReader.Length)
-                                {
-                                    try
-                                    {
-                                        ReadMessage(messageReader);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        throw new MessageException(messageHistory, ex);
-                                    }
-                                }
-                            }
+                            ReadMessagesInMessageBlock(ReadMessageBlock(br));
                         }
 
                         if ((!IsCorrupt && stream.Position >= directoryEntriesOffset) || stream.Position == streamLength)
@@ -409,7 +384,6 @@ namespace CDP.HalfLifeDemo
 
             try
             {
-                AddFrameCallback<Frames.ClientCommand>(Write_ClientCommand);
                 ResetOperationCancelledState();
                 ResetProgress();
 
@@ -418,10 +392,51 @@ namespace CDP.HalfLifeDemo
                 using (FileStream outputStream = new FileStream(destinationFileName, FileMode.Create, FileAccess.Write, FileShare.None, fileBufferSize, FileOptions.SequentialScan))
                 using (BinaryWriter bw = new BinaryWriter(outputStream))
                 {
-                    long streamLength = inputStream.Length;
+                    // Before writing, read the loading segment and do some processing.
+                    // We don't want message and frame callbacks added before this call to Write to fire when reading the loading segment, so save them now and restore them just before writing starts.
+                    List<MessageCallback> savedMessageCallbacks = new List<MessageCallback>(messageCallbacks);
+                    List<FrameCallback> savedFrameCallbacks = new List<FrameCallback>(frameCallbacks);
+                    messageCallbacks.Clear();
+                    frameCallbacks.Clear();
+                    inputStream.Seek(Header.SizeInBytes, SeekOrigin.Begin);
+                    AddMessageCallback<Messages.SvcServerInfo>(msg => firstFrameToWriteIndex = currentFrameIndex);
+                    currentFrameIndex = 0;
+
+                    while (true)
+                    {
+                        Frame frame = ReadFrame(br);
+                        CurrentTimestamp = frame.Timestamp;
+
+                        if (frame.Id == (byte)FrameIds.PlaybackSegmentStart)
+                        {
+                            break;
+                        }
+                        else if (frame.HasMessages)
+                        {
+                            ReadMessagesInMessageBlock(ReadMessageBlock(br));
+                        }
+
+                        currentFrameIndex++;
+                    }
+
+                    // Restore saved message and frame callbacks.
+                    messageCallbacks.Clear();
+                    frameCallbacks.Clear();
+                    messageCallbacks.AddRange(savedMessageCallbacks);
+                    frameCallbacks.AddRange(savedFrameCallbacks);
+
+                    // For a HLTV demo, svc_director messages should be inserted into the first frame of the playback segment if no svc_director messages were encountered during the loading segment.
+                    if (Perspective == "HLTV")
+                    {
+                        haveInsertedSvcDirectorMessage = false;
+                        haveParsedSvcDirectorMessage = false;
+                        AddMessageCallback<Messages.SvcDirector>(Write_Director);
+                        AddFrameCallback<Frames.Playback>(Write_Playback);
+                    }
 
                     // Read header, write empty header.
                     // The directory entries offset must be known before the header can be written, which means the entire demo must be parsed first.
+                    inputStream.Seek(0, SeekOrigin.Begin);
                     Header header = new Header();
                     header.Read(br.ReadBytes(Header.SizeInBytes));
                     bw.Write(new byte[Header.SizeInBytes]);
@@ -429,9 +444,27 @@ namespace CDP.HalfLifeDemo
                     bool foundPlaybackSegment = false;
                     uint playbackSegmentOffset = 0;
                     int nPlaybackFrames = 0;
+                    currentFrameIndex = 0;
+                    long streamLength = inputStream.Length;
+                    AddFrameCallback<Frames.ClientCommand>(Write_ClientCommand);
 
                     while (true)
                     {
+                        // Workaround for a Half-Life engine bug.
+                        // Skip writing frames until the last frame that contains a svc_serverinfo message.
+                        if (currentFrameIndex < firstFrameToWriteIndex)
+                        {
+                            Frame frameToSkip = ReadFrame(br);
+                            
+                            if (frameToSkip.HasMessages)
+                            {
+                                ReadMessageBlock(br);
+                            }
+
+                            currentFrameIndex++;
+                            continue;
+                        }
+
                         // Read and write frame.
                         lastFrameOffset = outputStream.Position;
                         Frame frame = ReadAndWriteFrame(br, bw);
@@ -452,33 +485,7 @@ namespace CDP.HalfLifeDemo
                                 nPlaybackFrames++;
                             }
 
-                            byte[] messageBlock = ReadMessageBlock(br);
-
-                            if (messageBlock !=null)
-                            {
-                                Core.BitReader messageReader = new Core.BitReader(messageBlock);
-                                Core.BitWriter messageWriter = new Core.BitWriter();
-
-                                while (messageReader.CurrentByte < messageReader.Length)
-                                {
-                                    try
-                                    {
-                                        ReadAndWriteMessage(messageReader, messageWriter, canSkipMessages);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        throw new MessageException(messageHistory, ex);
-                                    }
-                                }
-
-                                messageBlock = messageWriter.ToArray();
-                                bw.Write((uint)messageBlock.Length);
-                                bw.Write(messageBlock);
-                            }
-                            else
-                            {
-                                bw.Write(0u);
-                            }
+                            ReadAndWriteMessagesInMessageBlock(ReadMessageBlock(br), bw, canSkipMessages);
                         }
 
                         if ((!IsCorrupt && inputStream.Position >= directoryEntriesOffset) || inputStream.Position == streamLength)
@@ -702,6 +709,140 @@ namespace CDP.HalfLifeDemo
             return data;
         }
 
+        private void ReadMessagesInMessageBlock(byte[] messageBlock)
+        {
+            if (messageBlock == null || messageBlock.Length == 0)
+            {
+                return;
+            }
+
+            Core.BitReader messageReader = new Core.BitReader(messageBlock);
+
+            while (messageReader.CurrentByte < messageReader.Length)
+            {
+                try
+                {
+                    ReadMessage(messageReader);
+                }
+                catch (Exception ex)
+                {
+                    throw new MessageException(messageHistory, ex);
+                }
+            }
+        }
+
+        private void ReadAndWriteMessagesInMessageBlock(byte[] messageBlock, BinaryWriter bw, bool canSkipMessages)
+        {
+            if (messageBlock != null && messageBlock.Length != 0)
+            {
+                Core.BitReader messageReader = new Core.BitReader(messageBlock);
+                Core.BitWriter messageWriter = new Core.BitWriter();
+
+                while (messageReader.CurrentByte < messageReader.Length)
+                {
+                    try
+                    {
+                        ReadAndWriteMessage(messageReader, messageWriter, canSkipMessages);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new MessageException(messageHistory, ex);
+                    }
+                }
+
+                // Append any extra messages.
+                foreach (IMessage message in messagesToInsert)
+                {
+                    UserMessage userMessage = message as UserMessage;
+
+                    if (userMessage == null)
+                    {
+                        messageWriter.WriteByte(message.Id);
+                    }
+                    else
+                    {
+                        messageWriter.WriteByte(GetUserMessageId(message.Name));
+                    }
+
+                    if (userMessage != null)
+                    {
+                        UserMessageDefinition definition = userMessageDefinitions.Single(umd => umd.Id == message.Id);
+
+                        if (definition.Length == -1)
+                        {
+                            messageWriter.WriteByte(userMessage.Length);
+                        }
+                    }
+
+                    message.Write(messageWriter);
+                }
+
+                messagesToInsert.Clear();
+
+                // Write the message block.
+                messageBlock = messageWriter.ToArray();
+                bw.Write((uint)messageBlock.Length);
+                bw.Write(messageBlock);
+            }
+            else
+            {
+                bw.Write(0u);
+            }
+        }
+
+        private IMessage ReadMessageHeader(Core.BitReader buffer)
+        {
+            byte id = buffer.ReadByte();
+            IMessage message = null;
+
+            if (id <= Demo.MaxEngineMessageId)
+            {
+                message = handler.CreateEngineMessage(id);
+            }
+            else
+            {
+                if (userMessageDefinitions.Count == 0)
+                {
+                    throw new ApplicationException("Tried to read a user message before any svc_newusermsg messages were parsed.");
+                }
+
+                UserMessageDefinition userMessageDefinition = userMessageDefinitions.SingleOrDefault(umd => umd.Id == id);
+
+                if (userMessageDefinition != null)
+                {
+                    UserMessage userMessage = handler.CreateUserMessage(userMessageDefinition.Name);
+                    userMessage.Id = userMessageDefinition.Id;
+
+                    if (userMessageDefinition.Length == -1)
+                    {
+                        // -1 is a marker for "dynamic length message", which just means the next byte contains the message length.
+                        userMessage.Length = buffer.ReadByte();
+                    }
+                    else
+                    {
+                        userMessage.Length = (byte)userMessageDefinition.Length;
+                    }
+
+                    message = userMessage;
+                }
+            }
+
+            if (message == null)
+            {
+                throw new ApplicationException(string.Format("Unknown message type \"{0}\".", id));
+            }
+
+            message.Demo = this;
+            messageHistory.Enqueue(message);
+
+            if (messageHistory.Count > messageHistoryMaxLength)
+            {
+                messageHistory.Dequeue();
+            }
+
+            return message;
+        }
+
         private IMessage ReadMessage(Core.BitReader buffer)
         {
             IMessage message = ReadMessageHeader(buffer);
@@ -799,59 +940,6 @@ namespace CDP.HalfLifeDemo
                 {
                     message.Write(writer);
                 }
-            }
-
-            return message;
-        }
-
-        private IMessage ReadMessageHeader(Core.BitReader buffer)
-        {
-            byte id = buffer.ReadByte();
-            IMessage message = null;
-
-            if (id <= Demo.MaxEngineMessageId)
-            {
-                message = handler.CreateEngineMessage(id);
-            }
-            else
-            {
-                if (userMessageDefinitions.Count == 0)
-                {
-                    throw new ApplicationException("Tried to read a user message before any svc_newusermsg messages were parsed.");
-                }
-
-                UserMessageDefinition userMessageDefinition = userMessageDefinitions.SingleOrDefault(umd => umd.Id == id);
-
-                if (userMessageDefinition != null)
-                {
-                    UserMessage userMessage = handler.CreateUserMessage(userMessageDefinition.Name);
-                    userMessage.Id = userMessageDefinition.Id;
-
-                    if (userMessageDefinition.Length == -1)
-                    {
-                        // -1 is a marker for "dynamic length message", which just means the next byte contains the message length.
-                        userMessage.Length = buffer.ReadByte();
-                    }
-                    else
-                    {
-                        userMessage.Length = (byte)userMessageDefinition.Length;
-                    }
-
-                    message = userMessage;
-                }
-            }
-
-            if (message == null)
-            {
-                throw new ApplicationException(string.Format("Unknown message type \"{0}\".", id));
-            }
-
-            message.Demo = this;
-            messageHistory.Enqueue(message);
-
-            if (messageHistory.Count > messageHistoryMaxLength)
-            {
-                messageHistory.Dequeue();
             }
 
             return message;
@@ -1095,7 +1183,36 @@ namespace CDP.HalfLifeDemo
         }
         #endregion
 
-        #region Write frame callbacks
+        #region Write callbacks
+        private void Write_Director(Messages.SvcDirector message)
+        {
+            haveParsedSvcDirectorMessage = true;
+        }
+
+        private void Write_Playback(Frames.Playback frame)
+        {
+            if (haveParsedSvcDirectorMessage || haveInsertedSvcDirectorMessage)
+            {
+                return;
+            }
+            
+            messagesToInsert.Add(new Messages.SvcDirector
+            {
+                Data = new byte[] { Messages.SvcDirector.DRC_CMD_START }
+            });
+
+            messagesToInsert.Add(new Messages.SvcDirector
+            {
+                Data = new byte[]
+                {
+                    Messages.SvcDirector.DRC_CMD_MODE,
+                    Messages.SvcDirector.OBS_IN_EYE
+                }
+            });
+
+            haveInsertedSvcDirectorMessage = true;
+        }
+
         private void Write_ClientCommand(Frames.ClientCommand frame)
         {
             if (Perspective == "POV" && (bool)settings["HlRemoveShowscores"] && (frame.Command == "+showscores" || frame.Command == "-showscores"))
