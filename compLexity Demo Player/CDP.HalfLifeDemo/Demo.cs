@@ -179,7 +179,6 @@ namespace CDP.HalfLifeDemo
         public float CurrentTimestamp { get; private set; }
 
         private Handler handler;
-        private uint directoryEntriesOffset;
         protected string clientDllChecksum;
         private readonly List<MessageCallback> messageCallbacks;
         private readonly List<FrameCallback> frameCallbacks;
@@ -253,7 +252,6 @@ namespace CDP.HalfLifeDemo
                     MapName = header.MapName;
                     GameFolderName = header.GameFolderName;
                     MapChecksum = header.MapChecksum;
-                    directoryEntriesOffset = header.DirectoryEntriesOffset;
                     AddDetail("Demo Protocol", header.DemoProtocol);
                     AddDetail("Network Protocol", NetworkProtocol);
                     AddDetail("Game Folder", GameFolderName);
@@ -322,7 +320,8 @@ namespace CDP.HalfLifeDemo
                 using (BinaryReader br = new BinaryReader(stream))
                 {
                     long streamLength = stream.Length;
-                    stream.Seek(Header.SizeInBytes, SeekOrigin.Begin);
+                    Header header = new Header();
+                    header.Read(br.ReadBytes(Header.SizeInBytes));
 
                     while (true)
                     {
@@ -335,7 +334,7 @@ namespace CDP.HalfLifeDemo
                             ReadMessagesInMessageBlock(ReadMessageBlock(br));
                         }
 
-                        if ((!IsCorrupt && stream.Position >= directoryEntriesOffset) || stream.Position == streamLength)
+                        if ((!IsCorrupt && stream.Position >= header.DirectoryEntriesOffset) || stream.Position == streamLength)
                         {
                             break;
                         }
@@ -387,6 +386,10 @@ namespace CDP.HalfLifeDemo
             writeDeltaStructures.AddRange(readDeltaStructures);
             long lastFrameOffset = 0;
             CurrentTimestamp = 0.0f;
+            currentFrameIndex = 0;
+            firstFrameToWriteIndex = 0;
+            haveInsertedSvcDirectorMessage = false;
+            haveParsedSvcDirectorMessage = false;
 
             try
             {
@@ -406,7 +409,6 @@ namespace CDP.HalfLifeDemo
                     frameCallbacks.Clear();
                     inputStream.Seek(Header.SizeInBytes, SeekOrigin.Begin);
                     AddMessageCallback<Messages.SvcServerInfo>(msg => firstFrameToWriteIndex = currentFrameIndex);
-                    currentFrameIndex = 0;
 
                     while (true)
                     {
@@ -434,8 +436,6 @@ namespace CDP.HalfLifeDemo
                     // For a HLTV demo, svc_director messages should be inserted into the first frame of the playback segment if no svc_director messages were encountered during the loading segment.
                     if (Perspective == "HLTV")
                     {
-                        haveInsertedSvcDirectorMessage = false;
-                        haveParsedSvcDirectorMessage = false;
                         AddMessageCallback<Messages.SvcDirector>(Write_Director);
                         AddFrameCallback<Frames.Playback>(Write_Playback);
                     }
@@ -495,7 +495,7 @@ namespace CDP.HalfLifeDemo
                             ReadAndWriteMessagesInMessageBlock(ReadMessageBlock(br), bw, canSkipMessages);
                         }
 
-                        if ((!IsCorrupt && inputStream.Position >= directoryEntriesOffset) || inputStream.Position == streamLength)
+                        if ((!IsCorrupt && inputStream.Position >= header.DirectoryEntriesOffset) || inputStream.Position == streamLength)
                         {
                             break;
                         }
@@ -515,7 +515,7 @@ namespace CDP.HalfLifeDemo
                     }
 
                     // Write directory entries.
-                    directoryEntriesOffset = (uint)outputStream.Position;
+                    uint directoryEntriesOffset = (uint)outputStream.Position;
                     bw.Write((int)2); // Number of dir. entries (always 2).
 
                     bw.Write(new DirectoryEntry
