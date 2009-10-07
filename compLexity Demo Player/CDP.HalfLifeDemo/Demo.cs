@@ -452,6 +452,7 @@ namespace CDP.HalfLifeDemo
                     int nPlaybackFrames = 0;
                     currentFrameIndex = 0;
                     long streamLength = inputStream.Length;
+                    AddMessageCallback<Messages.SvcServerInfo>(Write_ServerInfo);
                     AddFrameCallback<Frames.ClientCommand>(Write_ClientCommand);
 
                     while (true)
@@ -1243,6 +1244,12 @@ namespace CDP.HalfLifeDemo
             });
 
             haveInsertedSvcDirectorMessage = true;
+        }
+
+        private void Write_ServerInfo(Messages.SvcServerInfo message)
+        {
+            message.NetworkProtocol = Demo.NewestNetworkProtocol;
+            message.GameFolder = Game.ModFolder;
         }
 
         private void Write_ClientCommand(Frames.ClientCommand frame)
