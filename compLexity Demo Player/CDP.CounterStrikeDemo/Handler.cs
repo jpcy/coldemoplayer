@@ -82,6 +82,7 @@ namespace CDP.CounterStrikeDemo
         {
             base.RegisterMessages();
             RegisterEngineMessage<Messages.SvcClientData>();
+            RegisterUserMessage<UserMessages.ClCorpse>();
             RegisterUserMessage<UserMessages.SendAudio>();
         }
 

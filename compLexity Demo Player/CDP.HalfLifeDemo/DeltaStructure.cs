@@ -77,14 +77,19 @@ namespace CDP.HalfLifeDemo
         /// <param name="flags"></param>
         public void AddEntry(string name, uint nBits, float divisor, EntryFlags flags)
         {
-            entries.Add(new Entry
+            Entry entry = entries.FirstOrDefault(e => e.Name == name);
+
+            if (entry == null)
             {
-                Name = name,
-                nBits = nBits,
-                Divisor = divisor,
-                Flags = flags,
-                PreMultiplier = 1.0f
-            });
+                entry = new Entry();
+                entries.Add(entry);
+            }
+
+            entry.Name = name;
+            entry.nBits = nBits;
+            entry.Divisor = divisor;
+            entry.Flags = flags;
+            entry.PreMultiplier = 1.0f;
         }
 
         public Delta CreateDelta()

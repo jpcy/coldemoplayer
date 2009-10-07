@@ -27,6 +27,7 @@ namespace CDP.HalfLifeDemo.Messages
         {
             public uint Id { get; set; }
             public uint Type { get; set; }
+            public string TypeName { get; set; }
             public Delta Delta { get; set; }
         }
 
@@ -64,7 +65,7 @@ namespace CDP.HalfLifeDemo.Messages
                     }
                 }
 
-                DeltaStructure structure = demo.FindDeltaStructure(typeName);
+                DeltaStructure structure = demo.FindReadDeltaStructure(typeName);
                 structure.SkipDelta(buffer);
             }
 
@@ -76,7 +77,7 @@ namespace CDP.HalfLifeDemo.Messages
             }
 
             uint nExtraEntityDeltas = buffer.ReadUBits(6);
-            DeltaStructure entityStateStructure = demo.FindDeltaStructure("entity_state_t");
+            DeltaStructure entityStateStructure = demo.FindReadDeltaStructure("entity_state_t");
 
             for (int i = 0; i < nExtraEntityDeltas; i++)
             {
@@ -110,21 +111,21 @@ namespace CDP.HalfLifeDemo.Messages
                 };
 
                 entity.Type = buffer.ReadUBits(2);
-                string typeName = "custom_entity_state_t";
+                entity.TypeName = "custom_entity_state_t";
 
                 if ((entity.Type & 1) != 0)
                 {
                     if (entity.Id > 0 && entity.Id <= demo.MaxClients)
                     {
-                        typeName = "entity_state_player_t";
+                        entity.TypeName = "entity_state_player_t";
                     }
                     else
                     {
-                        typeName = "entity_state_t";
+                        entity.TypeName = "entity_state_t";
                     }
                 }
 
-                DeltaStructure structure = demo.FindDeltaStructure(typeName);
+                DeltaStructure structure = demo.FindReadDeltaStructure(entity.TypeName);
                 entity.Delta = structure.CreateDelta();
                 structure.ReadDelta(buffer, entity.Delta);
                 Entities.Add(entity);
@@ -139,7 +140,7 @@ namespace CDP.HalfLifeDemo.Messages
 
             uint nExtraEntityDeltas = buffer.ReadUBits(6);
             ExtraEntityDeltas = new List<Delta>((int)nExtraEntityDeltas);
-            DeltaStructure entityStateStructure = demo.FindDeltaStructure("entity_state_t");
+            DeltaStructure entityStateStructure = demo.FindReadDeltaStructure("entity_state_t");
 
             for (int i = 0; i < nExtraEntityDeltas; i++)
             {
@@ -157,29 +158,14 @@ namespace CDP.HalfLifeDemo.Messages
             {
                 buffer.WriteUBits(entity.Id, 11);
                 buffer.WriteUBits(entity.Type, 2);
-
-                string typeName = "custom_entity_state_t";
-
-                if ((entity.Type & 1) != 0)
-                {
-                    if (entity.Id > 0 && entity.Id <= demo.MaxClients)
-                    {
-                        typeName = "entity_state_player_t";
-                    }
-                    else
-                    {
-                        typeName = "entity_state_t";
-                    }
-                }
-
-                DeltaStructure structure = demo.FindDeltaStructure(typeName);
+                DeltaStructure structure = demo.FindWriteDeltaStructure(entity.TypeName);
                 structure.WriteDelta(buffer, entity.Delta);
             }
 
             buffer.WriteUBits((1 << 16) - 1, 16);
 
             buffer.WriteUBits((uint)ExtraEntityDeltas.Count, 6);
-            DeltaStructure entityStateStructure = demo.FindDeltaStructure("entity_state_t");
+            DeltaStructure entityStateStructure = demo.FindWriteDeltaStructure("entity_state_t");
 
             foreach (Delta delta in ExtraEntityDeltas)
             {

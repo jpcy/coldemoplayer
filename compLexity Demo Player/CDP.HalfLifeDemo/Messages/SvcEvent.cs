@@ -41,7 +41,7 @@ namespace CDP.HalfLifeDemo.Messages
             }
 
             uint nEvents = buffer.ReadUBits(5);
-            DeltaStructure eventDeltaStructure = demo.FindDeltaStructure("event_t");
+            DeltaStructure eventDeltaStructure = demo.FindReadDeltaStructure("event_t");
 
             for (int i = 0; i < nEvents; i++)
             {
@@ -75,7 +75,7 @@ namespace CDP.HalfLifeDemo.Messages
 
             uint nEvents = buffer.ReadUBits(5);
             Events = new List<Event>();
-            DeltaStructure eventDeltaStructure = demo.FindDeltaStructure("event_t");
+            DeltaStructure eventDeltaStructure = demo.FindReadDeltaStructure("event_t");
 
             for (int i = 0; i < nEvents; i++)
             {
@@ -107,7 +107,7 @@ namespace CDP.HalfLifeDemo.Messages
         public override void Write(BitWriter buffer)
         {
             buffer.WriteUBits((uint)Events.Count, 5);
-            DeltaStructure eventDeltaStructure = demo.FindDeltaStructure("event_t");
+            DeltaStructure eventDeltaStructure = demo.FindWriteDeltaStructure("event_t");
 
             foreach (Event ev in Events)
             {

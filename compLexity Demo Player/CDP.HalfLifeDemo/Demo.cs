@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.Reflection;
 using System.Collections;
+using CDP.Core.Extensions;
 
 namespace CDP.HalfLifeDemo
 {
@@ -182,7 +183,8 @@ namespace CDP.HalfLifeDemo
         protected string clientDllChecksum;
         private readonly List<MessageCallback> messageCallbacks;
         private readonly List<FrameCallback> frameCallbacks;
-        private readonly Dictionary<string, DeltaStructure> deltaStructures;
+        private readonly Dictionary<string, DeltaStructure> readDeltaStructures;
+        private readonly Dictionary<string, DeltaStructure> writeDeltaStructures;
         private readonly List<UserMessageDefinition> userMessageDefinitions;
 
         private const int messageHistoryMaxLength = 16;
@@ -211,7 +213,8 @@ namespace CDP.HalfLifeDemo
             Players = new ArrayList();
             messageCallbacks = new List<MessageCallback>();
             frameCallbacks = new List<FrameCallback>();
-            deltaStructures = new Dictionary<string, DeltaStructure>();
+            readDeltaStructures = new Dictionary<string, DeltaStructure>();
+            writeDeltaStructures = new Dictionary<string, DeltaStructure>();
             userMessageDefinitions = new List<UserMessageDefinition>();
 
             // Add delta_description_t delta structure. Yes, it's a delta structure even though delta compression is never used and the parameters are always the same. Blame Valve.
@@ -379,6 +382,9 @@ namespace CDP.HalfLifeDemo
 
         public void Write(string destinationFileName, bool canSkipMessages)
         {
+            // Clear state (Write may be called on the same demo multiple times).
+            writeDeltaStructures.Clear();
+            writeDeltaStructures.AddRange(readDeltaStructures);
             long lastFrameOffset = 0;
             CurrentTimestamp = 0.0f;
 
@@ -1018,24 +1024,50 @@ namespace CDP.HalfLifeDemo
 
         private void AddDeltaStructure(DeltaStructure structure)
         {
-            // Remove the decoder if it already exists (duplicate svc_deltadescription message).
-            // Example: http://www.gotfrag.com/cs/demos/6/
-            if (deltaStructures.ContainsKey(structure.Name))
+            // Remove the decoder if it already exists, e.g. duplicate svc_deltadescription message (http://www.gotfrag.com/cs/demos/6/).
+            Action<Dictionary<string, DeltaStructure>> addDeltaStructure = dict =>
             {
-                deltaStructures.Remove(structure.Name);
-            }
+                if (dict.ContainsKey(structure.Name))
+                {
+                    dict.Remove(structure.Name);
+                }
 
-            deltaStructures.Add(structure.Name, structure);
+                dict.Add(structure.Name, structure);
+            };
+
+            addDeltaStructure(readDeltaStructures);
+            addDeltaStructure(writeDeltaStructures);
         }
 
-        public DeltaStructure FindDeltaStructure(string name)
+        protected void AddWriteDeltaStructure(DeltaStructure structure)
         {
-            if (!deltaStructures.ContainsKey(name))
+            // For handling svc_deltadescription message changes when writing, so deltas are written using the new structures.
+            if (writeDeltaStructures.ContainsKey(structure.Name))
+            {
+                writeDeltaStructures.Remove(structure.Name);
+            }
+
+            writeDeltaStructures.Add(structure.Name, structure);
+        }
+
+        public DeltaStructure FindReadDeltaStructure(string name)
+        {
+            if (!readDeltaStructures.ContainsKey(name))
             {
                 throw new ApplicationException("Delta structure \"" + name + "\" not found.");
             }
 
-            return deltaStructures[name];
+            return readDeltaStructures[name];
+        }
+
+        public DeltaStructure FindWriteDeltaStructure(string name)
+        {
+            if (!writeDeltaStructures.ContainsKey(name))
+            {
+                throw new ApplicationException("Delta structure \"" + name + "\" not found.");
+            }
+
+            return writeDeltaStructures[name];
         }
 
         public void AddUserMessage(byte id, sbyte length, string name)

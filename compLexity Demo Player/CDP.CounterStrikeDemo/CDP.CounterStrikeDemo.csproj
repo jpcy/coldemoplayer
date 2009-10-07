@@ -67,6 +67,7 @@
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="SettingsViewModel.cs" />
+    <Compile Include="UserMessages\ClCorpse.cs" />
     <Compile Include="UserMessages\SendAudio.cs" />
   </ItemGroup>
   <ItemGroup>

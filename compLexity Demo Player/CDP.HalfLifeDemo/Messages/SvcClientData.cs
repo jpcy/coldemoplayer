@@ -51,9 +51,9 @@ namespace CDP.HalfLifeDemo.Messages
                 buffer.SeekBytes(1);
             }
 
-            DeltaStructure clientDataStructure = demo.FindDeltaStructure("clientdata_t");
+            DeltaStructure clientDataStructure = demo.FindReadDeltaStructure("clientdata_t");
             clientDataStructure.SkipDelta(buffer);
-            DeltaStructure weaponDataStructure = demo.FindDeltaStructure("weapon_data_t");
+            DeltaStructure weaponDataStructure = demo.FindReadDeltaStructure("weapon_data_t");
 
             while (buffer.ReadBoolean())
             {
@@ -89,10 +89,10 @@ namespace CDP.HalfLifeDemo.Messages
                 DeltaSequenceNumber = buffer.ReadByte();
             }
 
-            DeltaStructure clientDataStructure = demo.FindDeltaStructure("clientdata_t");
+            DeltaStructure clientDataStructure = demo.FindReadDeltaStructure("clientdata_t");
             Delta = clientDataStructure.CreateDelta();
             clientDataStructure.ReadDelta(buffer, Delta);
-            DeltaStructure weaponStructure = demo.FindDeltaStructure("weapon_data_t");
+            DeltaStructure weaponStructure = demo.FindReadDeltaStructure("weapon_data_t");
             Weapons = new List<Weapon>();
 
             while (buffer.ReadBoolean())
@@ -133,9 +133,9 @@ namespace CDP.HalfLifeDemo.Messages
                 buffer.WriteByte(DeltaSequenceNumber.Value);
             }
 
-            DeltaStructure clientDataStructure = demo.FindDeltaStructure("clientdata_t");
+            DeltaStructure clientDataStructure = demo.FindWriteDeltaStructure("clientdata_t");
             clientDataStructure.WriteDelta(buffer, Delta);
-            DeltaStructure weaponStructure = demo.FindDeltaStructure("weapon_data_t");
+            DeltaStructure weaponStructure = demo.FindWriteDeltaStructure("weapon_data_t");
 
             foreach (Weapon weapon in Weapons)
             {

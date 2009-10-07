@@ -35,7 +35,7 @@ namespace CDP.HalfLifeDemo.Messages
             }
 
             ushort nEntries = buffer.ReadUShort();
-            DeltaStructure deltaDescription = demo.FindDeltaStructure("delta_description_t");
+            DeltaStructure deltaDescription = demo.FindReadDeltaStructure("delta_description_t");
 
             for (int i = 0; i < nEntries; i++)
             {
@@ -56,7 +56,7 @@ namespace CDP.HalfLifeDemo.Messages
             }
 
             ushort nEntries = buffer.ReadUShort();
-            DeltaStructure deltaDescription = demo.FindDeltaStructure("delta_description_t");
+            DeltaStructure deltaDescription = demo.FindReadDeltaStructure("delta_description_t");
             Deltas = new Delta[nEntries];
 
             for (int i = 0; i < nEntries; i++)
@@ -73,7 +73,7 @@ namespace CDP.HalfLifeDemo.Messages
         {
             buffer.WriteString(Structure.Name);
             buffer.WriteUShort((ushort)Structure.NumEntries);
-            DeltaStructure deltaDescription = demo.FindDeltaStructure("delta_description_t");
+            DeltaStructure deltaDescription = demo.FindWriteDeltaStructure("delta_description_t");
 
             // TODO: delta classes need cleaning up, should be able to write directly from the delta structure instead of storing and writing from the deltas.
             for (int i = 0; i < Structure.NumEntries; i++)

@@ -31,6 +31,7 @@ namespace CDP.HalfLifeDemo.Messages
             public bool Custom { get; set; }
             public bool Unknown1 { get; set; }
             public bool Unknown2 { get; set; }
+            public string TypeName { get; set; }
         }
 
         public ushort MaxEntities { get; set; }
@@ -98,7 +99,7 @@ namespace CDP.HalfLifeDemo.Messages
                         typeName = "custom_entity_state_t";
                     }
 
-                    DeltaStructure structure = demo.FindDeltaStructure(typeName);
+                    DeltaStructure structure = demo.FindReadDeltaStructure(typeName);
                     structure.SkipDelta(buffer);
                 }
             }
@@ -164,18 +165,18 @@ namespace CDP.HalfLifeDemo.Messages
                         entity.Unknown2 = buffer.ReadBoolean(); // Unknown, always 0.
                     }
 
-                    string typeName = "entity_state_t";
+                    entity.TypeName = "entity_state_t";
 
                     if (entityId > 0 && entityId <= demo.MaxClients)
                     {
-                        typeName = "entity_state_player_t";
+                        entity.TypeName = "entity_state_player_t";
                     }
                     else if (entity.Custom)
                     {
-                        typeName = "custom_entity_state_t";
+                        entity.TypeName = "custom_entity_state_t";
                     }
 
-                    DeltaStructure structure = demo.FindDeltaStructure(typeName);
+                    DeltaStructure structure = demo.FindReadDeltaStructure(entity.TypeName);
                     entity.Delta = structure.CreateDelta();
                     structure.ReadDelta(buffer, entity.Delta);
                 }
@@ -206,18 +207,7 @@ namespace CDP.HalfLifeDemo.Messages
                     }
 
                     buffer.WriteBoolean(entity.Custom);
-                    string typeName = "entity_state_t";
-
-                    if (entity.Id > 0 && entity.Id <= demo.MaxClients)
-                    {
-                        typeName = "entity_state_player_t";
-                    }
-                    else if (entity.Custom)
-                    {
-                        typeName = "custom_entity_state_t";
-                    }
-
-                    DeltaStructure structure = demo.FindDeltaStructure(typeName);
+                    DeltaStructure structure = demo.FindWriteDeltaStructure(entity.TypeName);
                     structure.WriteDelta(buffer, entity.Delta);
                 }
             }
