@@ -69,5 +69,10 @@ namespace CDP.CounterStrikeDemo
             // Translate the string names defined in the XML config file (e.g. "1.3") to the enumeration Versions (e.g. "CounterStrike13").
             return (int)Enum.Parse(typeof(Demo.Versions), "CounterStrike" + version.Name.RemoveChars('.'));
         }
+
+        public bool BuiltInMapExists(uint checksum, string name)
+        {
+            return Maps.SingleOrDefault(m => m.Checksum == checksum && m.Name == name) != null;
+        }
     }
 }

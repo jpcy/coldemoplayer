@@ -8,7 +8,7 @@ namespace CDP.HalfLifeDemo
     {
         private readonly string configFileName = "coldemoplayer.cfg";
         private readonly string demoFileName = "coldemoplayer.dem";
-        private Demo demo;
+        protected Demo demo;
 
         public override void Initialise(Core.Demo demo)
         {

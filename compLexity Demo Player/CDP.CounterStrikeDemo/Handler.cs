@@ -73,6 +73,11 @@ namespace CDP.CounterStrikeDemo
             return new Demo();
         }
 
+        public override Core.Launcher CreateLauncher()
+        {
+            return new Launcher();
+        }
+
         public override Core.ViewModelBase CreateAnalysisViewModel(Core.Demo demo)
         {
             return new Analysis.ViewModel((Demo)demo);

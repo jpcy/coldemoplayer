@@ -86,6 +86,7 @@
     <Compile Include="Handler.cs" />
     <Compile Include="Header.cs" />
     <Compile Include="Frame.cs" />
+    <Compile Include="MapChecksum.cs" />
     <Compile Include="Messages\SvcAddAngle.cs" />
     <Compile Include="Messages\SvcCdTrack.cs" />
     <Compile Include="Messages\SvcCenterPrint.cs" />
