@@ -74,7 +74,7 @@ namespace CDP.HalfLifeDemo
                 stream.WriteLine("slot1");
 
                 // TODO: remove this, figure out why the spec menu it's initalised correctly with old converted HLTV demos.
-                if (demo.Perspective == "POV")
+                if (demo.Perspective != "POV" && demo.NetworkProtocol < 47)
                 {
                     stream.WriteLine("wait10");
                     stream.WriteLine("spec_menu 0");
