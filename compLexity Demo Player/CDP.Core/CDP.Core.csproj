@@ -63,6 +63,7 @@
     <Compile Include="DemoManager.cs" />
     <Compile Include="Demo.cs" />
     <Compile Include="DemoHandler.cs" />
+    <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="FileSystem.cs" />
