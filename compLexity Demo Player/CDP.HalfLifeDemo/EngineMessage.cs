@@ -17,6 +17,7 @@ namespace CDP.HalfLifeDemo
         }
 
         public bool Remove { get; set; }
+        public long Offset { get; set; }
 
         protected Demo demo;
 

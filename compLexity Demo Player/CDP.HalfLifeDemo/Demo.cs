@@ -27,7 +27,7 @@ namespace CDP.HalfLifeDemo
 
                 foreach (IMessage m in messageHistory)
                 {
-                    sb.AppendFormat("{0} [{1}]\n", m.Name, m.Id);
+                    sb.AppendFormat("({0}) {1} [{2}]\n", m.Offset, m.Name, m.Id);
                 }
 
                 message = sb.ToString();
@@ -202,6 +202,10 @@ namespace CDP.HalfLifeDemo
         private readonly List<IMessage> messagesToInsert = new List<IMessage>();
         private bool haveInsertedSvcDirectorMessage;
         private bool haveParsedSvcDirectorMessage;
+
+        /// <summary>The offset of the last message block that was read.</summary>
+        /// <remarks>Used to calculate a message's offset, which in turn is used for diagnostics and error messages.</remarks>
+        private long currentMessageBlockOffset;
 
         public Demo()
         {
@@ -698,6 +702,7 @@ namespace CDP.HalfLifeDemo
                 throw new ApplicationException("Message data length too large.");
             }
 
+            currentMessageBlockOffset = stream.Position;
             byte[] data = null;
 
             if (length > 0)
@@ -791,6 +796,7 @@ namespace CDP.HalfLifeDemo
 
         private IMessage ReadMessageHeader(Core.BitReader buffer)
         {
+            long messageOffset = currentMessageBlockOffset + buffer.CurrentByte;
             byte id = buffer.ReadByte();
             IMessage message = null;
 
@@ -832,6 +838,7 @@ namespace CDP.HalfLifeDemo
             }
 
             message.Demo = this;
+            message.Offset = messageOffset;
             messageHistory.Enqueue(message);
 
             if (messageHistory.Count > messageHistoryMaxLength)
