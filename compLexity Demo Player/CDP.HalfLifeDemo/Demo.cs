@@ -239,15 +239,12 @@ namespace CDP.HalfLifeDemo
                 AddMessageCallback<Messages.SvcHltv>(Load_Hltv);
                 ResetProgress();
 
-                using (FileStream stream = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.None, fileBufferSize, FileOptions.SequentialScan))
-                using (BinaryReader br = new BinaryReader(stream))
+                using (Core.FastFileStream stream = new Core.FastFileStream(FileName, Core.FastFileAccess.Read))
                 {
-                    long streamLength = stream.Length;
-
                     // Read header.
                     // TODO: sanity check on demo and network protocol; friendly error message.
                     Header header = new Header();
-                    header.Read(br.ReadBytes(Header.SizeInBytes));
+                    header.Read(stream.ReadBytes(Header.SizeInBytes));
                     NetworkProtocol = header.NetworkProtocol;
                     MapName = header.MapName;
                     GameFolderName = header.GameFolderName;
@@ -262,7 +259,7 @@ namespace CDP.HalfLifeDemo
                     // Read directory entries.
                     try
                     {
-                        ReadDirectoryEntries(header.DirectoryEntriesOffset, br);
+                        ReadDirectoryEntries(header.DirectoryEntriesOffset, stream);
                     }
                     catch (Exception)
                     {
@@ -276,7 +273,7 @@ namespace CDP.HalfLifeDemo
 
                     while (true)
                     {
-                        Frame frame = ReadFrame(br);
+                        Frame frame = ReadFrame(stream);
 
                         if (frame.Id == (byte)FrameIds.PlaybackSegmentStart)
                         {
@@ -284,10 +281,10 @@ namespace CDP.HalfLifeDemo
                         }
                         else if (frame.HasMessages)
                         {
-                            ReadMessagesInMessageBlock(ReadMessageBlock(br));
+                            ReadMessagesInMessageBlock(ReadMessageBlock(stream));
                         }
 
-                        UpdateProgress(stream.Position, streamLength);
+                        UpdateProgress(stream.Position, stream.Length);
                     }
                 }
             }
@@ -316,25 +313,23 @@ namespace CDP.HalfLifeDemo
                 ResetOperationCancelledState();
                 ResetProgress();
 
-                using (FileStream stream = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.None, fileBufferSize, FileOptions.SequentialScan))
-                using (BinaryReader br = new BinaryReader(stream))
+                using (Core.FastFileStream stream = new Core.FastFileStream(FileName, Core.FastFileAccess.Read))
                 {
-                    long streamLength = stream.Length;
                     Header header = new Header();
-                    header.Read(br.ReadBytes(Header.SizeInBytes));
+                    header.Read(stream.ReadBytes(Header.SizeInBytes));
 
                     while (true)
                     {
                         lastFrameOffset = stream.Position;
-                        Frame frame = ReadFrame(br);
+                        Frame frame = ReadFrame(stream);
                         CurrentTimestamp = frame.Timestamp;
 
                         if (frame.HasMessages)
                         {
-                            ReadMessagesInMessageBlock(ReadMessageBlock(br));
+                            ReadMessagesInMessageBlock(ReadMessageBlock(stream));
                         }
 
-                        if ((!IsCorrupt && stream.Position >= header.DirectoryEntriesOffset) || stream.Position == streamLength)
+                        if ((!IsCorrupt && stream.Position >= header.DirectoryEntriesOffset) || stream.Position == stream.Length)
                         {
                             break;
                         }
@@ -345,7 +340,7 @@ namespace CDP.HalfLifeDemo
                             return;
                         }
 
-                        UpdateProgress(stream.Position, streamLength);
+                        UpdateProgress(stream.Position, stream.Length);
                     }
                 }
             }
@@ -396,10 +391,8 @@ namespace CDP.HalfLifeDemo
                 ResetOperationCancelledState();
                 ResetProgress();
 
-                using (FileStream inputStream = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.None, fileBufferSize, FileOptions.SequentialScan))
-                using (BinaryReader br = new BinaryReader(inputStream))
-                using (FileStream outputStream = new FileStream(destinationFileName, FileMode.Create, FileAccess.Write, FileShare.None, fileBufferSize, FileOptions.SequentialScan))
-                using (BinaryWriter bw = new BinaryWriter(outputStream))
+                using (Core.FastFileStream inputStream = new Core.FastFileStream(FileName, Core.FastFileAccess.Read))
+                using (Core.FastFileStream outputStream = new Core.FastFileStream(destinationFileName, Core.FastFileAccess.Write))
                 {
                     // Before writing, read the loading segment and do some processing.
                     // We don't want message and frame callbacks added before this call to Write to fire when reading the loading segment, so save them now and restore them just before writing starts.
@@ -412,7 +405,7 @@ namespace CDP.HalfLifeDemo
 
                     while (true)
                     {
-                        Frame frame = ReadFrame(br);
+                        Frame frame = ReadFrame(inputStream);
                         CurrentTimestamp = frame.Timestamp;
 
                         if (frame.Id == (byte)FrameIds.PlaybackSegmentStart)
@@ -421,7 +414,7 @@ namespace CDP.HalfLifeDemo
                         }
                         else if (frame.HasMessages)
                         {
-                            ReadMessagesInMessageBlock(ReadMessageBlock(br));
+                            ReadMessagesInMessageBlock(ReadMessageBlock(inputStream));
                         }
 
                         currentFrameIndex++;
@@ -444,14 +437,13 @@ namespace CDP.HalfLifeDemo
                     // The directory entries offset must be known before the header can be written, which means the entire demo must be parsed first.
                     inputStream.Seek(0, SeekOrigin.Begin);
                     Header header = new Header();
-                    header.Read(br.ReadBytes(Header.SizeInBytes));
-                    bw.Write(new byte[Header.SizeInBytes]);
+                    header.Read(inputStream.ReadBytes(Header.SizeInBytes));
+                    outputStream.WriteBytes(new byte[Header.SizeInBytes]);
 
                     bool foundPlaybackSegment = false;
                     uint playbackSegmentOffset = 0;
                     int nPlaybackFrames = 0;
                     currentFrameIndex = 0;
-                    long streamLength = inputStream.Length;
                     AddMessageCallback<Messages.SvcServerInfo>(Write_ServerInfo);
                     AddFrameCallback<Frames.ClientCommand>(Write_ClientCommand);
 
@@ -461,11 +453,11 @@ namespace CDP.HalfLifeDemo
                         // Skip writing frames until the last frame that contains a svc_serverinfo message.
                         if (currentFrameIndex < firstFrameToWriteIndex)
                         {
-                            Frame frameToSkip = ReadFrame(br);
+                            Frame frameToSkip = ReadFrame(inputStream);
                             
                             if (frameToSkip.HasMessages)
                             {
-                                ReadMessageBlock(br);
+                                ReadMessageBlock(inputStream);
                             }
 
                             currentFrameIndex++;
@@ -474,7 +466,7 @@ namespace CDP.HalfLifeDemo
 
                         // Read and write frame.
                         lastFrameOffset = outputStream.Position;
-                        Frame frame = ReadAndWriteFrame(br, bw);
+                        Frame frame = ReadAndWriteFrame(inputStream, outputStream);
                         CurrentTimestamp = frame.Timestamp;
 
                         // Remember the offset of the start of the playback segment.
@@ -492,10 +484,10 @@ namespace CDP.HalfLifeDemo
                                 nPlaybackFrames++;
                             }
 
-                            ReadAndWriteMessagesInMessageBlock(ReadMessageBlock(br), bw, canSkipMessages);
+                            ReadAndWriteMessagesInMessageBlock(ReadMessageBlock(inputStream), outputStream, canSkipMessages);
                         }
 
-                        if ((!IsCorrupt && inputStream.Position >= header.DirectoryEntriesOffset) || inputStream.Position == streamLength)
+                        if ((!IsCorrupt && inputStream.Position >= header.DirectoryEntriesOffset) || inputStream.Position == inputStream.Length)
                         {
                             break;
                         }
@@ -506,7 +498,7 @@ namespace CDP.HalfLifeDemo
                             return;
                         }
 
-                        UpdateProgress(inputStream.Position, streamLength);
+                        UpdateProgress(inputStream.Position, inputStream.Length);
                     }
 
                     if (!foundPlaybackSegment)
@@ -516,16 +508,16 @@ namespace CDP.HalfLifeDemo
 
                     // Write directory entries.
                     uint directoryEntriesOffset = (uint)outputStream.Position;
-                    bw.Write((int)2); // Number of dir. entries (always 2).
+                    outputStream.WriteInt(2); // Number of dir. entries (always 2).
 
-                    bw.Write(new DirectoryEntry
+                    outputStream.WriteBytes(new DirectoryEntry
                     {
                         Title = "LOADING",
                         Offset = Header.SizeInBytes,
                         Length = (int)(playbackSegmentOffset - Header.SizeInBytes)
                     }.Write());
 
-                    bw.Write(new DirectoryEntry
+                    outputStream.WriteBytes(new DirectoryEntry
                     {
                         Title = "Playback",
                         Number = 1,
@@ -540,7 +532,7 @@ namespace CDP.HalfLifeDemo
                     header.NetworkProtocol = Demo.NewestNetworkProtocol;
                     header.GameFolderName = Game.ModFolder;
                     outputStream.Seek(0, SeekOrigin.Begin);
-                    bw.Write(header.Write());
+                    outputStream.WriteBytes(header.Write());
                 }
             }
             catch (Exception ex)
@@ -569,18 +561,18 @@ namespace CDP.HalfLifeDemo
         }
 
         #region Reading and writing
-        private void ReadDirectoryEntries(long offset, BinaryReader br)
+        private void ReadDirectoryEntries(long offset, Core.FastFileStream stream)
         {
             // offset + nEntries + 2 directory entries.
             // Don't check if there's anything following the directory entries, it could be used for meta-data in the future.
-            if (br.BaseStream.Length < offset + 4 + DirectoryEntry.SizeInBytes * 2)
+            if (stream.Length < offset + 4 + DirectoryEntry.SizeInBytes * 2)
             {
                 goto corrupt;
             }
 
-            br.BaseStream.Seek(offset, SeekOrigin.Begin);
+            stream.Seek(offset, SeekOrigin.Begin);
 
-            int nEntries = br.ReadInt32();
+            int nEntries = stream.ReadInt();
 
             if (nEntries != 2)
             {
@@ -588,9 +580,9 @@ namespace CDP.HalfLifeDemo
             }
 
             DirectoryEntry loading = new DirectoryEntry();
-            loading.Read(br.ReadBytes(DirectoryEntry.SizeInBytes));
+            loading.Read(stream.ReadBytes(DirectoryEntry.SizeInBytes));
             DirectoryEntry playback = new DirectoryEntry();
-            playback.Read(br.ReadBytes(DirectoryEntry.SizeInBytes));
+            playback.Read(stream.ReadBytes(DirectoryEntry.SizeInBytes));
 
             // Verify loading segment offset. It immediately follows the header, so it should be equal to the header size.
             if (loading.Offset != Header.SizeInBytes)
@@ -605,9 +597,9 @@ namespace CDP.HalfLifeDemo
             }
 
             // Verify first byte at playback segment offset (should be frame ID '2', playback segment start).
-            br.BaseStream.Seek(playback.Offset, SeekOrigin.Begin);
+            stream.Seek(playback.Offset, SeekOrigin.Begin);
 
-            if (br.ReadByte() != (byte)FrameIds.PlaybackSegmentStart)
+            if (stream.ReadByte() != (byte)FrameIds.PlaybackSegmentStart)
             {
                 goto corrupt;
             }
@@ -620,36 +612,36 @@ namespace CDP.HalfLifeDemo
             IsCorrupt = true;
         }
 
-        private Frame ReadFrameHeader(BinaryReader br)
+        private Frame ReadFrameHeader(Core.FastFileStream stream)
         {
             // New frame, clear the message history.
             messageHistory.Clear();
 
-            byte id = br.ReadByte();
+            byte id = stream.ReadByte();
             Frame frame = handler.CreateFrame(id);
 
             if (frame == null)
             {
-                throw new ApplicationException(string.Format("Unknown frame type \"{0}\" at offset \"{1}\"", id, br.BaseStream.Position - 1));
+                throw new ApplicationException(string.Format("Unknown frame type \"{0}\" at offset \"{1}\"", id, stream.Position - 1));
             }
 
             frame.Demo = this;
-            frame.ReadHeader(br, NetworkProtocol);
+            frame.ReadHeader(stream, NetworkProtocol);
             return frame;
         }
 
-        private Frame ReadFrame(BinaryReader br)
+        private Frame ReadFrame(Core.FastFileStream stream)
         {
-            Frame frame = ReadFrameHeader(br);
+            Frame frame = ReadFrameHeader(stream);
             List<FrameCallback> frameCallbacks = FindFrameCallbacks(frame);
 
             if (frameCallbacks.Count == 0 && frame.CanSkip)
             {
-                frame.Skip(br);
+                frame.Skip(stream);
             }
             else
             {
-                frame.Read(br);
+                frame.Read(stream);
             }
 
             foreach (FrameCallback frameCallback in frameCallbacks)
@@ -660,27 +652,27 @@ namespace CDP.HalfLifeDemo
             return frame;
         }
 
-        private Frame ReadAndWriteFrame(BinaryReader br, BinaryWriter bw)
+        private Frame ReadAndWriteFrame(Core.FastFileStream inputStream, Core.FastFileStream outputStream)
         {
-            Frame frame = ReadFrameHeader(br);
+            Frame frame = ReadFrameHeader(inputStream);
             List<FrameCallback> frameCallbacks = FindFrameCallbacks(frame);
 
             if (frameCallbacks.Count == 0 && frame.CanSkip)
             {
-                long frameStartOffset = br.BaseStream.Position;
-                frame.Skip(br);
-                int frameLength = (int)(br.BaseStream.Position - frameStartOffset);
-                frame.WriteHeader(bw);
+                long frameStartOffset = inputStream.Position;
+                frame.Skip(inputStream);
+                int frameLength = (int)(inputStream.Position - frameStartOffset);
+                frame.WriteHeader(outputStream);
 
                 if (frameLength > 0)
                 {
-                    br.BaseStream.Seek(frameStartOffset, SeekOrigin.Begin);
-                    bw.Write(br.ReadBytes(frameLength));
+                    inputStream.Seek(frameStartOffset, SeekOrigin.Begin);
+                    outputStream.WriteBytes(inputStream.ReadBytes(frameLength));
                 }
             }
             else
             {
-                frame.Read(br);
+                frame.Read(inputStream);
 
                 foreach (FrameCallback frameCallback in frameCallbacks)
                 {
@@ -689,17 +681,17 @@ namespace CDP.HalfLifeDemo
 
                 if (!frame.Remove)
                 {
-                    frame.WriteHeader(bw);
-                    frame.Write(bw);
+                    frame.WriteHeader(outputStream);
+                    frame.Write(outputStream);
                 }
             }
 
             return frame;
         }
 
-        private byte[] ReadMessageBlock(BinaryReader br)
+        private byte[] ReadMessageBlock(Core.FastFileStream stream)
         {
-            uint length = br.ReadUInt32();
+            uint length = stream.ReadUInt();
 
             if (length > (1<<16))
             {
@@ -710,7 +702,7 @@ namespace CDP.HalfLifeDemo
 
             if (length > 0)
             {
-                data = br.ReadBytes((int)length);
+                data = stream.ReadBytes((int)length);
             }
 
             return data;
@@ -738,7 +730,7 @@ namespace CDP.HalfLifeDemo
             }
         }
 
-        private void ReadAndWriteMessagesInMessageBlock(byte[] messageBlock, BinaryWriter bw, bool canSkipMessages)
+        private void ReadAndWriteMessagesInMessageBlock(byte[] messageBlock, Core.FastFileStream outputStream, bool canSkipMessages)
         {
             if (messageBlock != null && messageBlock.Length != 0)
             {
@@ -788,12 +780,12 @@ namespace CDP.HalfLifeDemo
 
                 // Write the message block.
                 messageBlock = messageWriter.ToArray();
-                bw.Write((uint)messageBlock.Length);
-                bw.Write(messageBlock);
+                outputStream.WriteUInt((uint)messageBlock.Length);
+                outputStream.WriteBytes(messageBlock);
             }
             else
             {
-                bw.Write(0u);
+                outputStream.WriteUInt(0);
             }
         }
 

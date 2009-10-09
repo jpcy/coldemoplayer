@@ -31,23 +31,23 @@ namespace CDP.HalfLifeDemo
 
         protected uint networkProtocol;
 
-        public void ReadHeader(BinaryReader br, uint networkProtocol)
+        public void ReadHeader(FastFileStream stream, uint networkProtocol)
         {
             this.networkProtocol = networkProtocol;
-            Timestamp = br.ReadSingle();
-            Number = br.ReadUInt32();
+            Timestamp = stream.ReadFloat();
+            Number = stream.ReadUInt();
         }
 
-        public void WriteHeader(BinaryWriter bw)
+        public void WriteHeader(FastFileStream stream)
         {
-            bw.Write(Id);
-            bw.Write(Timestamp);
-            bw.Write(Number);
+            stream.WriteByte(Id);
+            stream.WriteFloat(Timestamp);
+            stream.WriteUInt(Number);
         }
 
-        public virtual void Skip(BinaryReader br) { }
-        public virtual void Read(BinaryReader br) { }
-        public virtual void Write(BinaryWriter bw) { }
+        public virtual void Skip(FastFileStream stream) { }
+        public virtual void Read(FastFileStream stream) { }
+        public virtual void Write(FastFileStream stream) { }
     }
 
     public enum FrameIds : byte

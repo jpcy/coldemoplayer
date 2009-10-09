@@ -17,32 +17,32 @@ namespace CDP.HalfLifeDemo.Frames
 
         public byte[] Data { get; set; }
 
-        public override void Skip(BinaryReader br)
+        public override void Skip(FastFileStream stream)
         {
-            uint length = br.ReadUInt32();
-            br.BaseStream.Seek(length, SeekOrigin.Current);
+            uint length = stream.ReadUInt();
+            stream.Seek(length, SeekOrigin.Current);
         }
 
-        public override void Read(BinaryReader br)
+        public override void Read(FastFileStream stream)
         {
-            uint length = br.ReadUInt32();
+            uint length = stream.ReadUInt();
 
             if (length > 0)
             {
-                Data = br.ReadBytes((int)length);
+                Data = stream.ReadBytes((int)length);
             }
         }
 
-        public override void Write(BinaryWriter bw)
+        public override void Write(FastFileStream stream)
         {
             if (Data == null)
             {
-                bw.Write(0u);
+                stream.WriteUInt(0);
             }
             else
             {
-                bw.Write((uint)Data.Length);
-                bw.Write(Data);
+                stream.WriteUInt((uint)Data.Length);
+                stream.WriteBytes(Data);
             }
         }
     }

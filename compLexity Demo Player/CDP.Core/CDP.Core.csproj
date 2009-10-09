@@ -66,6 +66,7 @@
     <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="FastFileStream.cs" />
     <Compile Include="FileSystem.cs" />
     <Compile Include="Launcher.cs">
       <SubType>Code</SubType>

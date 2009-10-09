@@ -18,22 +18,22 @@ namespace CDP.HalfLifeDemo.Frames
 
         private const int commandLength = 64;
 
-        public override void Skip(BinaryReader br)
+        public override void Skip(FastFileStream stream)
         {
-            br.BaseStream.Seek(commandLength, SeekOrigin.Current);
+            stream.Seek(commandLength, SeekOrigin.Current);
         }
 
-        public override void Read(BinaryReader br)
+        public override void Read(FastFileStream stream)
         {
-            BitReader bitReader = new BitReader(br.ReadBytes(commandLength));
+            BitReader bitReader = new BitReader(stream.ReadBytes(commandLength));
             Command = bitReader.ReadString();
         }
 
-        public override void Write(BinaryWriter bw)
+        public override void Write(FastFileStream stream)
         {
             BitWriter bitWriter = new BitWriter();
             bitWriter.WriteString(Command, commandLength);
-            bw.Write(bitWriter.ToArray());
+            stream.WriteBytes(bitWriter.ToArray());
         }
     }
 }

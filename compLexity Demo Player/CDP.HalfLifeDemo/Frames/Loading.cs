@@ -32,27 +32,27 @@ namespace CDP.HalfLifeDemo.Frames
 
         private const int demoInfoLength = 436;
 
-        public override void Read(BinaryReader br)
+        public override void Read(FastFileStream stream)
         {
             if (networkProtocol <= 43)
             {
                 DemoInfo = new byte[demoInfoLength];
-                br.BaseStream.Read(DemoInfo, 0, 28);
-                br.BaseStream.Seek(489, SeekOrigin.Current);
-                br.BaseStream.Read(DemoInfo, 421, 15);
+                stream.Read(DemoInfo, 0, 28);
+                stream.Seek(489, SeekOrigin.Current);
+                stream.Read(DemoInfo, 421, 15);
             }
             else
             {
-                DemoInfo = br.ReadBytes(demoInfoLength);
+                DemoInfo = stream.ReadBytes(demoInfoLength);
             }
 
-            SequenceInfo = br.ReadBytes(28);
+            SequenceInfo = stream.ReadBytes(28);
         }
 
-        public override void Write(BinaryWriter bw)
+        public override void Write(FastFileStream stream)
         {
-            bw.Write(DemoInfo);
-            bw.Write(SequenceInfo);
+            stream.WriteBytes(DemoInfo);
+            stream.WriteBytes(SequenceInfo);
         }
     }
 }

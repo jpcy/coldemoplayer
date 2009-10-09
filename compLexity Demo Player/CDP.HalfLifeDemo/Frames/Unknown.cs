@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using CDP.Core;
 
 namespace CDP.HalfLifeDemo.Frames
 {
@@ -15,19 +16,19 @@ namespace CDP.HalfLifeDemo.Frames
 
         public byte[] Data { get; set; }
 
-        public override void Skip(BinaryReader br)
+        public override void Skip(FastFileStream stream)
         {
-            br.BaseStream.Seek(84, SeekOrigin.Current);
+            stream.Seek(84, SeekOrigin.Current);
         }
 
-        public override void Read(BinaryReader br)
+        public override void Read(FastFileStream stream)
         {
-            Data = br.ReadBytes(84);
+            Data = stream.ReadBytes(84);
         }
 
-        public override void Write(BinaryWriter bw)
+        public override void Write(FastFileStream stream)
         {
-            bw.Write(Data);
+            stream.WriteBytes(Data);
         }
     }
 }

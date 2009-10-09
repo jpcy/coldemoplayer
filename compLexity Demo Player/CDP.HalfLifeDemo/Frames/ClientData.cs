@@ -32,35 +32,35 @@ namespace CDP.HalfLifeDemo.Frames
         public uint WeaponBitmask { get; set; }
         public float Fov { get; set; }
 
-        public override void Skip(BinaryReader br)
+        public override void Skip(FastFileStream stream)
         {
-            br.BaseStream.Seek(32, SeekOrigin.Current);
+            stream.Seek(32, SeekOrigin.Current);
         }
 
-        public override void Read(BinaryReader br)
+        public override void Read(FastFileStream stream)
         {
             Origin = new Core.Vector();
-            Origin.X = br.ReadSingle();
-            Origin.Y = br.ReadSingle();
-            Origin.Z = br.ReadSingle();
+            Origin.X = stream.ReadFloat();
+            Origin.Y = stream.ReadFloat();
+            Origin.Z = stream.ReadFloat();
             ViewAngles = new Core.Vector();
-            ViewAngles.X = br.ReadSingle();
-            ViewAngles.Y = br.ReadSingle();
-            ViewAngles.Z = br.ReadSingle();
-            WeaponBitmask = br.ReadUInt32();
-            Fov = br.ReadSingle();
+            ViewAngles.X = stream.ReadFloat();
+            ViewAngles.Y = stream.ReadFloat();
+            ViewAngles.Z = stream.ReadFloat();
+            WeaponBitmask = stream.ReadUInt();
+            Fov = stream.ReadFloat();
         }
 
-        public override void Write(BinaryWriter bw)
+        public override void Write(FastFileStream stream)
         {
-            bw.Write(Origin.X);
-            bw.Write(Origin.Y);
-            bw.Write(Origin.Z);
-            bw.Write(ViewAngles.X);
-            bw.Write(ViewAngles.Y);
-            bw.Write(ViewAngles.Z);
-            bw.Write(WeaponBitmask);
-            bw.Write(Fov);
+            stream.WriteFloat(Origin.X);
+            stream.WriteFloat(Origin.Y);
+            stream.WriteFloat(Origin.Z);
+            stream.WriteFloat(ViewAngles.X);
+            stream.WriteFloat(ViewAngles.Y);
+            stream.WriteFloat(ViewAngles.Z);
+            stream.WriteUInt(WeaponBitmask);
+            stream.WriteFloat(Fov);
         }
     }
 }
