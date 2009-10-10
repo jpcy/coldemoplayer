@@ -97,11 +97,11 @@
       <Project>{14ABD36D-331F-43C8-8097-18C05B20F06E}</Project>
       <Name>CDP.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CDP.CounterStrikeDemo\CDP.CounterStrike.csproj">
+    <ProjectReference Include="..\CDP.CounterStrike\CDP.CounterStrike.csproj">
       <Project>{77712F28-8EB3-4560-BCD8-096CEA789915}</Project>
       <Name>CDP.CounterStrike</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CDP.HalfLifeDemo\CDP.HalfLife.csproj">
+    <ProjectReference Include="..\CDP.HalfLife\CDP.HalfLife.csproj">
       <Project>{6D554123-E196-4376-9B52-365777B913B8}</Project>
       <Name>CDP.HalfLife</Name>
     </ProjectReference>

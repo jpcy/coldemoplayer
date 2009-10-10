@@ -77,7 +77,7 @@
       <Name>CDP.Core</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\CDP.HalfLifeDemo\CDP.HalfLife.csproj">
+    <ProjectReference Include="..\CDP.HalfLife\CDP.HalfLife.csproj">
       <Project>{6D554123-E196-4376-9B52-365777B913B8}</Project>
       <Name>CDP.HalfLife</Name>
       <Private>False</Private>
