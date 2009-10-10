@@ -64,5 +64,16 @@ namespace CDP.HalfLifeDemo
             buffer.WriteUInt(DirectoryEntriesOffset);
             return buffer.ToArray();
         }
+
+        public void Log(StreamWriter log)
+        {
+            log.WriteLine("Magic: {0}", magicLength);
+            log.WriteLine("Demo protocol: {0}", DemoProtocol);
+            log.WriteLine("Network protocol: {0}", NetworkProtocol);
+            log.WriteLine("Map: {0}", MapName);
+            log.WriteLine("Game folder: {0}", GameFolderName);
+            log.WriteLine("Map checksum: {0}", MapChecksum);
+            log.WriteLine("Directory entries offset: {0}", DirectoryEntriesOffset);
+        }
     }
 }

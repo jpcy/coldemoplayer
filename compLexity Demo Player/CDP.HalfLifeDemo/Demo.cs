@@ -564,6 +564,146 @@ namespace CDP.HalfLifeDemo
             }
         }
 
+        public void RunDiagnostic(IEnumerable<byte> engineMessageIds, IEnumerable<string> userMessages, string logFileName)
+        {
+            Func<byte, bool> shouldLogMessage = id =>
+            {
+                if (id <= MaxEngineMessageId)
+                {
+                    if (engineMessageIds != null)
+                    {
+                        return engineMessageIds.Contains(id);
+                    }
+                }
+                else
+                {
+                    if (userMessages != null)
+                    {
+                        UserMessageDefinition userMessageDefinition = userMessageDefinitions.SingleOrDefault(umd => umd.Id == id);
+
+                        if (userMessageDefinition != null)
+                        {
+                            return userMessages.Contains(userMessageDefinition.Name);
+                        }
+                    }
+                }
+
+                return false;
+            };
+
+
+            try
+            {
+                AddMessageCallback<Messages.SvcServerInfo>(Diagnostic_ServerInfo);
+                AddMessageCallback<Messages.SvcDeltaDescription>(Diagnostic_DeltaDescription);
+                AddMessageCallback<Messages.SvcNewUserMessage>(Diagnostic_NewUserMessage);
+                AddMessageCallback<Messages.SvcHltv>(Diagnostic_Hltv);
+                ResetProgress();
+
+                using (Core.FastFileStream stream = new Core.FastFileStream(FileName, Core.FastFileAccess.Read))
+                using (StreamWriter log = new StreamWriter(logFileName))
+                {
+                    try
+                    {
+                        // Header.
+                        Header header = new Header();
+                        header.Read(stream.ReadBytes(Header.SizeInBytes));
+                        NetworkProtocol = header.NetworkProtocol;
+                        GameFolderName = header.GameFolderName;
+                        Game = handler.FindGame(GameFolderName);
+                        header.Log(log);
+                        log.WriteLine();
+
+                        // Frames
+                        while (true)
+                        {
+                            long frameOffset = stream.Position;
+                            Frame frame = ReadFrame(stream);
+                            log.WriteLine("Frame {0}. Number: {1}, Timestamp: {2}, Offset: {3}", frame.Id, frame.Number, frame.Timestamp, frameOffset);
+
+                            if (frame.HasMessages)
+                            {
+                                bool logAllMessages = false;
+
+                                try
+                                {
+                                    byte[] messageBlock = ReadMessageBlock(stream);
+
+                                    if (messageBlock != null)
+                                    {
+                                        Core.BitReader messageReader = new Core.BitReader(messageBlock);
+
+                                        while (messageReader.CurrentByte < messageReader.Length)
+                                        {
+                                            try
+                                            {
+                                                byte id = messageReader.ReadByte();
+                                                ReadMessage(messageReader, id, !shouldLogMessage(id));
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                throw new MessageException(messageHistory, ex);
+                                            }
+                                        }
+                                    }
+                                }
+                                catch (MessageException ex)
+                                {
+                                    log.WriteLine("\n*** Error processing message block ***\n");
+                                    log.WriteLine(ex.ToString());
+                                    log.WriteLine();
+                                }
+
+                                foreach (IMessage message in messageHistory)
+                                {
+                                    log.WriteLine("{0} [{1}] Offset: {2}", message.Name, message.Id, message.Offset);
+
+                                    if (shouldLogMessage(message.Id))
+                                    {
+                                        message.Log(log);
+                                        log.WriteLine();
+                                    }
+                                }
+
+                                log.WriteLine();
+                            }
+
+                            if ((stream.Position >= header.DirectoryEntriesOffset) || stream.Position == stream.Length)
+                            {
+                                break;
+                            }
+
+                            if (IsOperationCancelled())
+                            {
+                                OnOperationCancelled();
+                                return;
+                            }
+
+                            UpdateProgress(stream.Position, stream.Length);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        log.WriteLine(ex);
+                        throw;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                OnOperationError(FileName, ex);
+                return;
+            }
+            finally
+            {
+                messageHistory.Clear();
+                messageCallbacks.Clear();
+                frameCallbacks.Clear();
+            }
+
+            OnOperationComplete();
+        }
+
         #region Reading and writing
         private void ReadDirectoryEntries(long offset, Core.FastFileStream stream)
         {
@@ -715,7 +855,7 @@ namespace CDP.HalfLifeDemo
 
         private void ReadMessagesInMessageBlock(byte[] messageBlock)
         {
-            if (messageBlock == null || messageBlock.Length == 0)
+            if (messageBlock == null)
             {
                 return;
             }
@@ -726,7 +866,7 @@ namespace CDP.HalfLifeDemo
             {
                 try
                 {
-                    ReadMessage(messageReader);
+                    ReadMessage(messageReader, null, true);
                 }
                 catch (Exception ex)
                 {
@@ -794,15 +934,25 @@ namespace CDP.HalfLifeDemo
             }
         }
 
-        private IMessage ReadMessageHeader(Core.BitReader buffer)
+        private IMessage ReadMessageHeader(Core.BitReader buffer, byte? id)
         {
             long messageOffset = currentMessageBlockOffset + buffer.CurrentByte;
-            byte id = buffer.ReadByte();
+
+            if (id == null)
+            {
+                id = buffer.ReadByte();
+            }
+            else
+            {
+                // Assume the buffer position is one byte after where the ID was read.
+                messageOffset--;
+            }
+
             IMessage message = null;
 
             if (id <= Demo.MaxEngineMessageId)
             {
-                message = handler.CreateEngineMessage(id);
+                message = handler.CreateEngineMessage(id.Value);
             }
             else
             {
@@ -849,14 +999,14 @@ namespace CDP.HalfLifeDemo
             return message;
         }
 
-        private IMessage ReadMessage(Core.BitReader buffer)
+        private IMessage ReadMessage(Core.BitReader buffer, byte? id, bool canSkip)
         {
-            IMessage message = ReadMessageHeader(buffer);
+            IMessage message = ReadMessageHeader(buffer, id);
             List<MessageCallback> messageCallbacks = FindMessageCallbacks(message);
 
             try
             {
-                if (messageCallbacks.Count == 0)
+                if (canSkip && messageCallbacks.Count == 0)
                 {
                     message.Skip(buffer);
                 }
@@ -880,7 +1030,7 @@ namespace CDP.HalfLifeDemo
 
         private IMessage ReadAndWriteMessage(Core.BitReader reader, Core.BitWriter writer, bool canSkip)
         {
-            IMessage message = ReadMessageHeader(reader);
+            IMessage message = ReadMessageHeader(reader, null);
             UserMessage userMessage = message as UserMessage;
 
             // User message IDs are changed to match the current version of the specific mod.
@@ -1257,6 +1407,36 @@ namespace CDP.HalfLifeDemo
             {
                 frame.Remove = true;
             }
+        }
+        #endregion
+
+        #region Diagnostic callbacks
+        private void Diagnostic_ServerInfo(Messages.SvcServerInfo message)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < message.ClientDllChecksum.Length; i++)
+            {
+                sb.Append(message.ClientDllChecksum[i].ToString("X2"));
+            }
+
+            clientDllChecksum = sb.ToString();
+            MaxClients = message.MaxClients;
+        }
+
+        private void Diagnostic_DeltaDescription(Messages.SvcDeltaDescription message)
+        {
+            AddDeltaStructure(message.Structure);
+        }
+
+        private void Diagnostic_NewUserMessage(Messages.SvcNewUserMessage message)
+        {
+            AddUserMessage(message.UserMessageId, message.UserMessageLength, message.UserMessageName);
+        }
+
+        private void Diagnostic_Hltv(Messages.SvcHltv message)
+        {
+            IsHltv = true;
         }
         #endregion
     }

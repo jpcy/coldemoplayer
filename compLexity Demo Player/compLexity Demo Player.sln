@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\Unit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HalfLifeDemoSystemTest", "HalfLifeDemoSystemTest\HalfLifeDemoSystemTest.csproj", "{97005DD0-2A52-4A8B-A2E8-94B8C4D899F8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CDP.DemoDiagnostic", "CDP.DemoDiagnostic\CDP.DemoDiagnostic.csproj", "{E404303E-6A6D-4441-BBB4-D0636057CCC1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,12 @@ Global
 		{97005DD0-2A52-4A8B-A2E8-94B8C4D899F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97005DD0-2A52-4A8B-A2E8-94B8C4D899F8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{97005DD0-2A52-4A8B-A2E8-94B8C4D899F8}.Release|x86.ActiveCfg = Release|Any CPU
+		{E404303E-6A6D-4441-BBB4-D0636057CCC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E404303E-6A6D-4441-BBB4-D0636057CCC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E404303E-6A6D-4441-BBB4-D0636057CCC1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E404303E-6A6D-4441-BBB4-D0636057CCC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E404303E-6A6D-4441-BBB4-D0636057CCC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E404303E-6A6D-4441-BBB4-D0636057CCC1}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
