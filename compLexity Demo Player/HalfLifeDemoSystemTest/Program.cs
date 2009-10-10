@@ -72,8 +72,8 @@ namespace HalfLifeDemoSystemTest
             Console.WriteLine();
             ObjectMappings.Initialise();
             demoManager = ObjectCreator.Get<IDemoManager>();
-            demoManager.AddPlugin(0, new CDP.HalfLifeDemo.Handler());
-            demoManager.AddPlugin(1, new CDP.CounterStrikeDemo.Handler());
+            demoManager.AddPlugin(0, new CDP.HalfLife.Handler());
+            demoManager.AddPlugin(1, new CDP.CounterStrike.Handler());
             fileSystem = ObjectCreator.Get<IFileSystem>();
 
             settings = ObjectCreator.Get<ISettings>();
@@ -122,7 +122,7 @@ namespace HalfLifeDemoSystemTest
                     continue;
                 }
 
-                CDP.HalfLifeDemo.Demo demo = (CDP.HalfLifeDemo.Demo)demoManager.CreateDemo(fileName);
+                CDP.HalfLife.Demo demo = (CDP.HalfLife.Demo)demoManager.CreateDemo(fileName);
 
                 if (demo == null)
                 {
@@ -181,7 +181,7 @@ namespace HalfLifeDemoSystemTest
                 Write("\tLoad written: ");
                 stopwatch.Reset();
                 stopwatch.Start();
-                CDP.HalfLifeDemo.Demo writtenDemo = (CDP.HalfLifeDemo.Demo)demoManager.CreateDemo(Path.Combine(selectedPath, tempDemoFileName));
+                CDP.HalfLife.Demo writtenDemo = (CDP.HalfLife.Demo)demoManager.CreateDemo(Path.Combine(selectedPath, tempDemoFileName));
 
                 if (writtenDemo == null)
                 {

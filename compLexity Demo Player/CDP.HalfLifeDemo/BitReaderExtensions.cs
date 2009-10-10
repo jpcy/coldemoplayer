@@ -1,6 +1,6 @@
 ﻿using System;
 using CDP.Core;
-namespace CDP.HalfLifeDemo
+namespace CDP.HalfLife
 {
     static class BitReaderExtensions
     {

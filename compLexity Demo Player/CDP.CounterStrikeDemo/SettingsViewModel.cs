@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CDP.CounterStrikeDemo
+namespace CDP.CounterStrike
 {
-    public class SettingsViewModel : HalfLifeDemo.SettingsViewModel
+    public class SettingsViewModel : HalfLife.SettingsViewModel
     {
         public bool RemoveFadeToBlack
         {

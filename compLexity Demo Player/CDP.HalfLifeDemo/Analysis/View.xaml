@@ -1,8 +1,8 @@
-﻿<UserControl x:Class="CDP.HalfLifeDemo.Analysis.View"
+﻿<UserControl x:Class="CDP.HalfLife.Analysis.View"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:core="clr-namespace:CDP.Core;assembly=CDP.Core"
-    xmlns:local="clr-namespace:CDP.HalfLifeDemo.Analysis">
+    xmlns:local="clr-namespace:CDP.HalfLife.Analysis">
     <UserControl.Resources>
         <local:TimestampConverter x:Key="timestampConverter" />
     </UserControl.Resources>

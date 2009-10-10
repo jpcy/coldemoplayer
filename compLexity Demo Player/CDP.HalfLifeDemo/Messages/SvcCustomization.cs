@@ -3,7 +3,7 @@ using System.IO;
 using BitReader = CDP.Core.BitReader;
 using BitWriter = CDP.Core.BitWriter;
 
-namespace CDP.HalfLifeDemo.Messages
+namespace CDP.HalfLife.Messages
 {
     // Very similar to svc_resourcelist entries, but bits aren't packed as tightly.
     public class SvcCustomization : EngineMessage

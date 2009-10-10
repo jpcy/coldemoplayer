@@ -2,7 +2,7 @@
 using System.Windows.Data;
 using System.Globalization;
 
-namespace CDP.HalfLifeDemo.Analysis
+namespace CDP.HalfLife.Analysis
 {
     [ValueConversion(typeof(float), typeof(string))]
     class TimestampConverter : IValueConverter

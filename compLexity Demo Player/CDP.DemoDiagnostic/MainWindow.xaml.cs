@@ -98,15 +98,15 @@ namespace CDP.DemoDiagnostic
             logFileTextBlock.Text = Path.ChangeExtension(Path.GetFileName(demo.FileName), "log");
 
             // Half-Life/Counter-Strike messages
-            HalfLifeDemo.Demo halfLifeDemo = demo as HalfLifeDemo.Demo;
+            HalfLife.Demo halfLifeDemo = demo as HalfLife.Demo;
 
             if (halfLifeDemo != null)
             {
-                foreach (byte id in Enum.GetValues(typeof(HalfLifeDemo.EngineMessageIds)))
+                foreach (byte id in Enum.GetValues(typeof(HalfLife.EngineMessageIds)))
                 {
                     messages.Add(new HalfLifeMessage
                     {
-                        Name = Enum.GetName(typeof(HalfLifeDemo.EngineMessageIds), id).Replace("_", "__"),
+                        Name = Enum.GetName(typeof(HalfLife.EngineMessageIds), id).Replace("_", "__"),
                         EngineMessageId = id,
                         IsEngineMessage = true
                     });
@@ -129,7 +129,7 @@ namespace CDP.DemoDiagnostic
             demo.OperationCancelledEvent += demo_OperationCancelledEvent;
             demo.OperationCompleteEvent += demo_OperationCompleteEvent;
 
-            HalfLifeDemo.Demo halfLifeDemo = demo as HalfLifeDemo.Demo;
+            HalfLife.Demo halfLifeDemo = demo as HalfLife.Demo;
 
             if (halfLifeDemo != null)
             {

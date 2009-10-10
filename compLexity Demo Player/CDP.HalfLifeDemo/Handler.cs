@@ -6,7 +6,7 @@ using System.IO;
 using System.Xml.Serialization;
 using System.Windows.Controls;
 
-namespace CDP.HalfLifeDemo
+namespace CDP.HalfLife
 {
     public class Handler : Core.DemoHandler
     {

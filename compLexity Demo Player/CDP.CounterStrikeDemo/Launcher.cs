@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 
-namespace CDP.CounterStrikeDemo
+namespace CDP.CounterStrike
 {
-    class Launcher : HalfLifeDemo.Launcher
+    class Launcher : HalfLife.Launcher
     {
         public override bool Verify()
         {
@@ -28,7 +28,7 @@ namespace CDP.CounterStrikeDemo
 
             if (File.Exists(mapDestinationFileName))
             {
-                HalfLifeDemo.MapChecksum mapChecksum = new HalfLifeDemo.MapChecksum();
+                HalfLife.MapChecksum mapChecksum = new HalfLife.MapChecksum();
                 mapChecksum.Calculate(mapDestinationFileName);
 
                 if (mapChecksum.Equals(demo.MapChecksum))

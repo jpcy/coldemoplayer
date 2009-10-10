@@ -2,7 +2,7 @@
 using System.IO;
 using CDP.Core;
 
-namespace CDP.HalfLifeDemo
+namespace CDP.HalfLife
 {
     public class DirectoryEntry
     {

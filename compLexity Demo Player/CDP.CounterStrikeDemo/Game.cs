@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 using System.Linq;
 using CDP.Core.Extensions;
 
-namespace CDP.CounterStrikeDemo
+namespace CDP.CounterStrike
 {
     public class Game : Core.SteamGame
     {

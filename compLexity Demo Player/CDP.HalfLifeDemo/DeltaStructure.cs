@@ -5,7 +5,7 @@ using System.Collections;
 using System.IO;
 using System.Linq;
 
-namespace CDP.HalfLifeDemo
+namespace CDP.HalfLife
 {
     /// <summary>
     /// Stores delta structure entry parameters, as well as handling the creation and decoding of delta compressed data.

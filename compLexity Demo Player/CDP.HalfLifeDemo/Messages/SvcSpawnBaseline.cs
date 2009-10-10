@@ -4,7 +4,7 @@ using BitReader = CDP.Core.BitReader;
 using BitWriter = CDP.Core.BitWriter;
 using System.IO;
 
-namespace CDP.HalfLifeDemo.Messages
+namespace CDP.HalfLife.Messages
 {
     public class SvcSpawnBaseline : EngineMessage
     {

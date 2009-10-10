@@ -4,7 +4,7 @@ using BitReader = CDP.Core.BitReader;
 using BitWriter = CDP.Core.BitWriter;
 
 
-namespace CDP.HalfLifeDemo.Messages
+namespace CDP.HalfLife.Messages
 {
     public class SvcRoomType : EngineMessage
     {

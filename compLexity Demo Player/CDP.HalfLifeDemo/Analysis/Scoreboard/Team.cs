@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CDP.HalfLifeDemo.Analysis.Scoreboard
+namespace CDP.HalfLife.Analysis.Scoreboard
 {
     public class Team : ICloneable
     {

@@ -8,8 +8,8 @@
     <ProjectGuid>{77712F28-8EB3-4560-BCD8-096CEA789915}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CDP.CounterStrikeDemo</RootNamespace>
-    <AssemblyName>CDP.CounterStrikeDemo</AssemblyName>
+    <RootNamespace>CDP.CounterStrike</RootNamespace>
+    <AssemblyName>CDP.CounterStrike</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -77,9 +77,9 @@
       <Name>CDP.Core</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\CDP.HalfLifeDemo\CDP.HalfLifeDemo.csproj">
+    <ProjectReference Include="..\CDP.HalfLifeDemo\CDP.HalfLife.csproj">
       <Project>{6D554123-E196-4376-9B52-365777B913B8}</Project>
-      <Name>CDP.HalfLifeDemo</Name>
+      <Name>CDP.HalfLife</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>

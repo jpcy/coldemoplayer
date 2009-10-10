@@ -2,7 +2,7 @@
 using System.IO;
 using System.Diagnostics;
 
-namespace CDP.HalfLifeDemo
+namespace CDP.HalfLife
 {
     public class Launcher : Core.SteamLauncher
     {

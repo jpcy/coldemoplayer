@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using CDP.Core;
 
-namespace CDP.HalfLifeDemo
+namespace CDP.HalfLife
 {
     public abstract class Frame
     {

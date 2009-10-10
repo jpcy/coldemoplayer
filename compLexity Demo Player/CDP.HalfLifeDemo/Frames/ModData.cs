@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using CDP.Core;
 
-namespace CDP.HalfLifeDemo.Frames
+namespace CDP.HalfLife.Frames
 {
     // MOD Demo_ReadBuffer/Demo_WriteBuffer
     public class ModData : Frame

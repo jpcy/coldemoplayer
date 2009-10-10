@@ -3,9 +3,9 @@ using System.IO;
 using BitReader = CDP.Core.BitReader;
 using BitWriter = CDP.Core.BitWriter;
 
-namespace CDP.CounterStrikeDemo.UserMessages
+namespace CDP.CounterStrike.UserMessages
 {
-    public class ClCorpse : CDP.HalfLifeDemo.UserMessage
+    public class ClCorpse : CDP.HalfLife.UserMessage
     {
         public override string Name
         {
@@ -14,7 +14,7 @@ namespace CDP.CounterStrikeDemo.UserMessages
 
         public override bool CanSkipWhenWriting
         {
-            get { return ((CounterStrikeDemo.Demo)demo).Version == CounterStrikeDemo.Demo.Versions.CounterStrike16; }
+            get { return ((CounterStrike.Demo)demo).Version == CounterStrike.Demo.Versions.CounterStrike16; }
         }
 
         public string Model { get; set; }

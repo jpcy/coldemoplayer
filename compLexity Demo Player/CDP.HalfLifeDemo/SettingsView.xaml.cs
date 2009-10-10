@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CDP.HalfLifeDemo
+namespace CDP.HalfLife
 {
     /// <summary>
     /// Interaction logic for SettingsView.xaml

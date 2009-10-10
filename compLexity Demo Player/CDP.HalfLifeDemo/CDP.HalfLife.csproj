@@ -8,8 +8,8 @@
     <ProjectGuid>{6D554123-E196-4376-9B52-365777B913B8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CDP.HalfLifeDemo</RootNamespace>
-    <AssemblyName>CDP.HalfLifeDemo</AssemblyName>
+    <RootNamespace>CDP.HalfLife</RootNamespace>
+    <AssemblyName>CDP.HalfLife</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkSubset>Client</TargetFrameworkSubset>

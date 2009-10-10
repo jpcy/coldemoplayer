@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Collections;
 using CDP.Core.Extensions;
 
-namespace CDP.HalfLifeDemo
+namespace CDP.HalfLife
 {
     public class Demo : Core.Demo
     {

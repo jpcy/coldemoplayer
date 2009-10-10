@@ -2,16 +2,16 @@
 using System.Linq;
 using System.Windows.Media;
 
-namespace CDP.CounterStrikeDemo.Analysis
+namespace CDP.CounterStrike.Analysis
 {
-    public class ViewModel : HalfLifeDemo.Analysis.ViewModel
+    public class ViewModel : HalfLife.Analysis.ViewModel
     {
         private readonly Demo demo;
 
         public ViewModel(Demo demo) : base(demo)
         {
             this.demo = demo;
-            demo.AddMessageCallback<HalfLifeDemo.Messages.SvcEventReliable>(MessageEventReliable);
+            demo.AddMessageCallback<HalfLife.Messages.SvcEventReliable>(MessageEventReliable);
 
             // TextMsg
             titles.Add("#Target_Bombed", "Target Succesfully Bombed!");
@@ -70,7 +70,7 @@ namespace CDP.CounterStrikeDemo.Analysis
         }
 
         #region Message handlers
-        private void MessageEventReliable(HalfLifeDemo.Messages.SvcEventReliable message)
+        private void MessageEventReliable(HalfLife.Messages.SvcEventReliable message)
         {
             int newRoundEventId = (demo.Version == Demo.Versions.CounterStrike16 ? 29 : 26);
 

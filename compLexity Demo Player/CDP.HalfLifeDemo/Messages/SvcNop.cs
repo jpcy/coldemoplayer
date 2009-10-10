@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace CDP.HalfLifeDemo.Messages
+namespace CDP.HalfLife.Messages
 {
     public class SvcNop : EngineMessage
     {

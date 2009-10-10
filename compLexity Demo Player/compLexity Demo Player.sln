@@ -5,11 +5,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CDP", "CDP\CDP.csproj", "{9
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CDP.Core", "CDP.Core\CDP.Core.csproj", "{14ABD36D-331F-43C8-8097-18C05B20F06E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CDP.HalfLifeDemo", "CDP.HalfLifeDemo\CDP.HalfLifeDemo.csproj", "{6D554123-E196-4376-9B52-365777B913B8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CDP.HalfLife", "CDP.HalfLifeDemo\CDP.HalfLife.csproj", "{6D554123-E196-4376-9B52-365777B913B8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickZip", "QuickZip\QuickZip.csproj", "{0894ACFD-ABA2-402B-AD4A-59764D621A8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CDP.CounterStrikeDemo", "CDP.CounterStrikeDemo\CDP.CounterStrikeDemo.csproj", "{77712F28-8EB3-4560-BCD8-096CEA789915}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CDP.CounterStrike", "CDP.CounterStrikeDemo\CDP.CounterStrike.csproj", "{77712F28-8EB3-4560-BCD8-096CEA789915}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{8761F0A0-BD9F-4EB5-8DF9-E2A546A43692}"
 EndProject

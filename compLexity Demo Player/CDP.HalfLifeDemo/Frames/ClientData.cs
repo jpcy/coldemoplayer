@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using CDP.Core;
 
-namespace CDP.HalfLifeDemo.Frames
+namespace CDP.HalfLife.Frames
 {
     // HL SDK cdll_int.h
     /*

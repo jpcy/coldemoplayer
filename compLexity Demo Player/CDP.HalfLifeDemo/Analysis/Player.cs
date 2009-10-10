@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CDP.HalfLifeDemo.Analysis
+namespace CDP.HalfLife.Analysis
 {
     public class Player
     {

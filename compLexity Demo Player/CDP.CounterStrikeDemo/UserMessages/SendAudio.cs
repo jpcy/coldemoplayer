@@ -3,9 +3,9 @@ using System.IO;
 using BitReader = CDP.Core.BitReader;
 using BitWriter = CDP.Core.BitWriter;
 
-namespace CDP.CounterStrikeDemo.UserMessages
+namespace CDP.CounterStrike.UserMessages
 {
-    public class SendAudio : HalfLifeDemo.UserMessage
+    public class SendAudio : HalfLife.UserMessage
     {
         public override string Name
         {

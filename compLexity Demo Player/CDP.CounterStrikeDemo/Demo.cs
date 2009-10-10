@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using CDP.HalfLifeDemo.Messages;
-using CDP.HalfLifeDemo.UserMessages;
+using CDP.HalfLife.Messages;
+using CDP.HalfLife.UserMessages;
 
-namespace CDP.CounterStrikeDemo
+namespace CDP.CounterStrike
 {
-    public class Demo : HalfLifeDemo.Demo
+    public class Demo : HalfLife.Demo
     {
         public enum Versions
         {
@@ -97,8 +97,8 @@ namespace CDP.CounterStrikeDemo
         /// <returns>The user message's ID.</returns>
         protected override byte GetUserMessageId(string userMessageName)
         {
-            CounterStrikeDemo.Game.UserMessage[] userMessages = ((CounterStrikeDemo.Game)Game).UserMessages;
-            CounterStrikeDemo.Game.UserMessage userMessage = userMessages.FirstOrDefault(um => um.Name == userMessageName);
+            CounterStrike.Game.UserMessage[] userMessages = ((CounterStrike.Game)Game).UserMessages;
+            CounterStrike.Game.UserMessage userMessage = userMessages.FirstOrDefault(um => um.Name == userMessageName);
 
             if (userMessage == null)
             {
@@ -139,7 +139,7 @@ namespace CDP.CounterStrikeDemo
                 // Change the actual structure, which will be used for writing deltas from now on.
                 for (int i = 1; i <= 2; i++)
                 {
-                    message.Structure.AddEntry(string.Format("iparam{0}", i), 18, 1.0f, CDP.HalfLifeDemo.DeltaStructure.EntryFlags.Integer | CDP.HalfLifeDemo.DeltaStructure.EntryFlags.Signed);
+                    message.Structure.AddEntry(string.Format("iparam{0}", i), 18, 1.0f, CDP.HalfLife.DeltaStructure.EntryFlags.Integer | CDP.HalfLife.DeltaStructure.EntryFlags.Signed);
                 }
 
                 // Overwrite the existing structure.
@@ -154,7 +154,7 @@ namespace CDP.CounterStrikeDemo
 
         private void Write_ResourceList(SvcResourceList message)
         {
-            CounterStrikeDemo.Game.Resource[] blacklist = ((CounterStrikeDemo.Game)Game).ResourceBlacklist;
+            CounterStrike.Game.Resource[] blacklist = ((CounterStrike.Game)Game).ResourceBlacklist;
             message.Resources.RemoveAll(r => blacklist.FirstOrDefault(blr => r.Name == blr.Name) != null);
 
             foreach (SvcResourceList.Resource resource in message.Resources)
@@ -265,7 +265,7 @@ namespace CDP.CounterStrikeDemo
         /// Converts a CS 1.0-1.5 entity delta to 1.6.
         /// </summary>
         /// <param name="delta">The entity delta.</param>
-        private void ConvertEntityDelta(CDP.HalfLifeDemo.Delta delta)
+        private void ConvertEntityDelta(CDP.HalfLife.Delta delta)
         {
             if (Version == Versions.CounterStrike10 || Version == Versions.CounterStrike11)
             {
@@ -280,7 +280,7 @@ namespace CDP.CounterStrikeDemo
         /// Converts a CS 1.0-1.5 player delta's animation sequences to 1.6.
         /// </summary>
         /// <param name="delta">The player delta.</param>
-        private void ConvertPlayerDelta(CDP.HalfLifeDemo.Delta delta)
+        private void ConvertPlayerDelta(CDP.HalfLife.Delta delta)
         {
             uint? sequence = (uint?)delta.FindEntryValue("sequence");
 

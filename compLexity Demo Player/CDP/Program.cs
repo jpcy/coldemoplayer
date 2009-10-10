@@ -15,8 +15,8 @@ namespace CDP
 
             // Demo manager and plugins.
             IDemoManager demoManager = ObjectCreator.Get<IDemoManager>();
-            demoManager.AddPlugin(0, new HalfLifeDemo.Handler());
-            demoManager.AddPlugin(1, new CounterStrikeDemo.Handler());
+            demoManager.AddPlugin(0, new HalfLife.Handler());
+            demoManager.AddPlugin(1, new CounterStrike.Handler());
 
             // Settings.
             ISettings settings = ObjectCreator.Get<ISettings>();

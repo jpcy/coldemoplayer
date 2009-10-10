@@ -5,9 +5,9 @@ using System.IO;
 using System.Collections.Generic;
 using System.Windows.Controls;
 
-namespace CDP.CounterStrikeDemo
+namespace CDP.CounterStrike
 {
-    public class Handler : HalfLifeDemo.Handler
+    public class Handler : HalfLife.Handler
     {
         public override string FullName
         {

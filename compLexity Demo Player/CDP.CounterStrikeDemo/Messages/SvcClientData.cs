@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using BitReader = CDP.Core.BitReader;
 
-namespace CDP.CounterStrikeDemo.Messages
+namespace CDP.CounterStrike.Messages
 {
-    class SvcClientData : CDP.HalfLifeDemo.Messages.SvcClientData
+    class SvcClientData : CDP.HalfLife.Messages.SvcClientData
     {
         public override bool CanSkipWhenWriting
         {
@@ -13,7 +13,7 @@ namespace CDP.CounterStrikeDemo.Messages
 
         private bool IsBeta16()
         {
-            return demo.NetworkProtocol == 46 && ((CDP.CounterStrikeDemo.Demo)demo).Version == CDP.CounterStrikeDemo.Demo.Versions.CounterStrike16;
+            return demo.NetworkProtocol == 46 && ((CDP.CounterStrike.Demo)demo).Version == CDP.CounterStrike.Demo.Versions.CounterStrike16;
         }
 
         public override void Skip(BitReader buffer)
@@ -33,9 +33,9 @@ namespace CDP.CounterStrikeDemo.Messages
                 buffer.SeekBytes(1);
             }
 
-            CDP.HalfLifeDemo.DeltaStructure clientDataStructure = demo.FindReadDeltaStructure("clientdata_t");
+            CDP.HalfLife.DeltaStructure clientDataStructure = demo.FindReadDeltaStructure("clientdata_t");
             clientDataStructure.SkipDelta(buffer);
-            CDP.HalfLifeDemo.DeltaStructure weaponDataStructure = demo.FindReadDeltaStructure("weapon_data_t");
+            CDP.HalfLife.DeltaStructure weaponDataStructure = demo.FindReadDeltaStructure("weapon_data_t");
 
             while (buffer.ReadBoolean())
             {
@@ -71,10 +71,10 @@ namespace CDP.CounterStrikeDemo.Messages
                 DeltaSequenceNumber = buffer.ReadByte();
             }
 
-            CDP.HalfLifeDemo.DeltaStructure clientDataStructure = demo.FindReadDeltaStructure("clientdata_t");
+            CDP.HalfLife.DeltaStructure clientDataStructure = demo.FindReadDeltaStructure("clientdata_t");
             Delta = clientDataStructure.CreateDelta();
             clientDataStructure.ReadDelta(buffer, Delta);
-            CDP.HalfLifeDemo.DeltaStructure weaponStructure = demo.FindReadDeltaStructure("weapon_data_t");
+            CDP.HalfLife.DeltaStructure weaponStructure = demo.FindReadDeltaStructure("weapon_data_t");
             Weapons = new List<Weapon>();
 
             while (buffer.ReadBoolean())

@@ -3,7 +3,7 @@ using System.IO;
 using BitReader = CDP.Core.BitReader;
 using BitWriter = CDP.Core.BitWriter;
 
-namespace CDP.HalfLifeDemo.UserMessages
+namespace CDP.HalfLife.UserMessages
 {
     public class TeamInfo : UserMessage
     {

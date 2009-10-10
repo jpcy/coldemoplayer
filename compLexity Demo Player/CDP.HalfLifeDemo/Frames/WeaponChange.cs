@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using CDP.Core;
 
-namespace CDP.HalfLifeDemo.Frames
+namespace CDP.HalfLife.Frames
 {
     // Something to do with weapon change animations.
     // Non-critical -- can be removed, which results in no weapon change animations (like HLTV/HLTV models).

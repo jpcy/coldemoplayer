@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace CDP.HalfLifeDemo
+namespace CDP.HalfLife
 {
     public class MapChecksum : IEquatable<MapChecksum>, IEquatable<uint>
     {

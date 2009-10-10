@@ -6,7 +6,7 @@ using System.Windows.Media;
 using System.Windows;
 using CDP.Core.Extensions;
 
-namespace CDP.HalfLifeDemo.Analysis
+namespace CDP.HalfLife.Analysis
 {
     public class ViewModel : Core.ViewModelBase
     {
@@ -321,7 +321,7 @@ namespace CDP.HalfLifeDemo.Analysis
 
             if (team == null)
             {
-                team = new HalfLifeDemo.Analysis.Scoreboard.Team(message.TeamName, message.Score);
+                team = new HalfLife.Analysis.Scoreboard.Team(message.TeamName, message.Score);
                 Rounds.Last().Teams.Add(team);
             }
             else

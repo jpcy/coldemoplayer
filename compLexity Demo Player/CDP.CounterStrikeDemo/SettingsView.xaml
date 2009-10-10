@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="CDP.CounterStrikeDemo.SettingsView"
+﻿<UserControl x:Class="CDP.CounterStrike.SettingsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <StackPanel>

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CDP.HalfLifeDemo
+namespace CDP.HalfLife
 {
     public class SettingsViewModel : Core.ViewModelBase
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace CDP.HalfLifeDemo.Frames
+namespace CDP.HalfLife.Frames
 {
     public class Playback : Loading
     {

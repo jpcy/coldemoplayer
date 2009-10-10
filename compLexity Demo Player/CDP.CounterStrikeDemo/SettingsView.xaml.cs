@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CDP.CounterStrikeDemo
+namespace CDP.CounterStrike
 {
     /// <summary>
     /// Interaction logic for SettingsView.xaml
