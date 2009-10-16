@@ -23,7 +23,7 @@ namespace CDP.HalfLife
             public MessageException(IEnumerable<IMessage> messageHistory, Exception innerException) : base(null, innerException)
             {
                 StringBuilder sb = new StringBuilder();
-                sb.AppendFormat("Last {0} messages:\n", messageHistoryMaxLength);
+                sb.Append("Last frame messages:\n");
 
                 foreach (IMessage m in messageHistory)
                 {
@@ -185,14 +185,9 @@ namespace CDP.HalfLife
         private readonly Dictionary<string, DeltaStructure> readDeltaStructures;
         private readonly Dictionary<string, DeltaStructure> writeDeltaStructures;
         private readonly List<UserMessageDefinition> userMessageDefinitions;
-
-        private const int messageHistoryMaxLength = 16;
-        private readonly Queue<IMessage> messageHistory = new Queue<IMessage>(messageHistoryMaxLength);
-
+        private readonly Core.CyclicQueue<IMessage> messageHistory = new Core.CyclicQueue<IMessage>(16);
         protected readonly Core.ISettings settings = Core.ObjectCreator.Get<Core.ISettings>();
         protected readonly Core.IFileSystem fileSystem = Core.ObjectCreator.Get<Core.IFileSystem>();
-
-        private const int fileBufferSize = 4096;
 
         // Pre-write.
         private int currentFrameIndex;
@@ -623,8 +618,6 @@ namespace CDP.HalfLife
 
                             if (frame.HasMessages)
                             {
-                                bool logAllMessages = false;
-
                                 try
                                 {
                                     byte[] messageBlock = ReadMessageBlock(stream);
@@ -990,12 +983,6 @@ namespace CDP.HalfLife
             message.Demo = this;
             message.Offset = messageOffset;
             messageHistory.Enqueue(message);
-
-            if (messageHistory.Count > messageHistoryMaxLength)
-            {
-                messageHistory.Dequeue();
-            }
-
             return message;
         }
 
