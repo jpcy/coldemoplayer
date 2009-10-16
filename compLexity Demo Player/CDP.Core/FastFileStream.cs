@@ -339,6 +339,21 @@ namespace CDP.Core
             position += sizeof(ulong);
             return value;
         }
+
+        public Vector ReadVector()
+        {
+            if (access != FastFileAccess.Read)
+            {
+                throw new FileAccessIsWriteNotRead();
+            }
+
+            Vector v = new Vector();
+            v.X = reader.ReadSingle();
+            v.Y = reader.ReadSingle();
+            v.Z = reader.ReadSingle();
+            position += sizeof(float) * 3;
+            return v;
+        }
         #endregion
 
         #region Writing
@@ -530,6 +545,19 @@ namespace CDP.Core
 
             stream.Write(buffer, offset, count);
             position += count;
+        }
+
+        public void WriteVector(Vector value)
+        {
+            if (access != FastFileAccess.Write)
+            {
+                throw new FileAccessIsReadNotWrite();
+            }
+
+            writer.Write(value.X);
+            writer.Write(value.Y);
+            writer.Write(value.Z);
+            position += sizeof(float) * 3;
         }
         #endregion
     }
