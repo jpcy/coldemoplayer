@@ -39,6 +39,16 @@ namespace CDP.Core.Extensions
 
         public static void WriteBytes(this StreamWriter self, byte[] value)
         {
+            self.WriteBytes(value, b => b.ToString("X2"));
+        }
+
+        public static void WriteBytesAsChars(this StreamWriter self, byte[] value)
+        {
+            self.WriteBytes(value, b => (char)b);
+        }
+
+        private static void WriteBytes(this StreamWriter self, byte[] value, Func<byte, object> transform)
+        {
             self.Write("Byte[]: ");
 
             if (value == null || value.Length == 0)
@@ -49,7 +59,7 @@ namespace CDP.Core.Extensions
 
             for (int i = 0; i < value.Length; i++)
             {
-                self.Write(i.ToString("X2"));
+                self.Write(transform(value[i]));
             }
 
             self.WriteLine();
