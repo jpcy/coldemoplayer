@@ -7,11 +7,17 @@ namespace CDP.Core
     public class CyclicQueue<T> : IEnumerable<T>, IEnumerable
     {
         private readonly int maximumSize;
-        private readonly Queue<T> queue = new Queue<T>();
+        private readonly List<T> list = new List<T>();
 
         public int Count
         {
-            get { return queue.Count; }
+            get { return list.Count; }
+        }
+
+        public T this[int index]
+        {
+            get { return list[index]; }
+            set { list[index] = value; }
         }
 
         public CyclicQueue(int maximumSize)
@@ -21,32 +27,27 @@ namespace CDP.Core
 
         public void Enqueue(T item)
         {
-            queue.Enqueue(item);
+            list.Add(item);
 
-            if (queue.Count > maximumSize)
+            if (list.Count > maximumSize)
             {
-                queue.Dequeue();
+                list.RemoveAt(0);
             }
         }
 
         public void Clear()
         {
-            queue.Clear();
+            list.Clear();
         }
 
-        public Queue<T>.Enumerator GetEnumerator()
+        public IEnumerator<T> GetEnumerator()
         {
-            return queue.GetEnumerator();
-        }
-
-        IEnumerator<T> IEnumerable<T>.GetEnumerator()
-        {
-            return queue.GetEnumerator();
+            return list.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return queue.GetEnumerator();
+            return list.GetEnumerator();
         }
     }
 }
