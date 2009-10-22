@@ -5,14 +5,13 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{14ABD36D-331F-43C8-8097-18C05B20F06E}</ProjectGuid>
+    <ProjectGuid>{5F8BE612-C77B-4870-AEE3-A0FEE9B9F906}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CDP.Core</RootNamespace>
-    <AssemblyName>CDP.Core</AssemblyName>
+    <RootNamespace>CDP.Source</RootNamespace>
+    <AssemblyName>CDP.Source</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkSubset>Client</TargetFrameworkSubset>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -50,54 +49,60 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="UIAutomationProvider">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
     <Reference Include="WindowsBase">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BitReader.cs" />
-    <Compile Include="BitWriter.cs" />
-    <Compile Include="CyclicQueue.cs" />
-    <Compile Include="DemoManager.cs" />
+    <Compile Include="BitReaderExtensions.cs" />
+    <Compile Include="DataTable.cs" />
     <Compile Include="Demo.cs" />
-    <Compile Include="DemoHandler.cs" />
-    <Compile Include="Extensions\DictionaryExtensions.cs" />
-    <Compile Include="Extensions\ExceptionExtensions.cs" />
-    <Compile Include="Extensions\StreamWriterExtensions.cs" />
-    <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="FastFileStream.cs" />
-    <Compile Include="FileSystem.cs" />
-    <Compile Include="Launcher.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Math.cs" />
-    <Compile Include="NotifyPropertyChanged.cs" />
-    <Compile Include="ObjectCreator.cs" />
-    <Compile Include="ObjectMappings.cs" />
-    <Compile Include="Process.cs" />
-    <Compile Include="ProcessFinder.cs" />
+    <Compile Include="Frame.cs" />
+    <Compile Include="Frames\Console.cs" />
+    <Compile Include="Frames\DataTables.cs" />
+    <Compile Include="Frames\Packet.cs" />
+    <Compile Include="Frames\Signon.cs" />
+    <Compile Include="Frames\Stop.cs" />
+    <Compile Include="Frames\StringTables.cs" />
+    <Compile Include="Frames\Synctick.cs" />
+    <Compile Include="Frames\UserCommand.cs" />
+    <Compile Include="Handler.cs" />
+    <Compile Include="Header.cs" />
+    <Compile Include="Message.cs" />
+    <Compile Include="MessageFrame.cs" />
+    <Compile Include="Messages\Customization.cs" />
+    <Compile Include="Messages\NetSetConVar.cs" />
+    <Compile Include="Messages\NetSignonState.cs" />
+    <Compile Include="Messages\NetStringCmd.cs" />
+    <Compile Include="Messages\NetTick.cs" />
+    <Compile Include="Messages\Nop.cs" />
+    <Compile Include="Messages\SvcBspDecal.cs" />
+    <Compile Include="Messages\SvcClassInfo.cs" />
+    <Compile Include="Messages\SvcCreateStringTable.cs" />
+    <Compile Include="Messages\SvcCrosshairAngle.cs" />
+    <Compile Include="Messages\SvcEntityMessage.cs" />
+    <Compile Include="Messages\SvcFixAngle.cs" />
+    <Compile Include="Messages\SvcGameEvent.cs" />
+    <Compile Include="Messages\SvcGameEventList.cs" />
+    <Compile Include="Messages\SvcPacketEntities.cs" />
+    <Compile Include="Messages\SvcPrefetch.cs" />
+    <Compile Include="Messages\SvcPrint.cs" />
+    <Compile Include="Messages\SvcServerInfo.cs" />
+    <Compile Include="Messages\SvcSetView.cs" />
+    <Compile Include="Messages\SvcSounds.cs" />
+    <Compile Include="Messages\SvcTempEntities.cs" />
+    <Compile Include="Messages\SvcUpdateStringTable.cs" />
+    <Compile Include="Messages\SvcUserMessage.cs" />
+    <Compile Include="Messages\SvcVoiceData.cs" />
+    <Compile Include="Messages\SvcVoiceInit.cs" />
+    <Compile Include="Prop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RichTextBox.xaml.cs">
-      <DependentUpon>RichTextBox.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Setting.cs" />
-    <Compile Include="Settings.cs" />
-    <Compile Include="SteamGame.cs" />
-    <Compile Include="SteamLauncher.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Vector.cs" />
-    <Compile Include="ViewModelBase.cs" />
-    <Compile Include="FlowDocumentWriter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="RichTextBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    <ProjectReference Include="..\CDP.Core\CDP.Core.csproj">
+      <Project>{14ABD36D-331F-43C8-8097-18C05B20F06E}</Project>
+      <Name>CDP.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

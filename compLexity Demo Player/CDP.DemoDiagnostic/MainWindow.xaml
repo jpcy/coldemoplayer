@@ -29,7 +29,7 @@
             <TextBlock Margin="0,0,10,0" FontWeight="Bold">Log file:</TextBlock>
             <TextBlock Name="logFileTextBlock">-</TextBlock>
         </StackPanel>
-        <ListBox Grid.Row="2" Margin="4" Name="messagesListBox">
+        <ListBox Grid.Row="2" Margin="4" Name="loggablesListBox">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <CheckBox IsChecked="{Binding IsSelected}" Content="{Binding Name}" />

@@ -15,6 +15,7 @@ namespace CDP.DemoDiagnostic
             IDemoManager demoManager = ObjectCreator.Get<IDemoManager>();
             demoManager.AddPlugin(0, new HalfLife.Handler());
             demoManager.AddPlugin(1, new CounterStrike.Handler());
+            demoManager.AddPlugin(0, new Source.Handler());
 
             // Settings.
             ISettings settings = ObjectCreator.Get<ISettings>();

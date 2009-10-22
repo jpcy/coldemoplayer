@@ -105,6 +105,10 @@
       <Project>{6D554123-E196-4376-9B52-365777B913B8}</Project>
       <Name>CDP.HalfLife</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CDP.Source\CDP.Source.csproj">
+      <Project>{5F8BE612-C77B-4870-AEE3-A0FEE9B9F906}</Project>
+      <Name>CDP.Source</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -85,6 +85,11 @@ namespace CDP.Core
             SeekBits(count, SeekOrigin.Current);
         }
 
+        public void SeekBits(uint count)
+        {
+            SeekBits((int)count, SeekOrigin.Current);
+        }
+
         public void SeekBits(int offset, SeekOrigin origin)
         {
             if (origin == SeekOrigin.Current)
