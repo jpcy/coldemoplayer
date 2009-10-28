@@ -111,7 +111,6 @@ namespace CDP.HalfLife
         public override string MapName { get; protected set; }
         public override string Perspective { get; protected set; }
         public override TimeSpan Duration { get; protected set; }
-        public override IList<Detail> Details { get; protected set; }
         public override ArrayList Players { get; protected set; }
 
         public override string[] IconFileNames
@@ -207,7 +206,6 @@ namespace CDP.HalfLife
             Perspective = "POV";
             IsHltv = false;
             IsCorrupt = false;
-            Details = new List<Detail>();
             Players = new ArrayList();
             messageCallbacks = new List<MessageCallback>();
             frameCallbacks = new List<FrameCallback>();
@@ -1225,23 +1223,6 @@ namespace CDP.HalfLife
                 Length = length,
                 Name = name
             });
-        }
-
-        private void AddDetail(string name, object value)
-        {
-            Detail detail = Details.FirstOrDefault(d => d.Name == name);
-
-            if (detail == null)
-            {
-                detail = new Detail
-                {
-                    Name = name
-                };
-
-                Details.Add(detail);
-            }
-
-            detail.Value = value;
         }
 
         #region Load message callbacks

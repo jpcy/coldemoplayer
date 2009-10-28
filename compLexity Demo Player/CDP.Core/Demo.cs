@@ -83,11 +83,12 @@ namespace CDP.Core
             }
         }
 
+        public IList<Detail> Details { get; private set; }
+
         public abstract string GameName { get; }
         public abstract string MapName { get; protected set; }
         public abstract string Perspective { get; protected set; }
         public abstract TimeSpan Duration { get; protected set; }
-        public abstract IList<Detail> Details { get; protected set; }
         public abstract ArrayList Players { get; protected set; }
 
         /// <summary>
@@ -109,6 +110,11 @@ namespace CDP.Core
         public abstract void Load();
         public abstract void Read();
         public abstract void Write(string destinationFileName);
+
+        public Demo()
+        {
+            Details = new List<Detail>();
+        }
 
         protected void OnProgressChanged(int progress)
         {
@@ -184,6 +190,24 @@ namespace CDP.Core
                 currentProgress = newProgress;
                 OnProgressChanged(currentProgress);
             }
+        }
+
+        // Details.
+        protected void AddDetail(string name, object value)
+        {
+            Detail detail = Details.FirstOrDefault(d => d.Name == name);
+
+            if (detail == null)
+            {
+                detail = new Detail
+                {
+                    Name = name
+                };
+
+                Details.Add(detail);
+            }
+
+            detail.Value = value;
         }
     }
 }

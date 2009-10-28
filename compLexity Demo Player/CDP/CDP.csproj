@@ -260,6 +260,10 @@
       <Project>{6D554123-E196-4376-9B52-365777B913B8}</Project>
       <Name>CDP.HalfLife</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CDP.IdTech3\CDP.IdTech3.csproj">
+      <Project>{EF8018FC-A773-4044-A044-17E38D3B07BC}</Project>
+      <Name>CDP.IdTech3</Name>
+    </ProjectReference>
     <ProjectReference Include="..\QuickZip\QuickZip.csproj">
       <Project>{0894ACFD-ABA2-402B-AD4A-59764D621A8F}</Project>
       <Name>QuickZip</Name>
@@ -357,6 +361,7 @@
     <PostBuildEvent>copy "$(TargetDir)\$(TargetFileName)" "$(SolutionDir)..\bin\compLexity Demo Player.exe"
 copy "$(TargetDir)\CDP.exe.config" "$(SolutionDir)..\bin\compLexity Demo Player.exe.config"
 copy "$(TargetDir)\ICSharpCode.SharpZipLib.dll" "$(SolutionDir)..\bin\ICSharpCode.SharpZipLib.dll"
-copy "$(TargetDir)\Interop.Shell32.dll" "$(SolutionDir)..\bin\Interop.Shell32.dll"</PostBuildEvent>
+copy "$(TargetDir)\Interop.Shell32.dll" "$(SolutionDir)..\bin\Interop.Shell32.dll"
+copy "$(SolutionDir)..\huffman\huffman.dll" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

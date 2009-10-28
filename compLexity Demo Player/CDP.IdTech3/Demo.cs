@@ -4,40 +4,62 @@ using System.Linq;
 using System.Text;
 using System.Collections;
 using System.IO;
+using System.Reflection;
 
 namespace CDP.IdTech3
 {
     public class Demo : Core.Demo
     {
+        private class CommandCallback
+        {
+            public CommandIds Id { get; set; }
+            public object Delegate { get; set; }
+
+            public void Fire(Command command)
+            {
+                MethodInfo methodInfo = Delegate.GetType().GetMethod("Invoke");
+                methodInfo.Invoke(Delegate, new object[] { command });
+            }
+        }
+
+        public class Player
+        {
+            public string Name { get; set; }
+            public string HeadModel { get; set; }
+            public string Model { get; set; }
+        }
+
         public override string GameName
         {
-            get { throw new NotImplementedException(); }
+            get { return gameName; }
         }
 
         public override string MapName { get; protected set; }
         public override string Perspective { get; protected set; }
         public override TimeSpan Duration { get; protected set; }
-        public override IList<Core.Demo.Detail> Details { get; protected set; }
         public override ArrayList Players { get; protected set; }
 
         public override string[] IconFileNames
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                return new string[] { fileSystem.PathCombine(settings.ProgramPath, "icons", "idtech3", gameName + ".ico") };
+            }
         }
 
         public override string MapImagesRelativePath
         {
-            get { throw new NotImplementedException(); }
+            get { return null; }
         }
 
         public override bool CanPlay
         {
-            get { throw new NotImplementedException(); }
+            get { return false; }
         }
 
         public override bool CanAnalyse
         {
-            get { throw new NotImplementedException(); }
+            get { return false; }
         }
 
         protected Handler handler;
@@ -49,12 +71,42 @@ namespace CDP.IdTech3
         }
 
         public int Protocol { get; private set; }
+        private string gameName; // TEMP: remove me
 
+        private readonly List<CommandCallback> commandCallbacks = new List<CommandCallback>();
+        private readonly Core.ISettings settings = Core.ObjectCreator.Get<Core.ISettings>();
         private readonly Core.IFileSystem fileSystem = Core.ObjectCreator.Get<Core.IFileSystem>();
+
+        public Demo()
+        {
+            Players = new ArrayList();
+        }
 
         public override void Load()
         {
-            throw new NotImplementedException();
+            try
+            {
+                AddCommandCallback<Commands.SvcConfigString>(Load_ConfigString);
+                CalculateProtocol();
+
+                using (Core.FastFileStream stream = new Core.FastFileStream(FileName, Core.FastFileAccess.Read))
+                {
+                    Message message = new Message();
+                    message.Read(stream);
+                    ReadCommandsUntilEof(message.Reader, null, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                OnOperationError(FileName, ex);
+                return;
+            }
+            finally
+            {
+                commandCallbacks.Clear();
+            }
+
+            OnOperationComplete();
         }
 
         public override void Read()
@@ -71,6 +123,7 @@ namespace CDP.IdTech3
         {
             try
             {
+                ResetProgress();
                 CalculateProtocol();
 
                 using (Core.FastFileStream stream = new Core.FastFileStream(FileName, Core.FastFileAccess.Read))
@@ -100,6 +153,7 @@ namespace CDP.IdTech3
             }
             finally
             {
+                commandCallbacks.Clear();
             }
 
             OnOperationComplete();
@@ -108,7 +162,12 @@ namespace CDP.IdTech3
         private CommandIds ReadCommandId(BitReader buffer, StreamWriter log)
         {
             CommandIds commandId = (CommandIds)buffer.ReadByte();
-            log.WriteLine("\nCommand {0} [{1}]", commandId, (byte)commandId);
+
+            if (log != null)
+            {
+                log.WriteLine("\nCommand {0} [{1}]", commandId, (byte)commandId);
+            }
+
             return commandId;
         }
 
@@ -130,7 +189,7 @@ namespace CDP.IdTech3
                     throw new ApplicationException(string.Format("Unknown command \'{0}\'.", commandId));
                 }
 
-                bool writeToLog = commandsToLog.Contains(commandId);
+                bool writeToLog = (log == null ? false : commandsToLog.Contains(commandId));
 
                 command.Demo = this;
 
@@ -140,14 +199,23 @@ namespace CDP.IdTech3
                 }
                 catch (Exception)
                 {
-                    log.WriteLine("\n*** ERROR ***\n");
-                    command.Log(log);
+                    if (log != null)
+                    {
+                        log.WriteLine("\n*** ERROR ***\n");
+                        command.Log(log);
+                    }
+
                     throw;
                 }
 
                 if (writeToLog)
                 {
                     command.Log(log);
+                }
+
+                foreach (CommandCallback callback in FindCommandCallbacks(command))
+                {
+                    callback.Fire(command);
                 }
 
                 if (command.ContainsSubCommands)
@@ -188,5 +256,69 @@ namespace CDP.IdTech3
                 }
             }
         }
+
+        private void Load_ConfigString(Commands.SvcConfigString command)
+        {
+            if (command.KeyValuePairs == null)
+            {
+                return;
+            }
+
+            if (command.KeyValuePairs.ContainsKey("version"))
+            {
+                AddDetail("Version", command.KeyValuePairs["version"]);
+            }
+
+            if (command.KeyValuePairs.ContainsKey("mapname"))
+            {
+                MapName = command.KeyValuePairs["mapname"];
+                AddDetail("Map", MapName);
+            }
+
+            if (command.KeyValuePairs.ContainsKey("gamename"))
+            {
+                gameName = command.KeyValuePairs["gamename"];
+            }
+
+            if (command.KeyValuePairs.ContainsKey("sv_maxclients"))
+            {
+                AddDetail("Server Slots", command.KeyValuePairs["sv_maxclients"]);
+            }
+
+            if (command.KeyValuePairs.ContainsKey("sv_hostname"))
+            {
+                AddDetail("Server Name", command.KeyValuePairs["sv_hostname"]);
+            }
+
+            if (command.IsPlayer)
+            {
+                Players.Add(new Player
+                {
+                    Name = command.KeyValuePairs["n"],
+                    HeadModel = command.KeyValuePairs["hmodel"],
+                    Model = command.KeyValuePairs["model"]
+                });
+            }
+        }
+
+        #region Command callbacks
+        private List<CommandCallback> FindCommandCallbacks(Command command)
+        {
+            return commandCallbacks.FindAll(cc => cc.Id == command.Id);
+        }
+
+        public void AddCommandCallback<T>(Action<T> method) where T : Command
+        {
+            CommandCallback callback = new CommandCallback
+            {
+                Delegate = method
+            };
+
+            // Instantiate the frame type to get the ID.
+            Command command = (Command)Activator.CreateInstance(typeof(T));
+            callback.Id = command.Id;
+            commandCallbacks.Add(callback);
+        }
+        #endregion
     }
 }

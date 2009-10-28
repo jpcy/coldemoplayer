@@ -53,7 +53,15 @@ namespace CDP.IdTech3
 
         public override Core.DemoHandler.PlayerColumn[] PlayerColumns
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                return new PlayerColumn[]
+                {
+                    new PlayerColumn("Name", "Name"),
+                    new PlayerColumn("Head Model", "HeadModel"),
+                    new PlayerColumn("Model", "Model")
+                };
+            }
         }
 
         public override Core.Setting[] Settings
@@ -74,7 +82,7 @@ namespace CDP.IdTech3
 
         public override UserControl SettingsView
         {
-            get { throw new NotImplementedException(); }
+            get { return null; }
         }
 
         public override bool IsValidDemo(Stream stream)

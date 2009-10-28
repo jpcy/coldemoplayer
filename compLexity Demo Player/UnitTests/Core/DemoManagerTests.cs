@@ -56,18 +56,6 @@ namespace UnitTests.Core
                 }
             }
 
-            public override IList<Demo.Detail> Details
-            {
-                get
-                {
-                    throw new NotImplementedException();
-                }
-                protected set
-                {
-                    throw new NotImplementedException();
-                }
-            }
-
             public override ArrayList Players
             {
                 get

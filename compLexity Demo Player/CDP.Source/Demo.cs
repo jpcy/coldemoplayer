@@ -64,7 +64,6 @@ namespace CDP.Source
         public override string MapName { get; protected set; }
         public override string Perspective { get; protected set; }
         public override TimeSpan Duration { get; protected set; }
-        public override IList<Core.Demo.Detail> Details { get; protected set; }
         public override ArrayList Players { get; protected set; }
 
         public override string[] IconFileNames
@@ -123,6 +122,8 @@ namespace CDP.Source
         {
             try
             {
+                ResetProgress();
+
                 using (Core.FastFileStream stream = new Core.FastFileStream(FileName, Core.FastFileAccess.Read))
                 using (StreamWriter log = new StreamWriter(logFileName))
                 {
