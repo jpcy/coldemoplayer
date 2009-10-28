@@ -105,6 +105,10 @@
       <Project>{6D554123-E196-4376-9B52-365777B913B8}</Project>
       <Name>CDP.HalfLife</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CDP.IdTech3\CDP.IdTech3.csproj">
+      <Project>{EF8018FC-A773-4044-A044-17E38D3B07BC}</Project>
+      <Name>CDP.IdTech3</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CDP.Source\CDP.Source.csproj">
       <Project>{5F8BE612-C77B-4870-AEE3-A0FEE9B9F906}</Project>
       <Name>CDP.Source</Name>
@@ -119,6 +123,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)..\bin\$(TargetFileName)"</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)..\bin\$(TargetFileName)"
+copy "$(SolutionDir)..\huffman\huffman.dll" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

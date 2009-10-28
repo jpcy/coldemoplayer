@@ -34,6 +34,11 @@ namespace CDP.DemoDiagnostic
             public byte Id { get; set; }
         }
 
+        public class IdTech3Command : Loggable
+        {
+            public IdTech3.CommandIds Id { get; set; }
+        }
+
         private readonly IDemoManager demoManager = ObjectCreator.Get<IDemoManager>();
         private readonly ObservableCollection<Loggable> loggables = new ObservableCollection<Loggable>();
         private Demo demo;
@@ -171,6 +176,21 @@ namespace CDP.DemoDiagnostic
                     });
                 }
             }
+
+            // id Tech 3
+            IdTech3.Demo idTech3Demo = demo as IdTech3.Demo;
+
+            if (idTech3Demo != null)
+            {
+                foreach (IdTech3.CommandIds id in Enum.GetValues(typeof(IdTech3.CommandIds)))
+                {
+                    loggables.Add(new IdTech3Command
+                    {
+                        Name = Enum.GetName(typeof(IdTech3.CommandIds), id).Replace("_", "__"),
+                        Id = id
+                    });
+                }
+            }
         }
 
         private void startButton_Click(object sender, RoutedEventArgs e)
@@ -220,6 +240,19 @@ namespace CDP.DemoDiagnostic
                 ThreadPool.QueueUserWorkItem(new WaitCallback(o =>
                 {
                     sourceDemo.RunDiagnostic(logFileName, frames, messages);
+                }));
+            }
+
+            IdTech3.Demo idTech3Demo = demo as IdTech3.Demo;
+
+            if (idTech3Demo != null)
+            {
+                var commands = from c in selectedLoggables
+                               select ((IdTech3Command)c).Id;
+
+                ThreadPool.QueueUserWorkItem(new WaitCallback(o =>
+                {
+                    idTech3Demo.RunDiagnostic(logFileName, commands);
                 }));
             }
         }
