@@ -23,13 +23,13 @@ namespace CDP.HalfLife
 
         protected Demo demo;
 
-        public void Skip(Core.BitReader buffer)
+        public void Skip(BitReader buffer)
         {
             buffer.SeekBytes(Length);
         }
 
-        public abstract void Read(Core.BitReader buffer);
-        public abstract void Write(Core.BitWriter buffer);
+        public abstract void Read(BitReader buffer);
+        public abstract void Write(BitWriter buffer);
         public abstract void Log(StreamWriter log);
     }
 }

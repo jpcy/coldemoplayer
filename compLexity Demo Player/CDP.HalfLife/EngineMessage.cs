@@ -21,9 +21,9 @@ namespace CDP.HalfLife
 
         protected Demo demo;
 
-        public abstract void Skip(Core.BitReader buffer);
-        public abstract void Read(Core.BitReader buffer);
-        public abstract void Write(Core.BitWriter buffer);
+        public abstract void Skip(BitReader buffer);
+        public abstract void Read(BitReader buffer);
+        public abstract void Write(BitWriter buffer);
         public abstract void Log(StreamWriter log);
     }
 

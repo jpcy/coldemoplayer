@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using BitReader = CDP.Core.BitReader;
-using BitWriter = CDP.Core.BitWriter;
 
 namespace CDP.HalfLife.Messages
 {
@@ -31,7 +29,7 @@ namespace CDP.HalfLife.Messages
 
             if (demo.NetworkProtocol == 43)
             {
-                buffer.Endian = Core.BitReader.Endians.Big;
+                buffer.Endian = BitReader.Endians.Big;
             }
 
             ushort nEntries = buffer.ReadUShort();
@@ -52,7 +50,7 @@ namespace CDP.HalfLife.Messages
 
             if (demo.NetworkProtocol == 43)
             {
-                buffer.Endian = Core.BitReader.Endians.Big;
+                buffer.Endian = BitReader.Endians.Big;
             }
 
             ushort nEntries = buffer.ReadUShort();

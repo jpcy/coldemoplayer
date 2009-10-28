@@ -13,61 +13,36 @@ namespace CDP.Core
     {
         public class OutOfRangeException : Exception
         {
-            public OutOfRangeException()
-            {
-            }
         }
 
-        public enum Endians
-        {
-            Little,
-            Big
-        }
-
-        public Endians Endian { get; set; }
-        public byte[] Buffer { get; private set; }
+        public byte[] Buffer { get; protected set; }
 
         public int Length
         {
-            get
-            {
-                return Buffer.Length;
-            }
+            get { return Buffer.Length; }
         }
 
         public int CurrentBit
         {
-            get
-            {
-                return currentBit;
-            }
+            get { return currentBit; }
         }
 
         public int CurrentByte
         {
-            get
-            {
-                return currentBit / 8;
-            }
+            get { return currentBit / 8; }
         }
 
         public int BitsLeft
         {
-            get
-            {
-                return (Length * 8) - currentBit;
-            }
+            get { return (Length * 8) - currentBit; }
         }
 
         public int BytesLeft
         {
-            get
-            {
-                return Length - CurrentByte;
-            }
+            get { return Length - CurrentByte; }
         }
 
-        private int currentBit = 0;
+        protected int currentBit = 0;
 
         public BitReader(byte[] buffer)
         {
@@ -77,93 +52,10 @@ namespace CDP.Core
             }
 
             Buffer = buffer;
-            Endian = Endians.Little;
         }
 
-        public void SeekBits(int count)
-        {
-            SeekBits(count, SeekOrigin.Current);
-        }
-
-        public void SeekBits(uint count)
-        {
-            SeekBits((int)count, SeekOrigin.Current);
-        }
-
-        public void SeekBits(int offset, SeekOrigin origin)
-        {
-            if (origin == SeekOrigin.Current)
-            {
-                currentBit += offset;
-            }
-            else if (origin == SeekOrigin.Begin)
-            {
-                currentBit = offset;
-            }
-            else if (origin == SeekOrigin.End)
-            {
-                currentBit = (Length * 8) - offset;
-            }
-
-            if (currentBit < 0 || currentBit > Length * 8)
-            {
-                throw new OutOfRangeException();
-            }
-        }
-
-        public void SeekBytes(int count)
-        {
-            SeekBits(count * 8);
-        }
-
-        public void SeekBytes(int offset, SeekOrigin origin)
-        {
-            SeekBits(offset * 8, origin);
-        }
-
-        public void SeekString()
-        {
-            while (ReadByte() != 0)
-            {
-            }
-        }
-
-        public void SeekRemainingBitsInCurrentByte()
-        {
-            int bitOffset = currentBit % 8;
-
-            if (bitOffset != 0)
-            {
-                SeekBits(8 - bitOffset);
-            }
-        }
-
-        // HL 1.1.0.6 bit reading (big endian byte and bit order)
-        private uint ReadUBitsBigEndian(int nBits)
-        {
-            int bitOffset = currentBit % 8;
-            int nBitsToRead = bitOffset + nBits;
-            int nBytesToRead = nBitsToRead / 8 + (nBitsToRead % 8 != 0 ? 1 : 0);
-
-            // get bytes we need
-            ulong currentValue = 0;
-            for (int i = 0; i < nBytesToRead; i++)
-            {
-                byte b = Buffer[CurrentByte + (nBytesToRead - 1) - i];
-                currentValue += (ulong)((ulong)b << (i * 8));
-            }
-
-            // get bits we need from bytes
-            currentValue >>= ((nBytesToRead * 8 - bitOffset) - nBits);
-            currentValue &= (uint)(((ulong)1 << nBits) - 1);
-
-            // increment current bit
-            currentBit += nBits;
-
-            return (uint)currentValue;
-        }
-
-        private uint ReadUBitsLittleEndianByteAligned(int nBits)
+        #region Core functionality
+        protected virtual uint ReadUBitsByteAligned(int nBits)
         {
             if (nBits % 8 != 0)
             {
@@ -186,7 +78,7 @@ namespace CDP.Core
             return result;
         }
 
-        private uint ReadUBitsLittleEndian(int nBits)
+        protected virtual uint ReadUBitsNotByteAligned(int nBits)
         {
             /* Example:
              * 
@@ -232,7 +124,7 @@ namespace CDP.Core
             return (uint)currentValue;
         }
 
-        public uint ReadUBits(int nBits)
+        public virtual uint ReadUBits(int nBits)
         {
             if (nBits <= 0 || nBits > 32)
             {
@@ -245,29 +137,59 @@ namespace CDP.Core
                 throw new OutOfRangeException();
             }
 
-            if (Endian == Endians.Little)
+            if (currentBit % 8 == 0 && nBits % 8 == 0)
             {
-                if (currentBit % 8 == 0 && nBits % 8 == 0)
-                {
-                    return ReadUBitsLittleEndianByteAligned(nBits);
-                }
-                else
-                {
-                    return ReadUBitsLittleEndian(nBits);
-                }
+                return ReadUBitsByteAligned(nBits);
             }
             else
             {
-                return ReadUBitsBigEndian(nBits);
+                return ReadUBitsNotByteAligned(nBits);
             }
         }
+
+        public virtual bool ReadBoolean()
+        {
+            // check for overflow
+            if (currentBit + 1 > Length * 8)
+            {
+                throw new OutOfRangeException();
+            }
+
+            int currentByte = currentBit / 8;
+            int bitOffset = currentBit % 8;
+            bool result = (Buffer[currentByte] & (1 << bitOffset)) == 0 ? false : true;
+            currentBit++;
+            return result;
+        }
+
+        public virtual void SeekBits(int offset, SeekOrigin origin)
+        {
+            if (origin == SeekOrigin.Current)
+            {
+                currentBit += offset;
+            }
+            else if (origin == SeekOrigin.Begin)
+            {
+                currentBit = offset;
+            }
+            else if (origin == SeekOrigin.End)
+            {
+                currentBit = (Length * 8) - offset;
+            }
+
+            if (currentBit < 0 || currentBit > Length * 8)
+            {
+                throw new OutOfRangeException();
+            }
+        }
+        #endregion
 
         public uint ReadUBits(uint nBits)
         {
             return ReadUBits((int)nBits);
         }
 
-        public int ReadBits(int nBits)
+        public virtual int ReadBits(int nBits)
         {
             int result = (int)ReadUBits(nBits - 1);
 
@@ -284,22 +206,7 @@ namespace CDP.Core
             return ReadBits((int)nBits);
         }
 
-        public bool ReadBoolean()
-        {
-            // check for overflow
-            if (currentBit + 1 > Length * 8)
-            {
-                throw new OutOfRangeException();
-            }
-
-            int currentByte = currentBit / 8;
-            int bitOffset = currentBit % 8;
-            bool result = (Buffer[currentByte] & ((Endian == Endians.Little ? 1 << bitOffset : 128 >> bitOffset))) == 0 ? false : true;
-            currentBit++;
-            return result;
-        }
-
-        public byte ReadByte()
+         public byte ReadByte()
         {
             return (byte)ReadUBits(8);
         }
@@ -404,6 +311,41 @@ namespace CDP.Core
             }
 
             return Encoding.UTF8.GetString(bytes.ToArray());
+        }
+
+        public void SeekBits(int count)
+        {
+            SeekBits(count, SeekOrigin.Current);
+        }
+
+        public void SeekBits(uint count)
+        {
+            SeekBits((int)count, SeekOrigin.Current);
+        }
+
+        public void SeekBytes(int count)
+        {
+            SeekBits(count * 8);
+        }
+
+        public void SeekBytes(int offset, SeekOrigin origin)
+        {
+            SeekBits(offset * 8, origin);
+        }
+
+        public void SeekString()
+        {
+            while (ReadByte() != 0) { }
+        }
+
+        public void SeekRemainingBitsInCurrentByte()
+        {
+            int bitOffset = currentBit % 8;
+
+            if (bitOffset != 0)
+            {
+                SeekBits(8 - bitOffset);
+            }
         }
     }
 }

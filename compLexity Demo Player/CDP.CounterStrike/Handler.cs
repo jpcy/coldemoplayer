@@ -62,7 +62,7 @@ namespace CDP.CounterStrike
 
             using (BinaryReader br = new BinaryReader(stream))
             {
-                Core.BitReader buffer = new Core.BitReader(br.ReadBytes(260));
+                HalfLife.BitReader buffer = new HalfLife.BitReader(br.ReadBytes(260));
                 string gameFolder = buffer.ReadString();
                 return game.DemoGameFolders.Contains(gameFolder, StringComparer.InvariantCultureIgnoreCase);
             }

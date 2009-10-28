@@ -97,7 +97,7 @@ namespace UnitTests.Core
         }
 
         [Test]
-        public void ReadUnsignedBits_LittleEndian_NotByteAligned()
+        public void ReadUnsignedBits_NotByteAligned()
         {
             ulong value = (ulong)uintTestValue << 1;
             BitReader reader = new BitReader(BitConverter.GetBytes(value));
@@ -107,32 +107,9 @@ namespace UnitTests.Core
         }
 
         [Test]
-        public void ReadUnsignedBits_LittleEndian_ByteAligned()
+        public void ReadUnsignedBits_ByteAligned()
         {
             BitReader reader = new BitReader(BitConverter.GetBytes(uintTestValue));
-            Assert.That(reader.ReadUBits(32), Is.EqualTo(uintTestValue));
-            Assert.That(reader.CurrentBit, Is.EqualTo(32));
-        }
-
-        [Test]
-        public void ReadUnsignedBits_BigEndian_NotByteAligned()
-        {
-            // TODO: this is hard, should just used canned values.
-        }
-
-        [Test]
-        public void ReadUnsignedBits_BigEndian_ByteAligned()
-        {
-            byte[] littleEndianBuffer = BitConverter.GetBytes(uintTestValue);
-            byte[] bigEndianBuffer = new byte[4];
-
-            for (int i = 0; i < 4; i++)
-            {
-                bigEndianBuffer[i] = littleEndianBuffer[3 - i];
-            }
-
-            BitReader reader = new BitReader(bigEndianBuffer);
-            reader.Endian = BitReader.Endians.Big;
             Assert.That(reader.ReadUBits(32), Is.EqualTo(uintTestValue));
             Assert.That(reader.CurrentBit, Is.EqualTo(32));
         }
@@ -154,18 +131,12 @@ namespace UnitTests.Core
         }
 
         [Test]
-        public void ReadBoolean_LittleEndian_Ok()
+        public void ReadBoolean_Ok()
         {
             const int value = 1 << 1; // offset of 1
             BitReader reader = new BitReader(BitConverter.GetBytes(value));
             reader.SeekBits(1);
             Assert.That(reader.ReadBoolean(), Is.True);
-        }
-
-        [Test]
-        public void ReadBoolean_BigEndian_Ok()
-        {
-            // TODO: can't remember how bit ordering works in HL 1.1.0.6
         }
     }
 }

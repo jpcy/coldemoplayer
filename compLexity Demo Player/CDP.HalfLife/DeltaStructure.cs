@@ -105,7 +105,7 @@ namespace CDP.HalfLife
             return delta;
         }
 
-        public void SkipDelta(Core.BitReader buffer)
+        public void SkipDelta(BitReader buffer)
         {
             uint nBitmaskBytes = buffer.ReadUBits(3);
             // TODO: error check nBitmaskBytes against nEntries
@@ -141,13 +141,13 @@ namespace CDP.HalfLife
             }
         }
 
-        public void ReadDelta(Core.BitReader buffer, Delta delta)
+        public void ReadDelta(BitReader buffer, Delta delta)
         {
             byte[] bitmaskBytes;
             ReadDelta(buffer, delta, out bitmaskBytes);
         }
 
-        public void ReadDelta(Core.BitReader buffer, Delta delta, out byte[] bitmaskBytes)
+        public void ReadDelta(BitReader buffer, Delta delta, out byte[] bitmaskBytes)
         {
             // read bitmask
             uint nBitmaskBytes = buffer.ReadUBits(3);
@@ -238,12 +238,12 @@ namespace CDP.HalfLife
             return bitmaskBytes;
         }
 
-        public void WriteDelta(Core.BitWriter buffer, Delta delta)
+        public void WriteDelta(BitWriter buffer, Delta delta)
         {
             WriteDelta(buffer, delta, CreateDeltaBitmask(delta));
         }
 
-        public void WriteDelta(Core.BitWriter buffer, Delta delta, byte[] bitmaskBytes)
+        public void WriteDelta(BitWriter buffer, Delta delta, byte[] bitmaskBytes)
         {
             if (bitmaskBytes == null) // no bitmask bytes
             {
@@ -277,7 +277,7 @@ namespace CDP.HalfLife
             }
         }
 
-        private void SkipEntry(Core.BitReader buffer, Entry e)
+        private void SkipEntry(BitReader buffer, Entry e)
         {
             if ((e.Flags & EntryFlags.String) == EntryFlags.String)
             {
@@ -289,7 +289,7 @@ namespace CDP.HalfLife
             }
         }
 
-        private object ParseEntry(Core.BitReader buffer, Entry e)
+        private object ParseEntry(BitReader buffer, Entry e)
         {
             bool signed = ((e.Flags & EntryFlags.Signed) != 0);
 
@@ -356,18 +356,18 @@ namespace CDP.HalfLife
             throw new ApplicationException(string.Format("Unknown delta entry type {0}.", e.Flags));
         }
 
-        private int ParseInt(Core.BitReader buffer, Entry e)
+        private int ParseInt(BitReader buffer, Entry e)
         {
             bool negative = buffer.ReadBoolean();
             return (int)buffer.ReadUBits((int)e.nBits - 1) / (int)e.Divisor * (negative ? -1 : 1);
         }
 
-        private uint ParseUnsignedInt(Core.BitReader buffer, Entry e)
+        private uint ParseUnsignedInt(BitReader buffer, Entry e)
         {
             return buffer.ReadUBits((int)e.nBits) / (uint)e.Divisor;
         }
 
-        private void WriteEntry(Delta delta, Core.BitWriter buffer, Entry e)
+        private void WriteEntry(Delta delta, BitWriter buffer, Entry e)
         {
             bool signed = ((e.Flags & EntryFlags.Signed) != 0);
             object value = delta.FindEntryValue(e.Name);
@@ -436,7 +436,7 @@ namespace CDP.HalfLife
             }
         }
 
-        private void WriteInt(Core.BitWriter buffer, Entry e, int value)
+        private void WriteInt(BitWriter buffer, Entry e, int value)
         {
             int writeValue = value * (int)e.Divisor;
 
@@ -444,7 +444,7 @@ namespace CDP.HalfLife
             buffer.WriteUBits((uint)Math.Abs(writeValue), (int)e.nBits - 1);
         }
 
-        private void WriteUnsignedInt(Core.BitWriter buffer, Entry e, uint value)
+        private void WriteUnsignedInt(BitWriter buffer, Entry e, uint value)
         {
             uint writeValue = value * (uint)e.Divisor;
             buffer.WriteUBits((uint)Math.Abs(writeValue), (int)e.nBits);

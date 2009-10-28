@@ -624,7 +624,7 @@ namespace CDP.HalfLife
 
                                     if (messageBlock != null)
                                     {
-                                        Core.BitReader messageReader = new Core.BitReader(messageBlock);
+                                        BitReader messageReader = new BitReader(messageBlock);
 
                                         while (messageReader.CurrentByte < messageReader.Length)
                                         {
@@ -853,7 +853,7 @@ namespace CDP.HalfLife
                 return;
             }
 
-            Core.BitReader messageReader = new Core.BitReader(messageBlock);
+            BitReader messageReader = new BitReader(messageBlock);
 
             while (messageReader.CurrentByte < messageReader.Length)
             {
@@ -872,8 +872,8 @@ namespace CDP.HalfLife
         {
             if (messageBlock != null && messageBlock.Length != 0)
             {
-                Core.BitReader messageReader = new Core.BitReader(messageBlock);
-                Core.BitWriter messageWriter = new Core.BitWriter();
+                BitReader messageReader = new BitReader(messageBlock);
+                BitWriter messageWriter = new BitWriter();
 
                 while (messageReader.CurrentByte < messageReader.Length)
                 {
@@ -927,7 +927,7 @@ namespace CDP.HalfLife
             }
         }
 
-        private IMessage ReadMessageHeader(Core.BitReader buffer, byte? id)
+        private IMessage ReadMessageHeader(BitReader buffer, byte? id)
         {
             long messageOffset = currentMessageBlockOffset + buffer.CurrentByte;
 
@@ -986,7 +986,7 @@ namespace CDP.HalfLife
             return message;
         }
 
-        private IMessage ReadMessage(Core.BitReader buffer, byte? id, bool canSkip)
+        private IMessage ReadMessage(BitReader buffer, byte? id, bool canSkip)
         {
             IMessage message = ReadMessageHeader(buffer, id);
             List<MessageCallback> messageCallbacks = FindMessageCallbacks(message);
@@ -1004,7 +1004,7 @@ namespace CDP.HalfLife
             }
             finally
             {
-                buffer.Endian = Core.BitReader.Endians.Little;
+                buffer.Endian = BitReader.Endians.Little;
             }
 
             foreach (MessageCallback messageCallback in messageCallbacks)
@@ -1015,7 +1015,7 @@ namespace CDP.HalfLife
             return message;
         }
 
-        private IMessage ReadAndWriteMessage(Core.BitReader reader, Core.BitWriter writer, bool canSkip)
+        private IMessage ReadAndWriteMessage(BitReader reader, BitWriter writer, bool canSkip)
         {
             IMessage message = ReadMessageHeader(reader, null);
             UserMessage userMessage = message as UserMessage;
@@ -1047,7 +1047,7 @@ namespace CDP.HalfLife
             }
             finally
             {
-                reader.Endian = Core.BitReader.Endians.Little;
+                reader.Endian = BitReader.Endians.Little;
             }
 
             foreach (MessageCallback messageCallback in messageCallbacks)

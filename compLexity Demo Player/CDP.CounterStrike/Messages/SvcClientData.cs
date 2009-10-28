@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using BitReader = CDP.Core.BitReader;
 
 namespace CDP.CounterStrike.Messages
 {
@@ -16,7 +15,7 @@ namespace CDP.CounterStrike.Messages
             return demo.NetworkProtocol == 46 && ((CDP.CounterStrike.Demo)demo).Version == CDP.CounterStrike.Demo.Versions.CounterStrike16;
         }
 
-        public override void Skip(BitReader buffer)
+        public override void Skip(HalfLife.BitReader buffer)
         {
             if (demo.IsHltv)
             {
@@ -25,7 +24,7 @@ namespace CDP.CounterStrike.Messages
 
             if (demo.NetworkProtocol <= 43)
             {
-                buffer.Endian = BitReader.Endians.Big;
+                buffer.Endian = HalfLife.BitReader.Endians.Big;
             }
 
             if (buffer.ReadBoolean())
@@ -54,7 +53,7 @@ namespace CDP.CounterStrike.Messages
             buffer.SeekRemainingBitsInCurrentByte();
         }
 
-        public override void Read(BitReader buffer)
+        public override void Read(HalfLife.BitReader buffer)
         {
             if (demo.IsHltv)
             {
@@ -63,7 +62,7 @@ namespace CDP.CounterStrike.Messages
 
             if (demo.NetworkProtocol <= 43)
             {
-                buffer.Endian = BitReader.Endians.Big;
+                buffer.Endian = HalfLife.BitReader.Endians.Big;
             }
 
             if (buffer.ReadBoolean())

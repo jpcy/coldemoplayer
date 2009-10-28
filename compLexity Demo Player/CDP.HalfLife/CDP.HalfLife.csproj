@@ -64,8 +64,8 @@
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>
     <Compile Include="Analysis\ViewModel.cs" />
-    <Compile Include="BitReaderExtensions.cs" />
-    <Compile Include="BitWriterExtensions.cs" />
+    <Compile Include="BitReader.cs" />
+    <Compile Include="BitWriter.cs" />
     <Compile Include="Delta.cs" />
     <Compile Include="Demo.cs" />
     <Compile Include="DirectoryEntry.cs" />

@@ -1,6 +1,4 @@
 ﻿using System;
-using BitReader = CDP.Core.BitReader;
-using BitWriter = CDP.Core.BitWriter;
 using System.IO;
 
 namespace CDP.HalfLife.Messages

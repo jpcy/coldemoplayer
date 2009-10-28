@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using BitReader = CDP.Core.BitReader;
-using BitWriter = CDP.Core.BitWriter;
 
 namespace CDP.CounterStrike.UserMessages
 {
@@ -22,7 +20,7 @@ namespace CDP.CounterStrike.UserMessages
         public byte Sequence { get; set; }
         public byte[] Data2 { get; set; }
 
-        public override void Read(BitReader buffer)
+        public override void Read(HalfLife.BitReader buffer)
         {
             Model = buffer.ReadString();
             Data1 = buffer.ReadBytes(22);
@@ -30,7 +28,7 @@ namespace CDP.CounterStrike.UserMessages
             Data2 = buffer.ReadBytes(3);
         }
 
-        public override void Write(BitWriter buffer)
+        public override void Write(HalfLife.BitWriter buffer)
         {
             buffer.WriteString(Model);
             buffer.WriteBytes(Data1);

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using BitReader = CDP.Core.BitReader;
-using BitWriter = CDP.Core.BitWriter;
 
 namespace CDP.CounterStrike.UserMessages
 {
@@ -21,7 +19,7 @@ namespace CDP.CounterStrike.UserMessages
         public string SoundName { get; set; }
         public short? Pitch { get; set; }
 
-        public override void Read(BitReader buffer)
+        public override void Read(HalfLife.BitReader buffer)
         {
             int startOffset = buffer.CurrentByte;
             Slot = buffer.ReadByte();
@@ -38,7 +36,7 @@ namespace CDP.CounterStrike.UserMessages
             }
         }
 
-        public override void Write(BitWriter buffer)
+        public override void Write(HalfLife.BitWriter buffer)
         {
             buffer.WriteByte(Slot);
             buffer.WriteString(SoundName);

@@ -20,15 +20,15 @@ namespace CDP.HalfLife.Messages
             get { return true; }
         }
 
-        public override void Skip(Core.BitReader buffer)
+        public override void Skip(BitReader buffer)
         {
         }
 
-        public override void Read(Core.BitReader buffer)
+        public override void Read(BitReader buffer)
         {
         }
 
-        public override void Write(Core.BitWriter buffer)
+        public override void Write(BitWriter buffer)
         {
         }
 

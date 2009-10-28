@@ -15,9 +15,9 @@ namespace CDP.HalfLife
         bool Remove { get; set; }
         long Offset { get; set; }
 
-        void Skip(Core.BitReader buffer);
-        void Read(Core.BitReader buffer);
-        void Write(Core.BitWriter buffer);
+        void Skip(BitReader buffer);
+        void Read(BitReader buffer);
+        void Write(BitWriter buffer);
         void Log(StreamWriter log);
     }
 }
