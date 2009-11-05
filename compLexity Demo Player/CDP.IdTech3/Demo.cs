@@ -43,7 +43,11 @@ namespace CDP.IdTech3
         {
             get
             {
-                return new string[] { fileSystem.PathCombine(settings.ProgramPath, "icons", "idtech3", gameName + ".ico") };
+                return new string[]
+                {
+                    fileSystem.PathCombine(settings.ProgramPath, "icons", "idtech3", gameName + ".ico"),
+                    fileSystem.PathCombine(settings.ProgramPath, "icons", "idtech3.ico")
+                };
             }
         }
 
@@ -329,13 +333,13 @@ namespace CDP.IdTech3
 
             if (command.KeyValuePairs.ContainsKey("mapname"))
             {
-                MapName = command.KeyValuePairs["mapname"];
+                MapName = command.KeyValuePairs["mapname"].ToLower();
                 AddDetail("Map", MapName);
             }
 
             if (command.KeyValuePairs.ContainsKey("gamename"))
             {
-                gameName = command.KeyValuePairs["gamename"];
+                gameName = command.KeyValuePairs["gamename"].ToLower();
             }
 
             if (command.KeyValuePairs.ContainsKey("sv_maxclients"))
