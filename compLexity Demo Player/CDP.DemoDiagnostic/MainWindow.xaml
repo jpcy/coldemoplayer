@@ -1,7 +1,7 @@
 ﻿<Window x:Class="CDP.DemoDiagnostic.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="Demo Diagnostic" Height="400" Width="400"
+    Title="Demo Diagnostic" Height="500" Width="400" WindowStartupLocation="CenterScreen"
     Loaded="Window_Loaded" DragEnter="Window_DragEnter" Drop="Window_Drop" AllowDrop="True">
     <Window.Resources>
         <Style TargetType="{x:Type Button}">
@@ -13,6 +13,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid>
@@ -36,7 +38,11 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Grid Grid.Row="3">
+        <StackPanel Grid.Row="3" Margin="4" Orientation="Horizontal">
+            <Button Margin="0,0,4,0" Name="selectAllButton" Click="selectAllButton_Click">Select All</Button>
+            <Button Name="selectNoneButton" Click="selectNoneButton_Click">Select None</Button>
+        </StackPanel>
+        <Grid Grid.Row="5" Background="LightBlue">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition Width="Auto" />

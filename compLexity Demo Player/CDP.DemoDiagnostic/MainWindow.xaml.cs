@@ -193,6 +193,26 @@ namespace CDP.DemoDiagnostic
             }
         }
 
+        private void selectAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (Loggable l in loggables)
+            {
+                l.IsSelected = true;
+            }
+
+            loggablesListBox.Items.Refresh();
+        }
+
+        private void selectNoneButton_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (Loggable l in loggables)
+            {
+                l.IsSelected = false;
+            }
+
+            loggablesListBox.Items.Refresh();
+        }
+
         private void startButton_Click(object sender, RoutedEventArgs e)
         {
             if (demo == null)
@@ -270,7 +290,7 @@ namespace CDP.DemoDiagnostic
             Dispatcher.Invoke(new Action(delegate
             {
                 MessageBox.Show(string.Format("Message: {0}\r\nException: {1}", e.ErrorMessage, e.Exception));
-                OnDiagnoseComplete();
+                OnDiagnoseComplete(false);
             }));
         }
 
@@ -278,7 +298,7 @@ namespace CDP.DemoDiagnostic
         {
             Dispatcher.Invoke(new Action(delegate
             {
-                OnDiagnoseComplete();
+                OnDiagnoseComplete(false);
             }));
         }
 
@@ -286,14 +306,18 @@ namespace CDP.DemoDiagnostic
         {
             Dispatcher.Invoke(new Action(delegate
             {
-                OnDiagnoseComplete();
+                OnDiagnoseComplete(true);
             }));
         }
 
-        private void OnDiagnoseComplete()
+        private void OnDiagnoseComplete(bool success)
         {
+            if (success)
+            {
+                diagnoseProgress.Value = 100;
+            }
+
             startButton.IsEnabled = true;
-            diagnoseProgress.Value = 100;
             demo.OperationErrorEvent -= demo_OperationErrorEvent;
             demo.ProgressChangedEvent -= demo_ProgressChangedEvent;
             demo.OperationCancelledEvent -= demo_OperationCancelledEvent;
