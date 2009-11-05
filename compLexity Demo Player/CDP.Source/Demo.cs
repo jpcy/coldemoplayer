@@ -122,6 +122,7 @@ namespace CDP.Source
         {
             try
             {
+                ResetOperationCancelledState();
                 ResetProgress();
 
                 using (Core.FastFileStream stream = new Core.FastFileStream(FileName, Core.FastFileAccess.Read))

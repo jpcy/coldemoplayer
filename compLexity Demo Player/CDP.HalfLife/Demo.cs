@@ -591,6 +591,7 @@ namespace CDP.HalfLife
                 AddMessageCallback<Messages.SvcDeltaDescription>(Diagnostic_DeltaDescription);
                 AddMessageCallback<Messages.SvcNewUserMessage>(Diagnostic_NewUserMessage);
                 AddMessageCallback<Messages.SvcHltv>(Diagnostic_Hltv);
+                ResetOperationCancelledState();
                 ResetProgress();
 
                 using (Core.FastFileStream stream = new Core.FastFileStream(FileName, Core.FastFileAccess.Read))
