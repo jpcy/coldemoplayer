@@ -12,15 +12,18 @@ namespace CDP.IdTech3
         public const int MAX_GENTITIES = (1 << GENTITYNUM_BITS);
         public const int GENTITYSENTINEL = MAX_GENTITIES - 1;
 
+        public const int BITMASK_BITS = 5;
+        public const int MAX_BITMASK = (1 << BITMASK_BITS);
+        public const int BITMASKSENTINEL = MAX_BITMASK - 1;
+
         public NetField[] NetFields
         {
             get { return netFields; }
         }
 
-        public uint Number { get; set; } // not read internally because svc_snapshot needs to check for a sentinel value.
+        public uint Number { get; set; } // Not read internally because svc_snapshot needs to check for a sentinel value.
         public bool Remove { get; set; }
         public bool Delta { get; set; }
-        public byte Lc { get; set; }
 
         private class FieldState
         {
@@ -28,7 +31,7 @@ namespace CDP.IdTech3
             public Object Value { get; set; }
         }
 
-        protected int protocol;
+        protected Protocols protocol;
         private FieldState[] state;
         private NetField[] netFields;
 
@@ -52,12 +55,7 @@ namespace CDP.IdTech3
             set { state[index].Value = value; }
         }
 
-        protected Entity()
-        {
-            Initialise();
-        }
-
-        public Entity(int protocol)
+        public Entity(Protocols protocol)
         {
             this.protocol = protocol;
             Initialise();
@@ -66,9 +64,17 @@ namespace CDP.IdTech3
         // This should be overridden in derived classes so they can provide their own netfields.
         protected virtual void Initialise()
         {
-            if (protocol <= 68)
+            if (protocol == Protocols.Protocol43 || protocol == Protocols.Protocol45)
             {
-                InitialiseState(Protocol68NetFields);
+                InitialiseState(Protocol43NetFields);
+            }
+            else if (protocol == Protocols.Protocol48)
+            {
+                InitialiseState(Protocol48NetFields);
+            }
+            else if (protocol >= Protocols.Protocol66 && protocol <= Protocols.Protocol68)
+            {
+                InitialiseState(Protocol66NetFields);
             }
             else
             {
@@ -104,59 +110,115 @@ namespace CDP.IdTech3
                 return;
             }
 
-            Lc = buffer.ReadByte();
-
-            for (int i = 0; i < Lc; i++)
+            if (protocol >= Protocols.Protocol43 && protocol <= Protocols.Protocol48)
             {
-                if (!buffer.ReadBoolean()) // No change.
+                byte[] bitmask = null;
+                uint bitmaskIndex = buffer.ReadUBits(5);
+
+                if (bitmaskIndex == BITMASKSENTINEL)
                 {
-                    continue;
+                    bitmask = new byte[7];
+
+                    // 50 bits for protocols 43 and 45, 51 bits for protocol 48.
+                    for (int i = 0; i < 6; i++)
+                    {
+                        bitmask[i] = buffer.ReadByte();
+                    }
+
+                    if (protocol == Protocols.Protocol48)
+                    {
+                        bitmask[6] = (byte)buffer.ReadUBits(3);
+                    }
+                    else
+                    {
+                        bitmask[6] = (byte)buffer.ReadUBits(2);
+                    }
+                }
+                else
+                {
+                    bitmask = KnownBitmasks[bitmaskIndex];
                 }
 
-                if (netFields[i].Bits == 0)
+                for (int i = 0; i < netFields.Length; i++)
                 {
-                    // float
-                    if (buffer.ReadBoolean())
+                    if ((bitmask[i / 8] & (1<<(i % 8))) == 0)
+                    {
+                        continue;
+                    }
+
+                    if (netFields[i].Bits == 0)
                     {
                         if (buffer.ReadBoolean())
                         {
-                            // full floating point value
                             this[i] = buffer.ReadFloat();
                         }
                         else
                         {
-                            // integral float
                             this[i] = buffer.ReadIntegralFloat();
                         }
                     }
                     else
                     {
-                        this[i] = 0.0f;
+                        this[i] = buffer.ReadUBits(netFields[i].Bits);
                     }
                 }
-                else
+            }
+            else
+            {
+                byte lc = buffer.ReadByte();
+
+                for (int i = 0; i < lc; i++)
                 {
-                    // int
-                    if (buffer.ReadBoolean())
+                    if (!buffer.ReadBoolean()) // No change.
                     {
-                        if (netFields[i].Signed)
+                        continue;
+                    }
+
+                    if (netFields[i].Bits == 0)
+                    {
+                        // float
+                        if (buffer.ReadBoolean())
                         {
-                            this[i] = buffer.ReadBits(netFields[i].Bits);
+                            if (buffer.ReadBoolean())
+                            {
+                                // full floating point value
+                                this[i] = buffer.ReadFloat();
+                            }
+                            else
+                            {
+                                // integral float
+                                this[i] = buffer.ReadIntegralFloat();
+                            }
                         }
                         else
                         {
-                            this[i] = buffer.ReadUBits(netFields[i].Bits);
+                            this[i] = 0.0f;
                         }
                     }
                     else
                     {
-                        if (netFields[i].Signed)
+                        // int
+                        if (buffer.ReadBoolean())
                         {
-                            this[i] = 0;
+                            if (netFields[i].Signed)
+                            {
+                                this[i] = buffer.ReadBits(netFields[i].Bits);
+                            }
+                            else
+                            {
+                                this[i] = buffer.ReadUBits(netFields[i].Bits);
+                            }
                         }
                         else
                         {
-                            this[i] = 0u;
+                            if (netFields[i].Signed)
+                            {
+                                this[i] = 0;
+                            }
+                            else
+                            {
+                                this[i] = 0u;
+                            }
                         }
                     }
                 }
@@ -178,8 +240,6 @@ namespace CDP.IdTech3
                 log.WriteLine("No delta");
             }
 
-            log.WriteLine("Lc: {0}", Lc);
-
             for (int i = 0; i < netFields.Length; i++)
             {
                 if (this[i] != null)
@@ -189,7 +249,158 @@ namespace CDP.IdTech3
             }
         }
 
-        private static readonly NetField[] Protocol68NetFields =
+        private static readonly byte[][] KnownBitmasks =
+        {
+		    new byte[] {0x60,0x80,0x00,0x00,0x00,0x00,0x00},
+		    new byte[] {0x60,0x00,0x00,0x00,0x00,0x00,0x00},
+		    new byte[] {0x60,0xC0,0x00,0x00,0x00,0x00,0x00},
+		    new byte[] {0xE1,0x00,0x00,0x00,0x00,0x20,0x00},
+		    new byte[] {0x60,0x80,0x00,0x00,0x00,0x10,0x00},
+		    new byte[] {0xE0,0x80,0x00,0x00,0x00,0x00,0x00},
+		    new byte[] {0xE0,0xC0,0x00,0x00,0x00,0x00,0x00},
+		    new byte[] {0x00,0x00,0x00,0x00,0x00,0x10,0x00},
+		    new byte[] {0x40,0x80,0x00,0x00,0x00,0x00,0x00},
+		    new byte[] {0x20,0x80,0x00,0x00,0x00,0x00,0x00},
+		    new byte[] {0x60,0x80,0x00,0x00,0x01,0x00,0x00},
+		    new byte[] {0xED,0x07,0x00,0x00,0x00,0x80,0x00},
+		    new byte[] {0xE0,0x00,0x00,0x00,0x00,0x00,0x00},
+		    new byte[] {0xED,0x07,0x00,0x00,0x00,0x30,0x00},
+		    new byte[] {0x80,0x00,0x00,0x00,0x00,0x00,0x00},
+		    new byte[] {0x40,0x00,0x00,0x00,0x00,0x00,0x00},
+		    new byte[] {0xE0,0xC0,0x00,0x00,0x00,0x10,0x00},
+		    new byte[] {0x60,0x00,0x00,0x00,0x00,0x10,0x00},
+		    new byte[] {0x20,0x00,0x00,0x00,0x00,0x00,0x00},
+		    new byte[] {0xE1,0x00,0x00,0x00,0x04,0x20,0x00},
+		    new byte[] {0xE1,0x00,0xC0,0x01,0x20,0x20,0x00},
+		    new byte[] {0xE0,0xC0,0x00,0x00,0x01,0x00,0x00},
+		    new byte[] {0x60,0x40,0x00,0x00,0x00,0x00,0x00},
+		    new byte[] {0x40,0xC0,0x00,0x00,0x00,0x00,0x00},
+		    new byte[] {0x60,0xC0,0x00,0x00,0x01,0x00,0x00},
+		    new byte[] {0x60,0xC0,0x00,0x00,0x00,0x10,0x00},
+		    new byte[] {0x60,0x80,0x00,0x00,0x01,0x00,0x01},
+		    new byte[] {0x60,0x80,0x00,0x00,0x00,0x30,0x00},
+		    new byte[] {0xE0,0x80,0x00,0x00,0x00,0x10,0x00},
+		    new byte[] {0x20,0xC0,0x00,0x00,0x00,0x00,0x00},
+		    new byte[] {0x60,0x80,0x00,0x00,0x00,0x00,0x02},
+		    new byte[] {0xE0,0x40,0x00,0x00,0x00,0x00,0x00}
+	    };
+
+        /// <summary>
+        /// Protocol 43 and 45 net fields.
+        /// </summary>
+        private static readonly NetField[] Protocol43NetFields =
+        {
+            new NetField("eType", 8),
+            new NetField("eFlags", 16),
+            new NetField("pos.trType", 8),
+            new NetField("pos.trTime", 32),
+            new NetField("pos.trDuration", 32),
+            new NetField("pos.trBase[0]", 0),
+            new NetField("pos.trBase[1]", 0),
+            new NetField("pos.trBase[2]", 0),
+            new NetField("pos.trDelta[0]", 0),
+            new NetField("pos.trDelta[1]", 0),
+            new NetField("pos.trDelta[2]", 0),
+            new NetField("apos.trType", 8),
+            new NetField("apos.trTime", 32),
+            new NetField("apos.trDuration", 32),
+            new NetField("apos.trBase[0]", 0),
+            new NetField("apos.trBase[1]", 0),
+            new NetField("apos.trBase[2]", 0),
+            new NetField("apos.trDelta[0]", 0),
+            new NetField("apos.trDelta[1]", 0),
+            new NetField("apos.trDelta[2]", 0),
+            new NetField("time", 32),
+            new NetField("time2", 32),
+            new NetField("origin[0]", 0),
+            new NetField("origin[1]", 0),
+            new NetField("origin[2]", 0),
+            new NetField("origin2[0]", 0),
+            new NetField("origin2[1]", 0),
+            new NetField("origin2[2]", 0),
+            new NetField("angles[0]", 0),
+            new NetField("angles[1]", 0),
+            new NetField("angles[2]", 0),
+            new NetField("angles2[0]", 0),
+            new NetField("angles2[1]", 0),
+            new NetField("angles2[2]", 0),
+            new NetField("otherEntityNum", GENTITYNUM_BITS),
+            new NetField("otherEntityNum2", GENTITYNUM_BITS),
+            new NetField("groundEntityNum", GENTITYNUM_BITS),
+            new NetField("loopSound", 8),
+            new NetField("constantLight", 32),
+            new NetField("modelindex", 8),
+            new NetField("modelindex2", 8),
+            new NetField("frame", 16),
+            new NetField("clientNum", 8),
+            new NetField("solid", 24),
+            new NetField("event", 10),
+            new NetField("eventParm", 8),
+            new NetField("powerups", 16),
+            new NetField("weapon", 8),
+            new NetField("legsAnim", 8),
+            new NetField("torsoAnim", 8)
+        };
+
+        private static readonly NetField[] Protocol48NetFields =
+        {
+            new NetField("eType", 8),
+            new NetField("eFlags", 19), // Changed from 16 bits in 45.
+            new NetField("pos.trType", 8),
+            new NetField("pos.trTime", 32),
+            new NetField("pos.trDuration", 32),
+            new NetField("pos.trBase[0]", 0),
+            new NetField("pos.trBase[1]", 0),
+            new NetField("pos.trBase[2]", 0),
+            new NetField("pos.trDelta[0]", 0),
+            new NetField("pos.trDelta[1]", 0),
+            new NetField("pos.trDelta[2]", 0),
+            new NetField("apos.trType", 8),
+            new NetField("apos.trTime", 32),
+            new NetField("apos.trDuration", 32),
+            new NetField("apos.trBase[0]", 0),
+            new NetField("apos.trBase[1]", 0),
+            new NetField("apos.trBase[2]", 0),
+            new NetField("apos.trDelta[0]", 0),
+            new NetField("apos.trDelta[1]", 0),
+            new NetField("apos.trDelta[2]", 0),
+            new NetField("time", 32),
+            new NetField("time2", 32),
+            new NetField("origin[0]", 0),
+            new NetField("origin[1]", 0),
+            new NetField("origin[2]", 0),
+            new NetField("origin2[0]", 0),
+            new NetField("origin2[1]", 0),
+            new NetField("origin2[2]", 0),
+            new NetField("angles[0]", 0),
+            new NetField("angles[1]", 0),
+            new NetField("angles[2]", 0),
+            new NetField("angles2[0]", 0),
+            new NetField("angles2[1]", 0),
+            new NetField("angles2[2]", 0),
+            new NetField("otherEntityNum", GENTITYNUM_BITS),
+            new NetField("otherEntityNum2", GENTITYNUM_BITS),
+            new NetField("groundEntityNum", GENTITYNUM_BITS),
+            new NetField("loopSound", 8),
+            new NetField("constantLight", 32),
+            new NetField("modelindex", 8),
+            new NetField("modelindex2", 8),
+            new NetField("frame", 16),
+            new NetField("clientNum", 8),
+            new NetField("solid", 24),
+            new NetField("event", 10),
+            new NetField("eventParm", 8),
+            new NetField("powerups", 16),
+            new NetField("weapon", 8),
+            new NetField("legsAnim", 8),
+            new NetField("torsoAnim", 8),
+            new NetField("generic1", 8) // New in 48.
+        };
+
+        /// <summary>
+        /// Protocol 66, 67 and 68 net fields.
+        /// </summary>
+        private static readonly NetField[] Protocol66NetFields =
         {
             new NetField("pos.trTime", 32),
             new NetField("pos.trBase[0]", 0),

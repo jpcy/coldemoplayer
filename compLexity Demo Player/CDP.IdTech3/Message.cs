@@ -17,7 +17,7 @@ namespace CDP.IdTech3
         public BitReader Reader { get; set; }
         public int ReliableAck { get; set; }
 
-        public void Read(Core.FastFileStream stream)
+        public void Read(Core.FastFileStream stream, Protocols protocol)
         {
             offset = stream.Position;
             SequenceNumber = stream.ReadInt();
@@ -33,8 +33,13 @@ namespace CDP.IdTech3
                 throw new ApplicationException(string.Format("Message length \'{0}\' is out of range. Minimum is \'0\', maximum is \'{1}\'.", Length, MAX_MSGLEN));
             }
 
-            Reader = new BitReader(stream.ReadBytes(Length));
-            ReliableAck = Reader.ReadInt();
+            Reader = new BitReader(stream.ReadBytes(Length), protocol >= Protocols.Protocol66);
+
+            // Doesn't exist in protocols 43 and 45.
+            if (protocol >= Protocols.Protocol48)
+            {
+                ReliableAck = Reader.ReadInt();
+            }
         }
 
         public void Log(StreamWriter log)

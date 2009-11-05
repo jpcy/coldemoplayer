@@ -48,7 +48,7 @@ namespace CDP.IdTech3
 
         public override string[] Extensions
         {
-            get { return new string[] { "dm_66", "dm_67", "dm_68", "dm_73" }; }
+            get { return new string[] { "dm3", "dm_48", "dm_66", "dm_67", "dm_68", "dm_73" }; }
         }
 
         public override Core.DemoHandler.PlayerColumn[] PlayerColumns

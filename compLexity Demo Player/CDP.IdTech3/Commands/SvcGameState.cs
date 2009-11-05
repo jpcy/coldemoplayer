@@ -54,8 +54,11 @@ namespace CDP.IdTech3.Commands
 
         public override void ReadFooter(BitReader buffer)
         {
-            ClientNumber = buffer.ReadInt();
-            Checksum = buffer.ReadInt();
+            if (demo.Protocol >= Protocols.Protocol66)
+            {
+                ClientNumber = buffer.ReadInt();
+                Checksum = buffer.ReadInt();
+            }
         }
 
         public override void WriteFooter(Core.BitWriter buffer)

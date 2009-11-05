@@ -7,14 +7,21 @@ namespace CDP.IdTech3
     {
         private const int FLOAT_INT_BITS = 13;
         private const int FLOAT_INT_BIAS = (1 << (FLOAT_INT_BITS - 1));
+        private bool huffman;
 
-        public BitReader(byte[] buffer)
+        public BitReader(byte[] buffer, bool huffman)
             : base(buffer)
         {
+            this.huffman = huffman;
         }
 
         public override uint ReadUBits(int nBits)
         {
+            if (!huffman)
+            {
+                return base.ReadUBits(nBits);
+            }
+
             if (nBits <= 0 || nBits > 32)
             {
                 throw new ArgumentException("Value must be a positive integer between 1 and 32 inclusive.", "nBits");
@@ -45,17 +52,34 @@ namespace CDP.IdTech3
 
         public override void SeekBits(int offset, SeekOrigin origin)
         {
-            throw new ApplicationException("Cannot seek within a huffman compressed BitReader.");
+            if (huffman)
+            {
+                throw new ApplicationException("Cannot seek within a huffman compressed BitReader.");
+            }
+            else
+            {
+                base.SeekBits(offset, origin);
+            }
         }
 
         protected override uint ReadUBitsNotByteAligned(int nBits)
         {
+            if (!huffman)
+            {
+                return base.ReadUBitsNotByteAligned(nBits);
+            }
+
             uint result = Huffman.ReadUInt(Buffer, ref currentBit, nBits);
             return result;
         }
 
         protected override uint ReadUBitsByteAligned(int nBits)
         {
+            if (!huffman)
+            {
+                return base.ReadUBitsByteAligned(nBits);
+            }
+
             return ReadUBitsNotByteAligned(nBits);
         }
 

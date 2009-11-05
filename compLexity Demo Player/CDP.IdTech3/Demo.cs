@@ -70,8 +70,9 @@ namespace CDP.IdTech3
             set { handler = (Handler)value; }
         }
 
-        public int Protocol { get; private set; }
+        public Protocols Protocol { get; private set; }
         private string gameName; // TEMP: remove me
+        private bool isLoaded = false;
 
         private readonly List<CommandCallback> commandCallbacks = new List<CommandCallback>();
         private readonly Core.ISettings settings = Core.ObjectCreator.Get<Core.ISettings>();
@@ -86,14 +87,24 @@ namespace CDP.IdTech3
         {
             try
             {
+                if (isLoaded)
+                {
+                    throw new ApplicationException("Demo has already been loaded.");
+                }
+                else
+                {
+                    isLoaded = true;
+                }
+
+                AddCommandCallback<Commands.SvcConfigString>(SetProtocol_ConfigString);
                 AddCommandCallback<Commands.SvcConfigString>(Load_ConfigString);
-                CalculateProtocol();
+                GuessProtocol();
 
                 using (Core.FastFileStream stream = new Core.FastFileStream(FileName, Core.FastFileAccess.Read))
                 {
                     Message message = new Message();
-                    message.Read(stream);
-                    ReadCommandsUntilEof(message.Reader, null, null);
+                    message.Read(stream, Protocol);
+                    ReadCommandsUntilEof(message.Reader, null, null, false);
                 }
             }
             catch (Exception ex)
@@ -123,8 +134,10 @@ namespace CDP.IdTech3
         {
             try
             {
+                AddCommandCallback<Commands.SvcConfigString>(SetProtocol_ConfigString);
+                ResetOperationCancelledState();
                 ResetProgress();
-                CalculateProtocol();
+                GuessProtocol();
 
                 using (Core.FastFileStream stream = new Core.FastFileStream(FileName, Core.FastFileAccess.Read))
                 using (StreamWriter log = new StreamWriter(logFileName))
@@ -132,7 +145,7 @@ namespace CDP.IdTech3
                     while (true)
                     {
                         Message message = new Message();
-                        message.Read(stream);
+                        message.Read(stream, Protocol);
 
                         if (message.Length == -1)
                         {
@@ -141,8 +154,14 @@ namespace CDP.IdTech3
                         }
 
                         message.Log(log);
-                        ReadCommandsUntilEof(message.Reader, log, commandsToLog);
+                        ReadCommandsUntilEof(message.Reader, log, commandsToLog, false);
                         UpdateProgress(stream.Position, stream.Length);
+
+                        if (IsOperationCancelled())
+                        {
+                            OnOperationCancelled();
+                            return;
+                        }
                     }
                 }
             }
@@ -171,15 +190,25 @@ namespace CDP.IdTech3
             return commandId;
         }
 
-        private void ReadCommandsUntilEof(BitReader buffer, StreamWriter log, IEnumerable<CommandIds> commandsToLog)
+        private void ReadCommandsUntilEof(BitReader buffer, StreamWriter log, IEnumerable<CommandIds> commandsToLog, bool parsingSubCommands)
         {
             while (true)
             {
                 CommandIds commandId = ReadCommandId(buffer, log);
 
-                if (commandId == CommandIds.svc_eof)
+                if (Protocol >= Protocols.Protocol43 && Protocol <= Protocols.Protocol48)
                 {
-                    break;
+                    if (parsingSubCommands && (byte)commandId == 0)
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    if (commandId == CommandIds.svc_eof)
+                    {
+                        break;
+                    }
                 }
 
                 Command command = handler.CreateCommand(commandId);
@@ -197,11 +226,13 @@ namespace CDP.IdTech3
                 {
                     command.Read(buffer);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     if (log != null)
                     {
                         log.WriteLine("\n*** ERROR ***\n");
+                        log.WriteLine(ex.ToString());
+                        log.WriteLine();
                         command.Log(log);
                     }
 
@@ -220,7 +251,7 @@ namespace CDP.IdTech3
 
                 if (command.ContainsSubCommands)
                 {
-                    ReadCommandsUntilEof(buffer, log, commandsToLog);
+                    ReadCommandsUntilEof(buffer, log, commandsToLog, true);
 
                     if (command.HasFooter)
                     {
@@ -232,28 +263,55 @@ namespace CDP.IdTech3
                         }
                     }
                 }
+
+                if (!parsingSubCommands && (Protocol >= Protocols.Protocol43 && Protocol <= Protocols.Protocol48))
+                {
+                    buffer.SeekRemainingBitsInCurrentByte();
+
+                    if (buffer.BitsLeft == 0)
+                    {
+                        return;
+                    }
+                }
             }
         }
 
         /// <summary>
-        /// Calculates the protocol based on the filename extension.
+        /// Guess the protocol based on the filename extension. Once a svc_configstring command containing the protocol key/value pair is read, the precise protocol should be assigned to the property "Protocol".
         /// </summary>
-        private void CalculateProtocol()
+        private void GuessProtocol()
         {
             string extension = fileSystem.GetExtension(FileName).ToLower();
 
             if (extension == "dm3")
             {
-                Protocol = 3;
+                // Could also be 45 or possibly 46 (patch was never released to the public?), but parsing is the same up until the the correct protocol can be read, so it's OK to assume it's 43.
+                Protocol = Protocols.Protocol43;
             }
             else
             {
-                int protocol = 0;
+                SetProtocol(int.Parse(extension.Replace("dm_", string.Empty)));
+            }
+        }
 
-                if (int.TryParse(extension.Replace("dm_", string.Empty), out protocol))
-                {
-                    Protocol = protocol;
-                }
+        /// <summary>
+        /// Set the protocol, while checking to see if it is valid.
+        /// </summary>
+        private void SetProtocol(int protocol)
+        {
+            if (!Enum.IsDefined(typeof(Protocols), protocol))
+            {
+                throw new ApplicationException(string.Format("Unknown protocol \'{0}\'.", protocol));
+            }
+
+            Protocol = (Protocols)protocol;
+        }
+
+        private void SetProtocol_ConfigString(Commands.SvcConfigString command)
+        {
+            if (command.KeyValuePairs != null && command.KeyValuePairs.ContainsKey("protocol"))
+            {
+                SetProtocol(int.Parse(command.KeyValuePairs["protocol"]));
             }
         }
 

@@ -29,6 +29,7 @@ namespace CDP.IdTech3.Commands
             get { return false; }
         }
 
+        public int ClientCommandSequence { get; set; }
         public int ServerTime { get; set; }
         public byte DeltaNum { get; set; }
         public byte SnapFlags { get; set; }
@@ -43,6 +44,11 @@ namespace CDP.IdTech3.Commands
 
         public override void Read(BitReader buffer)
         {
+            if (demo.Protocol == Protocols.Protocol43 || demo.Protocol == Protocols.Protocol45)
+            {
+                ClientCommandSequence = buffer.ReadInt();
+            }
+
             ServerTime = buffer.ReadInt();
             DeltaNum = buffer.ReadByte();
             SnapFlags = buffer.ReadByte();
@@ -54,8 +60,17 @@ namespace CDP.IdTech3.Commands
             }
 
             // Read player info.
-            byte lc = buffer.ReadByte();
-            Player = new Player();
+            Player = new Player(demo.Protocol);
+            byte lc;
+
+            if (demo.Protocol >= Protocols.Protocol43 && demo.Protocol <= Protocols.Protocol48)
+            {
+                lc = (byte)Player.NetFields.Length;
+            }
+            else
+            {
+                lc = buffer.ReadByte();
+            }
 
             for (int i = 0; i < lc; i++)
             {
@@ -106,7 +121,7 @@ namespace CDP.IdTech3.Commands
                 }
             };
 
-            if (buffer.ReadBoolean())
+            if ((demo.Protocol >= Protocols.Protocol43 && demo.Protocol <= Protocols.Protocol48) || buffer.ReadBoolean())
             {
                 readArray(Player.MAX_STATS, i => Player.Stats[i] = buffer.ReadShort());
                 readArray(Player.MAX_PERSISTANT, i => Player.Persistant[i] = buffer.ReadShort());
@@ -138,6 +153,11 @@ namespace CDP.IdTech3.Commands
 
         public override void Log(StreamWriter log)
         {
+            if (demo.Protocol == Protocols.Protocol43 || demo.Protocol == Protocols.Protocol45)
+            {
+                log.WriteLine("Client command sequence: {0}", ClientCommandSequence);
+            }
+
             log.WriteLine("Server time: {0}", ServerTime);
             log.WriteLine("Delta num: {0}", DeltaNum);
             log.WriteLine("Snap flags: {0}", SnapFlags);
@@ -157,6 +177,36 @@ namespace CDP.IdTech3.Commands
                         log.WriteLine("Field: {0}, Value: {1}", Player.NetFields[i].Name, Player[i]);
                     }
                 }
+
+                log.Write("Stats: ");
+                
+                for (int i = 0; i < Player.MAX_STATS; i++)
+                {
+                    log.Write("{0} ", Player.Stats[i]);
+                }
+
+                log.Write("\nPersistant: ");
+
+                for (int i = 0; i < Player.MAX_PERSISTANT; i++)
+                {
+                    log.Write("{0} ", Player.Persistant[i]);
+                }
+
+                log.Write("\nAmmo: ");
+
+                for (int i = 0; i < Player.MAX_WEAPONS; i++)
+                {
+                    log.Write("{0} ", Player.Ammo[i]);
+                }
+
+                log.Write("\nPowerups: ");
+
+                for (int i = 0; i < Player.MAX_POWERUPS; i++)
+                {
+                    log.Write("{0} ", Player.Powerups[i]);
+                }
+
+                log.WriteLine();
             }
 
             foreach (Entity entity in Entities)
