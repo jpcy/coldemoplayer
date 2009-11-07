@@ -12,6 +12,10 @@ namespace CDP.Core
         void Write(string text);
         void Write(string text, SolidColorBrush brush);
         void Write(string text, SolidColorBrush brush, TextDecorationCollection decorations);
+        void WriteLine();
+        void WriteLine(string text);
+        void WriteLine(string text, SolidColorBrush brush);
+        void WriteLine(string text, SolidColorBrush brush, TextDecorationCollection decorations);
         void Save(FlowDocument flowDocument);
     }
 
@@ -37,7 +41,7 @@ namespace CDP.Core
 
         public void Write(string text)
         {
-            Write(text, Brushes.Black);
+            Write(text, null);
         }
 
         public void Write(string text, SolidColorBrush brush)
@@ -47,14 +51,15 @@ namespace CDP.Core
 
         public void Write(string text, SolidColorBrush brush, TextDecorationCollection decorations)
         {
-            // FIXME: probably more invalid characters...
-            text = text.Replace((Char)0x17, ' ');
-            //text = System.Security.SecurityElement.Escape(text).Replace((Char)0x17, ' ');
+            if (text == null)
+            {
+                throw new ArgumentNullException("text");
+            }
 
             XmlElement run = document.CreateElement("Run", namespaceUri);
-            run.InnerText = text;
+            run.InnerText = ValidateString(text);
 
-            if (brush != Brushes.Black)
+            if (brush != null)
             {
                 AddXmlAttribute(run, "Foreground", brush.ToString());
             }
@@ -66,6 +71,26 @@ namespace CDP.Core
             }
 
             paragraph.AppendChild(run);
+        }
+
+        public void WriteLine()
+        {
+            Write(Environment.NewLine);
+        }
+
+        public void WriteLine(string text)
+        {
+            Write(text + Environment.NewLine, null);
+        }
+
+        public void WriteLine(string text, SolidColorBrush brush)
+        {
+            Write(text + Environment.NewLine, brush, null);
+        }
+
+        public void WriteLine(string text, SolidColorBrush brush, TextDecorationCollection decorations)
+        {
+            Write(text + Environment.NewLine, brush, decorations);
         }
 
         public void Save(FlowDocument flowDocument)
@@ -83,6 +108,56 @@ namespace CDP.Core
             XmlAttribute attribute = document.CreateAttribute(attributeName);
             attribute.InnerXml = attributeValue;
             element.Attributes.Append(attribute);
+        }
+
+        /// <summary>
+        /// Removes invalid characters from a string.
+        /// </summary>
+        /// <param name="s">The string to remove invalid characters from.</param>
+        /// <returns>A new string with invalid characters removed.</returns>
+        private string ValidateString(string s)
+        {
+            int nInvalidChars = 0;
+
+            foreach (char ch in s)
+            {
+                if (!IsValidChar(ch))
+                {
+                    nInvalidChars++;
+                }
+            }
+
+            if (nInvalidChars == 0)
+            {
+                return s;
+            }
+
+            int newLength = s.Length - nInvalidChars;
+
+            if (newLength <= 0)
+            {
+                return string.Empty;
+            }
+
+            char[] result = new char[newLength];
+            int i = 0;
+
+            foreach (char ch in s)
+            {
+                if (IsValidChar(ch))
+                {
+                    result[i] = ch;
+                    i++;
+                }
+            }
+
+            return new string(result);
+        }
+
+        // http://www.w3.org/TR/REC-xml/#charsets
+        private bool IsValidChar(char ch)
+        {
+            return (ch == 0x9 || ch == 0xA || ch == 0xD || (ch >= 0x20 && ch <= 0xD7FF) || (ch >= 0xE000 && ch <= 0xFFFD));
         }
     }
 }
