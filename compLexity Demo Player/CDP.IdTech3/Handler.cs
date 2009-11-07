@@ -104,12 +104,12 @@ namespace CDP.IdTech3
 
         public override UserControl CreateAnalysisView()
         {
-            throw new NotImplementedException();
+            return new Analysis.View();
         }
 
         public override Core.ViewModelBase CreateAnalysisViewModel(Core.Demo demo)
         {
-            throw new NotImplementedException();
+            return new Analysis.ViewModel((Demo)demo);
         }
 
         public Command CreateCommand(CommandIds id)

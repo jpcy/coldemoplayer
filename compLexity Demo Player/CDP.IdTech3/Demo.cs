@@ -63,7 +63,7 @@ namespace CDP.IdTech3
 
         public override bool CanAnalyse
         {
-            get { return false; }
+            get { return true; }
         }
 
         protected Handler handler;
@@ -126,7 +126,45 @@ namespace CDP.IdTech3
 
         public override void Read()
         {
-            throw new NotImplementedException();
+            try
+            {
+                ResetOperationCancelledState();
+                ResetProgress();
+
+                using (Core.FastFileStream stream = new Core.FastFileStream(FileName, Core.FastFileAccess.Read))
+                {
+                    while (true)
+                    {
+                        Message message = new Message();
+                        message.Read(stream, Protocol);
+
+                        if (message.Length == -1)
+                        {
+                            break;
+                        }
+
+                        ReadCommandsUntilEof(message.Reader, null, null, false);
+                        UpdateProgress(stream.Position, stream.Length);
+
+                        if (IsOperationCancelled())
+                        {
+                            OnOperationCancelled();
+                            return;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                OnOperationError(FileName, ex);
+                return;
+            }
+            finally
+            {
+                commandCallbacks.Clear();
+            }
+
+            OnOperationComplete();
         }
 
         public override void Write(string destinationFileName)

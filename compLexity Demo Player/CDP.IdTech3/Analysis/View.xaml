@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="CDP.IdTech3.Analysis.View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:core="clr-namespace:CDP.Core;assembly=CDP.Core">
+    <TabControl>
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/CDP;component/Images/gamelog.png" Margin="0,0,4,0" />
+                    <TextBlock>Game log</TextBlock>
+                </StackPanel>
+            </TabItem.Header>
+            <core:RichTextBox Background="LightGray" FontFamily="Courier New" Document="{Binding GameLogDocument}" />
+        </TabItem>
+    </TabControl>
+</UserControl>
