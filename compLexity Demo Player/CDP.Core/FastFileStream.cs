@@ -11,7 +11,52 @@ namespace CDP.Core
         Write
     }
 
-    public class FastFileStream : IDisposable
+    public abstract class FastFileStreamBase : IDisposable
+    {
+        public abstract long Position { get; }
+        public abstract long Length { get; }
+        public abstract long BytesLeft { get; }
+        public abstract void Dispose();
+        public abstract void Seek(long offset, SeekOrigin origin);
+        public abstract int Read(byte[] buffer, int offset, int count);
+        public abstract bool ReadBoolean();
+        public abstract byte ReadByte();
+        public abstract byte[] ReadBytes(int count);
+        public abstract char ReadChar();
+        public abstract char[] ReadChars(int count);
+        public abstract decimal ReadDecimal();
+        public abstract double ReadDouble();
+        public abstract short ReadShort();
+        public abstract int ReadInt();
+        public abstract long ReadLong();
+        public abstract sbyte ReadSByte();
+        public abstract float ReadFloat();
+        public abstract string ReadString();
+        public abstract ushort ReadUShort();
+        public abstract uint ReadUInt();
+        public abstract ulong ReadULong();
+        public abstract Vector ReadVector();
+        public abstract void WriteBoolean(bool value);
+        public abstract void WriteByte(byte value);
+        public abstract void WriteBytes(byte[] buffer);
+        public abstract void WriteChar(char ch);
+        public abstract void WriteChars(char[] chars);
+        public abstract void WriteDecimal(decimal value);
+        public abstract void WriteDouble(double value);
+        public abstract void WriteFloat(float value);
+        public abstract void WriteInt(int value);
+        public abstract void WriteLong(long value);
+        public abstract void WriteSByte(sbyte value);
+        public abstract void WriteShort(short value);
+        public abstract void WriteString(string value);
+        public abstract void WriteUInt(uint value);
+        public abstract void WriteULong(ulong value);
+        public abstract void WriteUShort(ushort value);
+        public abstract void Write(byte[] buffer, int offset, int count);
+        public abstract void WriteVector(Vector value);
+    }
+
+    public class FastFileStream : FastFileStreamBase, IDisposable
     {
         public class FileAccessIsReadNotWrite : InvalidOperationException
         {
@@ -29,6 +74,11 @@ namespace CDP.Core
             }
         }
 
+        public static FastFileStreamBase Open(string fileName, FastFileAccess access)
+        {
+            return new FastFileStream(fileName, access);
+        }
+
         private FileStream stream;
         private BinaryReader reader;
         private BinaryWriter writer;
@@ -37,12 +87,12 @@ namespace CDP.Core
         private FastFileAccess access;
         private bool disposed = false;
 
-        public long Position
+        public override long Position
         {
             get { return position; }
         }
 
-        public long Length
+        public override long Length
         {
             get
             {
@@ -55,6 +105,11 @@ namespace CDP.Core
                     throw new InvalidOperationException("Cannot get stream length when writing.");
                 }
             }
+        }
+
+        public override long BytesLeft
+        {
+            get { return Length - Position; }
         }
 
         private const int fileBufferSize = 4096;
@@ -83,7 +138,7 @@ namespace CDP.Core
             Dispose(false);
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
@@ -118,13 +173,13 @@ namespace CDP.Core
             disposed = true;
         }
 
-        public void Seek(long offset, SeekOrigin origin)
+        public override void Seek(long offset, SeekOrigin origin)
         {
             position = stream.Seek(offset, origin);
         }
 
         #region Reading
-        public int Read(byte[] buffer, int offset, int count)
+        public override int Read(byte[] buffer, int offset, int count)
         {
             if (access != FastFileAccess.Read)
             {
@@ -136,7 +191,7 @@ namespace CDP.Core
             return bytesRead;
         }
 
-        public bool ReadBoolean()
+        public override bool ReadBoolean()
         {
             if (access != FastFileAccess.Read)
             {
@@ -148,7 +203,7 @@ namespace CDP.Core
             return value;
         }
 
-        public byte ReadByte()
+        public override byte ReadByte()
         {
             if (access != FastFileAccess.Read)
             {
@@ -160,7 +215,7 @@ namespace CDP.Core
             return value;
         }
 
-        public byte[] ReadBytes(int count)
+        public override byte[] ReadBytes(int count)
         {
             if (access != FastFileAccess.Read)
             {
@@ -172,7 +227,7 @@ namespace CDP.Core
             return value;
         }
 
-        public char ReadChar()
+        public override char ReadChar()
         {
             if (access != FastFileAccess.Read)
             {
@@ -184,7 +239,7 @@ namespace CDP.Core
             return value;
         }
 
-        public char[] ReadChars(int count)
+        public override char[] ReadChars(int count)
         {
             if (access != FastFileAccess.Read)
             {
@@ -196,7 +251,7 @@ namespace CDP.Core
             return value;
         }
 
-        public decimal ReadDecimal()
+        public override decimal ReadDecimal()
         {
             if (access != FastFileAccess.Read)
             {
@@ -208,7 +263,7 @@ namespace CDP.Core
             return value;
         }
 
-        public double ReadDouble()
+        public override double ReadDouble()
         {
             if (access != FastFileAccess.Read)
             {
@@ -220,7 +275,7 @@ namespace CDP.Core
             return value;
         }
 
-        public short ReadShort()
+        public override short ReadShort()
         {
             if (access != FastFileAccess.Read)
             {
@@ -232,7 +287,7 @@ namespace CDP.Core
             return value;
         }
 
-        public int ReadInt()
+        public override int ReadInt()
         {
             if (access != FastFileAccess.Read)
             {
@@ -244,7 +299,7 @@ namespace CDP.Core
             return value;
         }
 
-        public long ReadLong()
+        public override long ReadLong()
         {
             if (access != FastFileAccess.Read)
             {
@@ -256,7 +311,7 @@ namespace CDP.Core
             return value;
         }
 
-        public sbyte ReadSByte()
+        public override sbyte ReadSByte()
         {
             if (access != FastFileAccess.Read)
             {
@@ -268,7 +323,7 @@ namespace CDP.Core
             return value;
         }
 
-        public float ReadFloat()
+        public override float ReadFloat()
         {
             if (access != FastFileAccess.Read)
             {
@@ -280,7 +335,7 @@ namespace CDP.Core
             return value;
         }
 
-        public string ReadString()
+        public override string ReadString()
         {
             if (access != FastFileAccess.Read)
             {
@@ -304,7 +359,7 @@ namespace CDP.Core
             return Encoding.UTF8.GetString(bytes.ToArray());
         }
 
-        public ushort ReadUShort()
+        public override ushort ReadUShort()
         {
             if (access != FastFileAccess.Read)
             {
@@ -316,7 +371,7 @@ namespace CDP.Core
             return value;
         }
 
-        public uint ReadUInt()
+        public override uint ReadUInt()
         {
             if (access != FastFileAccess.Read)
             {
@@ -328,7 +383,7 @@ namespace CDP.Core
             return value;
         }
 
-        public ulong ReadULong()
+        public override ulong ReadULong()
         {
             if (access != FastFileAccess.Read)
             {
@@ -340,7 +395,7 @@ namespace CDP.Core
             return value;
         }
 
-        public Vector ReadVector()
+        public override Vector ReadVector()
         {
             if (access != FastFileAccess.Read)
             {
@@ -357,7 +412,7 @@ namespace CDP.Core
         #endregion
 
         #region Writing
-        public void WriteBoolean(bool value)
+        public override void WriteBoolean(bool value)
         {
             if (access != FastFileAccess.Write)
             {
@@ -368,7 +423,7 @@ namespace CDP.Core
             position += sizeof(bool);
         }
 
-        public void WriteByte(byte value)
+        public override void WriteByte(byte value)
         {
             if (access != FastFileAccess.Write)
             {
@@ -379,7 +434,7 @@ namespace CDP.Core
             position += sizeof(byte);
         }
 
-        public void WriteBytes(byte[] buffer)
+        public override void WriteBytes(byte[] buffer)
         {
             if (access != FastFileAccess.Write)
             {
@@ -390,7 +445,7 @@ namespace CDP.Core
             position += buffer.Length * sizeof(byte);
         }
 
-        public void WriteChar(char ch)
+        public override void WriteChar(char ch)
         {
             if (access != FastFileAccess.Write)
             {
@@ -401,7 +456,7 @@ namespace CDP.Core
             position += sizeof(char);
         }
 
-        public void WriteChars(char[] chars)
+        public override void WriteChars(char[] chars)
         {
             if (access != FastFileAccess.Write)
             {
@@ -412,7 +467,7 @@ namespace CDP.Core
             position += chars.Length * sizeof(char);
         }
 
-        public void WriteDecimal(decimal value)
+        public override void WriteDecimal(decimal value)
         {
             if (access != FastFileAccess.Write)
             {
@@ -423,7 +478,7 @@ namespace CDP.Core
             position += sizeof(decimal);
         }
 
-        public void WriteDouble(double value)
+        public override void WriteDouble(double value)
         {
             if (access != FastFileAccess.Write)
             {
@@ -434,7 +489,7 @@ namespace CDP.Core
             position += sizeof(double);
         }
 
-        public void WriteFloat(float value)
+        public override void WriteFloat(float value)
         {
             if (access != FastFileAccess.Write)
             {
@@ -445,7 +500,7 @@ namespace CDP.Core
             position += sizeof(float);
         }
 
-        public void WriteInt(int value)
+        public override void WriteInt(int value)
         {
             if (access != FastFileAccess.Write)
             {
@@ -456,7 +511,7 @@ namespace CDP.Core
             position += sizeof(int);
         }
 
-        public void WriteLong(long value)
+        public override void WriteLong(long value)
         {
             if (access != FastFileAccess.Write)
             {
@@ -467,7 +522,7 @@ namespace CDP.Core
             position += sizeof(long);
         }
 
-        public void WriteSByte(sbyte value)
+        public override void WriteSByte(sbyte value)
         {
             if (access != FastFileAccess.Write)
             {
@@ -478,7 +533,7 @@ namespace CDP.Core
             position += sizeof(sbyte);
         }
 
-        public void WriteShort(short value)
+        public override void WriteShort(short value)
         {
             if (access != FastFileAccess.Write)
             {
@@ -489,7 +544,7 @@ namespace CDP.Core
             position += sizeof(short);
         }
 
-        public void WriteString(string value)
+        public override void WriteString(string value)
         {
             if (access != FastFileAccess.Write)
             {
@@ -503,7 +558,7 @@ namespace CDP.Core
             position += data.Length * sizeof(byte);
         }
 
-        public void WriteUInt(uint value)
+        public override void WriteUInt(uint value)
         {
             if (access != FastFileAccess.Write)
             {
@@ -514,7 +569,7 @@ namespace CDP.Core
             position += sizeof(uint);
         }
 
-        public void WriteULong(ulong value)
+        public override void WriteULong(ulong value)
         {
             if (access != FastFileAccess.Write)
             {
@@ -525,7 +580,7 @@ namespace CDP.Core
             position += sizeof(ulong);
         }
 
-        public void WriteUShort(ushort value)
+        public override void WriteUShort(ushort value)
         {
             if (access != FastFileAccess.Write)
             {
@@ -536,7 +591,7 @@ namespace CDP.Core
             position += sizeof(ushort);
         }
 
-        public void Write(byte[] buffer, int offset, int count)
+        public override void Write(byte[] buffer, int offset, int count)
         {
             if (access != FastFileAccess.Write)
             {
@@ -547,7 +602,7 @@ namespace CDP.Core
             position += count;
         }
 
-        public void WriteVector(Vector value)
+        public override void WriteVector(Vector value)
         {
             if (access != FastFileAccess.Write)
             {
