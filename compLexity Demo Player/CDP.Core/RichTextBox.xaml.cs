@@ -14,13 +14,13 @@ namespace CDP.Core
             set { SetValue(DocumentProperty, value); }
         }
 
-        public Brush Background
+        public new Brush Background
         {
             get { return (Brush)GetValue(BackgroundProperty); }
             set { SetValue(BackgroundProperty, value); }
         }
 
-        public FontFamily FontFamily
+        public new FontFamily FontFamily
         {
             get { return (FontFamily)GetValue(FontFamilyProperty); }
             set { SetValue(FontFamilyProperty, value); }
@@ -28,9 +28,9 @@ namespace CDP.Core
 
         public static DependencyProperty DocumentProperty = DependencyProperty.Register("Document", typeof(FlowDocument), typeof(RichTextBox), new PropertyMetadata(OnDocumentChanged));
 
-        public static DependencyProperty BackgroundProperty = DependencyProperty.Register("Background", typeof(Brush), typeof(RichTextBox), new PropertyMetadata(OnBackgroundChanged));
+        public static new DependencyProperty BackgroundProperty = DependencyProperty.Register("Background", typeof(Brush), typeof(RichTextBox), new PropertyMetadata(OnBackgroundChanged));
 
-        public static DependencyProperty FontFamilyProperty = DependencyProperty.Register("FontFamily", typeof(FontFamily), typeof(RichTextBox), new PropertyMetadata(OnFontFamilyChanged));
+        public static new DependencyProperty FontFamilyProperty = DependencyProperty.Register("FontFamily", typeof(FontFamily), typeof(RichTextBox), new PropertyMetadata(OnFontFamilyChanged));
 
         public RichTextBox()
         {
