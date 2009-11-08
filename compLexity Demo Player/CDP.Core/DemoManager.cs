@@ -98,7 +98,7 @@ namespace CDP.Core
         {
             string extension = fileSystem.GetExtension(demoFileName);
 
-            using (Stream stream = fileSystem.OpenRead(demoFileName))
+            using (FastFileStreamBase stream = fileSystem.OpenRead(demoFileName))
             {
                 return plugins.Where(p =>
                 {

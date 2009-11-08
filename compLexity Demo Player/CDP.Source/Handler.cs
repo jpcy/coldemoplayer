@@ -125,8 +125,13 @@ namespace CDP.Source
             RegisterMessage<Messages.SvcVoiceInit>();
         }
 
-        public override bool IsValidDemo(System.IO.Stream stream)
+        public override bool IsValidDemo(Core.FastFileStreamBase stream)
         {
+            if (stream.Length < magic.Length)
+            {
+                return false;
+            }
+
             for (int i = 0; i < magic.Length; i++)
             {
                 if (stream.ReadByte() != magic[i])

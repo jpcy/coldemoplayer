@@ -50,7 +50,7 @@ namespace CDP.CounterStrike
         {
         }
 
-        public override bool IsValidDemo(Stream stream)
+        public override bool IsValidDemo(Core.FastFileStreamBase stream)
         {
             if (!base.IsValidDemo(stream))
             {
@@ -58,14 +58,14 @@ namespace CDP.CounterStrike
             }
 
             // magic (8 bytes) + demo protocol (4 bytes) + network protocol (4 bytes) + map name (260 bytes) = 276
-            stream.Seek(276, SeekOrigin.Begin);
-
-            using (BinaryReader br = new BinaryReader(stream))
+            // game folder = 260
+            if (stream.BytesLeft < 276 + 260)
             {
-                HalfLife.BitReader buffer = new HalfLife.BitReader(br.ReadBytes(260));
-                string gameFolder = buffer.ReadString();
-                return game.DemoGameFolders.Contains(gameFolder, StringComparer.InvariantCultureIgnoreCase);
+                return false;
             }
+
+            stream.Seek(276, SeekOrigin.Begin);
+            return game.DemoGameFolders.Contains(stream.ReadString(), StringComparer.InvariantCultureIgnoreCase);
         }
 
         public override Core.Demo CreateDemo()

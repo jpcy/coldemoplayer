@@ -7,7 +7,7 @@ namespace CDP.Core
 {
     public interface IFileSystem
     {
-        Stream OpenRead(string fileName);
+        FastFileStreamBase OpenRead(string fileName);
         string[] GetFiles(string path, string fileSearchPattern);
         IEnumerable<string> GetFolderNames(string path);
         string PathCombine(string path, params string[] paths);
@@ -16,9 +16,9 @@ namespace CDP.Core
 
     public class FileSystem : IFileSystem
     {
-        public Stream OpenRead(string fileName)
+        public FastFileStreamBase OpenRead(string fileName)
         {
-            return File.OpenRead(fileName);
+            return FastFileStream.Open(fileName, FastFileAccess.Read);
         }
 
         public string[] GetFiles(string path, string fileSearchPattern)

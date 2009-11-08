@@ -112,7 +112,7 @@ namespace UnitTests.Core
         public void SetUp()
         {
             fileSystem = new MockProvider<IFileSystem>();
-            fileSystem.Mock.Setup(f => f.OpenRead(It.IsAny<string>())).Returns(new MemoryStream());
+            fileSystem.Mock.Setup(f => f.OpenRead(It.IsAny<string>())).Returns(new Mock<FastFileStreamBase>().Object);
             ObjectCreator.Reset();
             ObjectCreator.MapToProvider<IFileSystem>(fileSystem);
             demoManager = new DemoManager();
@@ -217,10 +217,9 @@ namespace UnitTests.Core
 
         private void SetUpPluginStub(string demoExtension, string[] extensions, bool isValidDemo)
         {
-            fileSystem.Mock.Setup(f => f.OpenRead(It.IsAny<string>())).Returns(new MemoryStream());
             fileSystem.Mock.Setup(p => p.GetExtension(It.IsAny<string>())).Returns(demoExtension);
             demoHandlerMock.Setup(dh => dh.Extensions).Returns(extensions);
-            demoHandlerMock.Setup(dh => dh.IsValidDemo(It.IsAny<Stream>())).Returns(isValidDemo);
+            demoHandlerMock.Setup(dh => dh.IsValidDemo(It.IsAny<FastFileStreamBase>())).Returns(isValidDemo);
             demoManager.AddPlugin(0, demoHandlerMock.Object);
         }
     }

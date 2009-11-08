@@ -85,10 +85,21 @@ namespace CDP.IdTech3
             get { return null; }
         }
 
-        public override bool IsValidDemo(Stream stream)
+        public override bool IsValidDemo(Core.FastFileStreamBase stream)
         {
-            // TODO: correct validation.
-            // Check that message length is valid for a start.
+            if (stream.Length < 8)
+            {
+                return false;
+            }
+
+            stream.Seek(4, SeekOrigin.Begin); // Skip sequence number.
+            int messageLength = stream.ReadInt();
+
+            if (messageLength > Message.MAX_MSGLEN)
+            {
+                return false;
+            }
+
             return true;
         }
 

@@ -8,7 +8,7 @@ namespace CDP.IdTech3
 {
     public class Message
     {
-        private const int MAX_MSGLEN = 16384;
+        public const int MAX_MSGLEN = 16384;
 
         private long offset;
 
