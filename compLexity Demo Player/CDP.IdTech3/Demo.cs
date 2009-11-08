@@ -102,7 +102,7 @@ namespace CDP.IdTech3
 
                 AddCommandCallback<Commands.SvcConfigString>(SetProtocol_ConfigString);
                 AddCommandCallback<Commands.SvcConfigString>(Load_ConfigString);
-                GuessProtocol();
+                Protocol = handler.GuessProtocol(FileName);
 
                 using (Core.FastFileStream stream = new Core.FastFileStream(FileName, Core.FastFileAccess.Read))
                 {
@@ -179,7 +179,7 @@ namespace CDP.IdTech3
                 AddCommandCallback<Commands.SvcConfigString>(SetProtocol_ConfigString);
                 ResetOperationCancelledState();
                 ResetProgress();
-                GuessProtocol();
+                Protocol = handler.GuessProtocol(FileName);
 
                 using (Core.FastFileStream stream = new Core.FastFileStream(FileName, Core.FastFileAccess.Read))
                 using (StreamWriter log = new StreamWriter(logFileName))
@@ -315,24 +315,6 @@ namespace CDP.IdTech3
                         return;
                     }
                 }
-            }
-        }
-
-        /// <summary>
-        /// Guess the protocol based on the filename extension. Once a svc_configstring command containing the protocol key/value pair is read, the precise protocol should be assigned to the property "Protocol".
-        /// </summary>
-        private void GuessProtocol()
-        {
-            string extension = fileSystem.GetExtension(FileName).ToLower();
-
-            if (extension == "dm3")
-            {
-                // Could also be 45 or possibly 46 (patch was never released to the public?), but parsing is the same up until the the correct protocol can be read, so it's OK to assume it's 43.
-                Protocol = Protocols.Protocol43;
-            }
-            else
-            {
-                SetProtocol(int.Parse(extension.Replace("dm_", string.Empty)));
             }
         }
 

@@ -156,5 +156,30 @@ namespace CDP.IdTech3
 
             registeredCommands.Add(command);
         }
+
+        /// <summary>
+        /// Guess the protocol based on the filename extension. Once a svc_configstring command containing the protocol key/value pair is read, the precise protocol should be assigned to the property "Protocol".
+        /// </summary>
+        public Protocols GuessProtocol(string fileName)
+        {
+            string extension = Core.ObjectCreator.Get<Core.IFileSystem>().GetExtension(fileName).ToLower();
+
+            if (extension == "dm3")
+            {
+                // Could also be 45 or possibly 46 (patch was never released to the public?), but parsing is the same up until the the correct protocol can be read, so it's OK to assume it's 43.
+                return Protocols.Protocol43;
+            }
+            else
+            {
+                int protocol = int.Parse(extension.Replace("dm_", string.Empty));
+
+                if (!Enum.IsDefined(typeof(Protocols), protocol))
+                {
+                    throw new ApplicationException(string.Format("Unknown protocol \'{0}\'.", protocol));
+                }
+
+                return (Protocols)protocol;
+            }
+        }
     }
 }
