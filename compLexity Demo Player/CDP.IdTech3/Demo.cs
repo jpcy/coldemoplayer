@@ -102,7 +102,7 @@ namespace CDP.IdTech3
 
                 AddCommandCallback<Commands.SvcConfigString>(SetProtocol_ConfigString);
                 AddCommandCallback<Commands.SvcConfigString>(Load_ConfigString);
-                Protocol = handler.GuessProtocol(FileName);
+                GuessProtocol();
 
                 using (Core.FastFileStream stream = new Core.FastFileStream(FileName, Core.FastFileAccess.Read))
                 {
@@ -179,7 +179,7 @@ namespace CDP.IdTech3
                 AddCommandCallback<Commands.SvcConfigString>(SetProtocol_ConfigString);
                 ResetOperationCancelledState();
                 ResetProgress();
-                Protocol = handler.GuessProtocol(FileName);
+                GuessProtocol();
 
                 using (Core.FastFileStream stream = new Core.FastFileStream(FileName, Core.FastFileAccess.Read))
                 using (StreamWriter log = new StreamWriter(logFileName))
@@ -316,6 +316,11 @@ namespace CDP.IdTech3
                     }
                 }
             }
+        }
+
+        private void GuessProtocol()
+        {
+            Protocol = handler.GuessProtocol(fileSystem.GetExtension(FileName));
         }
 
         /// <summary>
