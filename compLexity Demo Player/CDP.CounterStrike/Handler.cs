@@ -50,9 +50,9 @@ namespace CDP.CounterStrike
         {
         }
 
-        public override bool IsValidDemo(Core.FastFileStreamBase stream)
+        public override bool IsValidDemo(Core.FastFileStreamBase stream, string fileExtension)
         {
-            if (!base.IsValidDemo(stream))
+            if (!base.IsValidDemo(stream, fileExtension))
             {
                 return false;
             }

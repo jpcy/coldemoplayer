@@ -31,7 +31,7 @@ namespace CDP.Core
         public abstract Setting[] Settings { get; }
         public abstract UserControl SettingsView { get; }
 
-        public abstract bool IsValidDemo(FastFileStreamBase stream);
+        public abstract bool IsValidDemo(FastFileStreamBase stream, string fileExtension);
         public abstract Demo CreateDemo();
         public abstract Launcher CreateLauncher();
         public abstract UserControl CreateAnalysisView();

@@ -125,7 +125,7 @@ namespace CDP.Source
             RegisterMessage<Messages.SvcVoiceInit>();
         }
 
-        public override bool IsValidDemo(Core.FastFileStreamBase stream)
+        public override bool IsValidDemo(Core.FastFileStreamBase stream,string fileExtension)
         {
             if (stream.Length < magic.Length)
             {

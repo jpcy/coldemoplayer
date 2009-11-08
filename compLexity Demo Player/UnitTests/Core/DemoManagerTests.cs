@@ -219,7 +219,7 @@ namespace UnitTests.Core
         {
             fileSystem.Mock.Setup(p => p.GetExtension(It.IsAny<string>())).Returns(demoExtension);
             demoHandlerMock.Setup(dh => dh.Extensions).Returns(extensions);
-            demoHandlerMock.Setup(dh => dh.IsValidDemo(It.IsAny<FastFileStreamBase>())).Returns(isValidDemo);
+            demoHandlerMock.Setup(dh => dh.IsValidDemo(It.IsAny<FastFileStreamBase>(), It.IsAny<string>())).Returns(isValidDemo);
             demoManager.AddPlugin(0, demoHandlerMock.Object);
         }
     }

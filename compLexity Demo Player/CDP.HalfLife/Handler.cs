@@ -87,7 +87,7 @@ namespace CDP.HalfLife
             ReadGameConfig();
         }
 
-        public override bool IsValidDemo(Core.FastFileStreamBase stream)
+        public override bool IsValidDemo(Core.FastFileStreamBase stream, string fileExtension)
         {
             if (stream.Length < magic.Length)
             {

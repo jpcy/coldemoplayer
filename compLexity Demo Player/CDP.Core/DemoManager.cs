@@ -108,7 +108,7 @@ namespace CDP.Core
                     }
 
                     stream.Seek(0, SeekOrigin.Begin);
-                    return p.DemoHandler.IsValidDemo(stream);
+                    return p.DemoHandler.IsValidDemo(stream, extension);
                 }).OrderByDescending(p => p.Priority).FirstOrDefault();
             }
         }

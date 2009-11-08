@@ -85,7 +85,7 @@ namespace CDP.IdTech3
             get { return null; }
         }
 
-        public override bool IsValidDemo(Core.FastFileStreamBase stream)
+        public override bool IsValidDemo(Core.FastFileStreamBase stream, string fileExtension)
         {
             if (stream.Length < 8)
             {
