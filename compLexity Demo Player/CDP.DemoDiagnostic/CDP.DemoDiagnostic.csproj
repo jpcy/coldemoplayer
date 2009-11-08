@@ -109,6 +109,10 @@
       <Project>{EF8018FC-A773-4044-A044-17E38D3B07BC}</Project>
       <Name>CDP.IdTech3</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CDP.Quake3Arena\CDP.Quake3Arena.csproj">
+      <Project>{F21AE7B5-2411-4773-B5AA-6C0A915FC062}</Project>
+      <Name>CDP.Quake3Arena</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CDP.Source\CDP.Source.csproj">
       <Project>{5F8BE612-C77B-4870-AEE3-A0FEE9B9F906}</Project>
       <Name>CDP.Source</Name>

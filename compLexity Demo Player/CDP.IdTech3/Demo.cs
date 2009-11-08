@@ -63,7 +63,7 @@ namespace CDP.IdTech3
 
         public override bool CanAnalyse
         {
-            get { return true; }
+            get { return false; }
         }
 
         protected Handler handler;
@@ -75,7 +75,7 @@ namespace CDP.IdTech3
         }
 
         public Protocols Protocol { get; private set; }
-        private string gameName; // TEMP: remove me
+        protected string gameName;
         private bool isLoaded = false;
 
         private readonly List<CommandCallback> commandCallbacks = new List<CommandCallback>();

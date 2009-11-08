@@ -18,6 +18,7 @@ namespace CDP
             demoManager.AddPlugin(0, new HalfLife.Handler());
             demoManager.AddPlugin(1, new CounterStrike.Handler());
             demoManager.AddPlugin(0, new IdTech3.Handler());
+            demoManager.AddPlugin(1, new Quake3Arena.Handler());
 
             // Settings.
             ISettings settings = ObjectCreator.Get<ISettings>();

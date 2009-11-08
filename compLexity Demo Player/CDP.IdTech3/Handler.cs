@@ -100,6 +100,11 @@ namespace CDP.IdTech3
                 return false;
             }
 
+            if (stream.BytesLeft < messageLength)
+            {
+                return false;
+            }
+
             return true;
         }
 
@@ -115,12 +120,12 @@ namespace CDP.IdTech3
 
         public override UserControl CreateAnalysisView()
         {
-            return new Analysis.View();
+            throw new NotImplementedException();
         }
 
         public override Core.ViewModelBase CreateAnalysisViewModel(Core.Demo demo)
         {
-            return new Analysis.ViewModel((Demo)demo);
+            throw new NotImplementedException();
         }
 
         public Command CreateCommand(CommandIds id)
@@ -178,6 +183,69 @@ namespace CDP.IdTech3
 
                 return (Protocols)protocol;
             }
+        }
+
+        /// <summary>
+        /// Reads the game name from a demo.
+        /// </summary>
+        /// <param name="stream">The demo file stream.</param>
+        /// <param name="fileExtension">The demo file extension.</param>
+        /// <returns>The game name in lower case, or null if it cannot be read.</returns>
+        /// <remarks>IsValidDemo helper method for plugins that derive from IdTech3.</remarks>
+        protected string ReadGameName(Core.FastFileStreamBase stream, string fileExtension)
+        {
+            stream.Seek(4, SeekOrigin.Begin); // Skip sequence number.
+            int messageLength = stream.ReadInt();
+
+            if (messageLength > Message.MAX_MSGLEN)
+            {
+                return null;
+            }
+
+            if (stream.BytesLeft < messageLength)
+            {
+                return null;
+            }
+
+            Protocols protocol = GuessProtocol(fileExtension);
+            BitReader reader = new BitReader(stream.ReadBytes(messageLength), protocol >= Protocols.Protocol66);
+
+            if (protocol >= Protocols.Protocol48)
+            {
+                reader.ReadInt(); // Reliable ACK.
+            }
+
+            // First command should be svc_gamestate.
+            if (reader.ReadByte() != (byte)CommandIds.svc_gamestate)
+            {
+                return null;
+            }
+
+            reader.ReadInt(); // Server command sequence.
+
+            // First sub-command of svc_gamestate should be svc_configstring.
+            if (reader.ReadByte() != (byte)CommandIds.svc_configstring)
+            {
+                return null;
+            }
+
+            // Read the first svc_configstring message. It should contain the game name.
+            Commands.SvcConfigString configString = new Commands.SvcConfigString();
+            configString.Read(reader);
+
+            if (configString.KeyValuePairs == null)
+            {
+                return null;
+            }
+
+            string gameName = configString.KeyValuePairs["gamename"];
+
+            if (string.IsNullOrEmpty(gameName))
+            {
+                return null;
+            }
+
+            return gameName.ToLower();
         }
     }
 }
