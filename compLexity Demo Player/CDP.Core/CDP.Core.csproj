@@ -61,6 +61,7 @@
     <Compile Include="BitReader.cs" />
     <Compile Include="BitWriter.cs" />
     <Compile Include="CyclicQueue.cs" />
+    <Compile Include="DelegateCommand.cs" />
     <Compile Include="DemoManager.cs" />
     <Compile Include="Demo.cs" />
     <Compile Include="DemoHandler.cs" />

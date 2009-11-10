@@ -33,8 +33,8 @@ namespace CDP.ViewModel
             }
         }
 
-        public DelegateCommand PlayCommand { get; private set; }
-        public DelegateCommand AnalyseCommand { get; private set; }
+        public Core.DelegateCommand PlayCommand { get; private set; }
+        public Core.DelegateCommand AnalyseCommand { get; private set; }
 
         private readonly Core.ISettings settings = Core.ObjectCreator.Get<Core.ISettings>();
         private readonly IMediator mediator = Core.ObjectCreator.Get<IMediator>();
@@ -43,8 +43,8 @@ namespace CDP.ViewModel
 
         public Demo()
         {
-            PlayCommand = new DelegateCommand(PlayCommandCanExecute, PlayCommandExecute);
-            AnalyseCommand = new DelegateCommand(AnalyseCommandCanExecute, AnalyseCommandExecute);
+            PlayCommand = new Core.DelegateCommand(PlayCommandCanExecute, PlayCommandExecute);
+            AnalyseCommand = new Core.DelegateCommand(AnalyseCommandCanExecute, AnalyseCommandExecute);
             mediator.Register<Core.Demo>(Messages.SelectedDemoChanged, SelectedDemoChanged, this);
         }
 

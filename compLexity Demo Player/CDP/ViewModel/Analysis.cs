@@ -12,7 +12,7 @@ namespace CDP.ViewModel
 
         public UserControl View { get; private set; }
         public Core.ViewModelBase ViewModel { get; private set; }
-        public DelegateCommand BackCommand { get; private set; }
+        public Core.DelegateCommand BackCommand { get; private set; }
 
         private readonly INavigationService navigationService = Core.ObjectCreator.Get<INavigationService>();
         private readonly Core.Demo demo;
@@ -22,7 +22,7 @@ namespace CDP.ViewModel
         {
             this.demo = demo;
             viewModel = demo.Handler.CreateAnalysisViewModel(demo);
-            BackCommand = new DelegateCommand(BackCommandExecute);
+            BackCommand = new Core.DelegateCommand(BackCommandExecute);
         }
 
         public override void OnNavigateComplete()

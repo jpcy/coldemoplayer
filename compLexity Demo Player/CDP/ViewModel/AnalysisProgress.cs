@@ -21,7 +21,7 @@ namespace CDP.ViewModel
             }
         }
 
-        public DelegateCommand CancelCommand { get; private set; }
+        public Core.DelegateCommand CancelCommand { get; private set; }
 
         private readonly INavigationService navigationService = Core.ObjectCreator.Get<INavigationService>();
         private readonly Core.Demo demo;
@@ -34,7 +34,7 @@ namespace CDP.ViewModel
             demo.OperationErrorEvent += demo_OperationErrorEvent;
             demo.OperationCompleteEvent += demo_OperationCompleteEvent;
             demo.OperationCancelledEvent += demo_OperationCancelledEvent;
-            CancelCommand = new DelegateCommand(CancelCommandExecute);
+            CancelCommand = new Core.DelegateCommand(CancelCommandExecute);
             analysisViewModel = new Analysis(demo);
         }
 

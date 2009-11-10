@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Input;
 
-namespace CDP
+namespace CDP.Core
 {
     public class DelegateCommand : ICommand
     {

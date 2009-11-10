@@ -1,4 +1,5 @@
 ﻿using System;
+using CDP.Core;
 using CDP.Core.Extensions;
 
 namespace CDP.ViewModel

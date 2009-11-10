@@ -1,4 +1,5 @@
 ﻿using System;
+using CDP.Core;
 
 namespace CDP.ViewModel
 {
