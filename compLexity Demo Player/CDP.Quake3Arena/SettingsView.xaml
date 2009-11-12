@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="CDP.Quake3Arena.SettingsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Margin="8">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">quake3.exe:</TextBlock>
+        <TextBox Grid.Row="1" Grid.Column="0" IsReadOnly="True" Margin="0,0,8,0" Text="{Binding ExeFullPath, Mode=OneWay}" />
+        <Button Grid.Row="1" Grid.Column="1" Padding="16,0,16,0" Command="{Binding BrowseForExeCommand}">Browse...</Button>
+    </Grid>
+</UserControl>

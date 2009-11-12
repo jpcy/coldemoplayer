@@ -20,6 +20,31 @@ namespace CDP.Quake3Arena
             get { return "Q3A"; }
         }
 
+        public override CDP.Core.Setting[] Settings
+        {
+            get
+            {
+                return new Core.Setting[]
+                {
+                    new Core.Setting("Quake3ExeFullPath", typeof(string), string.Empty)
+                };
+            }
+        }
+
+        private UserControl settingsView;
+        public override UserControl SettingsView
+        {
+            get
+            {
+                if (settingsView == null)
+                {
+                    settingsView = new SettingsView { DataContext = new SettingsViewModel() };
+                }
+
+                return settingsView;
+            }
+        }
+
         /// <summary>
         /// Game names that are valid for this plugin - i.e. they are compatiable enough with Q3A that they don't require any special treatment to convert, analyse or play (aside from resources).
         /// </summary>
@@ -53,6 +78,11 @@ namespace CDP.Quake3Arena
         public override Core.Demo CreateDemo()
         {
             return new Demo();
+        }
+
+        public override Core.Launcher CreateLauncher()
+        {
+            return new Launcher();
         }
 
         public override UserControl CreateAnalysisView()

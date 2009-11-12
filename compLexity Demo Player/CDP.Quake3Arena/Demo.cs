@@ -26,5 +26,10 @@ namespace CDP.Quake3Arena
         {
             get { return true; }
         }
+
+        public override bool CanPlay
+        {
+            get { return true; }
+        }
     }
 }
