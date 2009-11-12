@@ -39,7 +39,7 @@ namespace UnitTests.Core
         [SetUp]
         public void SetUp()
         {
-            writer = new BitWriter();
+            writer = new BitWriter(1024);
         }
 
         [Test]

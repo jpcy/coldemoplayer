@@ -60,7 +60,7 @@ namespace CDP.Source
 
         public byte[] Write()
         {
-            Core.BitWriter bw = new Core.BitWriter();
+            Core.BitWriter bw = new Core.BitWriter(SizeInBytes);
             bw.WriteString(Magic, magicLength);
             bw.WriteInt(DemoProtocol);
             bw.WriteInt(NetworkProtocol);

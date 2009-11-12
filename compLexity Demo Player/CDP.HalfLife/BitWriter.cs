@@ -4,6 +4,13 @@ namespace CDP.HalfLife
 {
     public class BitWriter : Core.BitWriter
     {
+        private const int maxSize = 65536; // MAX_POSSIBLE_MSG = 2^16
+
+        public BitWriter()
+            : base(maxSize)
+        {
+        }
+
         public void WriteCoord(float value)
         {
             WriteBoolean(true); // int flag

@@ -42,7 +42,7 @@ namespace CDP.IdTech3.Commands
             ServerCommandSequence = buffer.ReadInt();
         }
 
-        public override void Write(Core.BitWriter buffer)
+        public override void Write(BitWriter buffer)
         {
             buffer.WriteInt(ServerCommandSequence);
         }
@@ -61,7 +61,7 @@ namespace CDP.IdTech3.Commands
             }
         }
 
-        public override void WriteFooter(Core.BitWriter buffer)
+        public override void WriteFooter(BitWriter buffer)
         {
             buffer.WriteInt(ClientNumber);
             buffer.WriteInt(Checksum);

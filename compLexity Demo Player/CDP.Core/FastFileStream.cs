@@ -551,7 +551,8 @@ namespace CDP.Core
                 throw new FileAccessIsReadNotWrite();
             }
 
-            BitWriter buffer = new BitWriter();
+            // Maximum possible encoded string length for UTF-8 is 4 bytes per character.
+            BitWriter buffer = new BitWriter(value.Length * 4);
             buffer.WriteString(value);
             byte[] data = buffer.ToArray();
             WriteBytes(data);

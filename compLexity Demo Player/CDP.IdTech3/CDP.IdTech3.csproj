@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BitReader.cs" />
+    <Compile Include="BitWriter.cs" />
     <Compile Include="Commands\SvcBaseline.cs" />
     <Compile Include="Commands\SvcConfigString.cs" />
     <Compile Include="Commands\SvcGameState.cs" />

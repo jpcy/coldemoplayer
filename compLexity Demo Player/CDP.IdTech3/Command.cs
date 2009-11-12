@@ -24,11 +24,11 @@ namespace CDP.IdTech3
         }
 
         public abstract void Read(BitReader buffer);
-        public abstract void Write(Core.BitWriter buffer);
+        public abstract void Write(BitWriter buffer);
         public abstract void Log(StreamWriter log);
 
         public virtual void ReadFooter(BitReader buffer) { }
-        public virtual void WriteFooter(Core.BitWriter buffer) { }
+        public virtual void WriteFooter(BitWriter buffer) { }
         public virtual void LogFooter(StreamWriter log) { }
     }
 

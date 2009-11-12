@@ -170,15 +170,14 @@ namespace CDP.Source.Messages
                         }
 
                         // Read user data.
-                        BitWriter writer = new BitWriter();
                         uint userDataSizeBytes = entry.UserDataNumBits / 8;
+                        uint remainingBits = entry.UserDataNumBits % 8;
+                        BitWriter writer = new BitWriter((int)userDataSizeBytes + (remainingBits > 0 ? 1 : 0));
 
                         if (userDataSizeBytes > 0)
                         {
                             writer.WriteBytes(buffer.ReadBytes(userDataSizeBytes));
                         }
-
-                        uint remainingBits = entry.UserDataNumBits % 8;
 
                         if (remainingBits > 0)
                         {

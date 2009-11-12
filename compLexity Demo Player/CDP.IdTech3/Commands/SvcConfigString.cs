@@ -64,7 +64,7 @@ namespace CDP.IdTech3.Commands
             }
         }
 
-        public override void Write(Core.BitWriter buffer)
+        public override void Write(BitWriter buffer)
         {
             throw new NotImplementedException();
         }

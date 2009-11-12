@@ -7,17 +7,17 @@ namespace CDP.Core
 {
     public class BitWriter
     {
-        private List<byte> data;
+        private byte[] data;
         private int currentBit = 0;
 
-        public BitWriter()
+        public BitWriter(int maxSize)
         {
-            data = new List<byte>();
+            data = new byte[maxSize];
         }
 
         public byte[] ToArray()
         {
-            return data.ToArray();
+            return data.Take(currentBit / 8 + (currentBit % 8 > 0 ? 1 : 0)).ToArray();
         }
 
         public void WriteUBits(uint value, int nBits)
@@ -37,10 +37,10 @@ namespace CDP.Core
 
                 for (int i = 0; i < nBytesToWrite; i++)
                 {
-                    data.Add((byte)((value >> i * 8) & 0xFF));
+                    data[currentBit / 8] = (byte)((value >> i * 8) & 0xFF);
+                    currentBit += 8;
                 }
 
-                currentBit += nBits;
                 return;
             }
 
@@ -49,31 +49,6 @@ namespace CDP.Core
             if (bitsToWriteToCurrentByte > nBits)
             {
                 bitsToWriteToCurrentByte = nBits;
-            }
-
-            // calculate how many bytes need to be added to the list
-            int bytesToAdd = 0;
-
-            if (nBits > bitsToWriteToCurrentByte)
-            {
-                int temp = nBits - bitsToWriteToCurrentByte;
-                bytesToAdd = temp / 8;
-
-                if ((temp % 8) != 0)
-                {
-                    bytesToAdd++;
-                }
-            }
-
-            if (bitOffset == 0)
-            {
-                bytesToAdd++;
-            }
-
-            // add new bytes if needed
-            for (int i = 0; i < bytesToAdd; i++)
-            {
-                data.Add(new byte());
             }
 
             int nBitsWritten = 0;
@@ -117,11 +92,6 @@ namespace CDP.Core
         {
             int currentByte = currentBit / 8;
 
-            if (currentByte > data.Count - 1)
-            {
-                data.Add(new byte());
-            }
-
             if (value)
             {
                 data[currentByte] += (byte)(1 << currentBit % 8);
@@ -142,17 +112,9 @@ namespace CDP.Core
 
         public void WriteBytes(byte[] values)
         {
-            if (currentBit % 8 == 0)
+            for (int i = 0; i < values.Length; i++)
             {
-                data.AddRange(values);
-                currentBit += values.Length * 8;
-            }
-            else
-            {
-                for (int i = 0; i < values.Length; i++)
-                {
-                    WriteByte(values[i]);
-                }
+                WriteByte(values[i]);
             }
         }
 
