@@ -325,11 +325,36 @@ typedef struct {
 
 static huffman_t		msgHuff;
 
+void	Huff_putBit( int bit, byte *fout, int *offset) {
+	if (((*offset)&7) == 0) {
+		fout[(*offset>>3)] = 0;
+	}
+	fout[(*offset>>3)] |= bit << ((*offset)&7);
+	(*offset)++;
+}
+
 int		Huff_getBit( byte *fin, int *offset) {
 	int t;
 	t = (fin[(*offset>>3)] >> (*offset&7)) & 0x1;
 	(*offset)++;
 	return t;
+}
+
+void send(node_t *node, node_t *child, byte *fout, int *offset) {
+	if (node->parent) {
+		send(node->parent, node, fout, offset);
+	}
+	if (child) {
+		if (node->right == child) {
+			Huff_putBit(1, fout, offset);
+		} else {
+			Huff_putBit(0, fout, offset);
+		}
+	}
+}
+
+void Huff_offsetTransmit (huff_t *huff, int ch, byte *fout, int *offset) {
+	send(huff->loc[ch], NULL, fout, offset);
 }
 
 /* Get a symbol */
@@ -602,4 +627,32 @@ unsigned int HuffmanReadUInt(unsigned char *buffer, int *bitOffset, int bits)
 	}
 
 	return value;
+}
+
+void HuffmanWriteUInt(unsigned char *buffer, int *bitOffset, unsigned int value, int bits)
+{
+	value &= (0xffffffff>>(32-bits));
+
+	if (bits & 7)
+	{
+		int nbits;
+		nbits = bits&7;
+
+		for (int i = 0; i < nbits; i++)
+		{
+			Huff_putBit((value&1), buffer, bitOffset);
+			value = (value>>1);
+		}
+
+		bits = bits - nbits;
+	}
+
+	if (bits)
+	{
+		for (int i = 0; i < bits; i += 8)
+		{
+			Huff_offsetTransmit (&msgHuff.compressor, (value&0xff), buffer, bitOffset);
+			value = (value>>8);
+		}
+	}
 }

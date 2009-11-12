@@ -39,7 +39,7 @@ namespace CDP.IdTech3
             // Sign.
             if ((value & (1 << (nBits - 1))) != 0)
             {
-                value |= -1 ^ ((1 << nBits) - 1);
+                value = -1 ^ int.MaxValue + value;
             }
 
             return value;

@@ -7,8 +7,8 @@ namespace CDP.Core
 {
     public class BitWriter
     {
-        private byte[] data;
-        private int currentBit = 0;
+        protected byte[] data;
+        protected int currentBit = 0;
 
         public BitWriter(int maxSize)
         {
@@ -20,7 +20,7 @@ namespace CDP.Core
             return data.Take(currentBit / 8 + (currentBit % 8 > 0 ? 1 : 0)).ToArray();
         }
 
-        public void WriteUBits(uint value, int nBits)
+        public virtual void WriteUBits(uint value, int nBits)
         {
             if (nBits < 0 || nBits > 32)
             {
@@ -82,13 +82,13 @@ namespace CDP.Core
             currentBit += nBits;
         }
 
-        public void WriteBits(int value, int nBits)
+        public virtual void WriteBits(int value, int nBits)
         {
             WriteUBits((uint)value, nBits - 1);
             WriteUBits(value < 0 ? 1u : 0u, 1);
         }
 
-        public void WriteBoolean(bool value)
+        public virtual void WriteBoolean(bool value)
         {
             int currentByte = currentBit / 8;
 
@@ -201,7 +201,7 @@ namespace CDP.Core
             }
         }
 
-        public void PadRemainingBitsInCurrentByte()
+        public virtual void PadRemainingBitsInCurrentByte()
         {
             int bitOffset = currentBit % 8;
 
