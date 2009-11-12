@@ -12,6 +12,7 @@ namespace CDP.Core
         IEnumerable<string> GetFolderNames(string path);
         string PathCombine(string path, params string[] paths);
         string GetExtension(string fileName);
+        string ChangeExtension(string fileName, string newExtension);
     }
 
     public class FileSystem : IFileSystem
@@ -46,6 +47,26 @@ namespace CDP.Core
         public string GetExtension(string fileName)
         {
             return Path.GetExtension(fileName).Replace(".", null);
+        }
+
+        public string ChangeExtension(string fileName, string newExtension)
+        {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                throw new ArgumentNullException("fileName");
+            }
+            if (string.IsNullOrEmpty(newExtension))
+            {
+                throw new ArgumentNullException("newExtension");
+            }
+
+            // Add leading '.' to extension.
+            if (!newExtension.StartsWith("."))
+            {
+                newExtension = "." + newExtension;
+            }
+
+            return Path.GetFileNameWithoutExtension(fileName) + newExtension;
         }
     }
 }
