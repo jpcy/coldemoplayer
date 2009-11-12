@@ -25,6 +25,7 @@ namespace CDP.IdTech3
 
             if (Length == -1)
             {
+                // End of file.
                 return;
             }
 
@@ -39,6 +40,18 @@ namespace CDP.IdTech3
             if (protocol >= Protocols.Protocol48)
             {
                 ReliableAck = Reader.ReadInt();
+            }
+        }
+
+        public void Write(Core.FastFileStream stream)
+        {
+            stream.WriteInt(SequenceNumber);
+            stream.WriteInt(Length);
+
+            // End of file marker.
+            if (SequenceNumber != -1 && Length != -1)
+            {
+                stream.WriteInt(ReliableAck);
             }
         }
 

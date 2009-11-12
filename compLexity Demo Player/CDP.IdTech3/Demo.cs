@@ -29,10 +29,19 @@ namespace CDP.IdTech3
             public string Model { get; set; }
         }
 
+        public enum ConvertTargets
+        {
+            None,
+            Protocol68,
+            Protocol73
+        }
+
         public override string GameName
         {
             get { return gameName; }
         }
+
+        public string ModFolder { get; protected set; }
 
         public override string MapName { get; protected set; }
         public override string Perspective { get; protected set; }
@@ -77,6 +86,7 @@ namespace CDP.IdTech3
         public Protocols Protocol { get; private set; }
         protected string gameName;
         private bool isLoaded = false;
+        private ConvertTargets convertTarget = ConvertTargets.None;
 
         private readonly List<CommandCallback> commandCallbacks = new List<CommandCallback>();
         private readonly Core.ISettings settings = Core.ObjectCreator.Get<Core.ISettings>();
@@ -169,7 +179,69 @@ namespace CDP.IdTech3
 
         public override void Write(string destinationFileName)
         {
-            throw new NotImplementedException();
+            const int bufferSize = 4096;
+
+            try
+            {
+                ResetOperationCancelledState();
+                ResetProgress();
+
+                using (Core.FastFileStream inputStream = new Core.FastFileStream(FileName, Core.FastFileAccess.Read))
+                using (Core.FastFileStream outputStream = new Core.FastFileStream(destinationFileName, Core.FastFileAccess.Write))
+                {
+                    while (true)
+                    {
+                        if (convertTarget == ConvertTargets.None)
+                        {
+                            int bytesToRead = bufferSize;
+
+                            if (inputStream.BytesLeft < bytesToRead)
+                            {
+                                bytesToRead = (int)inputStream.BytesLeft;
+
+                                if (bytesToRead == 0)
+                                {
+                                    break;
+                                }
+                            }
+
+                            outputStream.WriteBytes(inputStream.ReadBytes(bytesToRead));
+                        }
+                        else
+                        {
+                            Message message = new Message();
+                            message.Read(inputStream, Protocol);
+                            message.Write(outputStream);
+
+                            if (message.Length == -1)
+                            {
+                                break;
+                            }
+
+                            ReadCommandsUntilEof(message.Reader, null, null, false);
+                        }
+
+                        UpdateProgress(inputStream.Position, inputStream.Length);
+
+                        if (IsOperationCancelled())
+                        {
+                            OnOperationCancelled();
+                            return;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                OnOperationError(FileName, ex);
+                return;
+            }
+            finally
+            {
+                commandCallbacks.Clear();
+            }
+
+            OnOperationComplete();
         }
 
         public void RunDiagnostic(string logFileName, IEnumerable<CommandIds> commandsToLog)
@@ -365,6 +437,7 @@ namespace CDP.IdTech3
             if (command.KeyValuePairs.ContainsKey("gamename"))
             {
                 gameName = command.KeyValuePairs["gamename"].ToLower();
+                ModFolder = gameName;
             }
 
             if (command.KeyValuePairs.ContainsKey("sv_maxclients"))

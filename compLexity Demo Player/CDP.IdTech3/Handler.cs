@@ -69,6 +69,11 @@ namespace CDP.IdTech3
             get { return new Core.Setting[] { }; }
         }
 
+        public override UserControl SettingsView
+        {
+            get { return null; }
+        }
+
         private readonly List<RegisteredCommand> registeredCommands = new List<RegisteredCommand>();
 
         public Handler()
@@ -78,11 +83,6 @@ namespace CDP.IdTech3
             RegisterCommand<Commands.SvcGameState>();
             RegisterCommand<Commands.SvcServerCommand>();
             RegisterCommand<Commands.SvcSnapshot>();
-        }
-
-        public override UserControl SettingsView
-        {
-            get { return null; }
         }
 
         public override bool IsValidDemo(Core.FastFileStreamBase stream, string fileExtension)
