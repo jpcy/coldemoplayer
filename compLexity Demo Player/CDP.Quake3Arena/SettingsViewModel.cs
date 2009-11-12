@@ -16,46 +16,53 @@ namespace CDP.Quake3Arena
         }
 
         private readonly Core.ISettings settings = Core.ObjectCreator.Get<Core.ISettings>();
+        private readonly string[] executableFileNames;
 
-        public SettingsViewModel()
+        public SettingsViewModel(string[] executableFileNames)
         {
+            if (executableFileNames == null)
+            {
+                throw new ArgumentNullException("executableFileNames");
+            }
+
+            this.executableFileNames = executableFileNames;
             BrowseForExeCommand = new Core.DelegateCommand(BrowseForExeCommandExecute);
         }
 
         private void BrowseForExeCommandExecute()
         {
-            string initialPath = null;
-
-            if (File.Exists((string)settings["Quake3ExeFullPath"]))
-            {
-                initialPath = Path.GetDirectoryName((string)settings["Quake3ExeFullPath"]);
-            }
-
-            string fileName = BrowseForFile("quake3.exe", initialPath);
-
-            if (!string.IsNullOrEmpty(fileName))
-            {
-                settings["Quake3ExeFullPath"] = fileName;
-                OnPropertyChanged("ExeFullPath");
-            }
-        }
-
-        private string BrowseForFile(string fileName, string initialPath)
-        {
             OpenFileDialog dialog = new OpenFileDialog
             {
-                Title = "Browse for \"" + fileName + "\"...",
-                InitialDirectory = initialPath,
-                Filter = fileName + "|" + fileName,
+                Title = "Browse for Quake III Arena executable...",
+                Filter = string.Empty,
                 RestoreDirectory = true
             };
 
-            if (dialog.ShowDialog() == true)
+            if (File.Exists((string)settings["Quake3ExeFullPath"]))
             {
-                return dialog.FileName;
+                dialog.InitialDirectory = Path.GetDirectoryName((string)settings["Quake3ExeFullPath"]);
             }
 
-            return null;
+            // OpenFileDialog Filter property does integrity checks everytime it changes, can't use it to build a string incrementally.
+            string filter = string.Empty;
+
+            foreach (string fileName in executableFileNames)
+            {
+                if (fileName != executableFileNames.First())
+                {
+                    filter += "|";
+                }
+
+                filter += fileName + "|" + fileName;
+            }
+
+            dialog.Filter = filter;
+
+            if (dialog.ShowDialog() == true)
+            {
+                settings["Quake3ExeFullPath"] = dialog.FileName;
+                OnPropertyChanged("ExeFullPath");
+            }
         }
     }
 }

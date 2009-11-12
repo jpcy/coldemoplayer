@@ -9,6 +9,8 @@ namespace CDP.Quake3Arena
 {
     /// <remarks>
     /// Demos don't have to be in a mod's "demos" folder to play, baseq3 is fine - so demos are always copied into baseq3/demos.
+    /// 
+    /// Setting fs_game to a mod folder that doesn't exist is fine, it just falls back to baseq3. This removes the need to check if a mod folder exists before playback. Mod folders for demos recorded with some mods don't need to exist anyway (i.e. if the mod doesn't add any new resources).
     /// </remarks>
     public class Launcher : Core.Launcher
     {
@@ -32,7 +34,7 @@ namespace CDP.Quake3Arena
         {
             if (!File.Exists((string)settings["Quake3ExeFullPath"]))
             {
-                Message = string.Format("quake3.exe path not set.");
+                Message = string.Format("Quake II Arena executable path not set.");
                 return false;
             }
 

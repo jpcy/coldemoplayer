@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows.Controls;
 using CDP.IdTech3;
 using CDP.IdTech3.Commands;
+using System.Xml.Serialization;
 
 namespace CDP.Quake3Arena
 {
@@ -20,7 +21,12 @@ namespace CDP.Quake3Arena
             get { return "Q3A"; }
         }
 
-        public override CDP.Core.Setting[] Settings
+        public override string[] Extensions
+        {
+            get { return new string[] { "dm3", "dm_48", "dm_66", "dm_67", "dm_68", "dm_73" }; }
+        }
+
+        public override Core.Setting[] Settings
         {
             get
             {
@@ -38,41 +44,27 @@ namespace CDP.Quake3Arena
             {
                 if (settingsView == null)
                 {
-                    settingsView = new SettingsView { DataContext = new SettingsViewModel() };
+                    settingsView = new SettingsView
+                    {
+                        DataContext = new SettingsViewModel(config.ExecutableFileNames)
+                    };
                 }
 
                 return settingsView;
             }
         }
 
-        /// <summary>
-        /// Game names that are valid for this plugin - i.e. they are compatiable enough with Q3A that they don't require any special treatment to convert, analyse or play (aside from resources).
-        /// </summary>
-        private readonly string[] validGameNames =
+        private Core.IFileSystem fileSystem = Core.ObjectCreator.Get<Core.IFileSystem>();
+        private Core.ISettings settings = Core.ObjectCreator.Get<Core.ISettings>();
+        private Config config;
+
+        public Handler()
         {
-            // TODO: read these from a config file.
-            "baseq3",
-            "cpma", // TODO: probably requires its own plugin.
-            "excessive",
-            "instaunlagged",
-            "ost" // TODO: probably requires its own plugin.
-        };
-
-        public override bool IsValidDemo(Core.FastFileStreamBase stream, string fileExtension)
-        {
-            if (!base.IsValidDemo(stream, fileExtension))
+            using (StreamReader stream = new StreamReader(fileSystem.PathCombine(settings.ProgramPath, "config", "idtech3", "quake3arena.xml")))
             {
-                return false;
+                XmlSerializer serializer = new XmlSerializer(typeof(Config));
+                config = (Config)serializer.Deserialize(stream);
             }
-
-            string gameName = ReadGameName(stream, fileExtension);
-
-            if (gameName == null)
-            {
-                return false;
-            }
-
-            return validGameNames.Contains(gameName);
         }
 
         public override Core.Demo CreateDemo()
@@ -93,6 +85,11 @@ namespace CDP.Quake3Arena
         public override Core.ViewModelBase CreateAnalysisViewModel(Core.Demo demo)
         {
             return new Analysis.ViewModel((Demo)demo);
+        }
+
+        public Mod FindMod(string modFolder)
+        {
+            return config.Mods.FirstOrDefault(m => m.Folder == modFolder);
         }
     }
 }

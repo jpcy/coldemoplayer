@@ -10,26 +10,33 @@ namespace CDP.Quake3Arena
         {
             get
             {
-                string result = "Quake III Arena";
-
-                if (gameName != "baseq3")
+                if (mod == null)
                 {
-                    // TODO: read proper mod names from a config file.
-                    result += string.Format(" ({0})", gameName);
+                    return string.Format("Quake III Arena ({0})", gameName);
                 }
-
-                return result;
+                else
+                {
+                    return mod.Name;
+                }
             }
         }
 
         public override bool CanAnalyse
         {
-            get { return true; }
+            get { return mod == null ? false : mod.CanAnalyse; }
         }
 
         public override bool CanPlay
         {
             get { return true; }
+        }
+
+        private Mod mod;
+
+        public override void Load()
+        {
+            base.Load();
+            mod = ((Handler)handler).FindMod(ModFolder);
         }
     }
 }
