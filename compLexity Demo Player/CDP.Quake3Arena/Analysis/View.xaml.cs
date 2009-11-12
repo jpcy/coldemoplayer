@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CDP.IdTech3.Analysis
+namespace CDP.Quake3Arena.Analysis
 {
     /// <summary>
     /// Interaction logic for View.xaml

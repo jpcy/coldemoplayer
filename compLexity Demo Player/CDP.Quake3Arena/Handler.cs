@@ -87,12 +87,12 @@ namespace CDP.Quake3Arena
 
         public override UserControl CreateAnalysisView()
         {
-            return new IdTech3.Analysis.View();
+            return new Analysis.View();
         }
 
         public override Core.ViewModelBase CreateAnalysisViewModel(Core.Demo demo)
         {
-            return new IdTech3.Analysis.ViewModel((IdTech3.Demo)demo);
+            return new Analysis.ViewModel((Demo)demo);
         }
     }
 }

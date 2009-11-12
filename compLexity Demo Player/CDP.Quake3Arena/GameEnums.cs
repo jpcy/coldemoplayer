@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CDP.IdTech3
+namespace CDP.Quake3Arena
 {
     public enum EntityTypes_Protocol43and45 : uint
     {

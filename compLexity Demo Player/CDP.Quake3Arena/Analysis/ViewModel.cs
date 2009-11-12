@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Documents;
-using CDP.Core.Extensions;
 using System.Windows.Media;
+using CDP.Core.Extensions;
+using CDP.IdTech3;
+using CDP.IdTech3.Commands;
 
-namespace CDP.IdTech3.Analysis
+namespace CDP.Quake3Arena.Analysis
 {
     public class ViewModel : Core.ViewModelBase
     {
@@ -35,9 +37,9 @@ namespace CDP.IdTech3.Analysis
         public ViewModel(Demo demo)
         {
             this.demo = demo;
-            demo.AddCommandCallback<Commands.SvcConfigString>(ConfigString);
-            demo.AddCommandCallback<Commands.SvcServerCommand>(ServerCommand);
-            demo.AddCommandCallback<Commands.SvcSnapshot>(Snapshot);
+            demo.AddCommandCallback<SvcConfigString>(ConfigString);
+            demo.AddCommandCallback<SvcServerCommand>(ServerCommand);
+            demo.AddCommandCallback<SvcSnapshot>(Snapshot);
             GameLogDocument = new FlowDocument();
         }
 
@@ -363,7 +365,7 @@ namespace CDP.IdTech3.Analysis
         }
 
         #region Command callbacks
-        private void ConfigString(Commands.SvcConfigString command)
+        private void ConfigString(SvcConfigString command)
         {
             if (command.IsPlayer)
             {
@@ -371,7 +373,7 @@ namespace CDP.IdTech3.Analysis
             }
         }
 
-        private void ServerCommand(Commands.SvcServerCommand command)
+        private void ServerCommand(SvcServerCommand command)
         {
             if (command.Sequence > serverCommandSequence)
             {
@@ -392,7 +394,7 @@ namespace CDP.IdTech3.Analysis
             }
         }
 
-        private void Snapshot(Commands.SvcSnapshot command)
+        private void Snapshot(SvcSnapshot command)
         {
             foreach (Entity entity in command.Entities)
             {

@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="CDP.IdTech3.Analysis.View"
+﻿<UserControl x:Class="CDP.Quake3Arena.Analysis.View"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:core="clr-namespace:CDP.Core;assembly=CDP.Core">
