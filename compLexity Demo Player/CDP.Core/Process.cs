@@ -31,6 +31,19 @@ namespace CDP.Core
 
                 try
                 {
+                    int attemptsLeft = 10;
+
+                    while (process.MainModule == null)
+                    {
+                        if (attemptsLeft == 0)
+                        {
+                            throw new ApplicationException(string.Format("Process MainModule still null after {0} attempts.", attemptsLeft));
+                        }
+
+                        System.Threading.Thread.Sleep(100);
+                        attemptsLeft--;
+                    }
+
                     result = process.MainModule.FileName;
                 }
                 catch (System.ComponentModel.Win32Exception)
