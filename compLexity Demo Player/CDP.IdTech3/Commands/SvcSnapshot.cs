@@ -59,75 +59,8 @@ namespace CDP.IdTech3.Commands
                 AreaMask = buffer.ReadBytes(areaMaskLength);
             }
 
-            // Read player info.
             Player = new Player(demo.Protocol);
-            byte lc;
-
-            if (demo.Protocol >= Protocols.Protocol43 && demo.Protocol <= Protocols.Protocol48)
-            {
-                lc = (byte)Player.NetFields.Length;
-            }
-            else
-            {
-                lc = buffer.ReadByte();
-            }
-
-            for (int i = 0; i < lc; i++)
-            {
-                if (!buffer.ReadBoolean())
-                {
-                    continue;
-                }
-
-                NetField field = Player.NetFields[i];
-
-                if (field.Bits == 0)
-                {
-                    if (buffer.ReadBoolean())
-                    {
-                        Player[i] = buffer.ReadFloat();
-                    }
-                    else
-                    {
-                        Player[i] = buffer.ReadIntegralFloat();
-                    }
-                }
-                else
-                {
-                    if (field.Signed)
-                    {
-                        Player[i] = buffer.ReadBits(field.Bits);
-                    }
-                    else
-                    {
-                        Player[i] = buffer.ReadUBits(field.Bits);
-                    }
-                }
-            }
-
-            Action<int, Action<int>> readArray = (size, callback) =>
-            {
-                if (buffer.ReadBoolean())
-                {
-                    short bits = buffer.ReadShort();
-
-                    for (int i = 0; i < size; i++)
-                    {
-                        if ((bits & (1 << i)) != 0)
-                        {
-                            callback(i);
-                        }
-                    }
-                }
-            };
-
-            if ((demo.Protocol >= Protocols.Protocol43 && demo.Protocol <= Protocols.Protocol48) || buffer.ReadBoolean())
-            {
-                readArray(Player.MAX_STATS, i => Player.Stats[i] = buffer.ReadShort());
-                readArray(Player.MAX_PERSISTANT, i => Player.Persistant[i] = buffer.ReadShort());
-                readArray(Player.MAX_WEAPONS, i => Player.Ammo[i] = buffer.ReadShort());
-                readArray(Player.MAX_POWERUPS, i => Player.Powerups[i] = buffer.ReadInt());
-            }
+            Player.Read(buffer);
 
             // Read packet entities.
             while (true)
@@ -148,7 +81,50 @@ namespace CDP.IdTech3.Commands
 
         public override void Write(BitWriter buffer)
         {
-            throw new NotImplementedException();
+            buffer.WriteInt(ServerTime);
+            buffer.WriteByte(DeltaNum);
+            buffer.WriteByte(SnapFlags);
+
+            if (AreaMask == null || AreaMask.Length == 0)
+            {
+                buffer.WriteByte(0);
+            }
+            else
+            {
+                buffer.WriteByte((byte)AreaMask.Length);
+                buffer.WriteBytes(AreaMask);
+            }
+
+            Player player = null;
+
+            if (demo.Protocol == demo.ConvertTargetProtocol)
+            {
+                player = Player;
+            }
+            else
+            {
+                player = new Player(demo.ConvertTargetProtocol, Player);
+            }
+
+            player.Write(buffer);            
+
+            // Write packet entities.
+            foreach (Entity entity in Entities)
+            {
+                buffer.WriteUBits(entity.Number, Entity.GENTITYNUM_BITS);
+
+                if (demo.Protocol == demo.ConvertTargetProtocol)
+                {
+                    entity.Write(buffer);
+                }
+                else
+                {
+                    Entity newEntity = new Entity(demo.ConvertTargetProtocol, entity);
+                    newEntity.Write(buffer);
+                }
+            }
+
+            buffer.WriteUBits(Entity.GENTITYSENTINEL, Entity.GENTITYNUM_BITS);
         }
 
         public override void Log(StreamWriter log)
@@ -170,43 +146,7 @@ namespace CDP.IdTech3.Commands
 
             if (Player != null)
             {
-                for (int i = 0; i < Player.NetFields.Length; i++)
-                {
-                    if (Player[i] != null)
-                    {
-                        log.WriteLine("Field: {0}, Value: {1}", Player.NetFields[i].Name, Player[i]);
-                    }
-                }
-
-                log.Write("Stats: ");
-                
-                for (int i = 0; i < Player.MAX_STATS; i++)
-                {
-                    log.Write("{0} ", Player.Stats[i]);
-                }
-
-                log.Write("\nPersistant: ");
-
-                for (int i = 0; i < Player.MAX_PERSISTANT; i++)
-                {
-                    log.Write("{0} ", Player.Persistant[i]);
-                }
-
-                log.Write("\nAmmo: ");
-
-                for (int i = 0; i < Player.MAX_WEAPONS; i++)
-                {
-                    log.Write("{0} ", Player.Ammo[i]);
-                }
-
-                log.Write("\nPowerups: ");
-
-                for (int i = 0; i < Player.MAX_POWERUPS; i++)
-                {
-                    log.Write("{0} ", Player.Powerups[i]);
-                }
-
-                log.WriteLine();
+                Player.Log(log);
             }
 
             foreach (Entity entity in Entities)

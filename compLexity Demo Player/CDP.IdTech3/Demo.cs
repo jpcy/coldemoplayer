@@ -29,13 +29,6 @@ namespace CDP.IdTech3
             public string Model { get; set; }
         }
 
-        public enum ConvertTargets
-        {
-            None,
-            Protocol68,
-            Protocol73
-        }
-
         public override string GameName
         {
             get { return gameName; }
@@ -83,10 +76,27 @@ namespace CDP.IdTech3
             set { handler = (Handler)value; }
         }
 
+        public ConvertTargets ConvertTarget { get; protected set; }
         public Protocols Protocol { get; private set; }
+        public Protocols ConvertTargetProtocol
+        {
+            get
+            {
+                if (ConvertTarget == ConvertTargets.Protocol68)
+                {
+                    return Protocols.Protocol68;
+                }
+                else if (ConvertTarget == ConvertTargets.Protocol73)
+                {
+                    return Protocols.Protocol73;
+                }
+
+                return Protocol;
+            }
+        }
+
         protected string gameName;
         private bool isLoaded = false;
-        private ConvertTargets convertTarget = ConvertTargets.None;
 
         private readonly List<CommandCallback> commandCallbacks = new List<CommandCallback>();
         private readonly Core.ISettings settings = Core.ObjectCreator.Get<Core.ISettings>();
@@ -185,13 +195,14 @@ namespace CDP.IdTech3
             {
                 ResetOperationCancelledState();
                 ResetProgress();
+                AddCommandCallback<Commands.SvcConfigString>(Write_ConfigString);
 
                 using (Core.FastFileStream inputStream = new Core.FastFileStream(FileName, Core.FastFileAccess.Read))
                 using (Core.FastFileStream outputStream = new Core.FastFileStream(destinationFileName, Core.FastFileAccess.Write))
                 {
                     while (true)
                     {
-                        if (convertTarget == ConvertTargets.None)
+                        if (ConvertTarget == ConvertTargets.None)
                         {
                             int bytesToRead = bufferSize;
 
@@ -211,14 +222,20 @@ namespace CDP.IdTech3
                         {
                             Message message = new Message();
                             message.Read(inputStream, Protocol);
-                            message.Write(outputStream);
 
                             if (message.Length == -1)
                             {
+                                message.Write(outputStream);
                                 break;
                             }
 
-                            ReadCommandsUntilEof(message.Reader, null, null, false);
+                            BitWriter writer = new BitWriter(true);
+                            writer.WriteInt(message.ReliableAck);
+                            ReadAndWriteCommandsUntilEof(message.Reader, writer, false);
+                            byte[] messageData = writer.ToArray();
+                            message.Length = messageData.Length;
+                            message.Write(outputStream);
+                            outputStream.WriteBytes(messageData);
                         }
 
                         UpdateProgress(inputStream.Position, inputStream.Length);
@@ -390,6 +407,86 @@ namespace CDP.IdTech3
             }
         }
 
+        private void ReadAndWriteCommandsUntilEof(BitReader reader, BitWriter writer, bool parsingSubCommands)
+        {
+            while (true)
+            {
+                CommandIds commandId = (CommandIds)reader.ReadByte();
+
+                if (Protocol >= Protocols.Protocol43 && Protocol <= Protocols.Protocol48)
+                {
+                    // Command ID 0 marks the end of sub commands.
+                    if (parsingSubCommands && (byte)commandId == 0)
+                    {
+                        // Insert svc_eof instead.
+                        writer.WriteByte((byte)CommandIds.svc_eof);
+                        break;
+                    }
+                }
+                else
+                {
+                    if (commandId == CommandIds.svc_eof)
+                    {
+                        writer.WriteByte((byte)commandId);
+
+                        if (!parsingSubCommands)
+                        {
+                            writer.WriteByte(0);
+                        }
+
+                        break;
+                    }
+                }
+
+                if (commandId == CommandIds.svc_nop)
+                {
+                    writer.WriteByte((byte)commandId);
+                    continue;
+                }
+
+                Command command = handler.CreateCommand(commandId);
+
+                if (command == null)
+                {
+                    throw new ApplicationException(string.Format("Unknown command \'{0}\'.", commandId));
+                }
+
+                writer.WriteByte((byte)commandId);
+                command.Demo = this;
+                command.Read(reader);
+
+                foreach (CommandCallback callback in FindCommandCallbacks(command))
+                {
+                    callback.Fire(command);
+                }
+
+                command.Write(writer);
+
+                if (command.ContainsSubCommands)
+                {
+                    ReadAndWriteCommandsUntilEof(reader, writer, true);
+
+                    if (command.HasFooter)
+                    {
+                        command.ReadFooter(reader);
+                        command.WriteFooter(writer);
+                    }
+                }
+
+                if (!parsingSubCommands && (Protocol >= Protocols.Protocol43 && Protocol <= Protocols.Protocol48))
+                {
+                    reader.SeekRemainingBitsInCurrentByte();
+
+                    if (reader.BitsLeft == 0)
+                    {
+                        writer.WriteByte((byte)CommandIds.svc_eof);
+                        writer.WriteByte(0);
+                        return;
+                    }
+                }
+            }
+        }
+
         private void GuessProtocol()
         {
             Protocol = handler.GuessProtocol(fileSystem.GetExtension(FileName));
@@ -458,6 +555,19 @@ namespace CDP.IdTech3
                     HeadModel = command.KeyValuePairs["hmodel"],
                     Model = command.KeyValuePairs["model"]
                 });
+            }
+        }
+
+        private void Write_ConfigString(Commands.SvcConfigString command)
+        {
+            if (command.KeyValuePairs == null || command.IsPlayer)
+            {
+                return;
+            }
+
+            if (command.KeyValuePairs.ContainsKey("protocol"))
+            {
+                command.KeyValuePairs["protocol"] = ((int)ConvertTargetProtocol).ToString();
             }
         }
 

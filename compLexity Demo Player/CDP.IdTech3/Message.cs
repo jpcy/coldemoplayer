@@ -47,12 +47,6 @@ namespace CDP.IdTech3
         {
             stream.WriteInt(SequenceNumber);
             stream.WriteInt(Length);
-
-            // End of file marker.
-            if (SequenceNumber != -1 && Length != -1)
-            {
-                stream.WriteInt(ReliableAck);
-            }
         }
 
         public void Log(StreamWriter log)

@@ -34,15 +34,7 @@ namespace CDP.IdTech3
 
         public override int ReadBits(int nBits)
         {
-            int value = (int)ReadUBits(nBits);
-
-            // Sign.
-            if ((value & (1 << (nBits - 1))) != 0)
-            {
-                value = -1 ^ int.MaxValue + value;
-            }
-
-            return value;
+            return (int)ReadUBits(nBits);
         }
 
         public override bool ReadBoolean()
@@ -86,6 +78,54 @@ namespace CDP.IdTech3
         public float ReadIntegralFloat()
         {
             return (int)ReadUBits(FLOAT_INT_BITS) - FLOAT_INT_BIAS;
+        }
+
+        public float ReadDeltaFloat()
+        {
+            if (ReadBoolean())
+            {
+                return ReadDeltaFloatOld();
+            }
+            else
+            {
+                return 0.0f;
+            }
+        }
+
+        public float ReadDeltaFloatOld()
+        {
+            if (ReadBoolean())
+            {
+                return ReadFloat();
+            }
+            else
+            {
+                return ReadIntegralFloat();
+            }
+        }
+
+        public int ReadDeltaBits(int nBits)
+        {
+            if (ReadBoolean())
+            {
+                return ReadBits(nBits);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        public uint ReadDeltaUBits(int nBits)
+        {
+            if (ReadBoolean())
+            {
+                return ReadUBits(nBits);
+            }
+            else
+            {
+                return 0;
+            }
         }
     }
 }

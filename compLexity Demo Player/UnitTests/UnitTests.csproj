@@ -59,6 +59,8 @@
     <Compile Include="Core\DemoTests.cs" />
     <Compile Include="Core\Extensions\StringExtensionsTests.cs" />
     <Compile Include="Core\LauncherTests.cs" />
+    <Compile Include="IdTech3\EntityTests.cs" />
+    <Compile Include="IdTech3\PlayerTests.cs" />
     <Compile Include="MockProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -74,6 +76,10 @@
     <ProjectReference Include="..\CDP.HalfLife\CDP.HalfLife.csproj">
       <Project>{6D554123-E196-4376-9B52-365777B913B8}</Project>
       <Name>CDP.HalfLife</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CDP.IdTech3\CDP.IdTech3.csproj">
+      <Project>{EF8018FC-A773-4044-A044-17E38D3B07BC}</Project>
+      <Name>CDP.IdTech3</Name>
     </ProjectReference>
     <ProjectReference Include="..\CDP\CDP.csproj">
       <Project>{9BF808A8-B828-4874-93BE-CCE46A7C319C}</Project>
@@ -91,4 +97,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(SolutionDir)..\huffman\huffman.dll" "$(TargetDir)"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

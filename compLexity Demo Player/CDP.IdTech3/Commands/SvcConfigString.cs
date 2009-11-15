@@ -66,13 +66,41 @@ namespace CDP.IdTech3.Commands
 
         public override void Write(BitWriter buffer)
         {
-            throw new NotImplementedException();
+            buffer.WriteShort(Index);
+
+            if (KeyValuePairs == null)
+            {
+                buffer.WriteString(Value);
+            }
+            else
+            {
+                StringBuilder sb = new StringBuilder();
+                bool first = true;
+
+                foreach (string key in KeyValuePairs.Keys)
+                {
+                    if (IsPlayer && first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        sb.Append(keyValueSeparator);
+                    }
+
+                    sb.Append(key);
+                    sb.Append(keyValueSeparator);
+                    sb.Append(KeyValuePairs[key]);
+                }
+
+                buffer.WriteString(sb.ToString());
+            }
         }
 
         public override void Log(StreamWriter log)
         {
             log.WriteLine("Index: {0}", Index);
-            log.WriteLine("Value: {0}", Value);
+            log.WriteLine("Value: \"{0}\"", Value);
 
             if (KeyValuePairs != null)
             {

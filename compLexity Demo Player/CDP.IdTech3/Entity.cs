@@ -8,6 +8,12 @@ namespace CDP.IdTech3
 {
     public class Entity
     {
+        private class NetFieldState
+        {
+            public NetField NetField { get; set; }
+            public Object Value { get; set; }
+        }
+
         public const int GENTITYNUM_BITS = 10;
         public const int MAX_GENTITIES = (1 << GENTITYNUM_BITS);
         public const int GENTITYSENTINEL = MAX_GENTITIES - 1;
@@ -16,31 +22,20 @@ namespace CDP.IdTech3
         public const int MAX_BITMASK = (1 << BITMASK_BITS);
         public const int BITMASKSENTINEL = MAX_BITMASK - 1;
 
-        public NetField[] NetFields
-        {
-            get { return netFields; }
-        }
-
         public uint Number { get; set; } // Not read internally because svc_snapshot needs to check for a sentinel value.
         public bool Remove { get; set; }
         public bool Delta { get; set; }
 
-        private class FieldState
-        {
-            public NetField NetField { get; set; }
-            public Object Value { get; set; }
-        }
-
         protected Protocols protocol;
-        private FieldState[] state;
-        private NetField[] netFields;
+        protected NetField[] fields;
+        private NetFieldState[] state;
 
         public object this[string field]
         {
             get
             {
-                FieldState fieldState = state.FirstOrDefault(s => s.NetField.Name == field);
-                return fieldState.Value;
+                NetFieldState netFieldState = state.First(s => s.NetField.Name == field);
+                return netFieldState.Value;
             }
 
             set
@@ -59,6 +54,44 @@ namespace CDP.IdTech3
         {
             this.protocol = protocol;
             Initialise();
+        }
+
+        public Entity(Protocols protocol, Entity entity)
+            : this(protocol)
+        {
+            Number = entity.Number;
+            Remove = entity.Remove;
+            Delta = entity.Delta;
+
+            // Copy all state from the entity, so long as a matching netfield name is found.
+            foreach (NetFieldState source in entity.state)
+            {
+                if (source.Value == null)
+                {
+                    continue;
+                }
+
+                NetFieldState destination = state.FirstOrDefault(nfs => nfs.NetField.Name == source.NetField.Name);
+
+                if (destination != null)
+                {
+                    if (source.NetField.Signed && !destination.NetField.Signed)
+                    {
+                        // Signed to unsigned.
+                        destination.Value = (uint)(int)source.Value;
+                    }
+                    else if (!source.NetField.Signed && destination.NetField.Signed)
+                    {
+                        // Unsigned to signed.
+                        destination.Value = (int)(uint)source.Value;
+                    }
+                    else
+                    {
+                        // NOTE: float to int and vice-versa not yet supported since a case where it is necessary has not been encountered.
+                        destination.Value = source.Value;
+                    }
+                }
+            }
         }
 
         // This should be overridden in derived classes so they can provide their own netfields.
@@ -84,17 +117,17 @@ namespace CDP.IdTech3
 
         protected void InitialiseState(NetField[] netFields)
         {
-            this.netFields = netFields;
-            state = new FieldState[netFields.Length];
+            this.fields = netFields;
+            state = new NetFieldState[netFields.Length];
 
             for (int i = 0; i < state.Length; i++)
             {
-                state[i] = new FieldState();
+                state[i] = new NetFieldState();
                 state[i].NetField = netFields[i];
             }
         }
 
-        public void Read(BitReader buffer)
+        public virtual void Read(BitReader buffer)
         {
             Remove = buffer.ReadBoolean();
 
@@ -139,27 +172,20 @@ namespace CDP.IdTech3
                     bitmask = KnownBitmasks[bitmaskIndex];
                 }
 
-                for (int i = 0; i < netFields.Length; i++)
+                for (int i = 0; i < fields.Length; i++)
                 {
                     if ((bitmask[i / 8] & (1<<(i % 8))) == 0)
                     {
                         continue;
                     }
 
-                    if (netFields[i].Bits == 0)
+                    if (fields[i].Bits == 0)
                     {
-                        if (buffer.ReadBoolean())
-                        {
-                            this[i] = buffer.ReadFloat();
-                        }
-                        else
-                        {
-                            this[i] = buffer.ReadIntegralFloat();
-                        }
+                        this[i] = buffer.ReadDeltaFloatOld();
                     }
                     else
                     {
-                        this[i] = buffer.ReadUBits(netFields[i].Bits);
+                        this[i] = buffer.ReadUBits(fields[i].Bits);
                     }
                 }
             }
@@ -174,58 +200,85 @@ namespace CDP.IdTech3
                         continue;
                     }
 
-                    if (netFields[i].Bits == 0)
+                    if (fields[i].Bits == 0)
                     {
                         // float
-                        if (buffer.ReadBoolean())
-                        {
-                            if (buffer.ReadBoolean())
-                            {
-                                // full floating point value
-                                this[i] = buffer.ReadFloat();
-                            }
-                            else
-                            {
-                                // integral float
-                                this[i] = buffer.ReadIntegralFloat();
-                            }
-                        }
-                        else
-                        {
-                            this[i] = 0.0f;
-                        }
+                        this[i] = buffer.ReadDeltaFloat();
                     }
                     else
                     {
                         // int
-                        if (buffer.ReadBoolean())
+                        if (fields[i].Signed)
                         {
-                            if (netFields[i].Signed)
-                            {
-                                this[i] = buffer.ReadBits(netFields[i].Bits);
-                            }
-                            else
-                            {
-                                this[i] = buffer.ReadUBits(netFields[i].Bits);
-                            }
+                            this[i] = buffer.ReadDeltaBits(fields[i].Bits);
                         }
                         else
                         {
-                            if (netFields[i].Signed)
-                            {
-                                this[i] = 0;
-                            }
-                            else
-                            {
-                                this[i] = 0u;
-                            }
+                            this[i] = buffer.ReadDeltaUBits(fields[i].Bits);
                         }
                     }
                 }
             }
         }
 
-        public void Log(StreamWriter log)
+        public virtual void Write(BitWriter buffer)
+        {
+            buffer.WriteBoolean(Remove);
+
+            if (Remove)
+            {
+                return;
+            }
+
+            buffer.WriteBoolean(Delta);
+
+            if (!Delta)
+            {
+                return;
+            }
+
+            int lc = 0;
+
+            for (int i = 0; i < state.Length; i++)
+            {
+                if (state[i].Value != null)
+                {
+                    lc = i + 1;
+                }
+            }
+
+            buffer.WriteByte((byte)lc);
+
+            for (int i = 0; i < lc; i++)
+            {
+                if (state[i].Value == null)
+                {
+                    buffer.WriteBoolean(false);
+                }
+                else
+                {
+                    buffer.WriteBoolean(true);
+
+                    if (fields[i].Bits == 0)
+                    {
+                        buffer.WriteDeltaFloat((float)state[i].Value);
+                    }
+                    else
+                    {
+                        if (fields[i].Signed)
+                        {
+                            buffer.WriteDeltaBits((int)state[i].Value, fields[i].Bits);
+                        }
+                        else
+                        {
+                            buffer.WriteDeltaUBits((uint)state[i].Value, fields[i].Bits);
+                        }
+                    }
+                }
+            }
+        }
+
+        public virtual void Log(StreamWriter log)
         {
             log.WriteLine("Entity number: {0}", Number);
 
@@ -240,11 +293,11 @@ namespace CDP.IdTech3
                 log.WriteLine("No delta");
             }
 
-            for (int i = 0; i < netFields.Length; i++)
+            for (int i = 0; i < fields.Length; i++)
             {
                 if (this[i] != null)
                 {
-                    log.WriteLine("Field: {0}, Value: {1}", netFields[i].Name, this[i]);
+                    log.WriteLine("Field: {0}, Value: {1}", fields[i].Name, this[i]);
                 }
             }
         }

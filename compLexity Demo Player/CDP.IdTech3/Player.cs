@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 namespace CDP.IdTech3
 {
@@ -17,7 +18,23 @@ namespace CDP.IdTech3
         public int[] Powerups { get; set; }
         public short[] Ammo { get; set; }
 
-        public Player(Protocols protocol) : base(protocol)
+        public Player(Protocols protocol)
+            : base(protocol)
+        {
+            InitialiseArrays();
+        }
+
+        public Player(Protocols protocol, Player player)
+            : base(protocol, player)
+        {
+            InitialiseArrays();
+            Array.Copy(player.Stats, Stats, MAX_STATS);
+            Array.Copy(player.Persistant, Persistant, MAX_PERSISTANT);
+            Array.Copy(player.Powerups, Powerups, MAX_POWERUPS);
+            Array.Copy(player.Ammo, Ammo, MAX_WEAPONS);
+        }
+
+        private void InitialiseArrays()
         {
             Stats = new short[MAX_STATS];
             Persistant = new short[MAX_PERSISTANT];
@@ -39,6 +56,201 @@ namespace CDP.IdTech3
             {
                 InitialiseState(Protocol66PlayerNetFields);
             }
+        }
+
+        public override void Read(BitReader buffer)
+        {
+            byte lc;
+
+            if (protocol >= Protocols.Protocol43 && protocol <= Protocols.Protocol48)
+            {
+                lc = (byte)fields.Length;
+            }
+            else
+            {
+                lc = buffer.ReadByte();
+            }
+
+            for (int i = 0; i < lc; i++)
+            {
+                if (!buffer.ReadBoolean())
+                {
+                    continue;
+                }
+
+                if (fields[i].Bits == 0)
+                {
+                    if (buffer.ReadBoolean())
+                    {
+                        this[i] = buffer.ReadFloat();
+                    }
+                    else
+                    {
+                        this[i] = buffer.ReadIntegralFloat();
+                    }
+                }
+                else
+                {
+                    if (fields[i].Signed)
+                    {
+                        this[i] = buffer.ReadBits(fields[i].Bits);
+                    }
+                    else
+                    {
+                        this[i] = buffer.ReadUBits(fields[i].Bits);
+                    }
+                }
+            }
+
+            Action<int, Action<int>> readArray = (size, readElement) =>
+            {
+                if (buffer.ReadBoolean())
+                {
+                    short bits = buffer.ReadShort();
+
+                    for (int i = 0; i < size; i++)
+                    {
+                        if ((bits & (1 << i)) != 0)
+                        {
+                            readElement(i);
+                        }
+                    }
+                }
+            };
+
+            if ((protocol >= Protocols.Protocol43 && protocol <= Protocols.Protocol48) || buffer.ReadBoolean())
+            {
+                readArray(MAX_STATS, i => Stats[i] = buffer.ReadShort());
+                readArray(MAX_PERSISTANT, i => Persistant[i] = buffer.ReadShort());
+                readArray(MAX_WEAPONS, i => Ammo[i] = buffer.ReadShort());
+                readArray(MAX_POWERUPS, i => Powerups[i] = buffer.ReadInt());
+            }
+        }
+
+        public override void Write(BitWriter buffer)
+        {
+            int lc = 0;
+
+            for (int i = 0; i < fields.Length; i++)
+            {
+                if (this[i] != null)
+                {
+                    lc = i + 1;
+                }
+            }
+
+            buffer.WriteByte((byte)lc);
+
+            for (int i = 0; i < lc; i++)
+            {
+                if (this[i] == null)
+                {
+                    buffer.WriteBoolean(false);
+                    continue;
+                }
+
+                buffer.WriteBoolean(true);
+
+                if (fields[i].Bits == 0)
+                {
+                    buffer.WriteIntegralFloatMaybe((float)this[i]);
+                }
+                else
+                {
+                    if (fields[i].Signed)
+                    {
+                        buffer.WriteBits((int)this[i], fields[i].Bits);
+                    }
+                    else
+                    {
+                        buffer.WriteUBits((uint)this[i], fields[i].Bits);
+                    }
+                }
+            }
+
+            if (Stats.All(i => i == 0) && Persistant.All(i => i == 0) && Ammo.All(i => i == 0) && Powerups.All(i => i == 0))
+            {
+                buffer.WriteBoolean(false);
+            }
+            else
+            {
+                buffer.WriteBoolean(true);
+                WriteArray(buffer, Stats, i => i == 0, i => buffer.WriteShort(i));
+                WriteArray(buffer, Persistant, i => i == 0, i => buffer.WriteShort(i));
+                WriteArray(buffer, Ammo, i => i == 0, i => buffer.WriteShort(i));
+                WriteArray(buffer, Powerups, i => i == 0, i => buffer.WriteInt(i));
+            }
+        }
+
+        private void WriteArray<T>(BitWriter buffer, T[] array, Func<T, bool> elementIsZero, Action<T> writeElement)
+        {
+            int bitMask = 0;
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (!elementIsZero(array[i]))
+                {
+                    bitMask |= 1 << i;
+                }
+            }
+
+            if (bitMask == 0)
+            {
+                buffer.WriteBoolean(false);
+                return;
+            }
+
+            buffer.WriteBoolean(true);
+            buffer.WriteShort((short)bitMask);
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                if ((bitMask & 1 << i) != 0)
+                {
+                    writeElement(array[i]);
+                }
+            }
+        }
+
+        public override void Log(StreamWriter log)
+        {
+            for (int i = 0; i < fields.Length; i++)
+            {
+                if (this[i] != null)
+                {
+                    log.WriteLine("Field: {0}, Value: {1}", fields[i].Name, this[i]);
+                }
+            }
+
+            log.Write("Stats: ");
+
+            for (int i = 0; i < MAX_STATS; i++)
+            {
+                log.Write("{0} ", Stats[i]);
+            }
+
+            log.Write("\nPersistant: ");
+
+            for (int i = 0; i < MAX_PERSISTANT; i++)
+            {
+                log.Write("{0} ", Persistant[i]);
+            }
+
+            log.Write("\nAmmo: ");
+
+            for (int i = 0; i < MAX_WEAPONS; i++)
+            {
+                log.Write("{0} ", Ammo[i]);
+            }
+
+            log.Write("\nPowerups: ");
+
+            for (int i = 0; i < MAX_POWERUPS; i++)
+            {
+                log.Write("{0} ", Powerups[i]);
+            }
+
+            log.WriteLine();
         }
 
         /// <summary>

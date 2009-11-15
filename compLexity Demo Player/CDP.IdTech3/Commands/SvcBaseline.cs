@@ -39,7 +39,17 @@ namespace CDP.IdTech3.Commands
 
         public override void Write(BitWriter buffer)
         {
-            throw new NotImplementedException();
+            buffer.WriteUBits(Entity.Number, Entity.GENTITYNUM_BITS);
+
+            if (demo.Protocol == demo.ConvertTargetProtocol)
+            {
+                Entity.Write(buffer);
+            }
+            else
+            {
+                Entity newEntity = new Entity(demo.ConvertTargetProtocol, Entity);
+                newEntity.Write(buffer);
+            }
         }
 
         public override void Log(StreamWriter log)

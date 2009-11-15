@@ -64,6 +64,7 @@
     <Compile Include="Commands\SvcGameState.cs" />
     <Compile Include="Commands\SvcServerCommand.cs" />
     <Compile Include="Commands\SvcSnapshot.cs" />
+    <Compile Include="ConvertTargets.cs" />
     <Compile Include="Demo.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Handler.cs" />
