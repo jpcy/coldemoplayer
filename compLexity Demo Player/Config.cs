@@ -21,6 +21,7 @@ namespace compLexity_Demo_Player
 
         // updating, on-demand map downloading
         public String UpdateUrl { get; set; }
+        public String UpdateUrl2 { get; set; }
         public String MapsUrl { get; set; }
         public Boolean AutoUpdate { get; set; }
 
@@ -85,6 +86,7 @@ namespace compLexity_Demo_Player
         public ProgramSettings()
         {
             UpdateUrl = "http://coldemoplayer.gittodachoppa.com/update115/";
+            UpdateUrl2 = "http://coldemoplayer.googlecode.com/svn/trunk/hosted/update/";
             MapsUrl = "http://coldemoplayer.gittodachoppa.com/maps/";
             AutoUpdate = true;
             WindowState = System.Windows.WindowState.Normal;
