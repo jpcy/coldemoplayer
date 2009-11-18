@@ -9,9 +9,11 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">quake3.exe:</TextBlock>
-        <TextBox Grid.Row="1" Grid.Column="0" IsReadOnly="True" Margin="0,0,8,0" Text="{Binding ExeFullPath, Mode=OneWay}" />
-        <Button Grid.Row="1" Grid.Column="1" Padding="16,0,16,0" Command="{Binding BrowseForExeCommand}">Browse...</Button>
+        <CheckBox Grid.Row="0" Margin="0,0,0,8" IsChecked="{Binding Convert}">Convert to protocol 68.</CheckBox>
+        <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">quake3.exe:</TextBlock>
+        <TextBox Grid.Row="2" Grid.Column="0" IsReadOnly="True" Margin="0,0,8,0" Text="{Binding ExeFullPath, Mode=OneWay}" />
+        <Button Grid.Row="2" Grid.Column="1" Padding="16,0,16,0" Command="{Binding BrowseForExeCommand}">Browse...</Button>
     </Grid>
 </UserControl>

@@ -32,7 +32,8 @@ namespace CDP.Quake3Arena
             {
                 return new Core.Setting[]
                 {
-                    new Core.Setting("Quake3ExeFullPath", typeof(string), string.Empty)
+                    new Core.Setting("Quake3ExeFullPath", typeof(string), string.Empty),
+                    new Core.Setting("Quake3ConvertProtocol", typeof(bool), true)
                 };
             }
         }

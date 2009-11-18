@@ -27,14 +27,30 @@ namespace CDP.Quake3Arena
 
         public override string CalculateDestinationFileName()
         {
-            return fileSystem.PathCombine(Path.GetDirectoryName((string)settings["Quake3ExeFullPath"]), "baseq3", "demos", fileSystem.ChangeExtension(demoFileName, fileSystem.GetExtension(demo.FileName)));
+            string extension;
+
+            if (demo.ConvertTarget == IdTech3.ConvertTargets.Protocol68)
+            {
+                extension = "dm_68";
+            }
+            else if (demo.ConvertTarget == IdTech3.ConvertTargets.Protocol73)
+            {
+                extension = "dm_73";
+            }
+            else
+            {
+                // Keep the same extension.
+                extension = fileSystem.GetExtension(demo.FileName);
+            }
+
+            return fileSystem.PathCombine(Path.GetDirectoryName((string)settings["Quake3ExeFullPath"]), "baseq3", "demos", demoFileName + "." + extension);
         }
 
         public override bool Verify()
         {
             if (!File.Exists((string)settings["Quake3ExeFullPath"]))
             {
-                Message = string.Format("Quake II Arena executable path not set.");
+                Message = string.Format("Quake III Arena executable path not set.");
                 return false;
             }
 
@@ -50,11 +66,14 @@ namespace CDP.Quake3Arena
 
         public override void Launch()
         {
+            // Explicitly providing an extension avoid the potential problem of multiple demos existing with the different extensions. Example: coldemoplayer.dm_66 and coldemoplayer.dm_68 - the filename with a dm_66 extension takes priority and will play if the command "demo coldemoplayer" is executed.
+            string extension = fileSystem.GetExtension(CalculateDestinationFileName());
+
             ProcessStartInfo psi = new ProcessStartInfo
             {
                 FileName = processExecutableFileName,
                 WorkingDirectory = Path.GetDirectoryName((string)settings["Quake3ExeFullPath"]),
-                Arguments = "+demo " + fileSystem.ChangeExtension(demoFileName, fileSystem.GetExtension(demo.FileName)) + " +set fs_game " + demo.ModFolder
+                Arguments = "+demo " + demoFileName + "." + extension + " +set fs_game " + demo.ModFolder
             };
 
             Process.Start(psi);

@@ -9,7 +9,6 @@ namespace CDP.Quake3Arena
     {
         public string Folder { get; set; }
         public string Name { get; set; }
-        public bool CanConvert { get; set; }
         public bool CanAnalyse { get; set; }
     }
 

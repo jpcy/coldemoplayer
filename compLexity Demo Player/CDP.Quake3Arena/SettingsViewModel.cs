@@ -9,6 +9,12 @@ namespace CDP.Quake3Arena
 {
     public class SettingsViewModel : Core.ViewModelBase
     {
+        public bool Convert
+        {
+            get { return (bool)settings["Quake3ConvertProtocol"]; }
+            set { settings["Quake3ConvertProtocol"] = value; }
+        }
+
         public Core.DelegateCommand BrowseForExeCommand { get; private set; }
         public string ExeFullPath
         {

@@ -59,11 +59,13 @@
     </Compile>
     <Compile Include="Analysis\ViewModel.cs" />
     <Compile Include="Demo.cs" />
-    <Compile Include="GameEnums.cs" />
+    <Compile Include="GameConstants.cs" />
     <Compile Include="Handler.cs" />
     <Compile Include="Launcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="Score.cs" />
+    <Compile Include="Scores.cs" />
     <Compile Include="SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>

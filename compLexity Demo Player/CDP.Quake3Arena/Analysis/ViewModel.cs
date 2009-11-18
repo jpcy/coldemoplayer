@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Documents;
 using System.Windows.Media;
+using CDP.Core;
 using CDP.Core.Extensions;
 using CDP.IdTech3;
 using CDP.IdTech3.Commands;
@@ -136,46 +137,32 @@ namespace CDP.Quake3Arena.Analysis
         /// <returns>An obituary message.</returns>
         private string CalculateObituary(uint mod, uint killerIndex, uint victimIndex)
         {
-            MeansOfDeath _mod = (MeansOfDeath)mod;
+            LookupTable_uint modTable = GameConstants.MeansOfDeath_Protocol48;
 
-            // Minor conversion. Only really necessary for grappling hook mods that use MOD_GRAPPLE.
             if (demo.Protocol == Protocols.Protocol43 || demo.Protocol == Protocols.Protocol45)
             {
-                if (_mod == MeansOfDeath.MOD_NAIL)
-                {
-                    _mod = (MeansOfDeath)MeansOfDeath_Protocol43and45.MOD_GRAPPLE;
-                }
+                // Convert mod to protocol 48.
+                mod = GameConstants.MeansOfDeath_Protocol43.Convert(mod, modTable);
             }
 
             string message = null;
 
-            switch (_mod)
-            {
-                case MeansOfDeath.MOD_SUICIDE:
-                    message = "suicides";
-                    break;
-                case MeansOfDeath.MOD_FALLING:
-                    message = "cratered";
-                    break;
-                case MeansOfDeath.MOD_CRUSH:
-                    message = "was squished";
-                    break;
-                case MeansOfDeath.MOD_WATER:
-                    message = "sank like a rock";
-                    break;
-                case MeansOfDeath.MOD_SLIME:
-                    message = "melted";
-                    break;
-                case MeansOfDeath.MOD_LAVA:
-                    message = "does a back flip into the lava";
-                    break;
-                case MeansOfDeath.MOD_TARGET_LASER:
-                    message = "saw the light";
-                    break;
-                case MeansOfDeath.MOD_TRIGGER_HURT:
-                    message = "was in the wrong place";
-                    break;
-            }
+            if (mod == modTable["MOD_SUICIDE"])
+                message = "suicides";
+            else if (mod == modTable["MOD_FALLING"]) 
+                message = "cratered";
+            else if (mod == modTable["MOD_CRUSH"])
+                message = "was squished";
+            else if (mod == modTable["MOD_WATER"])
+                message = "sank like a rock";
+            else if (mod == modTable["MOD_SLIME"])
+                message = "melted";
+            else if (mod == modTable["MOD_LAVA"])
+                message = "does a back flip into the lava";
+            else if (mod == modTable["MOD_TARGET_LASER"])
+                message = "saw the light";
+            else if (mod == modTable["MOD_TRIGGER_HURT"])
+                message = "was in the wrong place";
 
             if (killerIndex == victimIndex)
             {
@@ -183,36 +170,20 @@ namespace CDP.Quake3Arena.Analysis
                 Genders gender = Genders.Male;
                 string genderIdentifier = CalculateGenderIdentifier(gender);
 
-                switch (_mod)
-                {
-                    case MeansOfDeath.MOD_KAMIKAZE:
-                        message = "goes out with a bang";
-                        break;
-
-                    case MeansOfDeath.MOD_GRENADE_SPLASH:
-                        message = string.Format("tripped on {0} own grenade", genderIdentifier);
-                        break;
-
-                    case MeansOfDeath.MOD_ROCKET_SPLASH:
-                        message = string.Format("blew {0}self up", genderIdentifier);
-                        break;
-
-                    case MeansOfDeath.MOD_PLASMA_SPLASH:
-                        message = string.Format("melted {0}self", genderIdentifier);
-                        break;
-
-                    case MeansOfDeath.MOD_BFG_SPLASH:
-                        message = "should have used a smaller gun";
-                        break;
-
-                    case MeansOfDeath.MOD_PROXIMITY_MINE:
-                        message = string.Format("found {0} prox mine", gender == Genders.Neutral ? "it's" : genderIdentifier);
-                        break;
-
-                    default:
-                        message = string.Format("killed {0}self", genderIdentifier);
-                        break;
-                }
+                if (mod == modTable["MOD_KAMIKAZE"])
+                    message = "goes out with a bang";
+                else if (mod == modTable["MOD_GRENADE_SPLASH"])
+                    message = string.Format("tripped on {0} own grenade", genderIdentifier);
+                else if (mod == modTable["MOD_ROCKET_SPLASH"])
+                    message = string.Format("blew {0}self up", genderIdentifier);
+                else if (mod == modTable["MOD_PLASMA_SPLASH"])
+                    message = string.Format("melted {0}self", genderIdentifier);
+                else if (mod == modTable["MOD_BFG_SPLASH"])
+                    message = "should have used a smaller gun";
+                else if (mod == modTable["MOD_PROXIMITY_MINE"])
+                    message = string.Format("found {0} prox mine", gender == Genders.Neutral ? "it's" : genderIdentifier);
+                else
+                    message = string.Format("killed {0}self", genderIdentifier);
             }
 
             if (message != null)
@@ -227,81 +198,83 @@ namespace CDP.Quake3Arena.Analysis
 
             string message2 = string.Empty;
 
-            switch (_mod) 
+            if (mod == modTable["MOD_GRAPPLE"])
+	            message = "was caught by";
+            else if (mod == modTable["MOD_GAUNTLET"])
+	            message = "was pummeled by";
+            else if (mod == modTable["MOD_MACHINEGUN"])
+	            message = "was machinegunned by";
+            else if (mod == modTable["MOD_SHOTGUN"])
+	            message = "was gunned down by";
+            else if (mod == modTable["MOD_GRENADE"])
             {
-	            case MeansOfDeath.MOD_GRAPPLE:
-		            message = "was caught by";
-		            break;
-	            case MeansOfDeath.MOD_GAUNTLET:
-		            message = "was pummeled by";
-		            break;
-	            case MeansOfDeath.MOD_MACHINEGUN:
-		            message = "was machinegunned by";
-		            break;
-	            case MeansOfDeath.MOD_SHOTGUN:
-		            message = "was gunned down by";
-		            break;
-	            case MeansOfDeath.MOD_GRENADE:
-		            message = "ate";
-		            message2 = "'s grenade";
-		            break;
-	            case MeansOfDeath.MOD_GRENADE_SPLASH:
-		            message = "was shredded by";
-		            message2 = "'s shrapnel";
-		            break;
-	            case MeansOfDeath.MOD_ROCKET:
-		            message = "ate";
-		            message2 = "'s rocket";
-		            break;
-	            case MeansOfDeath.MOD_ROCKET_SPLASH:
-		            message = "almost dodged";
-		            message2 = "'s rocket";
-		            break;
-	            case MeansOfDeath.MOD_PLASMA:
-		            message = "was melted by";
-		            message2 = "'s plasmagun";
-		            break;
-	            case MeansOfDeath.MOD_PLASMA_SPLASH:
-		            message = "was melted by";
-		            message2 = "'s plasmagun";
-		            break;
-	            case MeansOfDeath.MOD_RAILGUN:
-		            message = "was railed by";
-		            break;
-	            case MeansOfDeath.MOD_LIGHTNING:
-		            message = "was electrocuted by";
-		            break;
-	            case MeansOfDeath.MOD_BFG:
-	            case MeansOfDeath.MOD_BFG_SPLASH:
-		            message = "was blasted by";
-		            message2 = "'s BFG";
-		            break;
-	            case MeansOfDeath.MOD_NAIL:
-		            message = "was nailed by";
-		            break;
-	            case MeansOfDeath.MOD_CHAINGUN:
-		            message = "got lead poisoning from";
-		            message2 = "'s Chaingun";
-		            break;
-	            case MeansOfDeath.MOD_PROXIMITY_MINE:
-		            message = "was too close to";
-		            message2 = "'s Prox Mine";
-		            break;
-	            case MeansOfDeath.MOD_KAMIKAZE:
-		            message = "falls to";
-		            message2 = "'s Kamikaze blast";
-		            break;
-	            case MeansOfDeath.MOD_JUICED:
-		            message = "was juiced by";
-		            break;
-	            case MeansOfDeath.MOD_TELEFRAG:
-		            message = "tried to invade";
-		            message2 = "'s personal space";
-		            break;
-	            default:
-		            message = "was killed by";
-		            break;
+	            message = "ate";
+	            message2 = "'s grenade";
 	        }
+            else if (mod == modTable["MOD_GRENADE_SPLASH"])
+            {
+	            message = "was shredded by";
+	            message2 = "'s shrapnel";
+	        }
+            else if (mod == modTable["MOD_ROCKET"])
+            {
+	            message = "ate";
+	            message2 = "'s rocket";
+	        }
+            else if (mod == modTable["MOD_ROCKET_SPLASH"])
+            {
+	            message = "almost dodged";
+	            message2 = "'s rocket";
+	        }
+            else if (mod == modTable["MOD_PLASMA"])
+            {
+	            message = "was melted by";
+	            message2 = "'s plasmagun";
+	        }
+            else if (mod == modTable["MOD_PLASMA_SPLASH"])
+            {
+	            message = "was melted by";
+	            message2 = "'s plasmagun";
+	        }
+            else if (mod == modTable["MOD_RAILGUN"])
+            {
+	            message = "was railed by";
+	        }
+            else if (mod == modTable["MOD_LIGHTNING"])
+            {
+	            message = "was electrocuted by";
+	        }
+            else if (mod == modTable["MOD_BFG"] || mod == modTable["MOD_BFG_SPLASH"])
+            {
+	            message = "was blasted by";
+	            message2 = "'s BFG";
+	        }
+            else if (mod == modTable["MOD_NAIL"])
+	            message = "was nailed by";
+            else if (mod == modTable["MOD_CHAINGUN"])
+            {
+	            message = "got lead poisoning from";
+	            message2 = "'s Chaingun";
+	        }
+            else if (mod == modTable["MOD_PROXIMITY_MINE"])
+            {
+	            message = "was too close to";
+	            message2 = "'s Prox Mine";
+	        }
+            else if (mod == modTable["MOD_KAMIKAZE"])
+            {
+	            message = "falls to";
+	            message2 = "'s Kamikaze blast";
+	        }
+            else if (mod == modTable["MOD_JUICED"])
+	            message = "was juiced by";
+            else if (mod == modTable["MOD_TELEFRAG"])
+            {
+	            message = "tried to invade";
+	            message2 = "'s personal space";
+	        }
+	        else
+		        message = "was killed by";
 
             // Set string colour back to default (white) after each player name.
             return string.Format("{0}^7 {1} {2}^7{3}.", playerNames[(int)victimIndex], message, playerNames[(int)killerIndex], message2);
@@ -344,24 +317,26 @@ namespace CDP.Quake3Arena.Analysis
         /// <param name="eType">The entity eType.</param>
         private bool IsObituary(uint eType)
         {
+            LookupTable_uint eTypesTable;
+            LookupTable_uint entityEventsTable;
+
             if (demo.Protocol == Protocols.Protocol43 || demo.Protocol == Protocols.Protocol45)
             {
-                if ((EntityTypes_Protocol43and45)eType < EntityTypes_Protocol43and45.ET_EVENTS)
-                {
-                    return false;
-                }
-
-                return (EntityEvents_Protocol43and45)(eType - (uint)EntityTypes_Protocol43and45.ET_EVENTS) == EntityEvents_Protocol43and45.EV_OBITUARY;
+                eTypesTable = GameConstants.EntityTypes_Protocol43;
+                entityEventsTable = GameConstants.EntityEvents_Protocol43;
             }
             else
             {
-                if ((EntityTypes)eType < EntityTypes.ET_EVENTS)
-                {
-                    return false;
-                }
-
-                return (EntityEvents)(eType - (uint)EntityTypes.ET_EVENTS) == EntityEvents.EV_OBITUARY;
+                eTypesTable = GameConstants.EntityTypes_Protocol48;
+                entityEventsTable = GameConstants.EntityEvents_Protocol48;
             }
+
+            if (eType < eTypesTable["ET_EVENTS"])
+            {
+                return false;
+            }
+
+            return (eType - eTypesTable["ET_EVENTS"] == entityEventsTable["EV_OBITUARY"]);
         }
 
         #region Command callbacks

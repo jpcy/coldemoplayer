@@ -76,7 +76,11 @@ namespace CDP.IdTech3
             set { handler = (Handler)value; }
         }
 
-        public ConvertTargets ConvertTarget { get; protected set; }
+        public virtual ConvertTargets ConvertTarget
+        {
+            get { return ConvertTargets.None; }
+        }
+
         public Protocols Protocol { get; private set; }
         public Protocols ConvertTargetProtocol
         {
@@ -545,6 +549,11 @@ namespace CDP.IdTech3
             if (command.KeyValuePairs.ContainsKey("sv_hostname"))
             {
                 AddDetail("Server Name", command.KeyValuePairs["sv_hostname"]);
+            }
+
+            if (command.KeyValuePairs.ContainsKey("protocol"))
+            {
+                AddDetail("Protocol", command.KeyValuePairs["protocol"]);
             }
 
             if (command.IsPlayer)
