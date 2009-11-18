@@ -74,6 +74,8 @@
     <Compile Include="Launcher.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="LookupElement.cs" />
+    <Compile Include="LookupTable.cs" />
     <Compile Include="Math.cs" />
     <Compile Include="NotifyPropertyChanged.cs" />
     <Compile Include="ObjectCreator.cs" />

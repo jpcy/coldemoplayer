@@ -59,6 +59,7 @@
     <Compile Include="Core\DemoTests.cs" />
     <Compile Include="Core\Extensions\StringExtensionsTests.cs" />
     <Compile Include="Core\LauncherTests.cs" />
+    <Compile Include="Core\LookupTableTests.cs" />
     <Compile Include="IdTech3\EntityTests.cs" />
     <Compile Include="IdTech3\PlayerTests.cs" />
     <Compile Include="MockProvider.cs" />
