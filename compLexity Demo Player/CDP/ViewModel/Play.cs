@@ -71,15 +71,23 @@ namespace CDP.ViewModel
             RemoveDemoWriteEventHandlers();
             navigationService.Invoke(new Action(() =>
             {
-                navigationService.HideWindow();
-                launcher.Launch();
-                launcher.ProcessFound += launcher_ProcessFound;
-                launcher.ProcessClosed += launcher_ProcessClosed;
-
-                ThreadPool.QueueUserWorkItem(new WaitCallback(o =>
+                if (launcher.CanMonitorProcess)
                 {
-                    launcher.MonitorProcessWorker();
-                }));
+                    navigationService.HideWindow();
+                    launcher.Launch();
+                    launcher.ProcessFound += launcher_ProcessFound;
+                    launcher.ProcessClosed += launcher_ProcessClosed;
+
+                    ThreadPool.QueueUserWorkItem(new WaitCallback(o =>
+                    {
+                        launcher.MonitorProcessWorker();
+                    }));
+                }
+                else
+                {
+                    launcher.Launch();
+                    navigationService.Home();
+                }
             }));
         }
 

@@ -28,6 +28,11 @@ namespace CDP.Core
         protected string processExecutableFileName;
         private const int defaultMonitorProcessSleepTime = 250;
 
+        public bool CanMonitorProcess
+        {
+            get { return !string.IsNullOrEmpty(processExecutableFileName); }
+        }
+
         public abstract void Initialise(Demo demo);
 
         public void MonitorProcessWorker()
