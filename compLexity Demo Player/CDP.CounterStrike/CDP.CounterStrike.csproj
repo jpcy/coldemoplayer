@@ -98,6 +98,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)..\bin\$(TargetFileName)"</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)..\bin\$(TargetFileName)"
+“$(FrameworkSDKDir)\Bin\sgen.exe” /a:"$(SolutionDir)..\bin\$(TargetFileName)" /t:CDP.CounterStrike.Game /force</PostBuildEvent>
   </PropertyGroup>
 </Project>
