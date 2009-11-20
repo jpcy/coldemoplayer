@@ -16,8 +16,8 @@ namespace CDP.Quake3Arena
     {
         protected readonly Core.ISettings settings = Core.ObjectCreator.Get<Core.ISettings>();
         protected readonly Core.IFileSystem fileSystem = Core.ObjectCreator.Get<Core.IFileSystem>();
-        protected readonly string demoFileName = "coldemoplayer";
-        protected Demo demo;
+        private readonly string demoFileName = "coldemoplayer";
+        private Demo demo;
 
         public override void Initialise(Core.Demo demo)
         {

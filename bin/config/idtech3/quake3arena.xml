@@ -4,31 +4,26 @@
 		<Mod>
 			<Folder>baseq3</Folder>
 			<Name>Quake III Arena</Name>
-			<CanConvert>true</CanConvert>
 			<CanAnalyse>true</CanAnalyse>
 		</Mod>
 		<Mod>
 			<Folder>excessive</Folder>
 			<Name>Quake III Arena (excessive)</Name>
-			<CanConvert>true</CanConvert>
 			<CanAnalyse>true</CanAnalyse>
 		</Mod>
 		<Mod>
 			<Folder>instaunlagged</Folder>
 			<Name>Quake III Arena (instaunlagged)</Name>
-			<CanConvert>true</CanConvert>
 			<CanAnalyse>true</CanAnalyse>
 		</Mod>
 		<Mod>
 			<Folder>cpma</Folder>
 			<Name>CPMA</Name>
-			<CanConvert>false</CanConvert>
 			<CanAnalyse>true</CanAnalyse>
 		</Mod>
 		<Mod>
 			<Folder>osp</Folder>
 			<Name>OSP</Name>
-			<CanConvert>false</CanConvert>
 			<CanAnalyse>true</CanAnalyse>
 		</Mod>
 	</Mods>

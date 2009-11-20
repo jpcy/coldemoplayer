@@ -267,6 +267,10 @@
       <Project>{F21AE7B5-2411-4773-B5AA-6C0A915FC062}</Project>
       <Name>CDP.Quake3Arena</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CDP.QuakeLive\CDP.QuakeLive.csproj">
+      <Project>{AE5C3573-A6B2-4822-A55A-396DDF395D0C}</Project>
+      <Name>CDP.QuakeLive</Name>
+    </ProjectReference>
     <ProjectReference Include="..\QuickZip\QuickZip.csproj">
       <Project>{0894ACFD-ABA2-402B-AD4A-59764D621A8F}</Project>
       <Name>QuickZip</Name>

@@ -17,6 +17,7 @@ namespace CDP.DemoDiagnostic
             demoManager.AddPlugin(1, new CounterStrike.Handler());
             demoManager.AddPlugin(0, new Source.Handler());
             demoManager.AddPlugin(0, new Quake3Arena.Handler());
+            demoManager.AddPlugin(0, new QuakeLive.Handler());
 
             // Settings.
             ISettings settings = ObjectCreator.Get<ISettings>();

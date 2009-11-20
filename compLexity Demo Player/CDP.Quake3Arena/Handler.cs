@@ -23,7 +23,7 @@ namespace CDP.Quake3Arena
 
         public override string[] Extensions
         {
-            get { return new string[] { "dm3", "dm_48", "dm_66", "dm_67", "dm_68", "dm_73" }; }
+            get { return new string[] { "dm3", "dm_48", "dm_66", "dm_67", "dm_68" }; }
         }
 
         public override Core.Setting[] Settings
@@ -61,6 +61,11 @@ namespace CDP.Quake3Arena
 
         public Handler()
         {
+            ReadConfig();
+        }
+
+        protected virtual void ReadConfig()
+        {
             using (StreamReader stream = new StreamReader(fileSystem.PathCombine(settings.ProgramPath, "config", "idtech3", "quake3arena.xml")))
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(Config));
@@ -88,7 +93,7 @@ namespace CDP.Quake3Arena
             return new Analysis.ViewModel((Demo)demo);
         }
 
-        public Mod FindMod(string modFolder)
+        public virtual Mod FindMod(string modFolder)
         {
             return config.Mods.FirstOrDefault(m => m.Folder == modFolder);
         }

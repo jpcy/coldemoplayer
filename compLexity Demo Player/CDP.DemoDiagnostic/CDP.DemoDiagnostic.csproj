@@ -113,6 +113,10 @@
       <Project>{F21AE7B5-2411-4773-B5AA-6C0A915FC062}</Project>
       <Name>CDP.Quake3Arena</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CDP.QuakeLive\CDP.QuakeLive.csproj">
+      <Project>{AE5C3573-A6B2-4822-A55A-396DDF395D0C}</Project>
+      <Name>CDP.QuakeLive</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CDP.Source\CDP.Source.csproj">
       <Project>{5F8BE612-C77B-4870-AEE3-A0FEE9B9F906}</Project>
       <Name>CDP.Source</Name>
