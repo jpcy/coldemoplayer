@@ -44,6 +44,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BitReaderTests.cs" />
+    <Compile Include="BitWriterTests.cs" />
+    <Compile Include="DemoManagerTests.cs" />
+    <Compile Include="DemoTests.cs" />
+    <Compile Include="Extensions\StringExtensionsTests.cs" />
+    <Compile Include="LauncherTests.cs" />
+    <Compile Include="LookupTableTests.cs" />
+    <Compile Include="MockProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -2,7 +2,7 @@
 using Moq;
 using CDP.Core;
 
-namespace UnitTests
+namespace CDP.Core.Tests
 {
     class MockProvider<T> : IObjectProvider<T> where T:class
     {

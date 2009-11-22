@@ -3,7 +3,7 @@ using NUnit.Framework;
 using Moq;
 using CDP.Core;
 
-namespace UnitTests.Core
+namespace CDP.Core.Tests
 {
     [TestFixture]
     public class LauncherTests

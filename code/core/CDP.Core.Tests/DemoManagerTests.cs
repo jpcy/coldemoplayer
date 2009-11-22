@@ -7,7 +7,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Collections;
 
-namespace UnitTests.Core
+namespace CDP.Core.Tests
 {
     [TestFixture]
     public class DemoManagerTests

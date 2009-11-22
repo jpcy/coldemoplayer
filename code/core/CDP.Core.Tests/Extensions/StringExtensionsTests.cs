@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using CDP.Core.Extensions;
 
-namespace UnitTests.Core.Extensions
+namespace CDP.Core.Tests.Extensions
 {
     [TestFixture]
     public class StringExtensionsTests
