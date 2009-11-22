@@ -5,7 +5,7 @@ using System.Text;
 using NUnit.Framework;
 using CDP.IdTech3;
 
-namespace UnitTests.IdTech3
+namespace CDP.IdTech3.Tests
 {
     [TestFixture]
     public class EntityTests
