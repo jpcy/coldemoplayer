@@ -1,21 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{E404303E-6A6D-4441-BBB4-D0636057CCC1}</ProjectGuid>
+    <ProjectGuid>{F3050D94-2C2F-4C45-B9C5-56D34BB2F613}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CDP.DemoDiagnostic</RootNamespace>
     <AssemblyName>CDP.DemoDiagnostic</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
+    <StartupObject>CDP.DemoDiagnostic.Program</StartupObject>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +27,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -33,27 +37,51 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CDP.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin\CDP.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="CDP.CounterStrike, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin\CDP.CounterStrike.dll</HintPath>
+    </Reference>
+    <Reference Include="CDP.HalfLife, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin\CDP.HalfLife.dll</HintPath>
+    </Reference>
+    <Reference Include="CDP.IdTech3, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin\CDP.IdTech3.dll</HintPath>
+    </Reference>
+    <Reference Include="CDP.Quake3Arena, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin\CDP.Quake3Arena.dll</HintPath>
+    </Reference>
+    <Reference Include="CDP.QuakeLive, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin\CDP.QuakeLive.dll</HintPath>
+    </Reference>
+    <Reference Include="CDP.Source, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin\CDP.Source.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="App.xaml">
+    <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
+    </ApplicationDefinition>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -92,37 +120,10 @@
     </None>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CDP.Core\CDP.Core.csproj">
-      <Project>{14ABD36D-331F-43C8-8097-18C05B20F06E}</Project>
-      <Name>CDP.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CDP.CounterStrike\CDP.CounterStrike.csproj">
-      <Project>{77712F28-8EB3-4560-BCD8-096CEA789915}</Project>
-      <Name>CDP.CounterStrike</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CDP.HalfLife\CDP.HalfLife.csproj">
-      <Project>{6D554123-E196-4376-9B52-365777B913B8}</Project>
-      <Name>CDP.HalfLife</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CDP.IdTech3\CDP.IdTech3.csproj">
-      <Project>{EF8018FC-A773-4044-A044-17E38D3B07BC}</Project>
-      <Name>CDP.IdTech3</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CDP.Quake3Arena\CDP.Quake3Arena.csproj">
-      <Project>{F21AE7B5-2411-4773-B5AA-6C0A915FC062}</Project>
-      <Name>CDP.Quake3Arena</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CDP.QuakeLive\CDP.QuakeLive.csproj">
-      <Project>{AE5C3573-A6B2-4822-A55A-396DDF395D0C}</Project>
-      <Name>CDP.QuakeLive</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CDP.Source\CDP.Source.csproj">
-      <Project>{5F8BE612-C77B-4870-AEE3-A0FEE9B9F906}</Project>
-      <Name>CDP.Source</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)..\..\bin\$(TargetFileName)"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -130,8 +131,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)..\bin\$(TargetFileName)"
-copy "$(SolutionDir)..\huffman\huffman.dll" "$(TargetDir)"</PostBuildEvent>
-  </PropertyGroup>
 </Project>
