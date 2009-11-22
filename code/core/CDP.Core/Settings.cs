@@ -109,7 +109,7 @@ namespace CDP.Core
             // Remove the last four folder names from the path, e.g. "\compLexity Demo Player\CDP\bin\Debug" to "\bin".
             if (System.Diagnostics.Debugger.IsAttached)
             {
-                programPath = Path.GetFullPath("../../../../bin");
+                programPath = Path.GetFullPath("../../../../../bin");
             }
 #endif
             Add("UpdateUrl", "http://coldemoplayer.gittodachoppa.com/update115/");
