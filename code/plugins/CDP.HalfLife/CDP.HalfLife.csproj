@@ -1,18 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{6D554123-E196-4376-9B52-365777B913B8}</ProjectGuid>
+    <ProjectGuid>{C2C5CA0E-B2E2-43BB-A326-717DA3B9E953}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CDP.HalfLife</RootNamespace>
     <AssemblyName>CDP.HalfLife</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkSubset>Client</TargetFrameworkSubset>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -27,32 +26,23 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PresentationCore">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    <Reference Include="CDP.Core">
+      <HintPath>..\..\..\bin\CDP.Core.dll</HintPath>
     </Reference>
-    <Reference Include="PresentationFramework">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analysis\Player.cs" />
@@ -67,25 +57,25 @@
     <Compile Include="BitReader.cs" />
     <Compile Include="BitWriter.cs" />
     <Compile Include="Delta.cs" />
+    <Compile Include="DeltaStructure.cs" />
     <Compile Include="Demo.cs" />
     <Compile Include="DirectoryEntry.cs" />
+    <Compile Include="EngineMessage.cs" />
+    <Compile Include="Frame.cs" />
     <Compile Include="Frames\ClientCommand.cs" />
     <Compile Include="Frames\ClientData.cs" />
     <Compile Include="Frames\EndOfSegment.cs" />
+    <Compile Include="Frames\Loading.cs" />
     <Compile Include="Frames\ModData.cs" />
+    <Compile Include="Frames\Playback.cs" />
     <Compile Include="Frames\PlaybackSegmentStart.cs" />
     <Compile Include="Frames\PlaySound.cs" />
     <Compile Include="Frames\Unknown.cs" />
     <Compile Include="Frames\WeaponChange.cs" />
-    <Compile Include="DeltaStructure.cs" />
-    <Compile Include="EngineMessage.cs" />
-    <Compile Include="IMessage.cs" />
-    <Compile Include="Launcher.cs" />
-    <Compile Include="Frames\Loading.cs" />
-    <Compile Include="Frames\Playback.cs" />
     <Compile Include="Handler.cs" />
     <Compile Include="Header.cs" />
-    <Compile Include="Frame.cs" />
+    <Compile Include="IMessage.cs" />
+    <Compile Include="Launcher.cs" />
     <Compile Include="MapChecksum.cs" />
     <Compile Include="Messages\SvcAddAngle.cs" />
     <Compile Include="Messages\SvcCdTrack.cs" />
@@ -96,9 +86,7 @@
     <Compile Include="Messages\SvcDeltaDescription.cs" />
     <Compile Include="Messages\SvcDeltaPacketEntities.cs" />
     <Compile Include="Messages\SvcDirector.cs" />
-    <Compile Include="Messages\SvcEvent.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Messages\SvcEvent.cs" />
     <Compile Include="Messages\SvcEventReliable.cs" />
     <Compile Include="Messages\SvcFileTransferFailed.cs" />
     <Compile Include="Messages\SvcFinale.cs" />
@@ -149,23 +137,19 @@
     <Compile Include="UserMessages\UnregisteredUserMessage.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CDP.Core\CDP.Core.csproj">
-      <Project>{14ABD36D-331F-43C8-8097-18C05B20F06E}</Project>
-      <Name>CDP.Core</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Page Include="Analysis\View.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="SettingsView.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)..\..\bin\$(TargetFileName)"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -173,7 +157,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)..\bin\$(TargetFileName)"</PostBuildEvent>
-  </PropertyGroup>
 </Project>

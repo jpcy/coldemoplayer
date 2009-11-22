@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CDP.HalfLifeDemo")]
+[assembly: AssemblyTitle("CDP.QuakeLive")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("CDP.HalfLifeDemo")]
+[assembly: AssemblyProduct("CDP.QuakeLive")]
 [assembly: AssemblyCopyright("Copyright ©  2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("441ba507-2e97-45d5-b2ba-7d5cc56a7172")]
+[assembly: Guid("f61c82b0-ecb7-46ac-8b3e-dde12a053120")]
 
 // Version information for an assembly consists of the following four values:
 //

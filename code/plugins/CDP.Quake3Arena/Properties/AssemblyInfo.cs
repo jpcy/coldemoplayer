@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CDP.Source")]
+[assembly: AssemblyTitle("CDP.Quake3Arena")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("CDP.Source")]
+[assembly: AssemblyProduct("CDP.Quake3Arena")]
 [assembly: AssemblyCopyright("Copyright ©  2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("8d7d5894-660a-4d7d-b802-7bbd409c2a13")]
+[assembly: Guid("d9e3f515-a31b-4a75-8434-743276a858c6")]
 
 // Version information for an assembly consists of the following four values:
 //

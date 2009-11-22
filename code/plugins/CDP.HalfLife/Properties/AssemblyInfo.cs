@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CDP.IdTech3")]
+[assembly: AssemblyTitle("CDP.HalfLife")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("CDP.IdTech3")]
+[assembly: AssemblyProduct("CDP.HalfLife")]
 [assembly: AssemblyCopyright("Copyright ©  2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("35be503d-9b5d-4489-a586-a9cb6bdaad80")]
+[assembly: Guid("6e78e8df-2ac5-4768-9476-f934ad1752f6")]
 
 // Version information for an assembly consists of the following four values:
 //
