@@ -108,7 +108,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\computer.jpg" />
+    <Resource Include="Resources\computer.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
