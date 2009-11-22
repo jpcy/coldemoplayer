@@ -102,6 +102,12 @@ namespace CDP.Core
         public Settings()
         {
             programDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), ProgramName);
+
+            if (!Directory.Exists(programDataPath))
+            {
+                Directory.CreateDirectory(programDataPath);
+            }
+
             programExeFullPath = Environment.GetCommandLineArgs()[0];
             programPath = Path.GetDirectoryName(ProgramExeFullPath);
 
