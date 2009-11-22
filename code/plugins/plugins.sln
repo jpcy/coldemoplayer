@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CDP.QuakeLive", "CDP.QuakeL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CDP.Source", "CDP.Source\CDP.Source.csproj", "{F41A256D-D3B4-4E26-9C7E-11468F049435}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CDP.IdTech3.Tests", "CDP.IdTech3.Tests\CDP.IdTech3.Tests.csproj", "{27F866F3-02AB-4051-B435-4107BC6A3CD2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{F41A256D-D3B4-4E26-9C7E-11468F049435}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F41A256D-D3B4-4E26-9C7E-11468F049435}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F41A256D-D3B4-4E26-9C7E-11468F049435}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27F866F3-02AB-4051-B435-4107BC6A3CD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27F866F3-02AB-4051-B435-4107BC6A3CD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27F866F3-02AB-4051-B435-4107BC6A3CD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27F866F3-02AB-4051-B435-4107BC6A3CD2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
