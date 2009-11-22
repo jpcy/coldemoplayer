@@ -104,14 +104,14 @@ namespace CDP.Core
             programDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), ProgramName);
             programExeFullPath = Environment.GetCommandLineArgs()[0];
             programPath = Path.GetDirectoryName(ProgramExeFullPath);
-#if DEBUG
+
             // BLEH: this is what happens when you can't use macros in setting the debug working directory.
             // Remove the last four folder names from the path, e.g. "\compLexity Demo Player\CDP\bin\Debug" to "\bin".
             if (System.Diagnostics.Debugger.IsAttached)
             {
                 programPath = Path.GetFullPath("../../../../../bin");
             }
-#endif
+
             Add("UpdateUrl", "http://coldemoplayer.gittodachoppa.com/update115/");
             Add("MapsUrl", "http://coldemoplayer.gittodachoppa.com/maps/");
             Add("AutoUpdate", true);
