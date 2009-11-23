@@ -13,7 +13,7 @@
             <TabItem>
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/CDP;component/Images/details.png" Margin="0,0,4,0" />
+                        <Image Source="/CDP.Gui;component/Images/details.png" Margin="0,0,4,0" />
                         <TextBlock>Details</TextBlock>
                     </StackPanel>
                 </TabItem.Header>
@@ -51,7 +51,7 @@
             <TabItem>
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/CDP;component/Images/players.png" Margin="0,0,4,0" />
+                        <Image Source="/CDP.Gui;component/Images/players.png" Margin="0,0,4,0" />
                         <TextBlock>Players</TextBlock>
                     </StackPanel>
                 </TabItem.Header>
@@ -64,7 +64,7 @@
             <TabItem>
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/CDP;component/Images/settings.png" Margin="0,0,4,0" />
+                        <Image Source="/CDP.Gui;component/Images/settings.png" Margin="0,0,4,0" />
                         <TextBlock>Settings</TextBlock>
                     </StackPanel>
                 </TabItem.Header>

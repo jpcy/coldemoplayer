@@ -22,6 +22,6 @@
                 </LinearGradientBrush>
             </GridSplitter.Background>
         </GridSplitter>
-        <view:Demo Grid.Row="4" DataContext="{Binding Demo}" />
+        <view:Demo Grid.Row="4" DataContext="{Binding Demo}" Background="#edf2f9" />
     </Grid>
 </Page>
