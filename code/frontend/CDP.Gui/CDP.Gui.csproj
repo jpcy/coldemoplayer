@@ -8,14 +8,14 @@
     <ProjectGuid>{431E0C7A-24BB-4319-806F-E8D8943227C5}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CDP</RootNamespace>
-    <AssemblyName>CDP</AssemblyName>
+    <RootNamespace>CDP.Gui</RootNamespace>
+    <AssemblyName>CDP.Gui</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
-    <StartupObject>CDP.Program</StartupObject>
+    <StartupObject>CDP.Gui.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -230,7 +230,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -263,8 +262,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetDir)\$(TargetFileName)" "$(SolutionDir)..\..\bin\compLexity Demo Player.exe"
-copy "$(TargetDir)\CDP.exe.config" "$(SolutionDir)....\\bin\compLexity Demo Player.exe.config"
+    <PostBuildEvent>copy "$(TargetDir)\$(TargetFileName)" "$(SolutionDir)..\..\bin\$(TargetFileName)"
 copy "$(TargetDir)\Interop.Shell32.dll" "$(SolutionDir)..\..\bin\Interop.Shell32.dll"
 copy "$(SolutionDir)..\..\huffman\huffman.dll" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
