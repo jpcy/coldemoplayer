@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CDP", "CDP\CDP.csproj", "{431E0C7A-24BB-4319-806F-E8D8943227C5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CDP.Gui", "CDP.Gui\CDP.Gui.csproj", "{431E0C7A-24BB-4319-806F-E8D8943227C5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CDP.DemoDiagnostic", "CDP.DemoDiagnostic\CDP.DemoDiagnostic.csproj", "{F3050D94-2C2F-4C45-B9C5-56D34BB2F613}"
 EndProject
