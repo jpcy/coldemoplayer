@@ -45,13 +45,16 @@ namespace CDP.Gui.View
             handler = demo.Handler;
             playersGridView.Columns.Clear();
 
-            foreach (Core.DemoHandler.PlayerColumn column in handler.PlayerColumns)
+            if (handler.PlayerColumns != null)
             {
-                playersGridView.Columns.Add(new GridViewColumn
+                foreach (Core.DemoHandler.PlayerColumn column in handler.PlayerColumns)
                 {
-                    Header = column.Header,
-                    DisplayMemberBinding = new Binding(column.DisplayMemberBinding)
-                });
+                    playersGridView.Columns.Add(new GridViewColumn
+                    {
+                        Header = column.Header,
+                        DisplayMemberBinding = new Binding(column.DisplayMemberBinding)
+                    });
+                }
             }
         }
     }
