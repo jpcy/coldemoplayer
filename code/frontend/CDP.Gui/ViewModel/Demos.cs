@@ -9,7 +9,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Media.Imaging;
 using System.ComponentModel;
 
-namespace CDP.ViewModel
+namespace CDP.Gui.ViewModel
 {
     public class Demos : Core.ViewModelBase
     {

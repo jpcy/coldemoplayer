@@ -7,7 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Threading;
 using System.Windows;
 
-namespace CDP
+namespace CDP.Gui
 {
     public interface INavigationService
     {

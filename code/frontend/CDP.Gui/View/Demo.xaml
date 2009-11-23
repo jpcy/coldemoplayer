@@ -1,8 +1,8 @@
-﻿<UserControl x:Class="CDP.View.Demo"
+﻿<UserControl x:Class="CDP.Gui.View.Demo"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:CDP"
-    xmlns:uc="clr-namespace:CDP.UserControls"
+    xmlns:local="clr-namespace:CDP.Gui"
+    xmlns:uc="clr-namespace:CDP.Gui.UserControls"
     Initialized="UserControl_Initialized">
     <Grid Margin="8">
         <Grid.RowDefinitions>

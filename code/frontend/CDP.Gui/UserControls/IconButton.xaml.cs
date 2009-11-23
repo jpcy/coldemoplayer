@@ -13,7 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Markup;
 
-namespace CDP.UserControls
+namespace CDP.Gui.UserControls
 {
     [ContentProperty("Text")]
     public partial class IconButton : UserControl

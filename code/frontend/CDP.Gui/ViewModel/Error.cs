@@ -2,7 +2,7 @@
 using CDP.Core;
 using CDP.Core.Extensions;
 
-namespace CDP.ViewModel
+namespace CDP.Gui.ViewModel
 {
     class Error : Core.ViewModelBase
     {

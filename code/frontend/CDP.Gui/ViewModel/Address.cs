@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CDP.ViewModel
+namespace CDP.Gui.ViewModel
 {
     public class Address : Core.ViewModelBase
     {

@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="CDP.UserControls.IconButton"
+﻿<UserControl x:Class="CDP.Gui.UserControls.IconButton"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Button Command="{Binding Path=Command, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">

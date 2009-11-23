@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Controls;
 
-namespace CDP.ViewModel
+namespace CDP.Gui.ViewModel
 {
     public class Analysis : Core.ViewModelBase
     {

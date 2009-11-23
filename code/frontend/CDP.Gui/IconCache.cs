@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Windows.Media.Imaging;
 using System.IO;
 
-namespace CDP
+namespace CDP.Gui
 {
     public class IconCache
     {

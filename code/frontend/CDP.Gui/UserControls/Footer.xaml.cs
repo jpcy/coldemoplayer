@@ -14,7 +14,7 @@ using System.Windows.Shapes;
 using System.ComponentModel;
 using System.Windows.Markup;
 
-namespace CDP.UserControls
+namespace CDP.Gui.UserControls
 {
     [DefaultProperty("NestedContent")]
     [ContentProperty("NestedContent")]

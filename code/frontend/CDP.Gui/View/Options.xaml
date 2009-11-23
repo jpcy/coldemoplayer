@@ -1,8 +1,8 @@
-﻿<Page x:Class="CDP.View.Options"
+﻿<Page x:Class="CDP.Gui.View.Options"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:uc="clr-namespace:CDP.UserControls"
-    xmlns:view="clr-namespace:CDP.View"
+    xmlns:uc="clr-namespace:CDP.Gui.UserControls"
+    xmlns:view="clr-namespace:CDP.Gui.View"
     Title="Options">
     <Grid>
         <Grid.RowDefinitions>

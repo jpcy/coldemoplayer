@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Navigation;
 
-namespace CDP
+namespace CDP.Gui
 {
     public partial class MainWindow : Window
     {
@@ -14,7 +14,7 @@ namespace CDP
 
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            CDP.INavigationService service = Core.ObjectCreator.Get<CDP.INavigationService>();
+            CDP.Gui.INavigationService service = Core.ObjectCreator.Get<CDP.Gui.INavigationService>();
             service.Window = this;
             service.Navigate(new View.Main(), new ViewModel.Main());
         }

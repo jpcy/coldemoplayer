@@ -1,7 +1,7 @@
 ﻿using System;
 using CDP.Core;
 
-namespace CDP
+namespace CDP.Gui
 {
     class Program
     {

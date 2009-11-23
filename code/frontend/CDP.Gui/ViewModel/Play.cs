@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace CDP.ViewModel
+namespace CDP.Gui.ViewModel
 {
     class Play : Core.ViewModelBase
     {

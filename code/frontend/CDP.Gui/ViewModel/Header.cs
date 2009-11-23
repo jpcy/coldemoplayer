@@ -1,7 +1,7 @@
 ﻿using System;
 using CDP.Core;
 
-namespace CDP.ViewModel
+namespace CDP.Gui.ViewModel
 {
     public class Header : Core.ViewModelBase
     {

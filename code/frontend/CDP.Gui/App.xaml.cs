@@ -2,7 +2,7 @@
 using System.Windows;
 using CDP.Core;
 
-namespace CDP
+namespace CDP.Gui
 {
     public partial class App : Application
     {

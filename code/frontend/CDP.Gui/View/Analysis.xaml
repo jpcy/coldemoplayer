@@ -1,7 +1,7 @@
-﻿<Page x:Class="CDP.View.Analysis"
+﻿<Page x:Class="CDP.Gui.View.Analysis"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:uc="clr-namespace:CDP.UserControls"
+    xmlns:uc="clr-namespace:CDP.Gui.UserControls"
     Title="Analysis">
     <Grid>
         <Grid.RowDefinitions>
