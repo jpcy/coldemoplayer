@@ -12,7 +12,7 @@ namespace CDP.Gui.ViewModel
         {
             get
             {
-                if (Data == null)
+                if (Data == null || Data.MapImagesRelativePath == null)
                 {
                     return null;
                 }
@@ -24,7 +24,7 @@ namespace CDP.Gui.ViewModel
         {
             get
             {
-                if (Data == null)
+                if (Data == null || Data.MapImagesRelativePath == null)
                 {
                     return null;
                 }
