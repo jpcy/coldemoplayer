@@ -124,7 +124,7 @@ namespace CDP.Gui
         {
             Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog
             {
-                Title = "Browse for \"" + fileName + "\"...",
+                Title = string.Format(Strings.BrowseForFileTitle, fileName),
                 InitialDirectory = initialPath,
                 Filter = fileName + "|" + fileName,
                 RestoreDirectory = true

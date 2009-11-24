@@ -1,5 +1,6 @@
 ﻿<Window x:Class="CDP.Gui.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="compLexity Demo Player"
+    xmlns:local="clr-namespace:CDP.Gui"
+    Title="{x:Static local:Strings.MainWindowTitle}"
     Width="800" Height="600" WindowStartupLocation="CenterScreen" />

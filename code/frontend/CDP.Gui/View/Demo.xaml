@@ -14,7 +14,7 @@
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/CDP.Gui;component/Images/details.png" Margin="0,0,4,0" />
-                        <TextBlock>Details</TextBlock>
+                        <TextBlock Text="{x:Static local:Strings.Demo_DetailsTabItemText}" />
                     </StackPanel>
                 </TabItem.Header>
                 <Grid>
@@ -52,7 +52,7 @@
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/CDP.Gui;component/Images/players.png" Margin="0,0,4,0" />
-                        <TextBlock>Players</TextBlock>
+                        <TextBlock Text="{x:Static local:Strings.Demo_PlayersTabItemText}" />
                     </StackPanel>
                 </TabItem.Header>
                 <ListView ItemsSource="{Binding Data.Players}">
@@ -65,7 +65,7 @@
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/CDP.Gui;component/Images/settings.png" Margin="0,0,4,0" />
-                        <TextBlock>Settings</TextBlock>
+                        <TextBlock Text="{x:Static local:Strings.Demo_SettingsTabItemText}" />
                     </StackPanel>
                 </TabItem.Header>
                 <ContentControl Content="{Binding Data.Handler.SettingsView}" />
@@ -82,8 +82,8 @@
                     <Setter Property="Padding" Value="0,0,10,0" />
                 </Style>
             </StackPanel.Resources>
-            <uc:IconButton Command="{Binding PlayCommand}" IconSource="/Images/play.png">Play</uc:IconButton>
-            <uc:IconButton Command="{Binding AnalyseCommand}" IconSource="/Images/analyse.png">Analyse</uc:IconButton>
+            <uc:IconButton Command="{Binding PlayCommand}" IconSource="/Images/play.png" Text="{x:Static local:Strings.PlayButtonText}" />
+            <uc:IconButton Command="{Binding AnalyseCommand}" IconSource="/Images/analyse.png" Text="{x:Static local:Strings.AnalyseButtonText}" />
         </StackPanel>
     </Grid>
 </UserControl>

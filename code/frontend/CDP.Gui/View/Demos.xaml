@@ -1,10 +1,11 @@
 ﻿<UserControl x:Class="CDP.Gui.View.Demos"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:CDP.Gui">
     <ListView Margin="8" SelectionMode="Single" ItemsSource="{Binding Items}" SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}">
         <ListView.View>
             <GridView>
-                <GridViewColumn Header="Name">
+                <GridViewColumn Header="{x:Static local:Strings.Demos_NameColumnHeader}">
                     <GridViewColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
@@ -18,10 +19,10 @@
                         </DataTemplate>
                     </GridViewColumn.CellTemplate>
                 </GridViewColumn>
-                <GridViewColumn Header="Game" DisplayMemberBinding="{Binding Game}" />
-                <GridViewColumn Header="Map" DisplayMemberBinding="{Binding Map}" />
-                <GridViewColumn Header="Perspective" DisplayMemberBinding="{Binding Perspective}" />
-                <GridViewColumn Header="Duration" DisplayMemberBinding="{Binding Duration}" />
+                <GridViewColumn Header="{x:Static local:Strings.Demos_GameColumnHeader}" DisplayMemberBinding="{Binding Game}" />
+                <GridViewColumn Header="{x:Static local:Strings.Demos_MapColumnHeader}" DisplayMemberBinding="{Binding Map}" />
+                <GridViewColumn Header="{x:Static local:Strings.Demos_PerspectiveColumnHeader}" DisplayMemberBinding="{Binding Perspective}" />
+                <GridViewColumn Header="{x:Static local:Strings.Demos_DurationColumnHeader}" DisplayMemberBinding="{Binding Duration}" />
             </GridView>
         </ListView.View>
     </ListView>

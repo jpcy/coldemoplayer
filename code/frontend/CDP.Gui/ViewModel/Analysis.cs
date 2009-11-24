@@ -7,7 +7,7 @@ namespace CDP.Gui.ViewModel
     {
         public string Header
         {
-            get { return string.Format("Analysis of \'{0}\'", demo.Name); }
+            get { return string.Format(Strings.Analysis_Title, demo.Name); }
         }
 
         public UserControl View { get; private set; }

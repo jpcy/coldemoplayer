@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:uc="clr-namespace:CDP.Gui.UserControls"
     xmlns:view="clr-namespace:CDP.Gui.View"
+    xmlns:local="clr-namespace:CDP.Gui"
     Title="Options">
     <Grid>
         <Grid.RowDefinitions>
@@ -37,8 +38,8 @@
         </Grid>
         <uc:Footer Grid.Row="2">
             <DockPanel LastChildFill="False" Margin="20,8,20,8">
-                <uc:IconButton DockPanel.Dock="Left" IconSource="/Images/cancel.png" Command="{Binding CancelCommand}">Cancel</uc:IconButton>
-                <uc:IconButton DockPanel.Dock="Right" IconSource="/Images/save.png" Command="{Binding ApplyCommand}">Apply</uc:IconButton>
+                <uc:IconButton DockPanel.Dock="Left" IconSource="/Images/cancel.png" Command="{Binding CancelCommand}" Text="{x:Static local:Strings.CancelButtonText}" />
+                <uc:IconButton DockPanel.Dock="Right" IconSource="/Images/save.png" Command="{Binding ApplyCommand}" Text="{x:Static local:Strings.ApplyButtonText}" />
             </DockPanel>
         </uc:Footer>
     </Grid>

@@ -7,7 +7,7 @@ namespace CDP.Gui.ViewModel
     {
         public string Caption
         {
-            get { return string.Format("Processing \'{0}\' for playback...", demo.Name); }
+            get { return string.Format(Strings.Play_Processing, demo.Name); }
         }
 
         private int progress = 0;
