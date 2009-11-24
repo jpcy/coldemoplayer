@@ -195,7 +195,11 @@ namespace CDP.Core
 
         public void DeleteFile(string fileName)
         {
-            File.Delete(fileName);
+            // Documentation is misleading, File.Delete throws an exception if the *path* doesn't exist.
+            if (File.Exists(fileName))
+            {
+                File.Delete(fileName);
+            }
         }
 
         public void DeleteDirectory(string path)
