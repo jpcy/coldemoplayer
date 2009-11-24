@@ -17,8 +17,7 @@ namespace CDP.Gui
 
         private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            // TODO: log exception
-            MessageBox.Show(e.Exception.ToString());
+            new ErrorReporter().LogUnhandledException(e.Exception);
         }
     }
 }
