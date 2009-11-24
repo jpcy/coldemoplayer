@@ -155,8 +155,9 @@ namespace CDP.Core
                 {
                     xml = XDocument.Load(path);
                 }
-                catch (Exception) // TODO: log exception
+                catch (Exception ex)
                 {
+                    new ErrorReporter().LogWarning(null, ex);
                     xml = null;
                 }
             }
