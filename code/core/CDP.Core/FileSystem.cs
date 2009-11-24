@@ -1,18 +1,109 @@
 ﻿using System;
-using System.Linq;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace CDP.Core
 {
     public interface IFileSystem
     {
+        /// <summary>
+        /// Open a binary file for reading.
+        /// </summary>
+        /// <param name="fileName">The file name.</param>
+        /// <returns>The opened file stream.</returns>
         FastFileStreamBase OpenRead(string fileName);
+
+        /// <summary>
+        /// Get the names of all files in the specified path that match the search pattern.
+        /// </summary>
+        /// <param name="path">The path to search for files in.</param>
+        /// <param name="fileSearchPattern">The search pattern to determine which files to select.</param>
+        /// <returns>An array of file names.</returns>
         string[] GetFiles(string path, string fileSearchPattern);
+
+        /// <summary>
+        /// Gets all the subfolders in the specified path.
+        /// </summary>
+        /// <param name="path">The path to search for subfolders in.</param>
+        /// <returns>A list of folder names.</returns>
         IEnumerable<string> GetFolderNames(string path);
+
+        /// <summary>
+        /// Combine path elements to form a single absolute path.
+        /// </summary>
+        /// <param name="path">The absolute path to start with.</param>
+        /// <param name="paths">Path elements to append to the starting path.</param>
+        /// <returns>A combined path.</returns>
         string PathCombine(string path, params string[] paths);
+
+        /// <summary>
+        /// Gets a file name's extension without the '.'.
+        /// </summary>
+        /// <param name="fileName">The file name to retrieve the extension from.</param>
+        /// <returns>A file extension without the '.'.</returns>
         string GetExtension(string fileName);
+
+        /// <summary>
+        /// Change a file name extension.
+        /// </summary>
+        /// <param name="fileName">The file name thats extension should be changed.</param>
+        /// <param name="newExtension">The new extension.</param>
+        /// <returns>A file name with the new extension.</returns>
         string ChangeExtension(string fileName, string newExtension);
+
+        /// <summary>
+        /// Gets a file name without it's extension.
+        /// </summary>
+        /// <param name="fileName">The file name.</param>
+        /// <returns>The specified file name without an extension.</returns>
+        string GetFileNameWithoutExtension(string fileName);
+
+        /// <summary>
+        /// Determines whether a file exists.
+        /// </summary>
+        /// <param name="fileName">The file name.</param>
+        /// <returns>True if the file exists, otherwise false.</returns>
+        bool FileExists(string fileName);
+
+        /// <summary>
+        /// Determines whether a directory exists.
+        /// </summary>
+        /// <param name="path">The path to the directory.</param>
+        /// <returns>True if the directory exists, otherwise false.</returns>
+        bool DirectoryExists(string path);
+
+        /// <summary>
+        /// Create a directory at the specified path.
+        /// </summary>
+        /// <param name="path">The path to the directory to be created.</param>
+        void CreateDirectory(string path);
+
+        /// <summary>
+        /// Deletes the directory at the specified path.
+        /// </summary>
+        /// <param name="path">The path to the directory to be deleted.</param>
+        void DeleteDirectory(string path);
+
+        /// <summary>
+        /// Returns the directory for the specified path string.
+        /// </summary>
+        /// <param name="path">The path to retrieve the directory from.</param>
+        /// <returns>The name of the directory.</returns>
+        string GetDirectoryName(string path);
+
+        /// <summary>
+        /// Delete a file. An exception is not thrown if the file does not exist.
+        /// </summary>
+        /// <param name="fileName">The name of the file to delete.</param>
+        void DeleteFile(string fileName);
+
+        /// <summary>
+        /// Calculate a random file name ensuring that a file with the same name doesn't exist in the specified path.
+        /// </summary>
+        /// <param name="path">The proposed path of the file.</param>
+        /// <returns>A random, unique filename.</returns>
+        string CalculateRandomFileName(string path);
     }
 
     public class FileSystem : IFileSystem
@@ -67,6 +158,54 @@ namespace CDP.Core
             }
 
             return Path.GetFileNameWithoutExtension(fileName) + newExtension;
+        }
+
+        public string GetFileNameWithoutExtension(string fileName)
+        {
+            return Path.GetFileNameWithoutExtension(fileName);
+        }
+
+        public bool FileExists(string fileName)
+        {
+            return File.Exists(fileName);
+        }
+
+        public bool DirectoryExists(string path)
+        {
+            return Directory.Exists(path);
+        }
+
+        public void CreateDirectory(string path)
+        {
+            Directory.CreateDirectory(path);
+        }
+
+        public string CalculateRandomFileName(string path)
+        {
+            string fileName;
+
+            do
+            {
+                fileName = PathCombine(path, Path.GetRandomFileName());
+            }
+            while (FileExists(fileName));
+
+            return fileName;
+        }
+
+        public void DeleteFile(string fileName)
+        {
+            File.Delete(fileName);
+        }
+
+        public void DeleteDirectory(string path)
+        {
+            Directory.Delete(path);
+        }
+
+        public string GetDirectoryName(string path)
+        {
+            return Path.GetDirectoryName(path);
         }
     }
 }
