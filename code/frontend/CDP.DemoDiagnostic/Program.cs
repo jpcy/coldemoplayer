@@ -8,6 +8,8 @@ namespace CDP.DemoDiagnostic
         [STAThread]
         public static void Main()
         {
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
             // Object mappings.
             Core.ObjectMappings.Initialise();
 
@@ -32,6 +34,11 @@ namespace CDP.DemoDiagnostic
             App app = new App();
             app.InitializeComponent();
             app.Run();
+        }
+
+        static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            new ErrorReporter().LogUnhandledException((Exception)e.ExceptionObject);
         }
     }
 }

@@ -10,6 +10,8 @@ namespace CDP.Cli
     {
         static void Main(string[] args)
         {
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
             if (args.Length < 1)
             {
                 Console.WriteLine("Usage: CDP.Cli filename");
@@ -94,6 +96,11 @@ namespace CDP.Cli
         static void demo_OperationCompleteEvent(object sender, EventArgs e)
         {
             Console.WriteLine("]");
+        }
+
+        static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            new ErrorReporter().LogUnhandledException((Exception)e.ExceptionObject);
         }
     }
 }

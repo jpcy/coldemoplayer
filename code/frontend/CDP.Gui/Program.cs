@@ -8,6 +8,8 @@ namespace CDP.Gui
         [STAThread]
         public static void Main()
         {
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
             // Object mappings.
             Core.ObjectMappings.Initialise();
             ObjectCreator.Map<IMediator, Mediator>();
@@ -34,6 +36,11 @@ namespace CDP.Gui
             App app = new App();
             app.InitializeComponent();
             app.Run();
+        }
+
+        static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            new ErrorReporter().LogUnhandledException((Exception)e.ExceptionObject);
         }
     }
 }
