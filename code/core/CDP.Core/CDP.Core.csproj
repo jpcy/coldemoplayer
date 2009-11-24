@@ -52,6 +52,7 @@
     <Compile Include="Demo.cs" />
     <Compile Include="DemoHandler.cs" />
     <Compile Include="DemoManager.cs" />
+    <Compile Include="ErrorReporter.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Extensions\StreamWriterExtensions.cs" />
