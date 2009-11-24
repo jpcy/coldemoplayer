@@ -189,7 +189,7 @@ namespace CDP.Core
         {
             if (length < value.Length + 1)
             {
-                throw new ArgumentException("String longer that specified length.", "length");
+                throw new ArgumentException("String longer than specified length.", "length");
             }
 
             WriteString(value);

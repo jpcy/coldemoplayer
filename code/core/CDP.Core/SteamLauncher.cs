@@ -35,7 +35,7 @@ namespace CDP.Core
             // Verify that steam.exe exists.
             if (!File.Exists((string)settings["SteamExeFullPath"]))
             {
-                Message = string.Format("Unable to find \"Steam.exe\" at \"{0}\". Go to Options and select the correct Steam path.", settings["SteamExeFullPath"]);
+                Message = string.Format(Strings.SteamExePathNotSet, settings["SteamExeFullPath"]);
                 return false;
             }
 
@@ -44,7 +44,7 @@ namespace CDP.Core
 
             if (!Directory.Exists(steamAccountPath))
             {
-                Message = string.Format("Steam account folder \"{0}\" doesn't exist. Go to Options and select a valid Steam account folder.", settings["SteamAccountName"]);
+                Message = string.Format(Strings.SteamAccountFolderDoesNotExist, settings["SteamAccountName"]);
                 return false;
             }
 
@@ -53,14 +53,14 @@ namespace CDP.Core
 
             if (!Directory.Exists(gamePath))
             {
-                Message = string.Format("The game \"{0}\" doesn't seem to be installed on the selected Steam account. The folder \"{1}\" does not exist. Check that the correct Steam account is selected in Options.", gameName, gamePath);
+                Message = string.Format(Strings.SteamGameFolderDoesNotExist, gameName, gamePath);
                 return false;
             }
 
             // Verify that Steam is running.
             if (FindProcess("Steam", (string)settings["SteamExeFullPath"]) == null)
             {
-                Message = "Steam is not running. Launch Steam, log into your account and try again.";
+                Message = Strings.SteamNotRunning;
                 return false;
             }
 
@@ -72,7 +72,7 @@ namespace CDP.Core
             // Verify that the game is not already running.
             if (FindProcess(Path.GetFileNameWithoutExtension(processExecutableFileName), processExecutableFileName) != null)
             {
-                Message = string.Format("Cannot play a demo while \"{0}\" is already running. Exit the game and try again.", gameName);
+                Message = string.Format(Strings.SteamGameAlreadyRunning, gameName);
                 return false;
             }
 
