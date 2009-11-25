@@ -25,12 +25,12 @@ namespace CDP.Quake3Arena
         {
             if (string.IsNullOrEmpty(serverCommand))
             {
-                throw new ArgumentException("Parameter cannot be null or empty", "s");
+                throw new ArgumentException("Parameter cannot be null or empty", "serverCommand");
             }
 
             if (!serverCommand.StartsWith(scoresServerCommandMarker))
             {
-                throw new ArgumentException(string.Format("String does not start with \'{0}\'", scoresServerCommandMarker), "s");
+                throw new ArgumentException(string.Format("String does not start with \'{0}\'", scoresServerCommandMarker), "serverCommand");
             }
 
             // Strip the server command marker.

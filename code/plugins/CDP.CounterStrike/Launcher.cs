@@ -46,7 +46,7 @@ namespace CDP.CounterStrike
             {
                 // TODO: block and attempt to download the required map here.
 
-                Message = string.Format("No suitable map found in the map pool: \'{0}\' with the checksum \'{1}\'.", demo.MapName, demo.MapChecksum);
+                Message = string.Format(Strings.NoSuitableMapFound, demo.MapName, demo.MapChecksum);
                 return false;
             }
 

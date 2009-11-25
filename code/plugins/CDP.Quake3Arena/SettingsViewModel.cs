@@ -39,7 +39,7 @@ namespace CDP.Quake3Arena
         {
             OpenFileDialog dialog = new OpenFileDialog
             {
-                Title = "Browse for Quake III Arena executable...",
+                Title = Strings.BrowseForExeDialogTitle,
                 Filter = string.Empty,
                 RestoreDirectory = true
             };

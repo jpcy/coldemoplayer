@@ -1,15 +1,16 @@
 ﻿<UserControl x:Class="CDP.CounterStrike.SettingsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:CDP.CounterStrike">
     <StackPanel>
-        <GroupBox Header="Playback Method">
+        <GroupBox Header="{x:Static local:Strings.PlaybackMethodGroupBoxHeader}">
             <StackPanel>
                 <RadioButton IsChecked="{Binding Playdemo}">playdemo</RadioButton>
                 <RadioButton IsChecked="{Binding Viewdemo}">viewdemo</RadioButton>
             </StackPanel>
         </GroupBox>
-        <CheckBox IsChecked="{Binding StartListenServer}">Start Listen Server</CheckBox>
-        <CheckBox IsChecked="{Binding RemoveShowscores}">Remove showscores command</CheckBox>
-        <CheckBox IsChecked="{Binding RemoveFadeToBlack}">Remove Fade to Black</CheckBox>
+        <CheckBox IsChecked="{Binding StartListenServer}" Content="{x:Static local:Strings.StartListenServerCheckBoxContent}" />
+        <CheckBox IsChecked="{Binding RemoveShowscores}" Content="{x:Static local:Strings.RemoveShowscoresCheckBoxContent}" />
+        <CheckBox IsChecked="{Binding RemoveFadeToBlack}" Content="{x:Static local:Strings.RemoveFadeToBlackCheckBoxContent}" />
     </StackPanel>
 </UserControl>

@@ -74,16 +74,16 @@ namespace CDP.UnrealTournament2004
                     MapName = ReadVerifiableString(stream);
 
                     // Game mode.
-                    AddDetail("Game Mode", ReadVerifiableString(stream));
+                    AddDetail(Strings.DemoDetailGameMode, ReadVerifiableString(stream));
 
                     // Skip unknown.
                     stream.Seek(12, SeekOrigin.Current);
 
                     // Recorded by.
-                    AddDetail("Recorded by", ReadVerifiableString(stream));
+                    AddDetail(Strings.DemoDetailRecordedBy, ReadVerifiableString(stream));
 
                     // Recorded on.
-                    AddDetail("Recorded on", ReadVerifiableString(stream));
+                    AddDetail(Strings.DemoDetailRecordedOn, ReadVerifiableString(stream));
                 }
             }
             catch (Exception ex)

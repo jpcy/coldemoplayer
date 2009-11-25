@@ -48,9 +48,17 @@ namespace CDP.Quake3Arena
 
         public override bool Verify()
         {
-            if (!File.Exists((string)settings["Quake3ExeFullPath"]))
+            string exeFullPath = (string)settings["Quake3ExeFullPath"];
+
+            if (string.IsNullOrEmpty(exeFullPath))
             {
-                Message = string.Format("Quake III Arena executable path not set.");
+                Message = Strings.ExeNotSet;
+                return false;
+            }
+
+            if (!File.Exists(exeFullPath))
+            {
+                Message = string.Format(Strings.ExeNotFound, exeFullPath);
                 return false;
             }
 
@@ -60,6 +68,8 @@ namespace CDP.Quake3Arena
             {
                 Directory.CreateDirectory(demosFolderPath);
             }
+
+            // TODO: make sure the game process isn't already running.
 
             return true;
         }

@@ -57,6 +57,11 @@
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="SettingsViewModel.cs" />
+    <Compile Include="Strings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
     <Compile Include="UserMessages\ClCorpse.cs" />
     <Compile Include="UserMessages\SendAudio.cs" />
   </ItemGroup>
@@ -72,9 +77,17 @@
       <Name>CDP.HalfLife</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Strings.de-DE.resx" />
+    <EmbeddedResource Include="Strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)..\..\bin\$(TargetFileName)"
+copy "$(TargetDir)\de-DE\CDP.CounterStrike.resources.dll" "$(SolutionDir)..\..\bin\de-DE\CDP.CounterStrike.resources.dll"
 “$(FrameworkSDKDir)bin\NETFX 4.0 Tools\sgen.exe” /a:"$(SolutionDir)..\..\bin\$(TargetFileName)" /t:CDP.CounterStrike.Game /force</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

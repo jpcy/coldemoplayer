@@ -1,6 +1,7 @@
 ﻿<UserControl x:Class="CDP.UnrealTournament2004.SettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:CDP.UnrealTournament2004">
     <Grid Margin="8">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -12,6 +13,6 @@
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">UT2004.exe:</TextBlock>
         <TextBox Grid.Row="1" Grid.Column="0" IsReadOnly="True" Margin="0,0,8,0" Text="{Binding ExeFullPath, Mode=OneWay}" />
-        <Button Grid.Row="1" Grid.Column="1" Padding="16,0,16,0" Command="{Binding BrowseForExeCommand}">Browse...</Button>
+        <Button Grid.Row="1" Grid.Column="1" Padding="16,0,16,0" Command="{Binding BrowseForExeCommand}" Content="{x:Static local:Strings.BrowseButtonContent}" />
     </Grid>
 </UserControl>

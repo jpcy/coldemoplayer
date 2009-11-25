@@ -26,7 +26,7 @@ namespace CDP.UnrealTournament2004
         {
             OpenFileDialog dialog = new OpenFileDialog
             {
-                Title = "Browse for UT2004 executable...",
+                Title = Strings.BrowseForExeDialogTitle,
                 Filter = "UT2004.exe|UT2004.exe",
                 RestoreDirectory = true
             };

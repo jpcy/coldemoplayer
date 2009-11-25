@@ -1,6 +1,7 @@
 ﻿<UserControl x:Class="CDP.Quake3Arena.SettingsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:CDP.Quake3Arena">
     <Grid Margin="8">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -14,6 +15,6 @@
         <CheckBox Grid.Row="0" Margin="0,0,0,8" IsChecked="{Binding Convert}">Convert to protocol 68.</CheckBox>
         <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">quake3.exe:</TextBlock>
         <TextBox Grid.Row="2" Grid.Column="0" IsReadOnly="True" Margin="0,0,8,0" Text="{Binding ExeFullPath, Mode=OneWay}" />
-        <Button Grid.Row="2" Grid.Column="1" Padding="16,0,16,0" Command="{Binding BrowseForExeCommand}">Browse...</Button>
+        <Button Grid.Row="2" Grid.Column="1" Padding="16,0,16,0" Command="{Binding BrowseForExeCommand}" Content="{x:Static local:Strings.BrowseButtonContent}" />
     </Grid>
 </UserControl>

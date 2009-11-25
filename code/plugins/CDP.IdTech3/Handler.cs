@@ -57,9 +57,9 @@ namespace CDP.IdTech3
             {
                 return new PlayerColumn[]
                 {
-                    new PlayerColumn("Name", "Name"),
-                    new PlayerColumn("Head Model", "HeadModel"),
-                    new PlayerColumn("Model", "Model")
+                    new PlayerColumn(Strings.PlayerNameColumnHeader, "Name"),
+                    new PlayerColumn(Strings.PlayerHeadModelColumnHeader, "HeadModel"),
+                    new PlayerColumn(Strings.PlayerModelColumnHeader, "Model")
                 };
             }
         }

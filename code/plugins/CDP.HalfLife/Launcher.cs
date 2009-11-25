@@ -92,13 +92,13 @@ namespace CDP.HalfLife
                 stream.WriteLine("echo \"==========================\"");
                 stream.WriteLine("echo \"{0}\"", settings.ProgramName);
                 stream.WriteLine("echo \"==========================\"");
-                stream.WriteLine("echo \"Aliases:\"");
-                stream.WriteLine("echo \"  +col_ff_slow (Fast Forward)\"");
-                stream.WriteLine("echo \"  +col_ff_fast (Faster Fast Forward)\"");
-                stream.WriteLine("echo \"  +col_slowmo (Slow Motion)\"");
-                stream.WriteLine("echo \"  col_pause (Toggle Pause)\"");
+                stream.WriteLine("echo \"{0}\"", Strings.GameConfigAliases);
+                stream.WriteLine("echo \"  +col_ff_slow ({0})\"", Strings.GameConfigFastForward);
+                stream.WriteLine("echo \"  +col_ff_fast ({0})\"", Strings.GameConfigFasterFastForward);
+                stream.WriteLine("echo \"  +col_slowmo ({0})\"", Strings.GameConfigSlowMotion);
+                stream.WriteLine("echo \"  col_pause ({0})\"", Strings.GameConfigTogglePause);
                 stream.WriteLine("echo \"\"");
-                stream.WriteLine("echo \"Playing \'{0}\'...\"", demo.Name);
+                stream.WriteLine("echo \"{0}\"", string.Format(Strings.GameConfigPlayingMessage, demo.Name));
                 // TODO: duration, recorded by.
                 stream.WriteLine("echo \"\"");
             }

@@ -526,13 +526,13 @@ namespace CDP.IdTech3
 
             if (command.KeyValuePairs.ContainsKey("version"))
             {
-                AddDetail("Version", command.KeyValuePairs["version"]);
+                AddDetail(Strings.DemoDetailVersion, command.KeyValuePairs["version"]);
             }
 
             if (command.KeyValuePairs.ContainsKey("mapname"))
             {
                 MapName = command.KeyValuePairs["mapname"].ToLower();
-                AddDetail("Map", MapName);
+                AddDetail(Strings.DemoDetailMap, MapName);
             }
 
             if (command.KeyValuePairs.ContainsKey("gamename"))
@@ -543,17 +543,17 @@ namespace CDP.IdTech3
 
             if (command.KeyValuePairs.ContainsKey("sv_maxclients"))
             {
-                AddDetail("Server Slots", command.KeyValuePairs["sv_maxclients"]);
+                AddDetail(Strings.DemoDetailServerSlots, command.KeyValuePairs["sv_maxclients"]);
             }
 
             if (command.KeyValuePairs.ContainsKey("sv_hostname"))
             {
-                AddDetail("Server Name", command.KeyValuePairs["sv_hostname"]);
+                AddDetail(Strings.DemoDetailServerName, command.KeyValuePairs["sv_hostname"]);
             }
 
             if (command.KeyValuePairs.ContainsKey("protocol"))
             {
-                AddDetail("Protocol", command.KeyValuePairs["protocol"]);
+                AddDetail(Strings.DemoDetailProtocol, command.KeyValuePairs["protocol"]);
             }
 
             if (command.IsPlayer)

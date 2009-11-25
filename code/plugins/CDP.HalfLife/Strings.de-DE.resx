@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AnalysisGameLogTabItemText" xml:space="preserve">
+    <value>[GERMAN] Game log</value>
+  </data>
+  <data name="AnalysisPlayersInfoKeysKeyColumnHeader" xml:space="preserve">
+    <value>[GERMAN] Key</value>
+  </data>
+  <data name="AnalysisPlayersInfoKeysValueColumnHeader" xml:space="preserve">
+    <value>[GERMAN] Value</value>
+  </data>
+  <data name="AnalysisPlayersInfoKeyValuesTimestampColumnHeader" xml:space="preserve">
+    <value>[GERMAN] Timestamp</value>
+  </data>
+  <data name="AnalysisPlayersInfoKeyValuesValueColumnHeader" xml:space="preserve">
+    <value>[GERMAN] Value</value>
+  </data>
+  <data name="AnalysisPlayersPlayersIdColumnHeader" xml:space="preserve">
+    <value>[GERMAN] Id</value>
+  </data>
+  <data name="AnalysisPlayersPlayersNameColumnHeader" xml:space="preserve">
+    <value>[GERMAN] Name</value>
+  </data>
+  <data name="AnalysisPlayersPlayersSlotColumnHeader" xml:space="preserve">
+    <value>[GERMAN] Slot</value>
+  </data>
+  <data name="AnalysisPlayersTabItemText" xml:space="preserve">
+    <value>[GERMAN] Players</value>
+  </data>
+  <data name="AnalysisScoreboardPlayersDeathsColumnHeader" xml:space="preserve">
+    <value>[GERMAN] Deaths</value>
+  </data>
+  <data name="AnalysisScoreboardPlayersFragsColumnHeader" xml:space="preserve">
+    <value>[GERMAN] Frags</value>
+  </data>
+  <data name="AnalysisScoreboardPlayersPlayerNameColumnHeader" xml:space="preserve">
+    <value>[GERMAN] Player Name</value>
+  </data>
+  <data name="AnalysisScoreboardPlayersTeamColumnHeader" xml:space="preserve">
+    <value>[GERMAN] Team</value>
+  </data>
+  <data name="AnalysisScoreboardRoundsRoundColumnHeader" xml:space="preserve">
+    <value>[GERMAN] Round</value>
+  </data>
+  <data name="AnalysisScoreboardRoundsStartTimeColumnHeader" xml:space="preserve">
+    <value>[GERMAN] Start Time</value>
+  </data>
+  <data name="AnalysisScoreboardTabItemText" xml:space="preserve">
+    <value>[GERMAN] Scoreboard</value>
+  </data>
+  <data name="AnalysisScoreboardTeamsScoreColumnHeader" xml:space="preserve">
+    <value>[GERMAN] Score</value>
+  </data>
+  <data name="AnalysisScoreboardTeamsTeamColumnHeader" xml:space="preserve">
+    <value>[GERMAN] Team</value>
+  </data>
+  <data name="DemoDetailDemoProtocol" xml:space="preserve">
+    <value>[GERMAN] Demo Protocol</value>
+  </data>
+  <data name="DemoDetailDuration" xml:space="preserve">
+    <value>[GERMAN] Duration</value>
+  </data>
+  <data name="DemoDetailGameFolder" xml:space="preserve">
+    <value>[GERMAN] Game Folder</value>
+  </data>
+  <data name="DemoDetailMapChecksum" xml:space="preserve">
+    <value>[GERMAN] Map Checksum</value>
+  </data>
+  <data name="DemoDetailMapName" xml:space="preserve">
+    <value>[GERMAN] Map Name</value>
+  </data>
+  <data name="DemoDetailNetworkProtocol" xml:space="preserve">
+    <value>[GERMAN] Network Protocol</value>
+  </data>
+  <data name="DemoDetailPerspective" xml:space="preserve">
+    <value>[GERMAN] Perspective</value>
+  </data>
+  <data name="DemoDetailServerName" xml:space="preserve">
+    <value>[GERMAN] Server Name</value>
+  </data>
+  <data name="DemoDetailServerSlots" xml:space="preserve">
+    <value>[GERMAN] Server Slots</value>
+  </data>
+  <data name="DemoDetailStatus" xml:space="preserve">
+    <value>[GERMAN] Status</value>
+  </data>
+  <data name="DemoStatusCorruptDirectoryEntries" xml:space="preserve">
+    <value>[GERMAN] Corrupt directory entries</value>
+  </data>
+  <data name="DemoStatusOk" xml:space="preserve">
+    <value>[GERMAN] OK</value>
+  </data>
+  <data name="GameConfigAliases" xml:space="preserve">
+    <value>[GERMAN] Aliases:</value>
+  </data>
+  <data name="GameConfigFasterFastForward" xml:space="preserve">
+    <value>[GERMAN] Faster Fast Forward</value>
+  </data>
+  <data name="GameConfigFastForward" xml:space="preserve">
+    <value>[GERMAN] Fast Forward</value>
+  </data>
+  <data name="GameConfigPlayingMessage" xml:space="preserve">
+    <value>[GERMAN] Playing '{0}'...</value>
+  </data>
+  <data name="GameConfigSlowMotion" xml:space="preserve">
+    <value>[GERMAN] Slow Motion</value>
+  </data>
+  <data name="GameConfigTogglePause" xml:space="preserve">
+    <value>[GERMAN] Toggle Pause</value>
+  </data>
+  <data name="PlaybackMethodGroupBoxHeader" xml:space="preserve">
+    <value>[GERMAN] Playback Method</value>
+  </data>
+  <data name="PlayerClientUpdateRateColumnHeader" xml:space="preserve">
+    <value>[GERMAN] cl__updaterate</value>
+    <comment>Underscore is an escape for underlining specific letters for ALT+letter keyboard shortcuts. Two underscores displays a single underscore.</comment>
+  </data>
+  <data name="PlayerNameColumnHeader" xml:space="preserve">
+    <value>[GERMAN] Name</value>
+  </data>
+  <data name="PlayerRateColumnHeader" xml:space="preserve">
+    <value>[GERMAN] rate</value>
+  </data>
+  <data name="PlayerSteamIdColumnHeader" xml:space="preserve">
+    <value>[GERMAN] Steam ID</value>
+  </data>
+  <data name="RemoveShowscoresCheckBoxContent" xml:space="preserve">
+    <value>[GERMAN] Remove showscores command</value>
+  </data>
+  <data name="StartListenServerCheckBoxContent" xml:space="preserve">
+    <value>[GERMAN] Start Listen Server</value>
+  </data>
+  <data name="UnsupportedDemoProtocol" xml:space="preserve">
+    <value>[GERMAN] Unsupported demo protocol '{0}', should be '{1}'.</value>
+    <comment>{0} = demo protocol, {1} = supported demo protocol (currently 5)</comment>
+  </data>
+  <data name="UnsupportedNetworkProtocol" xml:space="preserve">
+    <value>[GERMAN] Unsupported network protocol '{0}', should be '{1}' or higher.</value>
+    <comment>{0} = network protocol, {1} = lowest supported network protocol (currently 43).</comment>
+  </data>
+</root>

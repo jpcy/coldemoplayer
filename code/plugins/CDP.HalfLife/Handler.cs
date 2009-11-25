@@ -37,10 +37,10 @@ namespace CDP.HalfLife
             {
                 return new PlayerColumn[]
                 {
-                    new PlayerColumn("Name", "Name"),
-                    new PlayerColumn("cl__updaterate", "UpdateRate"),
-                    new PlayerColumn("rate", "Rate"),
-                    new PlayerColumn("Steam ID", "SteamId")
+                    new PlayerColumn(Strings.PlayerNameColumnHeader, "Name"),
+                    new PlayerColumn(Strings.PlayerClientUpdateRateColumnHeader, "UpdateRate"),
+                    new PlayerColumn(Strings.PlayerRateColumnHeader, "Rate"),
+                    new PlayerColumn(Strings.PlayerSteamIdColumnHeader, "SteamId")
                 };
             }
         }

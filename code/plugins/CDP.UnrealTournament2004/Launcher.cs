@@ -39,9 +39,15 @@ namespace CDP.UnrealTournament2004
 
         public override bool Verify()
         {
+            if (string.IsNullOrEmpty(processExecutableFileName))
+            {
+                Message = Strings.ExeNotSet;
+                return false;
+            }
+
             if (!File.Exists(processExecutableFileName) )
             {
-                Message = string.Format("Unreal Tournament 2004 executable path not set.");
+                Message = string.Format(Strings.ExeNotFound, processExecutableFileName);
                 return false;
             }
 
@@ -57,7 +63,8 @@ namespace CDP.UnrealTournament2004
         {
             using (TextWriter writer = new StreamWriter(fileSystem.PathCombine(rootFolder, execFileName)))
             {
-                writer.WriteLine("say Playing \'{0}\'...", Path.GetFileNameWithoutExtension(demo.FileName));
+                writer.Write("say ");
+                writer.WriteLine(Strings.PlayingDemoMessage, Path.GetFileNameWithoutExtension(demo.FileName));
                 writer.WriteLine("demoplay {0}", demoFileName);
             }
 

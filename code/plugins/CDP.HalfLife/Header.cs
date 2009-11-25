@@ -36,14 +36,14 @@ namespace CDP.HalfLife
 
             if (DemoProtocol != expectedDemoProtocol)
             {
-                throw new ApplicationException(string.Format("Unknown demo protocol \"{0}\", should be {1}.", DemoProtocol, expectedDemoProtocol));
+                throw new ApplicationException(string.Format(Strings.UnsupportedDemoProtocol, DemoProtocol, expectedDemoProtocol));
             }
 
             NetworkProtocol = br.ReadUInt();
 
             if (NetworkProtocol < minimumNetworkProtocol)
             {
-                throw new ApplicationException(string.Format("Unsupported network protocol \"{0}\", should be {1} or higher.", NetworkProtocol, minimumNetworkProtocol));
+                throw new ApplicationException(string.Format(Strings.UnsupportedNetworkProtocol, NetworkProtocol, minimumNetworkProtocol));
             }
 
             MapName = br.ReadString(mapNameLength);

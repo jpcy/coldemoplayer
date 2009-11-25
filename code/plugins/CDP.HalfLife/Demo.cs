@@ -246,11 +246,11 @@ namespace CDP.HalfLife
                     MapName = header.MapName;
                     GameFolderName = header.GameFolderName;
                     MapChecksum = header.MapChecksum;
-                    AddDetail("Demo Protocol", header.DemoProtocol);
-                    AddDetail("Network Protocol", NetworkProtocol);
-                    AddDetail("Game Folder", GameFolderName);
-                    AddDetail("Map Checksum", MapChecksum);
-                    AddDetail("Map Name", MapName);
+                    AddDetail(Strings.DemoDetailDemoProtocol, header.DemoProtocol);
+                    AddDetail(Strings.DemoDetailNetworkProtocol, NetworkProtocol);
+                    AddDetail(Strings.DemoDetailGameFolder, GameFolderName);
+                    AddDetail(Strings.DemoDetailMapChecksum, MapChecksum);
+                    AddDetail(Strings.DemoDetailMapName, MapName);
                     Game = handler.FindGame(GameFolderName);
 
                     // Read directory entries.
@@ -263,7 +263,7 @@ namespace CDP.HalfLife
                         IsCorrupt = true;
                     }
 
-                    AddDetail("Status", IsCorrupt ? "Corrupt directory entries" : "OK");
+                    AddDetail(Strings.DemoDetailStatus, IsCorrupt ? Strings.DemoStatusCorruptDirectoryEntries : Strings.DemoStatusOk);
 
                     // Read frames.
                     stream.Seek(Header.SizeInBytes, SeekOrigin.Begin);
@@ -741,7 +741,7 @@ namespace CDP.HalfLife
             }
 
             Duration = TimeSpan.FromSeconds(Math.Abs(playback.Duration));
-            AddDetail("Duration", Duration);
+            AddDetail(Strings.DemoDetailDuration, Duration);
             return;
 
             corrupt:
@@ -1238,9 +1238,9 @@ namespace CDP.HalfLife
 
             clientDllChecksum = sb.ToString();
             MaxClients = message.MaxClients;
-            AddDetail("Server Slots", MaxClients);
+            AddDetail(Strings.DemoDetailServerSlots, MaxClients);
             ServerName = message.ServerName;
-            AddDetail("Server Name", message.ServerName);
+            AddDetail(Strings.DemoDetailServerName, message.ServerName);
         }
 
         private void Load_UpdateUserInfo(Messages.SvcUpdateUserInfo message)
@@ -1330,7 +1330,7 @@ namespace CDP.HalfLife
         {
             IsHltv = true;
             Perspective = "HLTV";
-            AddDetail("Perspective", Perspective);
+            AddDetail(Strings.DemoDetailPerspective, Perspective);
         }
         #endregion
 
