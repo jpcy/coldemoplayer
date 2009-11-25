@@ -14,13 +14,13 @@ namespace CDP.Cli
 
             if (args.Length < 1)
             {
-                Console.WriteLine("Usage: CDP.Cli filename");
+                Console.WriteLine(Strings.Usage);
                 Environment.Exit(1);
             }
 
             if (!File.Exists(args[0]))
             {
-                Console.WriteLine("File \'{0}\' doesn't exist.", args[0]);
+                Console.WriteLine(Strings.DemoFileDoesNotExist, args[0]);
                 Environment.Exit(1);
             }
 
@@ -50,7 +50,7 @@ namespace CDP.Cli
 
             if (demo == null)
             {
-                Console.WriteLine("No matching plugin found for \'{0}\'.", args[0]);
+                Console.WriteLine(Strings.NoMatchingPluginFound, args[0]);
                 Environment.Exit(1);
             }
 
@@ -69,7 +69,8 @@ namespace CDP.Cli
             // Write demo.
             demo.ProgressChangedEvent += demo_ProgressChangedEvent;
             demo.OperationCompleteEvent += demo_OperationCompleteEvent;
-            Console.Write("Writing demo [");
+            Console.Write(Strings.WritingDemo);
+            Console.Write(" [");
             demo.Write(launcher.CalculateDestinationFileName());
 
             // Launch.
