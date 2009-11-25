@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.ComponentModel;
 
 namespace CDP.Gui.View
 {
@@ -25,7 +26,11 @@ namespace CDP.Gui.View
 
         private void UserControl_Initialized(object sender, EventArgs e)
         {
-            Core.ObjectCreator.Get<IMediator>().Register<Core.Demo>(Messages.SelectedDemoChanged, SelectedDemoChanged, this);
+            // Don't run this code in the designer.
+            if (!DesignerProperties.GetIsInDesignMode(this))
+            {
+                Core.ObjectCreator.Get<IMediator>().Register<Core.Demo>(Messages.SelectedDemoChanged, SelectedDemoChanged, this);
+            }
         }
 
         private void SelectedDemoChanged(Core.Demo demo)
