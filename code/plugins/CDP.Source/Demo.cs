@@ -71,7 +71,7 @@ namespace CDP.Source
             get { throw new NotImplementedException(); }
         }
 
-        public override string MapImagesRelativePath
+        public override string MapThumbnailRelativePath
         {
             get { throw new NotImplementedException(); }
         }

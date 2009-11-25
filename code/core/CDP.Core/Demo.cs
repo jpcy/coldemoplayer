@@ -97,13 +97,19 @@ namespace CDP.Core
         public abstract string[] IconFileNames { get; }
 
         /// <summary>
-        /// The relative path to the map preview and overview images corresponding to this demo.
+        /// The relative path of the map thumbnail image corresponding to this demo.
         /// </summary>
         /// <example>goldsrc\de_dust2.jpg</example>
-        public abstract string MapImagesRelativePath { get; }
+        public abstract string MapThumbnailRelativePath { get; }
 
-        // Capabilities.
+        /// <summary>
+        /// Determines whether the demo can be played.
+        /// </summary>
         public abstract bool CanPlay { get; }
+
+        /// <summary>
+        /// Determines whether the demo can be analysed.
+        /// </summary>
         public abstract bool CanAnalyse { get; }
 
         // Operations.

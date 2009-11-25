@@ -146,7 +146,7 @@ namespace CDP.HalfLife
             }
         }
 
-        public override string MapImagesRelativePath
+        public override string MapThumbnailRelativePath
         {
             get
             {

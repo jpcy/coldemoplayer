@@ -21,7 +21,7 @@ namespace CDP.CounterStrike
 
         public Versions Version { get; private set; }
 
-        public override string MapImagesRelativePath
+        public override string MapThumbnailRelativePath
         {
             get
             {

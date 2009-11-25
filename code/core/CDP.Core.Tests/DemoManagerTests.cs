@@ -73,7 +73,7 @@ namespace CDP.Core.Tests
                 get { throw new NotImplementedException(); }
             }
 
-            public override string MapImagesRelativePath
+            public override string MapThumbnailRelativePath
             {
                 get { throw new NotImplementedException(); }
             }

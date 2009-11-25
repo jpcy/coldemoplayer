@@ -30,7 +30,7 @@ namespace CDP.UnrealTournament2004
             }
         }
 
-        public override string MapImagesRelativePath
+        public override string MapThumbnailRelativePath
         {
             get { return null; }
         }

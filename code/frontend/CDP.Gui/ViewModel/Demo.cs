@@ -8,28 +8,16 @@ namespace CDP.Gui.ViewModel
     public class Demo : Core.ViewModelBase
     {
         public Core.Demo Data { get; private set; }
-        public string MapPreviewFileName
+        public string MapThumbnailFileName
         {
             get
             {
-                if (Data == null || Data.MapImagesRelativePath == null)
+                if (Data == null || Data.MapThumbnailRelativePath == null)
                 {
                     return null;
                 }
 
-                return fileSystem.PathCombine(settings.ProgramPath, "previews", Data.MapImagesRelativePath);
-            }
-        }
-        public string MapOverviewFileName
-        {
-            get
-            {
-                if (Data == null || Data.MapImagesRelativePath == null)
-                {
-                    return null;
-                }
-
-                return fileSystem.PathCombine(settings.ProgramPath, "overviews", Data.MapImagesRelativePath);
+                return fileSystem.PathCombine(settings.ProgramPath, "mapthumbnails", Data.MapThumbnailRelativePath);
             }
         }
 
@@ -72,8 +60,7 @@ namespace CDP.Gui.ViewModel
         {
             Data = demo;
             OnPropertyChanged("Data");
-            OnPropertyChanged("MapPreviewFileName");
-            OnPropertyChanged("MapOverviewFileName");
+            OnPropertyChanged("MapThumbnailFileName");
         }
     }
 }

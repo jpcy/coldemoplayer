@@ -53,7 +53,7 @@ namespace CDP.IdTech3
             }
         }
 
-        public override string MapImagesRelativePath
+        public override string MapThumbnailRelativePath
         {
             get { return fileSystem.PathCombine("idtech3", MapName + ".jpg"); }
         }
