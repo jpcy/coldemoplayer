@@ -1,8 +1,9 @@
 ﻿using System;
+using CDP.Core;
 
 namespace CDP.Gui.ViewModel
 {
-    public class Address : Core.ViewModelBase
+    public class Address : ViewModelBase
     {
         public string SelectedFolder
         {
@@ -20,10 +21,11 @@ namespace CDP.Gui.ViewModel
             }
         }
 
-        private readonly IMediator mediator = Core.ObjectCreator.Get<IMediator>();
-        private readonly Core.ISettings settings = Core.ObjectCreator.Get<Core.ISettings>();
+        private readonly IMediator mediator = ObjectCreator.Get<IMediator>();
+        private readonly ISettings settings = ObjectCreator.Get<ISettings>();
+        private readonly IFileSystem fileSystem = ObjectCreator.Get<IFileSystem>();
         private string lastSelectedFolder;
-        private string selectedFolder = "";
+        private string selectedFolder = string.Empty;
 
         public Address()
         {
@@ -32,7 +34,10 @@ namespace CDP.Gui.ViewModel
 
         public override void OnNavigateComplete()
         {
-            SetSelectedFolder((string)settings["LastPath"]);
+            if (fileSystem.DirectoryExists((string)settings["LastPath"]))
+            {
+                SetSelectedFolder((string)settings["LastPath"]);
+            }
         }
 
         public void SetSelectedFolder(string path)
