@@ -6,7 +6,7 @@
         <TabItem>
             <TabItem.Header>
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="/CDP;component/Images/gamelog.png" Margin="0,0,4,0" />
+                    <Image Source="/CDP.Gui;component/Images/gamelog.png" Margin="0,0,4,0" />
                     <TextBlock>Game log</TextBlock>
                 </StackPanel>
             </TabItem.Header>
