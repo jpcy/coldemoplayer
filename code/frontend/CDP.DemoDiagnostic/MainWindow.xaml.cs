@@ -82,7 +82,7 @@ namespace CDP.DemoDiagnostic
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
-                Title = "Open Demo"
+                Title = Strings.OpenDemoDialogTitle
             };
 
             if (openFileDialog.ShowDialog(this) != true)
@@ -101,7 +101,7 @@ namespace CDP.DemoDiagnostic
 
             if (demo == null)
             {
-                MessageBox.Show("Not a valid demo for any of the loaded plugins.");
+                MessageBox.Show(Strings.NoPluginFound);
                 fileNameTextBox.Text = string.Empty;
                 pluginTextBlock.Text = "-";
                 logFileTextBlock.Text = "-";

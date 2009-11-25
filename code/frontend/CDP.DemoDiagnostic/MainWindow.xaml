@@ -1,7 +1,8 @@
 ﻿<Window x:Class="CDP.DemoDiagnostic.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="Demo Diagnostic" Height="500" Width="400" WindowStartupLocation="CenterScreen"
+    xmlns:local="clr-namespace:CDP.DemoDiagnostic"
+    Title="{x:Static local:Strings.MainWindowTitle}" Height="500" Width="400" WindowStartupLocation="CenterScreen"
     Loaded="Window_Loaded" DragEnter="Window_DragEnter" Drop="Window_Drop" AllowDrop="True">
     <Window.Resources>
         <Style TargetType="{x:Type Button}">
@@ -23,12 +24,12 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <TextBox Margin="4" Name="fileNameTextBox" IsReadOnly="True" />
-            <Button Grid.Column="1" Margin="4" Name="openButton" Click="openButton_Click">Open...</Button>
+            <Button Grid.Column="1" Margin="4" Name="openButton" Click="openButton_Click" Content="{x:Static local:Strings.OpenButtonContent}" />
         </Grid>
         <StackPanel Grid.Row="1" Margin="4" Orientation="Horizontal">
-            <TextBlock Margin="0,0,10,0" FontWeight="Bold">Plugin:</TextBlock>
+            <TextBlock Margin="0,0,10,0" FontWeight="Bold" Text="{x:Static local:Strings.PluginText}" />
             <TextBlock Margin="0,0,10,0" Name="pluginTextBlock">-</TextBlock>
-            <TextBlock Margin="0,0,10,0" FontWeight="Bold">Log file:</TextBlock>
+            <TextBlock Margin="0,0,10,0" FontWeight="Bold" Text="{x:Static local:Strings.LogFileText}" />
             <TextBlock Name="logFileTextBlock">-</TextBlock>
         </StackPanel>
         <ListBox Grid.Row="2" Margin="4" Name="loggablesListBox">
@@ -39,8 +40,8 @@
             </ListBox.ItemTemplate>
         </ListBox>
         <StackPanel Grid.Row="3" Margin="4" Orientation="Horizontal">
-            <Button Margin="0,0,4,0" Name="selectAllButton" Click="selectAllButton_Click">Select All</Button>
-            <Button Name="selectNoneButton" Click="selectNoneButton_Click">Select None</Button>
+            <Button Margin="0,0,4,0" Name="selectAllButton" Click="selectAllButton_Click" Content="{x:Static local:Strings.SelectAllButtonContent}" />
+            <Button Name="selectNoneButton" Click="selectNoneButton_Click" Content="{x:Static local:Strings.SelectNoneButtonContent}" />
         </StackPanel>
         <Grid Grid.Row="5" Background="LightBlue">
             <Grid.ColumnDefinitions>
@@ -49,8 +50,8 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <ProgressBar Margin="4" Name="diagnoseProgress" Minimum="0" Maximum="100" />
-            <Button Grid.Column="1" Margin="4" Name="startButton" Click="startButton_Click">Start</Button>
-            <Button Grid.Column="2" Margin="4" Name="stopButton" Click="stopButton_Click">Stop</Button>
+            <Button Grid.Column="1" Margin="4" Name="startButton" Click="startButton_Click" Content="{x:Static local:Strings.StartButtonContent}" />
+            <Button Grid.Column="2" Margin="4" Name="stopButton" Click="stopButton_Click" Content="{x:Static local:Strings.StopButtonContent}" />Button>
         </Grid>
     </Grid>
 </Window>
