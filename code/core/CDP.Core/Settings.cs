@@ -6,6 +6,7 @@ using System.Text;
 using System.Linq;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using Microsoft.Win32;
 
 namespace CDP.Core
 {
@@ -193,6 +194,11 @@ namespace CDP.Core
 
                 dictionary.Add(setting.Key, value);
             }
+
+            if (xml == null)
+            {
+                PopulateDefaults();
+            }
         }
 
         public void Save()
@@ -217,6 +223,47 @@ namespace CDP.Core
 
                 xml.WriteEndElement();
                 xml.WriteEndDocument();
+            }
+        }
+
+        /// <summary>
+        /// Populate as many default settings as possible with values read from the registry.
+        /// </summary>
+        private void PopulateDefaults()
+        {
+            // Steam.
+            using (RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\Valve\\Steam"))
+            {
+                if (key != null)
+                {
+                    // Read SteamExeFullPath.
+                    string steamExeFullPath = (string)key.GetValue("SteamExe");
+
+                    if (steamExeFullPath != null && File.Exists(steamExeFullPath))
+                    {
+                        dictionary["SteamExeFullPath"] = steamExeFullPath;
+                    }
+
+                    // Try to guess the Steam account.
+                    string steamPath = (string)key.GetValue("SteamPath");
+
+                    if (steamPath != null && Directory.Exists(steamPath))
+                    {
+                        string[] invalidSteamAppFolders =
+                        {
+                            "common",
+                            "media",
+                            "sourcemods"
+                        };
+
+                        DirectoryInfo steamAccount = new DirectoryInfo(Path.Combine(steamPath, "SteamApps")).GetDirectories().FirstOrDefault(di => !invalidSteamAppFolders.Contains(di.Name.ToLower()));
+
+                        if (steamAccount != null)
+                        {
+                            dictionary["SteamAccountName"] = steamAccount.Name;
+                        }
+                    }
+                }
             }
         }
     }
