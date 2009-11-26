@@ -84,6 +84,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="IconButton.cs" />
     <Compile Include="Strings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -91,9 +92,6 @@
     </Compile>
     <Compile Include="UserControls\Footer.xaml.cs">
       <DependentUpon>Footer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\IconButton.xaml.cs">
-      <DependentUpon>IconButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\Address.cs" />
     <Compile Include="ViewModel\Analysis.cs" />
@@ -161,10 +159,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="UserControls\Footer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="UserControls\IconButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

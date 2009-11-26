@@ -70,18 +70,8 @@
             </TabItem>
         </TabControl>
         <StackPanel Grid.Row="1" Margin="0,10,0,0" Orientation="Horizontal">
-            <StackPanel.Resources>
-                <Style TargetType="{x:Type uc:IconButton}">
-                    <Setter Property="FontSize" Value="20" />
-                    <Setter Property="Margin" Value="0,0,10,0" />
-                </Style>
-                <Style TargetType="{x:Type TextBlock}">
-                    <Setter Property="VerticalAlignment" Value="Center" />
-                    <Setter Property="Padding" Value="0,0,10,0" />
-                </Style>
-            </StackPanel.Resources>
-            <uc:IconButton Command="{Binding PlayCommand}" IconSource="/Images/play.png" Text="{x:Static local:Strings.PlayButtonText}" />
-            <uc:IconButton Command="{Binding AnalyseCommand}" IconSource="/Images/analyse.png" Text="{x:Static local:Strings.AnalyseButtonText}" />
+            <local:IconButton Margin="0,0,10,0" Command="{Binding PlayCommand}" IconSource="/Images/play.png" Text="{x:Static local:Strings.PlayButtonText}" Style="{StaticResource ActionIconButton}" />
+            <local:IconButton Command="{Binding AnalyseCommand}" IconSource="/Images/analyse.png" Text="{x:Static local:Strings.AnalyseButtonText}" Style="{StaticResource ActionIconButton}" />
         </StackPanel>
     </Grid>
 </UserControl>

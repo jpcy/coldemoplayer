@@ -22,7 +22,7 @@
             <ProgressBar Grid.Row="1" Height="24" MinWidth="300" Minimum="0" Maximum="100" Value="{Binding Progress}" />
         </Grid>
         <uc:Footer Grid.Row="1">
-            <uc:IconButton HorizontalAlignment="Center" Margin="0,8,0,8" Command="{Binding CancelCommand}" IconSource="/Images/cancel.png" Text="{x:Static local:Strings.CancelButtonText}" />
+            <local:IconButton HorizontalAlignment="Center" Margin="0,8,0,8" Command="{Binding CancelCommand}" IconSource="/Images/cancel.png" Text="{x:Static local:Strings.CancelButtonText}" />
         </uc:Footer>
     </Grid>
 </Page>

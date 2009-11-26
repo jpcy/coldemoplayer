@@ -14,7 +14,7 @@
             <TextBox Margin="8" Style="{StaticResource MessageTextBox}" Text="{Binding Text, Mode=OneWay}" />
         </Grid>
         <uc:Footer Grid.Row="1">
-            <uc:IconButton HorizontalAlignment="Center" Margin="0,8,0,8" Command="{Binding OkCommand}" IconSource="/Images/ok.png" Text="{x:Static local:Strings.OkButtonText}" />
+            <local:IconButton HorizontalAlignment="Center" Margin="0,8,0,8" Command="{Binding OkCommand}" IconSource="/Images/ok.png" Text="{x:Static local:Strings.OkButtonText}" />
         </uc:Footer>
     </Grid>
 </Page>

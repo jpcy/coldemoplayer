@@ -5,8 +5,14 @@
     xmlns:local="clr-namespace:CDP.Gui">
     <DockPanel LastChildFill="True" Background="Black">
         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
-            <uc:IconButton Margin="8" IconSource="/Images/options.png" Command="{Binding OptionsCommand}" Text="{x:Static local:Strings.OptionsButtonText}" />
-            <uc:IconButton Margin="8" IconSource="/Images/about.png" Command="{Binding AboutCommand}" Text="{x:Static local:Strings.AboutButtonText}" />
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="Padding" Value="10,0,0,0" />
+                </Style>
+            </StackPanel.Resources>
+            <local:IconButton Margin="8" IconSource="/Images/options.png" Command="{Binding OptionsCommand}" Text="{x:Static local:Strings.OptionsButtonText}" Style="{StaticResource HeaderIconButton}" />
+            <local:IconButton Margin="8" IconSource="/Images/about.png" Command="{Binding AboutCommand}" Text="{x:Static local:Strings.AboutButtonText}" Style="{StaticResource HeaderIconButton}" />
         </StackPanel>
         <Image Stretch="Fill" Source="/Images/banner.jpg" StretchDirection="Both" MinHeight="0" MaxHeight="47" VerticalAlignment="Top" Height="48" HorizontalAlignment="Left" Width="427" />
     </DockPanel>
