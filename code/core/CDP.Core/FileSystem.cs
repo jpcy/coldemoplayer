@@ -104,6 +104,13 @@ namespace CDP.Core
         /// <param name="path">The proposed path of the file.</param>
         /// <returns>A random, unique filename.</returns>
         string CalculateRandomFileName(string path);
+
+        /// <summary>
+        /// Gets the absolute path for the specified path string.
+        /// </summary>
+        /// <param name="path">The (possibly relative) path.</param>
+        /// <returns>An absolute path.</returns>
+        string GetFullPath(string path);
     }
 
     public class FileSystem : IFileSystem
@@ -210,6 +217,11 @@ namespace CDP.Core
         public string GetDirectoryName(string path)
         {
             return Path.GetDirectoryName(path);
+        }
+
+        public string GetFullPath(string path)
+        {
+            return Path.GetFullPath(path);
         }
     }
 }
