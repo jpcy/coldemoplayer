@@ -25,6 +25,7 @@ namespace CDP.Core
         public abstract void Launch();
 
         private readonly IProcessFinder processFinder = ObjectCreator.Get<IProcessFinder>();
+        private readonly IFileSystem fileSystem = ObjectCreator.Get<IFileSystem>();
         protected string processExecutableFileName;
         private const int defaultMonitorProcessSleepTime = 250;
 
@@ -100,7 +101,7 @@ namespace CDP.Core
             {
                 string compare = process.FileName ?? executableFileName;
 
-                if (string.Equals(executableFileName, compare, StringComparison.CurrentCultureIgnoreCase))
+                if (string.Equals(fileSystem.GetFullPath(executableFileName), fileSystem.GetFullPath(compare), StringComparison.CurrentCultureIgnoreCase))
                 {
                     return process;
                 }

@@ -37,6 +37,7 @@ namespace CDP.Core.Tests
         }
 
         private MockProvider<IProcessFinder> processFinder;
+        private MockProvider<IFileSystem> fileSystem;
         private LauncherMock launcher;
 
         [SetUp]
@@ -44,7 +45,10 @@ namespace CDP.Core.Tests
         {
             ObjectCreator.Reset();
             processFinder = new MockProvider<IProcessFinder>();
+            fileSystem = new MockProvider<IFileSystem>();
             ObjectCreator.MapToProvider<IProcessFinder>(processFinder);
+            ObjectCreator.MapToProvider<IFileSystem>(fileSystem);
+            fileSystem.Mock.Setup(fs => fs.GetFullPath(It.IsAny<string>())).Returns<string>(s => s);
             launcher = new LauncherMock();
         }
 
