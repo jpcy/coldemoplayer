@@ -159,8 +159,8 @@
   <data name="OkButtonText" xml:space="preserve">
     <value>OK</value>
   </data>
-  <data name="OptionsButtonText" xml:space="preserve">
-    <value>Options</value>
+  <data name="PreferencesButtonText" xml:space="preserve">
+    <value>Preferences</value>
   </data>
   <data name="PlayButtonText" xml:space="preserve">
     <value>Play</value>

@@ -14,12 +14,9 @@ using System.Windows.Shapes;
 
 namespace CDP.Gui.View
 {
-    /// <summary>
-    /// Interaction logic for Options.xaml
-    /// </summary>
-    public partial class Options : Page
+    public partial class Preferences : Page
     {
-        public Options()
+        public Preferences()
         {
             InitializeComponent();
         }

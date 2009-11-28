@@ -171,8 +171,8 @@
   <data name="OkButtonText" xml:space="preserve">
     <value>[GERMAN] OK</value>
   </data>
-  <data name="OptionsButtonText" xml:space="preserve">
-    <value>[GERMAN] Options</value>
+  <data name="PreferencesButtonText" xml:space="preserve">
+    <value>[GERMAN] Preferences</value>
   </data>
   <data name="PlayButtonText" xml:space="preserve">
     <value>[GERMAN] Play</value>

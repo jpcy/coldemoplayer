@@ -2,7 +2,7 @@
 
 namespace CDP.Gui.ViewModel
 {
-    public class Options : Core.ViewModelBase
+    public class Preferences : Core.ViewModelBase
     {
         public Header Header { get; private set; }
         public DelegateCommand CancelCommand { get; private set; }
@@ -10,7 +10,7 @@ namespace CDP.Gui.ViewModel
 
         private readonly INavigationService navigationService = ObjectCreator.Get<INavigationService>();
 
-        public Options()
+        public Preferences()
         {
             Header = new Header();
             CancelCommand = new DelegateCommand(CancelCommandExecute);
