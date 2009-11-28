@@ -10,7 +10,7 @@
                     <TextBlock>Game log</TextBlock>
                 </StackPanel>
             </TabItem.Header>
-            <core:RichTextBox Background="LightGray" FontFamily="Courier New" Document="{Binding GameLogDocument}" />
+            <core:FlowDocumentViewer Background="LightGray" FontFamily="Courier New" FontSize="12" Document="{Binding GameLogDocument}" />
         </TabItem>
     </TabControl>
 </UserControl>

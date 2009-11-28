@@ -15,7 +15,7 @@
                     <TextBlock Text="{x:Static local:Strings.AnalysisGameLogTabItemText}" />
                 </StackPanel>                
             </TabItem.Header>
-            <core:RichTextBox Document="{Binding GameLogDocument}" />
+            <core:FlowDocumentViewer Document="{Binding GameLogDocument}" />
         </TabItem>
         <TabItem>
             <TabItem.Header>
