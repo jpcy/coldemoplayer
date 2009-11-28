@@ -255,4 +255,7 @@
   <data name="AnalysisScoreboardTeamsTeamColumnHeader" xml:space="preserve">
     <value>Team</value>
   </data>
+  <data name="BrowseForSteamExeDialogTitle" xml:space="preserve">
+    <value>Browsing for 'Steam.exe'...</value>
+  </data>
 </root>

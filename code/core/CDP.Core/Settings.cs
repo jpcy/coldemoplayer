@@ -126,7 +126,6 @@ namespace CDP.Core
             Add("LastFileName", string.Empty);
             Add("SteamExeFullPath", string.Empty);
             Add("SteamAccountName", string.Empty);
-            Add("SteamAdditionalLaunchParameters", string.Empty);
         }
 
         public void Add<T>(string key, T defaultValue)

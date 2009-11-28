@@ -12,29 +12,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <view:Header Grid.Row="0" DataContext="{Binding Header}" />
-        <Grid Grid.Row="1" Margin="20" MaxWidth="500">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="200" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Image Grid.Column="0" Source="/Images/steam.jpg" Margin="0,0,16,0" VerticalAlignment="Top" />
-                <StackPanel Grid.Column="1">
-                    <TextBlock>Steam.exe:</TextBlock>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <TextBox Grid.Column="0" IsReadOnly="True" Margin="0,0,8,0" Text="{Binding SteamExeFullPath}" />
-                        <Button Grid.Column="1" Padding="16,0,16,0" Command="{Binding BrowseForSteamExeCommand}">Browse...</Button>
-                    </Grid>
-                    <TextBlock Margin="0,8,0,0">Steam Account:</TextBlock>
-                    <ComboBox ItemsSource="{Binding SteamAccountNames}" SelectedItem="{Binding Path=SteamAccountName, Mode=TwoWay}" />
-                    <TextBlock Margin="0,8,0,0">Additional Launch Parameters:</TextBlock>
-                    <TextBox Text="{Binding SteamAdditionalLaunchParameters}" />
-                </StackPanel>
-            </Grid>
+        <Grid Grid.Row="1" Margin="20">
         </Grid>
         <uc:Footer Grid.Row="2">
             <DockPanel LastChildFill="False" Margin="20,8,20,8">

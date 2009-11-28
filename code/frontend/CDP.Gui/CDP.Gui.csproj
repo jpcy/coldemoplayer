@@ -259,7 +259,6 @@
     <Resource Include="Images\save.png" />
     <Resource Include="Images\scoreboard.png" />
     <Resource Include="Images\settings.png" />
-    <Resource Include="Images\steam.jpg" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\QuickZip\QuickZip.csproj">

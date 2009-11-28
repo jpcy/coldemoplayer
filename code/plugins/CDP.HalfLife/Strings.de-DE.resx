@@ -255,4 +255,7 @@
     <value>[GERMAN] Unsupported network protocol '{0}', should be '{1}' or higher.</value>
     <comment>{0} = network protocol, {1} = lowest supported network protocol (currently 43).</comment>
   </data>
+  <data name="BrowseForSteamExeDialogTitle" xml:space="preserve">
+    <value>[GERMAN] Browsing for 'Steam.exe'...</value>
+  </data>
 </root>
