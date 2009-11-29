@@ -16,6 +16,7 @@ namespace CDP.Gui
             Core.ObjectMappings.Initialise();
             ObjectCreator.Map<IMediator, Mediator>();
             ObjectCreator.Map<INavigationService, NavigationService>();
+            ObjectCreator.Map<IFileAssociation, FileAssociation>();
 
             // Demo manager and plugins.
             IDemoManager demoManager = ObjectCreator.Get<IDemoManager>();
@@ -27,6 +28,7 @@ namespace CDP.Gui
 
             // Settings.
             ISettings settings = ObjectCreator.Get<ISettings>();
+            settings.Add("DefaultShellCommand", "open");
             settings.Load(demoManager);
 
             App app = new App();

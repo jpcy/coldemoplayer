@@ -84,6 +84,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="FileAssociation.cs" />
     <Compile Include="IconButton.cs" />
     <Compile Include="Strings.Designer.cs">
       <AutoGen>True</AutoGen>

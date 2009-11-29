@@ -180,4 +180,22 @@
   <data name="Play_Processing" xml:space="preserve">
     <value>[GERMAN] Processing '{0}' for playback...</value>
   </data>
+  <data name="FileAssociationsGroupBoxHeader" xml:space="preserve">
+    <value>[GERMAN] File Associations</value>
+  </data>
+  <data name="ShellCommandGroupBoxHeader" xml:space="preserve">
+    <value>[GERMAN] Default Double-click Action</value>
+  </data>
+  <data name="ShellCommandOpen" xml:space="preserve">
+    <value>[GERMAN] Open with compLexity Demo Player</value>
+  </data>
+  <data name="ShellCommandOpenRadioButton" xml:space="preserve">
+    <value>[GERMAN] Open</value>
+  </data>
+  <data name="ShellCommandPlay" xml:space="preserve">
+    <value>[GERMAN] Play with compLexity Demo Player</value>
+  </data>
+  <data name="ShellCommandPlayRadioButton" xml:space="preserve">
+    <value>[GERMAN] Play</value>
+  </data>
 </root>
