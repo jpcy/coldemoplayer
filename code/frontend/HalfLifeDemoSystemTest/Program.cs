@@ -77,13 +77,7 @@ namespace HalfLifeDemoSystemTest
             fileSystem = ObjectCreator.Get<IFileSystem>();
 
             settings = ObjectCreator.Get<ISettings>();
-
-            foreach (Setting setting in demoManager.GetAllDemoHandlerSettings())
-            {
-                settings.Add(setting);
-            }
-
-            settings.Load();
+            settings.Load(demoManager);
 
             Stopwatch sw = new Stopwatch();
             sw.Start();

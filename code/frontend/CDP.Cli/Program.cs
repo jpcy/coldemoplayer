@@ -37,13 +37,7 @@ namespace CDP.Cli
 
             // Settings.
             ISettings settings = ObjectCreator.Get<ISettings>();
-
-            foreach (Setting setting in demoManager.GetAllDemoHandlerSettings())
-            {
-                settings.Add(setting);
-            }
-
-            settings.Load();
+            settings.Load(demoManager);
 
             // Create and load demo.
             Demo demo = demoManager.CreateDemo(args[0]);

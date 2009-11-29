@@ -27,13 +27,7 @@ namespace CDP.Gui
 
             // Settings.
             ISettings settings = ObjectCreator.Get<ISettings>();
-
-            foreach (Setting setting in demoManager.GetAllDemoHandlerSettings())
-            {
-                settings.Add(setting);
-            }
-
-            settings.Load();
+            settings.Load(demoManager);
 
             App app = new App();
             app.InitializeComponent();

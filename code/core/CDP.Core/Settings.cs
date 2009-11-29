@@ -22,10 +22,11 @@ namespace CDP.Core
         string ProgramExeFullPath { get; }
         string ProgramPath { get; }
         string ProgramDataPath { get; }
+        string FileAssociationSettingPrefix { get; }
 
         void Add<T>(string key, T defaultValue);
         void Add(Setting setting);
-        void Load();
+        void Load(IDemoManager demoManager);
         void Save();
     }
 
@@ -94,10 +95,16 @@ namespace CDP.Core
             get { return programDataPath; }
         }
 
+        public string FileAssociationSettingPrefix
+        {
+            get { return fileAssociationSettingPrefix; }
+        }
+
         public readonly List<Setting> definitions = new List<Setting>();
         public readonly Dictionary<string, object> dictionary = new Dictionary<string, object>();
         private readonly string fileName = "settings.xml";
         private readonly string rootElement = "Settings";
+        private readonly string fileAssociationSettingPrefix = "FileAssociation_";
         private bool IsLoaded = false;
 
         public Settings()
@@ -143,8 +150,20 @@ namespace CDP.Core
             definitions.Add(setting);
         }
 
-        public void Load()
+        public void Load(IDemoManager demoManager)
         {
+            // Add plugin-specific settings.
+            foreach (Setting setting in demoManager.GetAllDemoHandlerSettings())
+            {
+                Add(setting);
+            }
+
+            // Add file association settings
+            foreach (string extension in demoManager.ValidDemoExtensions())
+            {
+                Add(fileAssociationSettingPrefix + extension, false);
+            }
+
             IsLoaded = true;
             string path = Path.Combine(ProgramDataPath, fileName);
             XDocument xml = null;
