@@ -13,6 +13,22 @@
         </Grid.RowDefinitions>
         <view:Header Grid.Row="0" DataContext="{Binding Header}" />
         <Grid Grid.Row="1" Margin="20">
+            <GroupBox Header="File Associations" Padding="4" Width="Auto">
+                <ItemsControl Margin="4" Grid.IsSharedSizeScope="True" ItemsSource="{Binding FileAssociations}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="0,0,0,4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="ExtensionColumn" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <CheckBox Grid.Column="0" Margin="0,0,10,0" IsChecked="{Binding IsSelected}" Content="{Binding Extension}" />
+                                <TextBlock Grid.Column="1" Text="{Binding PluginNames}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </GroupBox>
         </Grid>
         <uc:Footer Grid.Row="2">
             <DockPanel LastChildFill="False" Margin="20,8,20,8">

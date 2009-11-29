@@ -13,6 +13,14 @@ namespace CDP.Core
         void AddPlugin(uint priority, DemoHandler demoHandler);
         Setting[] GetAllDemoHandlerSettings();
         string[] ValidDemoExtensions();
+
+        /// <summary>
+        /// Gets the names of all demo handlers that handle the given extension.
+        /// </summary>
+        /// <param name="extension">The demo file extension.</param>
+        /// <returns>A list of demo handler full names.</returns>
+        string[] GetDemoHandlerNames(string extension);
+
         Demo CreateDemo(string fileName);
         Launcher CreateLauncher(Demo demo);
     }
@@ -65,6 +73,22 @@ namespace CDP.Core
             }
 
             return extensions.Distinct().ToArray();
+        }
+
+        public string[] GetDemoHandlerNames(string extension)
+        {
+            if (string.IsNullOrEmpty(extension))
+            {
+                throw new ArgumentException("String cannot be null or empty.", extension);
+            }
+
+            extension = extension.ToLower();
+
+            var query = from p in plugins
+                        where p.DemoHandler.Extensions.Contains(extension)
+                        select p.DemoHandler.FullName;
+
+            return query.ToArray();
         }
 
         public Demo CreateDemo(string fileName)
