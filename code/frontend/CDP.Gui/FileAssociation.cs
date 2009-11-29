@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using Microsoft.Win32;
 using CDP.Core;
+using System.Diagnostics;
 
 namespace CDP.Gui
 {
@@ -29,6 +30,11 @@ namespace CDP.Gui
 
         public bool Associate(string[] extensions, string defaultShellCommand)
         {
+            if (Debugger.IsAttached)
+            {
+                return false;
+            }
+
             if (extensions == null)
             {
                 throw new ArgumentNullException("extensions");
