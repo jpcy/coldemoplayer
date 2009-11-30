@@ -53,6 +53,13 @@ namespace CDP.Core
         string ChangeExtension(string fileName, string newExtension);
 
         /// <summary>
+        /// Gets the filename (including extension) from a path string.
+        /// </summary>
+        /// <param name="path">The path that includes the filename to be retrieved.</param>
+        /// <returns>A filename with extension.</returns>
+        string GetFileName(string path);
+
+        /// <summary>
         /// Gets a file name without it's extension.
         /// </summary>
         /// <param name="fileName">The file name.</param>
@@ -165,6 +172,11 @@ namespace CDP.Core
             }
 
             return Path.GetFileNameWithoutExtension(fileName) + newExtension;
+        }
+
+        public string GetFileName(string path)
+        {
+            return Path.GetFileName(path);
         }
 
         public string GetFileNameWithoutExtension(string fileName)
