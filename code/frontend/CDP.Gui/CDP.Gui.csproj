@@ -69,6 +69,7 @@
       <HintPath>..\..\..\bin\CDP.UnrealTournament2004.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -87,6 +88,7 @@
     </ApplicationDefinition>
     <Compile Include="FileAssociation.cs" />
     <Compile Include="IconButton.cs" />
+    <Compile Include="IpcChannel.cs" />
     <Compile Include="Strings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

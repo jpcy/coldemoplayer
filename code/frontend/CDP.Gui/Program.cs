@@ -1,12 +1,21 @@
 ﻿using System;
-using CDP.Core;
 using System.Globalization;
 using System.Threading;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Linq;
+using CDP.Core;
 
 namespace CDP.Gui
 {
     class Program
     {
+        [DllImport("user32.dll")]
+        private static extern bool AllowSetForegroundWindow(int processId);
+
+        [DllImport("user32.dll")]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
+
         [STAThread]
         public static void Main()
         {
@@ -17,6 +26,31 @@ namespace CDP.Gui
             ObjectCreator.Map<IMediator, Mediator>();
             ObjectCreator.Map<INavigationService, NavigationService>();
             ObjectCreator.Map<IFileAssociation, FileAssociation>();
+            ObjectCreator.Map<IIpcChannel, IpcChannel>();
+
+            // Ipc.
+            IIpcChannel ipcChannel = ObjectCreator.Get<IIpcChannel>();
+            IProcessFinder processFinder = ObjectCreator.Get<IProcessFinder>();
+            IProcess currentProcess = processFinder.GetCurrentProcess();
+            IProcess otherProcess = processFinder.FindByName(currentProcess.Name, currentProcess.FileName, currentProcess.Id).FirstOrDefault();
+
+            if (otherProcess == null)
+            {
+                AllowSetForegroundWindow(currentProcess.Id);
+                ipcChannel.Open();
+            }
+            else
+            {
+                SetForegroundWindow(otherProcess.MainWindowHandle);
+                string[] args = Environment.GetCommandLineArgs();
+
+                if (args.Length > 1 && File.Exists(args[1]))
+                {
+                    ipcChannel.Transport(args[1]);
+                }
+
+                return;                
+            }
 
             // Demo manager and plugins.
             IDemoManager demoManager = ObjectCreator.Get<IDemoManager>();
