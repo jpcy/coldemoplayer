@@ -7,6 +7,9 @@ namespace CDP.Core
     {
         bool HasExited { get; }
         string FileName { get; }
+        int Id { get; }
+        IntPtr MainWindowHandle { get; }
+        string Name { get; }
     }
 
     public class Process : IProcess
@@ -52,6 +55,21 @@ namespace CDP.Core
 
                 return result;
             }
+        }
+
+        public int Id
+        {
+            get { return process.Id; }
+        }
+
+        public IntPtr MainWindowHandle
+        {
+            get { return process.MainWindowHandle; }
+        }
+
+        public string Name
+        {
+            get { return process.ProcessName; }
         }
     }
 }
