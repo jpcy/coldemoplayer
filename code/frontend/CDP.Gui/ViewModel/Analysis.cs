@@ -3,7 +3,7 @@ using System.Windows.Controls;
 
 namespace CDP.Gui.ViewModel
 {
-    public class Analysis : Core.ViewModelBase
+    internal class Analysis : Core.ViewModelBase
     {
         public string Header
         {

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CDP.Gui.ViewModel
 {
-    public class Demo : Core.ViewModelBase
+    internal class Demo : Core.ViewModelBase
     {
         public Core.Demo Data { get; private set; }
         public string MapThumbnailFileName

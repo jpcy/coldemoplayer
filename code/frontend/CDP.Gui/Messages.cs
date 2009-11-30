@@ -5,14 +5,14 @@ using System.Text;
 
 namespace CDP.Gui
 {
-    public enum Messages
+    internal enum Messages
     {
         SetFolder,
         SelectedFolderChanged,
         SelectedDemoChanged
     };
 
-    public class SetFolderMessageParameters
+    internal class SetFolderMessageParameters
     {
         public string Path { get; private set; }
         public string FileNameToSelect { get; private set; }
@@ -29,7 +29,7 @@ namespace CDP.Gui
         }
     }
 
-    public class SelectedFolderChangedMessageParameters
+    internal class SelectedFolderChangedMessageParameters
     {
         public string Path { get; private set; }
         public string FileNameToSelect { get; private set; }

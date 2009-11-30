@@ -4,7 +4,7 @@ using CDP.Core;
 
 namespace CDP.Gui.ViewModel
 {
-    public class Address : ViewModelBase
+    internal class Address : ViewModelBase
     {
         public string SelectedFolder
         {

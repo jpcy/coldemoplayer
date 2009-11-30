@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace CDP.Gui.ViewModel
 {
-    class Play : Core.ViewModelBase
+    internal class Play : Core.ViewModelBase
     {
         public string Caption
         {

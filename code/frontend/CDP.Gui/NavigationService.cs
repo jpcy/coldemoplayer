@@ -9,7 +9,7 @@ using System.Windows;
 
 namespace CDP.Gui
 {
-    public interface INavigationService
+    internal interface INavigationService
     {
         Window Window { get; set; }
         string CurrentPageTitle { get; }
@@ -31,7 +31,7 @@ namespace CDP.Gui
     }
 
     [Core.Singleton]
-    public class NavigationService : INavigationService
+    internal class NavigationService : INavigationService
     {
         public Window Window { get; set; }
 

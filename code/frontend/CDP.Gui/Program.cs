@@ -8,7 +8,7 @@ using CDP.Core;
 
 namespace CDP.Gui
 {
-    class Program
+    internal class Program
     {
         [DllImport("user32.dll")]
         private static extern bool AllowSetForegroundWindow(int processId);

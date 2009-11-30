@@ -3,7 +3,7 @@ using CDP.Core;
 
 namespace CDP.Gui.ViewModel
 {
-    public class Main : ViewModelBase
+    internal class Main : ViewModelBase
     {
         public Header Header { get; private set; }
         public Address Address { get; private set; }

@@ -12,7 +12,7 @@ using CDP.Core;
 
 namespace CDP.Gui.ViewModel
 {
-    public class Demos : ViewModelBase
+    internal class Demos : ViewModelBase
     {
         public class Item : NotifyPropertyChanged
         {

@@ -6,7 +6,7 @@ using System.IO;
 
 namespace CDP.Gui
 {
-    public class IconCache
+    internal class IconCache
     {
         private readonly Core.ISettings settings = Core.ObjectCreator.Get<Core.ISettings>();
         private readonly Core.IFileSystem fileSystem = Core.ObjectCreator.Get<Core.IFileSystem>();

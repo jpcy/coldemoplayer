@@ -4,7 +4,7 @@ using CDP.Core.Extensions;
 
 namespace CDP.Gui.ViewModel
 {
-    class Error : Core.ViewModelBase
+    internal class Error : Core.ViewModelBase
     {
         public string Message { get; private set; }
         public string Exception { get; private set; }

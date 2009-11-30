@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace CDP.Gui
 {
-    public interface IMediator
+    internal interface IMediator
     {
         void Register<T>(Messages message, Action<T> callback, object registerer);
         void Unregister(Messages message, object registerer);
@@ -15,7 +15,7 @@ namespace CDP.Gui
     }
 
     [Core.Singleton]
-    public class Mediator : IMediator
+    internal class Mediator : IMediator
     {
         public class MessageNotFoundException : Exception
         {

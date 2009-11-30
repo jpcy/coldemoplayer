@@ -3,7 +3,7 @@ using CDP.Core;
 
 namespace CDP.Gui.ViewModel
 {
-    public class Header : Core.ViewModelBase
+    internal class Header : Core.ViewModelBase
     {
         public DelegateCommand PreferencesCommand { get; private set; }
         public DelegateCommand AboutCommand { get; private set; }
