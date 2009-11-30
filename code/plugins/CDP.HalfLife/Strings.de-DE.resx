@@ -258,4 +258,13 @@
   <data name="BrowseForSteamExeDialogTitle" xml:space="preserve">
     <value>[GERMAN] Browsing for 'Steam.exe'...</value>
   </data>
+  <data name="BrowseForSteamExeButton" xml:space="preserve">
+    <value>[GERMAN] Browse...</value>
+  </data>
+  <data name="SteamAccountTextBlockText" xml:space="preserve">
+    <value>[GERMAN] Steam Account:</value>
+  </data>
+  <data name="SteamExeTextBlockText" xml:space="preserve">
+    <value>[GERMAN] Steam.exe:</value>
+  </data>
 </root>

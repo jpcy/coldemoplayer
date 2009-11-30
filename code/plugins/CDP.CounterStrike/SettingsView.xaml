@@ -20,16 +20,16 @@
         </StackPanel>
         <Grid Grid.Column="1">
             <StackPanel Grid.Column="0">
-                <TextBlock>Steam.exe:</TextBlock>
+                <TextBlock Text="{x:Static local:Strings.SteamExeTextBlockText}" />
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBox Grid.Column="0" IsReadOnly="True" Margin="0,0,8,0" Text="{Binding SteamExeFullPath}" />
-                    <Button Grid.Column="1" Padding="16,0,16,0" Command="{Binding BrowseForSteamExeCommand}">Browse...</Button>
+                    <Button Grid.Column="1" Padding="16,0,16,0" Command="{Binding BrowseForSteamExeCommand}" Content="{x:Static local:Strings.BrowseForSteamExeButton}" />
                 </Grid>
-                <TextBlock Margin="0,8,0,0">Steam Account:</TextBlock>
+                <TextBlock Margin="0,8,0,0" Text="{x:Static local:Strings.SteamAccountTextBlockText}" />
                 <ComboBox ItemsSource="{Binding SteamAccountNames}" SelectedItem="{Binding Path=SteamAccountName, Mode=TwoWay}" />
             </StackPanel>
         </Grid>

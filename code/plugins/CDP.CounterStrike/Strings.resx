@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BrowseForSteamExeButton" xml:space="preserve">
+    <value>Browse...</value>
+  </data>
   <data name="NoSuitableMapFound" xml:space="preserve">
     <value>No suitable map found in the map pool: '{0}' with the checksum '{1}'.</value>
     <comment>{0} = map name, {1} = map checksum</comment>
@@ -132,5 +135,11 @@
   </data>
   <data name="StartListenServerCheckBoxContent" xml:space="preserve">
     <value>Start Listen Server</value>
+  </data>
+  <data name="SteamAccountTextBlockText" xml:space="preserve">
+    <value>Steam Account:</value>
+  </data>
+  <data name="SteamExeTextBlockText" xml:space="preserve">
+    <value>Steam.exe:</value>
   </data>
 </root>
