@@ -67,7 +67,7 @@ namespace CDP.HalfLife
                 stream.WriteLine("wait10");
                 stream.WriteLine("wait10");
 
-                string playbackType = ((Handler.PlaybackMethods)settings["HlPlaybackMethod"] == Handler.PlaybackMethods.Playdemo ? "playdemo" : "viewdemo");
+                string playbackType = ((Plugin.PlaybackMethods)settings["HlPlaybackMethod"] == Plugin.PlaybackMethods.Playdemo ? "playdemo" : "viewdemo");
 
                 stream.WriteLine("{0} {1}", playbackType, demoFileName);
                 stream.WriteLine("wait10");

@@ -63,7 +63,7 @@ namespace CDP.Quake3Arena
         public override void Load()
         {
             base.Load();
-            mod = ((Handler)handler).FindMod(ModFolder);
+            mod = ((Plugin)plugin).FindMod(ModFolder);
         }
 
         public override void Write(string destinationFileName)

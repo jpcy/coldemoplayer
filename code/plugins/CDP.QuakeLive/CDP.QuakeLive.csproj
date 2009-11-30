@@ -43,8 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Demo.cs" />
-    <Compile Include="Handler.cs" />
     <Compile Include="Launcher.cs" />
+    <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

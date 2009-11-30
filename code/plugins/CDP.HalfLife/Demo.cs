@@ -76,10 +76,10 @@ namespace CDP.HalfLife
             public string SteamId { get; set; }
         }
 
-        public override Core.DemoHandler Handler
+        public override Core.Plugin Plugin
         {
-            get { return handler; }
-            set { handler = (Handler)value; }
+            get { return plugin; }
+            set { plugin = (Plugin)value; }
         }
 
         public static uint NewestNetworkProtocol
@@ -177,7 +177,7 @@ namespace CDP.HalfLife
         /// </summary>
         public float CurrentTimestamp { get; private set; }
 
-        private Handler handler;
+        private Plugin plugin;
         protected string clientDllChecksum;
         private readonly List<MessageCallback> messageCallbacks;
         private readonly List<FrameCallback> frameCallbacks;
@@ -251,7 +251,7 @@ namespace CDP.HalfLife
                     AddDetail(Strings.DemoDetailGameFolder, GameFolderName);
                     AddDetail(Strings.DemoDetailMapChecksum, MapChecksum);
                     AddDetail(Strings.DemoDetailMapName, MapName);
-                    Game = handler.FindGame(GameFolderName);
+                    Game = plugin.FindGame(GameFolderName);
 
                     // Read directory entries.
                     try
@@ -604,7 +604,7 @@ namespace CDP.HalfLife
                         header.Read(stream.ReadBytes(Header.SizeInBytes));
                         NetworkProtocol = header.NetworkProtocol;
                         GameFolderName = header.GameFolderName;
-                        Game = handler.FindGame(GameFolderName);
+                        Game = plugin.FindGame(GameFolderName);
                         header.Log(log);
                         log.WriteLine();
 
@@ -754,7 +754,7 @@ namespace CDP.HalfLife
             messageHistory.Clear();
 
             byte id = stream.ReadByte();
-            Frame frame = handler.CreateFrame(id);
+            Frame frame = plugin.CreateFrame(id);
 
             if (frame == null)
             {
@@ -944,7 +944,7 @@ namespace CDP.HalfLife
 
             if (id <= Demo.MaxEngineMessageId)
             {
-                message = handler.CreateEngineMessage(id.Value);
+                message = plugin.CreateEngineMessage(id.Value);
             }
             else
             {
@@ -957,7 +957,7 @@ namespace CDP.HalfLife
 
                 if (userMessageDefinition != null)
                 {
-                    UserMessage userMessage = handler.CreateUserMessage(userMessageDefinition.Name);
+                    UserMessage userMessage = plugin.CreateUserMessage(userMessageDefinition.Name);
                     userMessage.Id = userMessageDefinition.Id;
 
                     if (userMessageDefinition.Length == -1)

@@ -72,11 +72,11 @@ namespace CDP.Gui.ViewModel
         public override void OnNavigateComplete()
         {
             IDemoManager demoManager = ObjectCreator.Get<IDemoManager>();
-            string[] extensions = demoManager.ValidDemoExtensions();
+            string[] extensions = demoManager.GetAllPluginFileExtensions();
 
             foreach (string extension in extensions)
             {
-                FileAssociations.Add(new FileAssociation((bool)settings[settings.FileAssociationSettingPrefix + extension], extension, demoManager.GetDemoHandlerNames(extension)));
+                FileAssociations.Add(new FileAssociation((bool)settings[settings.FileAssociationSettingPrefix + extension], extension, demoManager.GetPluginNames(extension)));
             }
         }
 

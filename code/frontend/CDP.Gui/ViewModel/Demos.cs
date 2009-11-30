@@ -90,9 +90,9 @@ namespace CDP.Gui.ViewModel
             }
 
             fileNameToSelect = parameters.FileNameToSelect;
-            string[] validExtensions = demoManager.ValidDemoExtensions();
+            string[] demoFileExtensions = demoManager.GetAllPluginFileExtensions();
 
-            foreach (string fileName in Directory.GetFiles(parameters.Path).Where(f => validExtensions.Contains(fileSystem.GetExtension(f))))
+            foreach (string fileName in Directory.GetFiles(parameters.Path).Where(f => demoFileExtensions.Contains(fileSystem.GetExtension(f))))
             {
                 Core.Demo demo = demoManager.CreateDemo(fileName);
 

@@ -15,11 +15,11 @@ namespace CDP.DemoDiagnostic
 
             // Demo manager and plugins.
             IDemoManager demoManager = ObjectCreator.Get<IDemoManager>();
-            demoManager.AddPlugin(0, new HalfLife.Handler());
-            demoManager.AddPlugin(1, new CounterStrike.Handler());
-            demoManager.AddPlugin(0, new Source.Handler());
-            demoManager.AddPlugin(0, new Quake3Arena.Handler());
-            demoManager.AddPlugin(0, new QuakeLive.Handler());
+            demoManager.RegisterPlugin(new HalfLife.Plugin());
+            demoManager.RegisterPlugin(new CounterStrike.Plugin());
+            demoManager.RegisterPlugin(new Source.Plugin());
+            demoManager.RegisterPlugin(new Quake3Arena.Plugin());
+            demoManager.RegisterPlugin(new QuakeLive.Plugin());
 
             // Settings.
             ISettings settings = ObjectCreator.Get<ISettings>();

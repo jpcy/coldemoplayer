@@ -6,7 +6,7 @@ using CDP.Core;
 
 namespace CDP.UnrealTournament2004
 {
-    public class Handler : Core.DemoHandler
+    public class Plugin : Core.Plugin
     {
         public override string FullName
         {
@@ -18,12 +18,17 @@ namespace CDP.UnrealTournament2004
             get { return "UT2004"; }
         }
 
-        public override string[] Extensions
+        public override uint Priority
+        {
+            get { return 0; }
+        }
+
+        public override string[] FileExtensions
         {
             get { return new string[] { "demo4" }; }
         }
 
-        public override DemoHandler.PlayerColumn[] PlayerColumns
+        public override PlayerColumn[] PlayerColumns
         {
             get { return null; }
         }
@@ -40,22 +45,6 @@ namespace CDP.UnrealTournament2004
         }
 
         private UserControl settingsView;
-        public override UserControl SettingsView
-        {
-            get
-            {
-                if (settingsView == null)
-                {
-                    settingsView = new SettingsView
-                    {
-                        DataContext = new SettingsViewModel()
-                    };
-                }
-
-                return settingsView;
-            }
-        }
-
         private readonly string magic = "UT2004 DEMO FILE";
 
         public override bool IsValidDemo(FastFileStreamBase stream, string fileExtension)
@@ -94,6 +83,19 @@ namespace CDP.UnrealTournament2004
         public override ViewModelBase CreateAnalysisViewModel(Core.Demo demo)
         {
             throw new NotImplementedException();
+        }
+
+        public override UserControl CreateSettingsView(Core.Demo demo)
+        {
+            if (settingsView == null)
+            {
+                settingsView = new SettingsView
+                {
+                    DataContext = new SettingsViewModel()
+                };
+            }
+
+            return settingsView;
         }
     }
 }

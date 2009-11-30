@@ -17,7 +17,7 @@ namespace CDP.Gui.View
 {
     public partial class Demo : UserControl
     {
-        private Core.DemoHandler handler = null;
+        private Core.Plugin plugin = null;
 
         public Demo()
         {
@@ -37,22 +37,22 @@ namespace CDP.Gui.View
         {
             if (demo == null)
             {
-                handler = null;
+                plugin = null;
                 playersGridView.Columns.Clear();
                 return;
             }
 
-            if (demo.Handler == handler)
+            if (demo.Plugin == plugin)
             {
                 return;
             }
 
-            handler = demo.Handler;
+            plugin = demo.Plugin;
             playersGridView.Columns.Clear();
 
-            if (handler.PlayerColumns != null)
+            if (plugin.PlayerColumns != null)
             {
-                foreach (Core.DemoHandler.PlayerColumn column in handler.PlayerColumns)
+                foreach (Core.Plugin.PlayerColumn column in plugin.PlayerColumns)
                 {
                     playersGridView.Columns.Add(new GridViewColumn
                     {

@@ -8,7 +8,7 @@ using CDP.Quake3Arena;
 
 namespace CDP.QuakeLive
 {
-    public class Handler : Quake3Arena.Handler
+    public class Plugin : Quake3Arena.Plugin
     {
         public override string FullName
         {
@@ -20,17 +20,12 @@ namespace CDP.QuakeLive
             get { return "QL"; }
         }
 
-        public override string[] Extensions
+        public override string[] FileExtensions
         {
             get { return new string[] { "dm_73" }; }
         }
 
         public override Setting[] Settings
-        {
-            get { return new Setting[] { }; }
-        }
-
-        public override UserControl SettingsView
         {
             get { return null; }
         }
@@ -47,6 +42,11 @@ namespace CDP.QuakeLive
         public override Core.Launcher CreateLauncher()
         {
             return new Launcher();
+        }
+
+        public override UserControl CreateSettingsView(Core.Demo demo)
+        {
+            return null;
         }
 
         public override Mod FindMod(string modFolder)

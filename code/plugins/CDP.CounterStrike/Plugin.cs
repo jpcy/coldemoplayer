@@ -7,7 +7,7 @@ using System.Windows.Controls;
 
 namespace CDP.CounterStrike
 {
-    public class Handler : HalfLife.Handler
+    public class Plugin : HalfLife.Plugin
     {
         public override string FullName
         {
@@ -17,6 +17,11 @@ namespace CDP.CounterStrike
         public override string Name
         {
             get { return "cstrike"; }
+        }
+
+        public override uint Priority
+        {
+            get { return 1; }
         }
 
         public override Core.Setting[] Settings
@@ -31,22 +36,9 @@ namespace CDP.CounterStrike
         }
 
         private UserControl settingsView;
-        public override UserControl SettingsView
-        {
-            get
-            {
-                if (settingsView == null)
-                {
-                    settingsView = new SettingsView { DataContext = new SettingsViewModel() };
-                }
-
-                return settingsView;
-            }
-        }
-
         private Game game;
 
-        public Handler()
+        public Plugin()
         {
         }
 
@@ -81,6 +73,16 @@ namespace CDP.CounterStrike
         public override Core.ViewModelBase CreateAnalysisViewModel(Core.Demo demo)
         {
             return new Analysis.ViewModel((Demo)demo);
+        }
+
+        public override UserControl CreateSettingsView(Core.Demo demo)
+        {
+            if (settingsView == null)
+            {
+                settingsView = new SettingsView { DataContext = new SettingsViewModel() };
+            }
+
+            return settingsView;
         }
 
         protected override void RegisterMessages()

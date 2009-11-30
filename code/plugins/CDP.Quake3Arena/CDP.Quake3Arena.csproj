@@ -50,8 +50,8 @@
     <Compile Include="Config.cs" />
     <Compile Include="Demo.cs" />
     <Compile Include="GameConstants.cs" />
-    <Compile Include="Handler.cs" />
     <Compile Include="Launcher.cs" />
+    <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Score.cs" />
     <Compile Include="Scores.cs" />

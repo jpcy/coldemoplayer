@@ -46,7 +46,6 @@
     <Compile Include="CyclicQueue.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="Demo.cs" />
-    <Compile Include="DemoHandler.cs" />
     <Compile Include="DemoManager.cs" />
     <Compile Include="ErrorReporter.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
@@ -66,6 +65,7 @@
     <Compile Include="NotifyPropertyChanged.cs" />
     <Compile Include="ObjectCreator.cs" />
     <Compile Include="ObjectMappings.cs" />
+    <Compile Include="Plugin.cs" />
     <Compile Include="Process.cs" />
     <Compile Include="ProcessFinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

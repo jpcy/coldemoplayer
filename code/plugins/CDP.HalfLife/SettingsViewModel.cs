@@ -11,11 +11,11 @@ namespace CDP.HalfLife
         {
             get 
             {
-                return ((Handler.PlaybackMethods)settings["HlPlaybackMethod"] == Handler.PlaybackMethods.Playdemo);
+                return ((Plugin.PlaybackMethods)settings["HlPlaybackMethod"] == Plugin.PlaybackMethods.Playdemo);
             }
             set
             {
-                settings["HlPlaybackMethod"] = Handler.PlaybackMethods.Playdemo;
+                settings["HlPlaybackMethod"] = Plugin.PlaybackMethods.Playdemo;
             }
         }
 
@@ -23,11 +23,11 @@ namespace CDP.HalfLife
         {
             get
             {
-                return ((Handler.PlaybackMethods)settings["HlPlaybackMethod"] == Handler.PlaybackMethods.Viewdemo);
+                return ((Plugin.PlaybackMethods)settings["HlPlaybackMethod"] == Plugin.PlaybackMethods.Viewdemo);
             }
             set
             {
-                settings["HlPlaybackMethod"] = Handler.PlaybackMethods.Viewdemo;
+                settings["HlPlaybackMethod"] = Plugin.PlaybackMethods.Viewdemo;
             }
         }
 

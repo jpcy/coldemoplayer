@@ -105,7 +105,7 @@ namespace CDP.Core.Tests
         }
 
         private DemoManager demoManager;
-        private Mock<CDP.Core.DemoHandler> demoHandlerMock;
+        private Mock<CDP.Core.Plugin> demoHandlerMock;
         private MockProvider<IFileSystem> fileSystem;
 
         [SetUp]
@@ -116,21 +116,21 @@ namespace CDP.Core.Tests
             ObjectCreator.Reset();
             ObjectCreator.MapToProvider<IFileSystem>(fileSystem);
             demoManager = new DemoManager();
-            demoHandlerMock = new Mock<DemoHandler>();
+            demoHandlerMock = new Mock<Plugin>();
         }
 
         [Test]
         public void AddPlugin_Ok()
         {
-            demoManager.AddPlugin(0, demoHandlerMock.Object);
+            demoManager.RegisterPlugin(demoHandlerMock.Object);
         }
 
         [Test]
         public void GetAllDemoHandlerSettings_Ok()
         {
-            Func<Setting[], Mock<CDP.Core.DemoHandler>> createDemoHandlerMock = s =>
+            Func<Setting[], Mock<CDP.Core.Plugin>> createDemoHandlerMock = s =>
             {
-                var mock = new Mock<DemoHandler>();
+                var mock = new Mock<Plugin>();
                 mock.Setup(dh => dh.Settings).Returns(s);
                 return mock;
             };
@@ -139,9 +139,9 @@ namespace CDP.Core.Tests
             var setting2 = new Setting("setting2", typeof(bool), false);
             var mock1 = createDemoHandlerMock(new Setting[] { setting1 });
             var mock2 = createDemoHandlerMock(new Setting[] { setting2 });
-            demoManager.AddPlugin(0, mock1.Object);
-            demoManager.AddPlugin(0, mock2.Object);
-            var result = demoManager.GetAllDemoHandlerSettings();
+            demoManager.RegisterPlugin(mock1.Object);
+            demoManager.RegisterPlugin(mock2.Object);
+            var result = demoManager.GetAllPluginSettings();
             Assert.That(result.Length, Is.EqualTo(2));
             Assert.That(result[0], Is.EqualTo(setting1));
             Assert.That(result[1], Is.EqualTo(setting2));
@@ -151,7 +151,7 @@ namespace CDP.Core.Tests
         public void ValidDemoExtensions_Ok()
         {
             SetUpPluginStub(string.Empty, new string[] { "dem", "replay" }, true);
-            string[] extensions = demoManager.ValidDemoExtensions();
+            string[] extensions = demoManager.GetAllPluginFileExtensions();
             Assert.That(extensions.Length, Is.EqualTo(2));
             Assert.That(extensions[0], Is.EqualTo("dem"));
             Assert.That(extensions[1], Is.EqualTo("replay"));
@@ -160,7 +160,7 @@ namespace CDP.Core.Tests
         [Test]
         public void ValidDemoExtensions_NoPlugins()
         {
-            Assert.That(demoManager.ValidDemoExtensions().Length, Is.EqualTo(0));
+            Assert.That(demoManager.GetAllPluginFileExtensions().Length, Is.EqualTo(0));
         }
 
         [Test]
@@ -192,7 +192,7 @@ namespace CDP.Core.Tests
             // Verify.
             Assert.That(demo, Is.EqualTo(dummyDemo));
             Assert.That(demo.FileName, Is.EqualTo(fileName));
-            Assert.That(demo.Handler, Is.EqualTo(demoHandlerMock.Object));
+            Assert.That(demo.Plugin, Is.EqualTo(demoHandlerMock.Object));
         }
 
         [Test]
@@ -201,13 +201,13 @@ namespace CDP.Core.Tests
             // Setup.
             CDP.Core.ObjectCreator.MapToProvider<IProcessFinder>(new MockProvider<IProcessFinder>());
             var demoMock = new Mock<Demo>();
-            demoMock.Setup(d => d.Handler).Returns(demoHandlerMock.Object);
+            demoMock.Setup(d => d.Plugin).Returns(demoHandlerMock.Object);
             var launcherMock = new Mock<Launcher>();
             launcherMock.Setup(l => l.Initialise(demoMock.Object)).Verifiable();
             demoHandlerMock.Setup(dh => dh.CreateLauncher()).Returns(launcherMock.Object);
 
             // Run.
-            demoManager.AddPlugin(0, demoHandlerMock.Object);
+            demoManager.RegisterPlugin(demoHandlerMock.Object);
             var launcher = demoManager.CreateLauncher(demoMock.Object);
             
             // Verify.
@@ -218,9 +218,9 @@ namespace CDP.Core.Tests
         private void SetUpPluginStub(string demoExtension, string[] extensions, bool isValidDemo)
         {
             fileSystem.Mock.Setup(p => p.GetExtension(It.IsAny<string>())).Returns(demoExtension);
-            demoHandlerMock.Setup(dh => dh.Extensions).Returns(extensions);
+            demoHandlerMock.Setup(dh => dh.FileExtensions).Returns(extensions);
             demoHandlerMock.Setup(dh => dh.IsValidDemo(It.IsAny<FastFileStreamBase>(), It.IsAny<string>())).Returns(isValidDemo);
-            demoManager.AddPlugin(0, demoHandlerMock.Object);
+            demoManager.RegisterPlugin(demoHandlerMock.Object);
         }
     }
 }

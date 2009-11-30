@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 
 namespace CDP.Quake3Arena
 {
-    public class Handler : IdTech3.Handler
+    public class Plugin : IdTech3.Plugin
     {
         public override string FullName
         {
@@ -21,7 +21,7 @@ namespace CDP.Quake3Arena
             get { return "Q3A"; }
         }
 
-        public override string[] Extensions
+        public override string[] FileExtensions
         {
             get { return new string[] { "dm3", "dm_48", "dm_66", "dm_67", "dm_68" }; }
         }
@@ -39,27 +39,11 @@ namespace CDP.Quake3Arena
         }
 
         private UserControl settingsView;
-        public override UserControl SettingsView
-        {
-            get
-            {
-                if (settingsView == null)
-                {
-                    settingsView = new SettingsView
-                    {
-                        DataContext = new SettingsViewModel(config.ExecutableFileNames)
-                    };
-                }
-
-                return settingsView;
-            }
-        }
-
         private Core.IFileSystem fileSystem = Core.ObjectCreator.Get<Core.IFileSystem>();
         private Core.ISettings settings = Core.ObjectCreator.Get<Core.ISettings>();
         private Config config;
 
-        public Handler()
+        public Plugin()
         {
             ReadConfig();
         }
@@ -91,6 +75,19 @@ namespace CDP.Quake3Arena
         public override Core.ViewModelBase CreateAnalysisViewModel(Core.Demo demo)
         {
             return new Analysis.ViewModel((Demo)demo);
+        }
+
+        public override UserControl CreateSettingsView(Core.Demo demo)
+        {
+            if (settingsView == null)
+            {
+                settingsView = new SettingsView
+                {
+                    DataContext = new SettingsViewModel(config.ExecutableFileNames)
+                };
+            }
+
+            return settingsView;
         }
 
         public virtual Mod FindMod(string modFolder)

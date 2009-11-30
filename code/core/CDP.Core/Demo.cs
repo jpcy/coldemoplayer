@@ -62,7 +62,7 @@ namespace CDP.Core
         public event EventHandler OperationCompleteEvent;
         public event EventHandler OperationCancelledEvent;
 
-        public virtual DemoHandler Handler { get; set; }
+        public virtual Plugin Plugin { get; set; }
         public string Name { get; private set; }
 
         private string fileName = null;

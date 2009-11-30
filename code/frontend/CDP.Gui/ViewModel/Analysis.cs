@@ -21,13 +21,13 @@ namespace CDP.Gui.ViewModel
         public Analysis(Core.Demo demo)
         {
             this.demo = demo;
-            viewModel = demo.Handler.CreateAnalysisViewModel(demo);
+            viewModel = demo.Plugin.CreateAnalysisViewModel(demo);
             BackCommand = new Core.DelegateCommand(BackCommandExecute);
         }
 
         public override void OnNavigateComplete()
         {
-            View = demo.Handler.CreateAnalysisView();
+            View = demo.Plugin.CreateAnalysisView();
             View.DataContext = viewModel;
             viewModel.OnNavigateComplete();
             OnPropertyChanged("View");

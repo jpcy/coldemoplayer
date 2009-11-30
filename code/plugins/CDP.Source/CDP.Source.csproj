@@ -55,7 +55,6 @@
     <Compile Include="Frames\StringTables.cs" />
     <Compile Include="Frames\Synctick.cs" />
     <Compile Include="Frames\UserCommand.cs" />
-    <Compile Include="Handler.cs" />
     <Compile Include="Header.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="MessageFrame.cs" />
@@ -84,6 +83,7 @@
     <Compile Include="Messages\SvcUserMessage.cs" />
     <Compile Include="Messages\SvcVoiceData.cs" />
     <Compile Include="Messages\SvcVoiceInit.cs" />
+    <Compile Include="Plugin.cs" />
     <Compile Include="Prop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Strings.Designer.cs">

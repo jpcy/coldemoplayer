@@ -109,7 +109,7 @@ namespace CDP.DemoDiagnostic
             }
 
             fileNameTextBox.Text = demo.FileName;
-            pluginTextBlock.Text = demo.Handler.FullName;
+            pluginTextBlock.Text = demo.Plugin.FullName;
             logFileTextBlock.Text = Path.ChangeExtension(Path.GetFileName(demo.FileName), "log");
 
             // Half-Life/Counter-Strike messages

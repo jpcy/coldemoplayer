@@ -153,13 +153,13 @@ namespace CDP.Core
         public void Load(IDemoManager demoManager)
         {
             // Add plugin-specific settings.
-            foreach (Setting setting in demoManager.GetAllDemoHandlerSettings())
+            foreach (Setting setting in demoManager.GetAllPluginSettings())
             {
                 Add(setting);
             }
 
             // Add file association settings
-            foreach (string extension in demoManager.ValidDemoExtensions())
+            foreach (string extension in demoManager.GetAllPluginFileExtensions())
             {
                 Add(fileAssociationSettingPrefix + extension, false);
             }

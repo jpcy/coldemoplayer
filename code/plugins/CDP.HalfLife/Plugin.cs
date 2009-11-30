@@ -8,7 +8,7 @@ using System.Windows.Controls;
 
 namespace CDP.HalfLife
 {
-    public class Handler : Core.DemoHandler
+    public class Plugin : Core.Plugin
     {
         public enum PlaybackMethods
         {
@@ -26,7 +26,12 @@ namespace CDP.HalfLife
             get { return "halflife"; }
         }
 
-        public override string[] Extensions
+        public override uint Priority
+        {
+            get { return 0; }
+        }
+
+        public override string[] FileExtensions
         {
             get { return new string[] { "dem" }; }
         }
@@ -59,19 +64,6 @@ namespace CDP.HalfLife
         }
 
         private UserControl settingsView;
-        public override UserControl SettingsView
-        {
-            get
-            {
-                if (settingsView == null)
-                {
-                    settingsView = new SettingsView { DataContext = new SettingsViewModel() };
-                }
-
-                return settingsView;
-            }
-        }
-
         protected readonly Core.ISettings settings = Core.ObjectCreator.Get<Core.ISettings>();
         protected readonly Core.IFileSystem fileSystem = Core.ObjectCreator.Get<Core.IFileSystem>();
         protected readonly Core.IProcessFinder processFinder = Core.ObjectCreator.Get<Core.IProcessFinder>();
@@ -81,7 +73,7 @@ namespace CDP.HalfLife
         private readonly Dictionary<string, Type> userMessages = new Dictionary<string, Type>();
         private Core.SteamGame[] games;
 
-        public Handler()
+        public Plugin()
         {
             RegisterMessages();
             ReadGameConfig();
@@ -123,6 +115,16 @@ namespace CDP.HalfLife
         public override Core.ViewModelBase CreateAnalysisViewModel(Core.Demo demo)
         {
             return new Analysis.ViewModel((Demo)demo);
+        }
+
+        public override UserControl CreateSettingsView(Core.Demo demo)
+        {
+            if (settingsView == null)
+            {
+                settingsView = new SettingsView { DataContext = new SettingsViewModel() };
+            }
+
+            return settingsView;
         }
 
         protected virtual void RegisterMessages()

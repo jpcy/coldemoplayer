@@ -72,8 +72,8 @@ namespace HalfLifeDemoSystemTest
             Console.WriteLine();
             ObjectMappings.Initialise();
             demoManager = ObjectCreator.Get<IDemoManager>();
-            demoManager.AddPlugin(0, new CDP.HalfLife.Handler());
-            demoManager.AddPlugin(1, new CDP.CounterStrike.Handler());
+            demoManager.RegisterPlugin(new CDP.HalfLife.Plugin());
+            demoManager.RegisterPlugin(new CDP.CounterStrike.Plugin());
             fileSystem = ObjectCreator.Get<IFileSystem>();
 
             settings = ObjectCreator.Get<ISettings>();
@@ -106,7 +106,7 @@ namespace HalfLifeDemoSystemTest
 
         static void EnumerateFolder(string path)
         {
-            string[] validExtensions = demoManager.ValidDemoExtensions();
+            string[] validExtensions = demoManager.GetAllPluginFileExtensions();
 
             foreach (string fileName in Directory.GetFiles(path).Where(f => validExtensions.Contains(fileSystem.GetExtension(f))))
             {

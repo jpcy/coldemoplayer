@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace CDP.IdTech3
 {
-    public class Handler : Core.DemoHandler
+    public class Plugin : Core.Plugin
     {
         private class RegisteredCommand
         {
@@ -46,12 +46,17 @@ namespace CDP.IdTech3
             get { return "idtech3"; }
         }
 
-        public override string[] Extensions
+        public override uint Priority
+        {
+            get { return 0; }
+        }
+
+        public override string[] FileExtensions
         {
             get { return new string[] { "dm3", "dm_48", "dm_66", "dm_67", "dm_68", "dm_73" }; }
         }
 
-        public override Core.DemoHandler.PlayerColumn[] PlayerColumns
+        public override PlayerColumn[] PlayerColumns
         {
             get
             {
@@ -69,14 +74,9 @@ namespace CDP.IdTech3
             get { return new Core.Setting[] { }; }
         }
 
-        public override UserControl SettingsView
-        {
-            get { return null; }
-        }
-
         private readonly List<RegisteredCommand> registeredCommands = new List<RegisteredCommand>();
 
-        public Handler()
+        public Plugin()
         {
             RegisterCommand<Commands.SvcBaseline>();
             RegisterCommand<Commands.SvcConfigString>();
@@ -124,6 +124,11 @@ namespace CDP.IdTech3
         }
 
         public override Core.ViewModelBase CreateAnalysisViewModel(Core.Demo demo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override UserControl CreateSettingsView(Core.Demo demo)
         {
             throw new NotImplementedException();
         }

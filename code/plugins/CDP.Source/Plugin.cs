@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace CDP.Source
 {
-    public class Handler : Core.DemoHandler
+    public class Plugin : Core.Plugin
     {
         public class RegisteredFrame
         {
@@ -56,12 +56,17 @@ namespace CDP.Source
             get { return "source"; }
         }
 
-        public override string[] Extensions
+        public override uint Priority
+        {
+            get { return 0; }
+        }
+
+        public override string[] FileExtensions
         {
             get { return new string[] { "dem" }; }
         }
 
-        public override Core.DemoHandler.PlayerColumn[] PlayerColumns
+        public override PlayerColumn[] PlayerColumns
         {
             get { throw new NotImplementedException(); }
         }
@@ -71,16 +76,11 @@ namespace CDP.Source
             get { return new Core.Setting[] { }; }
         }
 
-        public override System.Windows.Controls.UserControl SettingsView
-        {
-            get { throw new NotImplementedException(); }
-        }
-
         private readonly byte[] magic = { 0x48, 0x4C, 0x32, 0x44, 0x45, 0x4D, 0x4F }; // HL2DEMO
         private readonly List<RegisteredFrame> registeredFrames = new List<RegisteredFrame>();
         private readonly List<RegisteredMessage> registeredMessages = new List<RegisteredMessage>();
 
-        public Handler()
+        public Plugin()
         {
             RegisterMessages();
         }
@@ -159,6 +159,11 @@ namespace CDP.Source
         }
 
         public override Core.ViewModelBase CreateAnalysisViewModel(CDP.Core.Demo demo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override System.Windows.Controls.UserControl CreateSettingsView(Core.Demo demo)
         {
             throw new NotImplementedException();
         }

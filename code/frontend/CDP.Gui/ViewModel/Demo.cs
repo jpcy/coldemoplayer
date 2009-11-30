@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Controls;
 
 namespace CDP.Gui.ViewModel
 {
@@ -19,6 +20,11 @@ namespace CDP.Gui.ViewModel
 
                 return fileSystem.PathCombine(settings.ProgramPath, "mapthumbnails", Data.MapThumbnailRelativePath);
             }
+        }
+
+        public UserControl SettingsView
+        {
+            get { return Data == null ? null : Data.Plugin.CreateSettingsView(Data); }
         }
 
         public Core.DelegateCommand PlayCommand { get; private set; }
@@ -61,6 +67,7 @@ namespace CDP.Gui.ViewModel
             Data = demo;
             OnPropertyChanged("Data");
             OnPropertyChanged("MapThumbnailFileName");
+            OnPropertyChanged("SettingsView");
         }
     }
 }

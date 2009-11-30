@@ -68,12 +68,12 @@ namespace CDP.IdTech3
             get { return false; }
         }
 
-        protected Handler handler;
+        protected Plugin plugin;
 
-        public override Core.DemoHandler Handler
+        public override Core.Plugin Plugin
         {
-            get { return handler; }
-            set { handler = (Handler)value; }
+            get { return plugin; }
+            set { plugin = (Plugin)value; }
         }
 
         public virtual ConvertTargets ConvertTarget
@@ -346,7 +346,7 @@ namespace CDP.IdTech3
                     }
                 }
 
-                Command command = handler.CreateCommand(commandId);
+                Command command = plugin.CreateCommand(commandId);
 
                 if (command == null)
                 {
@@ -448,7 +448,7 @@ namespace CDP.IdTech3
                     continue;
                 }
 
-                Command command = handler.CreateCommand(commandId);
+                Command command = plugin.CreateCommand(commandId);
 
                 if (command == null)
                 {
@@ -493,7 +493,7 @@ namespace CDP.IdTech3
 
         private void GuessProtocol()
         {
-            Protocol = handler.GuessProtocol(fileSystem.GetExtension(FileName));
+            Protocol = plugin.GuessProtocol(fileSystem.GetExtension(FileName));
         }
 
         /// <summary>

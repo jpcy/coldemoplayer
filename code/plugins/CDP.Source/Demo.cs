@@ -48,12 +48,12 @@ namespace CDP.Source
             }
         }
 
-        protected Handler handler;
+        protected Plugin plugin;
 
-        public override Core.DemoHandler Handler
+        public override Core.Plugin Plugin
         {
-            get { return handler; }
-            set { handler = (Handler)value; }
+            get { return plugin; }
+            set { plugin = (Plugin)value; }
         }
 
         public override string GameName
@@ -219,7 +219,7 @@ namespace CDP.Source
             messageHistory.Clear();
 
             byte id = stream.ReadByte();
-            Frame frame = handler.CreateFrame(id, NetworkProtocol);
+            Frame frame = plugin.CreateFrame(id, NetworkProtocol);
 
             if (frame == null)
             {
@@ -370,7 +370,7 @@ namespace CDP.Source
                 messageOffset--;
             }
 
-            Message message = handler.CreateMessage(id.Value, NetworkProtocol);
+            Message message = plugin.CreateMessage(id.Value, NetworkProtocol);
 
             if (message == null)
             {
