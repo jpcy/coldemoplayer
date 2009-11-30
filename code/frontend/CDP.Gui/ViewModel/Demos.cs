@@ -8,12 +8,13 @@ using System.Threading;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Imaging;
 using System.ComponentModel;
+using CDP.Core;
 
 namespace CDP.Gui.ViewModel
 {
-    public class Demos : Core.ViewModelBase
+    public class Demos : ViewModelBase
     {
-        public class Item : Core.NotifyPropertyChanged
+        public class Item : NotifyPropertyChanged
         {
             public Core.Demo Demo { get; private set; }
 
@@ -47,8 +48,6 @@ namespace CDP.Gui.ViewModel
         }
 
         private Item selectedItem;
-        private object dirtyLock = new object();
-        private bool isDirty = false;
 
         public ObservableCollection<Item> Items { get; private set; }
         public Item SelectedItem
@@ -56,48 +55,44 @@ namespace CDP.Gui.ViewModel
             get { return selectedItem; }
             set
             {
-                SetDirty();
-
                 if (value != selectedItem)
                 {
-                    settings["LastFileName"] = (value == null ? null : value.Demo.FileName);
+                    settings["LastFileName"] = (value == null ? null : fileSystem.GetFileName(value.Demo.FileName));
                     selectedItem = value;
                     mediator.Notify<Core.Demo>(Messages.SelectedDemoChanged, selectedItem == null ? null : selectedItem.Demo, true);
                 }
             }
         }
 
-        private readonly IMediator mediator = Core.ObjectCreator.Get<IMediator>();
-        private readonly INavigationService navigationService = Core.ObjectCreator.Get<INavigationService>();
-        private readonly Core.IFileSystem fileSystem = Core.ObjectCreator.Get<Core.IFileSystem>();
+        private readonly IMediator mediator = ObjectCreator.Get<IMediator>();
+        private readonly INavigationService navigationService = ObjectCreator.Get<INavigationService>();
+        private readonly IFileSystem fileSystem = ObjectCreator.Get<IFileSystem>();
         private readonly IconCache iconCache = new IconCache();
-        private readonly Core.IDemoManager demoManager = Core.ObjectCreator.Get<Core.IDemoManager>();
-        private readonly Core.ISettings settings = Core.ObjectCreator.Get<Core.ISettings>();
+        private readonly IDemoManager demoManager = ObjectCreator.Get<IDemoManager>();
+        private readonly ISettings settings = ObjectCreator.Get<ISettings>();
+        private string fileNameToSelect = null;
 
         public Demos()
         {
             Items = new ObservableCollection<Item>();
-            mediator.Register<string>(Messages.SelectedFolderChanged, SelectedFolderChanged, this);
+            mediator.Register<SelectedFolderChangedMessageParameters>(Messages.SelectedFolderChanged, SelectedFolderChanged, this);
         }
 
-        public void SelectedFolderChanged(string path)
+        public void SelectedFolderChanged(SelectedFolderChangedMessageParameters parameters)
         {
             Items.Clear();
+            SelectedItem = null;
+            OnPropertyChanged("SelectedItem");
 
-            if (IsDirty())
-            {
-                SelectedItem = null;
-                OnPropertyChanged("SelectedItem");
-            }
-
-            if (!Directory.Exists(path))
+            if (!Directory.Exists(parameters.Path))
             {
                 return;
             }
 
+            fileNameToSelect = parameters.FileNameToSelect;
             string[] validExtensions = demoManager.ValidDemoExtensions();
 
-            foreach (string fileName in Directory.GetFiles(path).Where(f => validExtensions.Contains(fileSystem.GetExtension(f))))
+            foreach (string fileName in Directory.GetFiles(parameters.Path).Where(f => validExtensions.Contains(fileSystem.GetExtension(f))))
             {
                 Core.Demo demo = demoManager.CreateDemo(fileName);
 
@@ -135,30 +130,15 @@ namespace CDP.Gui.ViewModel
                 demo.OperationCompleteEvent -= demo_OperationCompleteEvent;
                 Item item = new Item(demo, iconCache.FindIcon(demo.IconFileNames));
                 Items.Add(item);
+                IFileSystem fileSystem = ObjectCreator.Get<IFileSystem>();
 
-                if (!IsDirty() && demo.FileName == (string)settings["LastFileName"])
+                if (fileSystem.GetFileName(demo.FileName) == fileSystem.GetFileName(fileNameToSelect))
                 {
                     SelectedItem = item;
                     OnPropertyChanged("SelectedItem");
                 }
             },
             (Core.Demo)sender);
-        }
-
-        private bool IsDirty()
-        {
-            lock (dirtyLock)
-            {
-                return isDirty;
-            }
-        }
-
-        private void SetDirty()
-        {
-            lock (dirtyLock)
-            {
-                isDirty = true;
-            }
         }
     }
 }
