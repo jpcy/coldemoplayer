@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Reflection;
+using System.Globalization;
 
 namespace CDP.Core
 {
@@ -124,9 +126,15 @@ namespace CDP.Core
 
         private void LogEnvironmentInformation(TextWriter writer, bool includeStackTrace)
         {
+            writer.WriteLine("Entry Assembly: \'{0}\'", Assembly.GetEntryAssembly().FullName);
+            writer.WriteLine("Executing Assembly: \'{0}\'", Assembly.GetExecutingAssembly().FullName);
+            writer.WriteLine("Timestamp: \'{0}\'.", DateTime.Now);
             writer.WriteLine("Environment.OSVersion: \'{0}\'", Environment.OSVersion);
             writer.WriteLine("Environment.Is64BitOperatingSystem: \'{0}\'", Environment.Is64BitOperatingSystem);
             writer.WriteLine("Environment.Version: \'{0}\'", Environment.Version);
+            LogCultureInfo(writer, "Current Culture", CultureInfo.CurrentCulture);
+            LogCultureInfo(writer, "Current UI Culture", CultureInfo.CurrentUICulture);
+            LogCultureInfo(writer, "Installed UI Culture", CultureInfo.InstalledUICulture);
 
             if (includeStackTrace)
             {
@@ -134,6 +142,11 @@ namespace CDP.Core
             }
 
             writer.WriteLine();
+        }
+
+        private void LogCultureInfo(TextWriter writer, string description, CultureInfo cultureInfo)
+        {
+            writer.WriteLine("{0}: \'{1}\', \'{2}\', \'{3}\'", description, cultureInfo.Name, cultureInfo.DisplayName, cultureInfo.EnglishName);
         }
     }
 }
