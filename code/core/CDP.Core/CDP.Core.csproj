@@ -97,7 +97,8 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)..\..\bin\$(TargetFileName)"
-copy "$(TargetDir)\de-DE\CDP.Core.resources.dll" "$(SolutionDir)..\..\bin\de-DE\CDP.Core.resources.dll"</PostBuildEvent>
+copy "$(TargetDir)\de-DE\CDP.Core.resources.dll" "$(SolutionDir)..\..\bin\de-DE\CDP.Core.resources.dll"
+“$(FrameworkSDKDir)bin\NETFX 4.0 Tools\sgen.exe” /a:"$(SolutionDir)..\..\bin\$(TargetFileName)" /t:CDP.Core.SteamGame /force</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
