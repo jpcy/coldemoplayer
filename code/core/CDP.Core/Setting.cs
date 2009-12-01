@@ -24,12 +24,24 @@ namespace CDP.Core
         public string Key { get; private set; }
         public Type Type { get; private set; }
         public object DefaultValue { get; private set; }
+        public bool IsUrl { get; private set; }
 
-        public Setting(string key, Type type, object defaultValue)
+        public Setting(string key, Type type, object defaultValue, bool isUrl)
         {
             Key = key;
             Type = type;
             DefaultValue = defaultValue;
+            IsUrl = isUrl;
+
+            if (IsUrl && Type != typeof(string))
+            {
+                throw new ArgumentException("IsUrl is true, the setting must be of type string.", "type");
+            }
+        }
+
+        public Setting(string key, Type type, object defaultValue)
+            : this(key, type, defaultValue, false)
+        {
         }
     }
 }

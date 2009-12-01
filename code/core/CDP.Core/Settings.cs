@@ -25,11 +25,19 @@ namespace CDP.Core
         string FileAssociationSettingPrefix { get; }
 
         void Add<T>(string key, T defaultValue);
+        void Add<T>(string key, T defaultValue, bool isUrl);
         void Add(Setting setting);
         void Load(IDemoManager demoManager);
         void Save();
     }
 
+    /// <remarks>
+    /// A Setting with IsUrl set to true receives special treatment. 
+    /// 
+    /// This is so updates can make changes to the default URL value without having to either hard-code the URL, or clear the settings file when an update is installed. 
+    /// 
+    /// When writing the setting, if the value is unchanged from the default value a marker value "default" is written instead. When reading the setting, if the value is set to the marker value "default", the default value for the setting is used, otherwise the value of the setting is used.
+    /// </remarks>
     [Singleton]
     public class Settings : ISettings
     {
@@ -105,6 +113,7 @@ namespace CDP.Core
         private readonly string fileName = "settings.xml";
         private readonly string rootElement = "Settings";
         private readonly string fileAssociationSettingPrefix = "FileAssociation_";
+        private readonly string useDefaultUrlMarker = "default";
         private bool IsLoaded = false;
 
         public Settings()
@@ -126,8 +135,8 @@ namespace CDP.Core
                 programPath = Path.GetFullPath("../../../../../bin");
             }
 
-            Add("UpdateUrl", "http://coldemoplayer.gittodachoppa.com/update115/");
-            Add("MapsUrl", "http://coldemoplayer.gittodachoppa.com/maps/");
+            Add("UpdateUrl", "http://coldemoplayer.gittodachoppa.com/update115/", true);
+            Add("MapsUrl", "http://coldemoplayer.gittodachoppa.com/maps/", true);
             Add("AutoUpdate", true);
             Add("LastPath", string.Empty);
             Add("LastFileName", string.Empty);
@@ -138,6 +147,11 @@ namespace CDP.Core
         public void Add<T>(string key, T defaultValue)
         {
             Add(new Setting(key, typeof(T), defaultValue));
+        }
+
+        public void Add<T>(string key, T defaultValue, bool isUrl)
+        {
+            Add(new Setting(key, typeof(T), defaultValue, isUrl));
         }
 
         public void Add(Setting setting)
@@ -191,7 +205,11 @@ namespace CDP.Core
 
                     if (element != null)
                     {
-                        if (setting.Type == typeof(bool))
+                        if (setting.IsUrl && element.Value == useDefaultUrlMarker)
+                        {
+                            value = setting.DefaultValue;
+                        }
+                        else if (setting.Type == typeof(bool))
                         {
                             value = bool.Parse(element.Value);
                         }
@@ -234,7 +252,16 @@ namespace CDP.Core
                     if (value != null)
                     {
                         xml.WriteStartElement(setting.Key);
-                        xml.WriteValue(value.ToString());
+
+                        if (setting.IsUrl && value == setting.DefaultValue)
+                        {
+                            xml.WriteValue(useDefaultUrlMarker);
+                        }
+                        else
+                        {
+                            xml.WriteValue(value.ToString());
+                        }
+
                         xml.WriteEndElement();
                     }
                 }
