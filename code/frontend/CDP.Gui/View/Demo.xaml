@@ -12,7 +12,7 @@
         <TabControl Grid.Row="0">
             <TabItem>
                 <TabItem.Header>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
                         <Image Source="/CDP.Gui;component/Images/details.png" Margin="0,0,4,0" />
                         <TextBlock Text="{x:Static local:Strings.Demo_DetailsTabItemText}" />
                     </StackPanel>
@@ -48,7 +48,7 @@
             </TabItem>
             <TabItem>
                 <TabItem.Header>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
                         <Image Source="/CDP.Gui;component/Images/players.png" Margin="0,0,4,0" />
                         <TextBlock Text="{x:Static local:Strings.Demo_PlayersTabItemText}" />
                     </StackPanel>
@@ -61,7 +61,7 @@
             </TabItem>
             <TabItem>
                 <TabItem.Header>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
                         <Image Source="/CDP.Gui;component/Images/settings.png" Margin="0,0,4,0" />
                         <TextBlock Text="{x:Static local:Strings.Demo_SettingsTabItemText}" />
                     </StackPanel>

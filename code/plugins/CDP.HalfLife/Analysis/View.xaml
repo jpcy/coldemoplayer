@@ -10,7 +10,7 @@
     <TabControl>
         <TabItem>
             <TabItem.Header>
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
                     <Image Source="/CDP.Gui;component/Images/gamelog.png" Margin="0,0,4,0" />
                     <TextBlock Text="{x:Static local:Strings.AnalysisGameLogTabItemText}" />
                 </StackPanel>                
@@ -19,7 +19,7 @@
         </TabItem>
         <TabItem>
             <TabItem.Header>
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
                     <Image Source="/CDP.Gui;component/Images/scoreboard.png" Margin="0,0,4,0" />
                     <TextBlock Text="{x:Static local:Strings.AnalysisScoreboardTabItemText}" />
                 </StackPanel>
@@ -69,7 +69,7 @@
         </TabItem>
         <TabItem>
             <TabItem.Header>
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
                     <Image Source="/CDP.Gui;component/Images/players.png" Margin="0,0,4,0" />
                     <TextBlock Text="{x:Static local:Strings.AnalysisPlayersTabItemText}" />
                 </StackPanel>
