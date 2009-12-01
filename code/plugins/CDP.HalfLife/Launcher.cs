@@ -113,11 +113,6 @@ namespace CDP.HalfLife
 
             launchParameters += " +exec " + configFileName;
 
-            if (!string.IsNullOrEmpty((string)settings["SteamAdditionalLaunchParameters"]))
-            {
-                launchParameters += " " + settings["SteamAdditionalLaunchParameters"];
-            }
-
             Process.Start((string)settings["SteamExeFullPath"], launchParameters);
         }
     }
