@@ -16,7 +16,7 @@ namespace CDP.Gui
         {
             CDP.Gui.INavigationService service = Core.ObjectCreator.Get<CDP.Gui.INavigationService>();
             service.Window = this;
-            service.Navigate(new View.Main(), new ViewModel.Main());
+            service.Navigate(new Views.Main(), new ViewModels.Main());
         }
     }
 }

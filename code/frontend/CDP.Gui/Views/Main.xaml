@@ -1,0 +1,28 @@
+﻿<Page x:Class="CDP.Gui.Views.Main"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:v="clr-namespace:CDP.Gui.Views"
+    xmlns:pv="clr-namespace:CDP.Gui.PartialViews"
+    Title="Main">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="0.5*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <pv:Header Grid.Row="0" DataContext="{Binding Header}" />
+        <pv:Address Grid.Row="1" DataContext="{Binding Address}" />
+        <pv:Demos Grid.Row="2" DataContext="{Binding Demos}" />
+        <GridSplitter Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Stretch" Height="4">
+            <GridSplitter.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Offset="0" Color="#ccd9ea" />
+                    <GradientStop Offset="1" Color="#edf2f9" />
+                </LinearGradientBrush>
+            </GridSplitter.Background>
+        </GridSplitter>
+        <pv:Demo Grid.Row="4" DataContext="{Binding Demo}" Background="#edf2f9" />
+    </Grid>
+</Page>
