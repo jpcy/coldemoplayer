@@ -82,10 +82,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CustomControls\ApplyButton.cs" />
+    <Compile Include="CustomControls\BackButton.cs" />
+    <Compile Include="CustomControls\CancelButton.cs" />
     <Compile Include="CustomControls\Footer.xaml.cs">
       <DependentUpon>Footer.xaml</DependentUpon>
     </Compile>
     <Compile Include="CustomControls\IconButton.cs" />
+    <Compile Include="CustomControls\OkButton.cs" />
     <Compile Include="FileAssociation.cs" />
     <Compile Include="IpcChannel.cs" />
     <Compile Include="PartialViews\Address.xaml.cs">

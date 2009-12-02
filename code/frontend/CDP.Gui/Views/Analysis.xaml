@@ -16,7 +16,7 @@
         </StackPanel>
         <ContentControl Grid.Row="1" Margin="8" Content="{Binding View}" />
         <cc:Footer Grid.Row="2">
-            <cc:IconButton HorizontalAlignment="Center" Margin="0,8,0,8" Command="{Binding BackCommand}" IconSource="/Images/back.png" Text="{x:Static l:Strings.BackButtonText}" />
+            <cc:BackButton HorizontalAlignment="Center" Margin="0,8,0,8" Command="{Binding BackCommand}" />
         </cc:Footer>
     </Grid>
 </Page>

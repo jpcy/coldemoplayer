@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:cc="clr-namespace:CDP.Gui.CustomControls"
-    xmlns:ll="clr-namespace:CDP.Gui">
+    xmlns:l="clr-namespace:CDP.Gui">
     <Style x:Key="ReadOnlyNoStyleTextBox" TargetType="{x:Type TextBox}">
         <Setter Property="IsReadOnly" Value="True" />
         <Setter Property="Background" Value="Transparent" />
@@ -87,5 +87,23 @@
                 </DataTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+    
+    <!-- Generic Icon Buttons -->
+    <Style BasedOn="{StaticResource {x:Type cc:IconButton}}" TargetType="{x:Type cc:ApplyButton}">
+        <Setter Property="Text" Value="{x:Static l:Strings.ApplyButtonText}" />
+        <Setter Property="IconSource" Value="/Images/save.png" />
+    </Style>
+    <Style BasedOn="{StaticResource {x:Type cc:IconButton}}" TargetType="{x:Type cc:BackButton}">
+        <Setter Property="Text" Value="{x:Static l:Strings.BackButtonText}" />
+        <Setter Property="IconSource" Value="/Images/back.png" />
+    </Style>
+    <Style BasedOn="{StaticResource {x:Type cc:IconButton}}" TargetType="{x:Type cc:CancelButton}">
+        <Setter Property="Text" Value="{x:Static l:Strings.CancelButtonText}" />
+        <Setter Property="IconSource" Value="/Images/cancel.png" />
+    </Style>
+    <Style BasedOn="{StaticResource {x:Type cc:IconButton}}" TargetType="{x:Type cc:OkButton}">
+        <Setter Property="Text" Value="{x:Static l:Strings.OkButtonText}" />
+        <Setter Property="IconSource" Value="/Images/ok.png" />
     </Style>
 </ResourceDictionary>

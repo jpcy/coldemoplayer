@@ -41,8 +41,8 @@
         </Grid>
         <cc:Footer Grid.Row="2">
             <DockPanel LastChildFill="False" Margin="20,8,20,8">
-                <cc:IconButton DockPanel.Dock="Left" IconSource="/Images/cancel.png" Command="{Binding CancelCommand}" Text="{x:Static l:Strings.CancelButtonText}" />
-                <cc:IconButton DockPanel.Dock="Right" IconSource="/Images/save.png" Command="{Binding ApplyCommand}" Text="{x:Static l:Strings.ApplyButtonText}" />
+                <cc:CancelButton DockPanel.Dock="Left" Command="{Binding CancelCommand}" />
+                <cc:ApplyButton DockPanel.Dock="Right" Command="{Binding ApplyCommand}" />
             </DockPanel>
         </cc:Footer>
     </Grid>
