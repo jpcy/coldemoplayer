@@ -1,7 +1,7 @@
 ﻿<Page x:Class="CDP.Gui.Views.Play"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:uc="clr-namespace:CDP.Gui.UserControls"
+    xmlns:cc="clr-namespace:CDP.Gui.CustomControls"
     xmlns:l="clr-namespace:CDP.Gui"
     Title="Play">
     <Grid>
@@ -20,8 +20,8 @@
             </StackPanel>
             <ProgressBar Grid.Row="1" Height="24" MinWidth="300" Minimum="0" Maximum="100" Value="{Binding Progress}" />
         </Grid>
-        <uc:Footer Grid.Row="1">
-            <l:IconButton HorizontalAlignment="Center" Margin="0,8,0,8" Command="{Binding CancelCommand}" IconSource="/Images/cancel.png" Text="{x:Static l:Strings.CancelButtonText}" />
-        </uc:Footer>
+        <cc:Footer Grid.Row="1">
+            <cc:IconButton HorizontalAlignment="Center" Margin="0,8,0,8" Command="{Binding CancelCommand}" IconSource="/Images/cancel.png" Text="{x:Static l:Strings.CancelButtonText}" />
+        </cc:Footer>
     </Grid>
 </Page>

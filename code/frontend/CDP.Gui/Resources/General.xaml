@@ -2,7 +2,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
-    xmlns:local="clr-namespace:CDP.Gui">
+    xmlns:cc="clr-namespace:CDP.Gui.CustomControls"
+    xmlns:ll="clr-namespace:CDP.Gui">
     <Style x:Key="ReadOnlyNoStyleTextBox" TargetType="{x:Type TextBox}">
         <Setter Property="IsReadOnly" Value="True" />
         <Setter Property="Background" Value="Transparent" />
@@ -16,7 +17,7 @@
     </Style>
     
     <!-- Default Icon Button -->
-    <Style TargetType="{x:Type local:IconButton}">
+    <Style TargetType="{x:Type cc:IconButton}">
         <Setter Property="ContentTemplate">
             <Setter.Value>
                 <DataTemplate>
@@ -30,7 +31,7 @@
     </Style>
     
     <!-- Header Icon Button -->
-    <Style x:Key="HeaderIconButton" TargetType="{x:Type local:IconButton}">
+    <Style x:Key="HeaderIconButton" TargetType="{x:Type cc:IconButton}">
         <Setter Property="OverridesDefaultStyle" Value="True"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -47,8 +48,8 @@
                             </RadialGradientBrush>
                         </Border.Background>
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,4,10,4" Orientation="Horizontal">
-                            <Image Source="{TemplateBinding local:IconButton.IconSource}" Margin="0,0,8,0" Width="16" Height="16" />
-                            <TextBlock Text="{TemplateBinding local:IconButton.Text}" Foreground="White" />
+                            <Image Source="{TemplateBinding cc:IconButton.IconSource}" Margin="0,0,8,0" Width="16" Height="16" />
+                            <TextBlock Text="{TemplateBinding cc:IconButton.Text}" Foreground="White" />
                         </StackPanel>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -75,7 +76,7 @@
     </Style>
     
     <!-- Demo Action Icon Button -->
-    <Style x:Key="ActionIconButton" TargetType="{x:Type local:IconButton}">
+    <Style x:Key="ActionIconButton" TargetType="{x:Type cc:IconButton}">
         <Setter Property="ContentTemplate">
             <Setter.Value>
                 <DataTemplate>

@@ -7,7 +7,7 @@ using System.Windows.Markup;
 using System.Windows;
 using System.Windows.Media;
 
-namespace CDP.Gui
+namespace CDP.Gui.CustomControls
 {
     [ContentProperty("Text")]
     internal class IconButton : Button
