@@ -85,10 +85,14 @@
     <Compile Include="CustomControls\ApplyButton.cs" />
     <Compile Include="CustomControls\BackButton.cs" />
     <Compile Include="CustomControls\CancelButton.cs" />
+    <Compile Include="CustomControls\DemoHeader.xaml.cs">
+      <DependentUpon>DemoHeader.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CustomControls\Footer.xaml.cs">
       <DependentUpon>Footer.xaml</DependentUpon>
     </Compile>
     <Compile Include="CustomControls\IconButton.cs" />
+    <Compile Include="CustomControls\MessageTextBox.cs" />
     <Compile Include="CustomControls\OkButton.cs" />
     <Compile Include="FileAssociation.cs" />
     <Compile Include="IpcChannel.cs" />
@@ -113,11 +117,12 @@
     <Compile Include="ViewModels\Analysis.cs" />
     <Compile Include="ViewModels\AnalysisProgress.cs" />
     <Compile Include="ViewModels\Demo.cs" />
+    <Compile Include="ViewModels\DemoError.cs" />
+    <Compile Include="ViewModels\DemoInformation.cs" />
     <Compile Include="ViewModels\Demos.cs" />
-    <Compile Include="ViewModels\Error.cs" />
+    <Compile Include="ViewModels\DemoWarning.cs" />
     <Compile Include="ViewModels\Header.cs" />
     <Compile Include="ViewModels\Main.cs" />
-    <Compile Include="ViewModels\Message.cs" />
     <Compile Include="ViewModels\Play.cs" />
     <Compile Include="ViewModels\Preferences.cs" />
     <Compile Include="Views\Analysis.xaml.cs">
@@ -126,14 +131,17 @@
     <Compile Include="Views\AnalysisProgress.xaml.cs">
       <DependentUpon>AnalysisProgress.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Error.xaml.cs">
-      <DependentUpon>Error.xaml</DependentUpon>
+    <Compile Include="Views\DemoError.xaml.cs">
+      <DependentUpon>DemoError.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DemoInformation.xaml.cs">
+      <DependentUpon>DemoInformation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DemoWarning.xaml.cs">
+      <DependentUpon>DemoWarning.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Main.xaml.cs">
       <DependentUpon>Main.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Message.xaml.cs">
-      <DependentUpon>Message.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Play.xaml.cs">
       <DependentUpon>Play.xaml</DependentUpon>
@@ -141,6 +149,10 @@
     <Compile Include="Views\Preferences.xaml.cs">
       <DependentUpon>Preferences.xaml</DependentUpon>
     </Compile>
+    <Page Include="CustomControls\DemoHeader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="CustomControls\Footer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -190,15 +202,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Error.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="Views\DemoError.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DemoInformation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DemoWarning.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Main.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Message.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -254,7 +270,6 @@
     <Resource Include="Images\banner.jpg" />
     <Resource Include="Images\cancel.png" />
     <Resource Include="Images\details.png" />
-    <Resource Include="Images\error.png" />
     <Resource Include="Images\gamelog.png" />
     <Resource Include="Images\ok.png" />
     <Resource Include="Images\play.png" />
@@ -274,6 +289,16 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="cdp.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\error_large.png" />
+    <Resource Include="Images\error_small.png" />
+    <Resource Include="Images\information_large.png" />
+    <Resource Include="Images\information_small.png" />
+    <Resource Include="Images\question_large.png" />
+    <Resource Include="Images\question_small.png" />
+    <Resource Include="Images\warning_large.png" />
+    <Resource Include="Images\warning_small.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -13,6 +13,7 @@ namespace CDP.Gui
     {
         Window Window { get; set; }
         string CurrentPageTitle { get; }
+        bool IsModalWindowActive { get; }
 
         void Navigate(Page view, Core.ViewModelBase viewModel);
         void Home();
@@ -40,12 +41,17 @@ namespace CDP.Gui
             get { return ((Page)Window.Content).Title; }
         }
 
+        public bool IsModalWindowActive
+        {
+            get { return modalWindows.Count > 0; }
+        }
+
         private readonly Stack<Page> pages = new Stack<Page>();
         private readonly List<Window> modalWindows = new List<Window>();
 
         public void Navigate(Page view, Core.ViewModelBase viewModel)
         {
-            if (modalWindows.Count > 0)
+            if (IsModalWindowActive)
             {
                 throw new InvalidOperationException("Cannot navigate within a modal window.");
             }
@@ -68,7 +74,7 @@ namespace CDP.Gui
 
         public void Home()
         {
-            if (modalWindows.Count > 0)
+            if (IsModalWindowActive)
             {
                 throw new InvalidOperationException("Cannot navigate within a modal window.");
             }
@@ -88,7 +94,7 @@ namespace CDP.Gui
 
         public void Back()
         {
-            if (modalWindows.Count > 0)
+            if (IsModalWindowActive)
             {
                 throw new InvalidOperationException("Cannot navigate within a modal window.");
             }
@@ -102,7 +108,7 @@ namespace CDP.Gui
 
         public void ShowWindow()
         {
-            if (modalWindows.Count > 0)
+            if (IsModalWindowActive)
             {
                 throw new InvalidOperationException("Cannot show the main window when a modal window is active.");
             }
@@ -112,7 +118,7 @@ namespace CDP.Gui
 
         public void HideWindow()
         {
-            if (modalWindows.Count > 0)
+            if (IsModalWindowActive)
             {
                 throw new InvalidOperationException("Cannot hide the main window when a modal window is active.");
             }

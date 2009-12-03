@@ -4,16 +4,13 @@
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:cc="clr-namespace:CDP.Gui.CustomControls"
     xmlns:l="clr-namespace:CDP.Gui">
+    
+    <!-- Read-only TextBox with no styling (basically just a TextBlock that can be copied to the clipboard). -->
     <Style x:Key="ReadOnlyNoStyleTextBox" TargetType="{x:Type TextBox}">
         <Setter Property="IsReadOnly" Value="True" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Padding" Value="0" />
-    </Style>
-    <Style x:Key="MessageTextBox" TargetType="{x:Type TextBox}">
-        <Setter Property="IsReadOnly" Value="True" />
-        <Setter Property="TextWrapping" Value="Wrap" />
-        <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
     </Style>
     
     <!-- Default Icon Button -->
@@ -105,5 +102,21 @@
     <Style BasedOn="{StaticResource {x:Type cc:IconButton}}" TargetType="{x:Type cc:OkButton}">
         <Setter Property="Text" Value="{x:Static l:Strings.OkButtonText}" />
         <Setter Property="IconSource" Value="/Images/ok.png" />
+    </Style>
+    
+    <!-- Message TextBox -->
+    <Style TargetType="{x:Type cc:MessageTextBox}">
+        <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="Background">
+            <Setter.Value>
+                <ImageBrush ImageSource="{Binding Path=BackgroundImageSource, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type cc:MessageTextBox}}}" Opacity="0.25" Stretch="None"  AlignmentX="Right" AlignmentY="Bottom">
+                    <ImageBrush.Transform>
+                        <TranslateTransform X="-25" Y="-15" />
+                    </ImageBrush.Transform>
+                </ImageBrush>
+            </Setter.Value>
+        </Setter>
     </Style>
 </ResourceDictionary>

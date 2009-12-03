@@ -1,0 +1,23 @@
+﻿<Page x:Class="CDP.Gui.Views.DemoWarning" x:ClassModifier="internal"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:cc="clr-namespace:CDP.Gui.CustomControls"
+      Title="Demo Warning">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <cc:DemoHeader Grid.Row="0">
+            <StackPanel Orientation="Horizontal" Margin="0,8,0,8">
+                <Image Margin="0,0,8,0" Source="/Images/warning_small.png" Width="32" Height="28" />
+                <TextBlock VerticalAlignment="Center" Text="{Binding DemoFileName, Mode=OneWay}" FontSize="18" />
+            </StackPanel>
+        </cc:DemoHeader>
+        <cc:MessageTextBox Grid.Row="1" Margin="8" BackgroundImageSource="/Images/warning_large.png" Text="{Binding Message, Mode=OneWay}" />
+        <cc:Footer Grid.Row="2">
+            <cc:OkButton HorizontalAlignment="Center" Margin="0,8,0,8" Command="{Binding OkCommand}" />
+        </cc:Footer>
+    </Grid>
+</Page>

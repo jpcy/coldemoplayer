@@ -71,10 +71,11 @@ namespace CDP.Gui.ViewModels
         void demo_OperationErrorEvent(object sender, Core.Demo.OperationErrorEventArgs e)
         {
             RemoveEventHandlers();
-            navigationService.Invoke(new Action<string, Exception>((msg, ex) =>
+            navigationService.Invoke(new Action<Core.Demo, string, Exception>((demo, msg, ex) =>
             {
-                navigationService.Navigate(new Views.Error(), new Error(msg, ex));
-            }), e.ErrorMessage, e.Exception);
+                // TODO: should be a warning, then show incomplete analysis.
+                navigationService.Navigate(new Views.DemoError(), new DemoError(demo.FileName, msg, ex));
+            }), (Core.Demo)sender, e.ErrorMessage, e.Exception);
         }
 
         private void RemoveEventHandlers()

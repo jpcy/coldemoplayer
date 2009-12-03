@@ -118,7 +118,7 @@ namespace CDP.Gui.ViewModels
                 Core.Demo demo = (Core.Demo)sender;
                 demo.OperationErrorEvent -= demo_OperationErrorEvent;
                 demo.OperationCompleteEvent -= demo_OperationCompleteEvent;
-                navigationService.OpenModalWindow(new Views.Message(), new Message(e.ErrorMessage, e.Exception));
+                navigationService.OpenModalWindow(new Views.DemoError(), new DemoError(demo.FileName, e.ErrorMessage, e.Exception));
             });
         }
 

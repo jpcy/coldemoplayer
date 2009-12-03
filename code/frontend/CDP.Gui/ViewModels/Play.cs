@@ -44,9 +44,7 @@ namespace CDP.Gui.ViewModels
 
             if (!launcher.Verify())
             {
-                // TODO: proper message page
-                System.Windows.MessageBox.Show(launcher.Message);
-                navigationService.Home();
+                navigationService.Navigate(new Views.DemoInformation(), new DemoInformation(demo.FileName, launcher.Message));
                 return;
             }
 
@@ -116,10 +114,10 @@ namespace CDP.Gui.ViewModels
         void demo_OperationErrorEvent(object sender, Core.Demo.OperationErrorEventArgs e)
         {
             RemoveDemoWriteEventHandlers();
-            navigationService.Invoke(new Action<string, Exception>((msg, ex) =>
+            navigationService.Invoke(new Action<Core.Demo, string, Exception>((demo, msg, ex) =>
             {
-                navigationService.Navigate(new Views.Error(), new Error(msg, ex));
-            }), e.ErrorMessage, e.Exception);
+                navigationService.Navigate(new Views.DemoError(), new DemoError(demo.FileName, msg, ex));
+            }), (Core.Demo)sender, e.ErrorMessage, e.Exception);
         }
 
         private void RemoveDemoWriteEventHandlers()
