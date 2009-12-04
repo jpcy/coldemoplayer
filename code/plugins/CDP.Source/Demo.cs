@@ -191,7 +191,7 @@ namespace CDP.Source
             }
             catch (Exception ex)
             {
-                OnOperationError(FileName, ex);
+                OnOperationError(null, ex);
                 return;
             }
             finally

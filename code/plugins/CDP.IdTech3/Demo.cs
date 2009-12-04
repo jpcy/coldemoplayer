@@ -137,7 +137,7 @@ namespace CDP.IdTech3
             }
             catch (Exception ex)
             {
-                OnOperationError(FileName, ex);
+                OnOperationError(null, ex);
                 return;
             }
             finally
@@ -180,7 +180,7 @@ namespace CDP.IdTech3
             }
             catch (Exception ex)
             {
-                OnOperationError(FileName, ex);
+                OnOperationError(null, ex);
                 return;
             }
             finally
@@ -254,7 +254,7 @@ namespace CDP.IdTech3
             }
             catch (Exception ex)
             {
-                OnOperationError(FileName, ex);
+                OnOperationError(null, ex);
                 return;
             }
             finally
@@ -302,7 +302,7 @@ namespace CDP.IdTech3
             }
             catch (Exception ex)
             {
-                OnOperationError(FileName, ex);
+                OnOperationError(null, ex);
                 return;
             }
             finally

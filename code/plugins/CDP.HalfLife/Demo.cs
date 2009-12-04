@@ -287,7 +287,7 @@ namespace CDP.HalfLife
             }
             catch (Exception ex)
             {
-                OnOperationError(FileName, ex);
+                OnOperationError(null, ex);
                 return;
             }
             finally
@@ -345,7 +345,7 @@ namespace CDP.HalfLife
             {
                 if (!IsOperationCancelled())
                 {
-                    OnOperationError(FileName, ex);
+                    OnOperationError(null, ex);
                     return;
                 }
             }
@@ -536,7 +536,7 @@ namespace CDP.HalfLife
             {
                 if (!IsOperationCancelled())
                 {
-                    OnOperationError(FileName, ex);
+                    OnOperationError(null, ex);
                     return;
                 }
             }
@@ -683,7 +683,7 @@ namespace CDP.HalfLife
             }
             catch (Exception ex)
             {
-                OnOperationError(FileName, ex);
+                OnOperationError(null, ex);
                 return;
             }
             finally

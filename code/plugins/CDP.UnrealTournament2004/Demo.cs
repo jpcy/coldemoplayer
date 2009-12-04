@@ -88,7 +88,7 @@ namespace CDP.UnrealTournament2004
             }
             catch (Exception ex)
             {
-                OnOperationError(FileName, ex);
+                OnOperationError(null, ex);
                 return;
             }
 
@@ -144,7 +144,7 @@ namespace CDP.UnrealTournament2004
             }
             catch (Exception ex)
             {
-                OnOperationError(FileName, ex);
+                OnOperationError(null, ex);
                 return;
             }
 
