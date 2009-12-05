@@ -8,19 +8,43 @@ namespace CDP.Cli
 {
     internal class Program
     {
+        /// <summary>
+        /// Determines whether the program execution is paused when information is presented to the user - i.e. the command window stays open and the user is prompted with "Press any key to continue...".
+        /// </summary>
+        private static bool canPause = false;
+
         static void Main(string[] args)
         {
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-            if (args.Length < 1)
+            if (args.Length == 0)
             {
                 Console.WriteLine(Strings.Usage);
                 Environment.Exit(1);
             }
 
-            if (!File.Exists(args[0]))
+            // The file name is always the last argument.
+            int fileNameArgIndex = args.Length - 1;
+            string fileName = args[fileNameArgIndex];
+
+            // Parse arguments that aren't the demo filename.
+            for (int i = 0; i < fileNameArgIndex; i++)
             {
-                Console.WriteLine(Strings.DemoFileDoesNotExist, args[0]);
+                if (args[i] == "-pause")
+                {
+                    canPause = true;
+                }
+                else
+                {
+                    Console.WriteLine(Strings.InvalidArgument);
+                    Pause();
+                }
+            }
+
+            if (!File.Exists(fileName))
+            {
+                Console.WriteLine(Strings.DemoFileDoesNotExist, fileName);
+                Pause();
                 Environment.Exit(1);
             }
 
@@ -40,11 +64,12 @@ namespace CDP.Cli
             settings.Load(demoManager);
 
             // Create and load demo.
-            Demo demo = demoManager.CreateDemo(args[0]);
+            Demo demo = demoManager.CreateDemo(fileName);
 
             if (demo == null)
             {
-                Console.WriteLine(Strings.NoMatchingPluginFound, args[0]);
+                Console.WriteLine(Strings.NoMatchingPluginFound, fileName);
+                Pause();
                 Environment.Exit(1);
             }
 
@@ -57,6 +82,7 @@ namespace CDP.Cli
             if (!launcher.Verify())
             {
                 Console.WriteLine(launcher.Message);
+                Pause();
                 Environment.Exit(1);
             }
 
@@ -74,11 +100,22 @@ namespace CDP.Cli
             launcher.Launch();
         }
 
+        static void Pause()
+        {
+            if (canPause)
+            {
+                Console.WriteLine();
+                Console.WriteLine(Strings.PauseMessage);
+                Console.ReadKey();
+            }
+        }
+
         static void demo_OperationErrorEvent(object sender, Demo.OperationErrorEventArgs e)
         {
             Console.WriteLine();
             Console.WriteLine(e.ErrorMessage);
             Console.WriteLine(e.Exception);
+            Pause();
             Environment.Exit(1);
         }
 

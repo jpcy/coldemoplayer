@@ -90,7 +90,7 @@ namespace CDP.Gui
                 CreateShellEntries(key, "open", Strings.ShellCommandOpen, "\"" + settings.ProgramExeFullPath + "\" \"%1\"");
 
                 // Play.
-                CreateShellEntries(key, "play", Strings.ShellCommandPlay, "\"" + fileSystem.PathCombine(fileSystem.GetDirectoryName(settings.ProgramExeFullPath), "CDP.Cli.exe") + "\" \"%1\"");
+                CreateShellEntries(key, "play", Strings.ShellCommandPlay, "\"" + fileSystem.PathCombine(fileSystem.GetDirectoryName(settings.ProgramExeFullPath), "CDP.Cli.exe") + "\" -pause \"%1\"");
             }
 
             return refresh;

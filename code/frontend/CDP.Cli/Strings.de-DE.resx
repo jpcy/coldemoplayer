@@ -124,9 +124,16 @@
   <data name="DemoWarningMessage" xml:space="preserve">
     <value>[GERMAN] Do you want to continue (Y/N)?</value>
   </data>
+  <data name="InvalidArgument" xml:space="preserve">
+    <value>[GERMAN] Invalid argument '{0}'.</value>
+    <comment>{0} = argument</comment>
+  </data>
   <data name="NoMatchingPluginFound" xml:space="preserve">
     <value>[GERMAN] No matching plugin found for '{0}'.</value>
     <comment>{0} = demo file name</comment>
+  </data>
+  <data name="PauseMessage" xml:space="preserve">
+    <value>[GERMAN] Press any key to continue...</value>
   </data>
   <data name="ResumeWritingDemo" xml:space="preserve">
     <value>[GERMAN] Resuming Writing demo</value>
