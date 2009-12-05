@@ -201,4 +201,7 @@
   <data name="ContinueButtonText" xml:space="preserve">
     <value>Continue</value>
   </data>
+  <data name="AnalysisError" xml:space="preserve">
+    <value>Error analysing demo. You can still continue and see the demo analysis, but it may not be complete.</value>
+  </data>
 </root>

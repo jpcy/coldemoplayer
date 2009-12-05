@@ -73,8 +73,17 @@ namespace CDP.Gui.ViewModels
             RemoveEventHandlers();
             navigationService.Invoke(new Action<Core.Demo, string, Exception>((demo, msg, ex) =>
             {
-                // TODO: should be a warning, then show incomplete analysis.
-                navigationService.Navigate(new Views.DemoError(), new DemoError(demo.FileName, msg, ex));
+                Action onContinue = delegate
+                {
+                    navigationService.Navigate(new Views.Analysis(), analysisViewModel);
+                };
+
+                Action onCancel = delegate
+                {
+                    navigationService.Home();
+                };
+
+                navigationService.Navigate(new Views.DemoWarning(), new DemoWarning(demo.FileName, Strings.AnalysisError, ex, onContinue, onCancel));
             }), (Core.Demo)sender, e.ErrorMessage, e.Exception);
         }
 
