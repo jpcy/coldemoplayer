@@ -34,6 +34,14 @@ namespace CDP.HalfLife
             }
         }
 
+        public class ReadFrameException : Exception
+        {
+            public ReadFrameException(Exception innerException)
+                : base(null, innerException)
+            {
+            }
+        }
+
         private class MessageCallback
         {
             public byte EngineMessageId { get; set; }
@@ -463,7 +471,38 @@ namespace CDP.HalfLife
 
                         // Read and write frame.
                         lastFrameOffset = outputStream.Position;
-                        Frame frame = ReadAndWriteFrame(inputStream, outputStream);
+                        Frame frame = null;
+
+                        try
+                        {
+                            frame = ReadAndWriteFrame(inputStream, outputStream);
+                        }
+                        catch (ReadFrameException ex)
+                        {
+                            // Error reading the current frame.
+
+                            if (IsCorrupt)
+                            {
+                                // Don't bother showing the user a warning message. Since the demo has corrupt directory entries assume this is the point at which the corruption beings and finish writing the demo.
+                                goto finishWriting;
+                            }
+
+                            // Give the user the option to continue or cancel writing.
+                            OnOperationWarning(Strings.FrameReadingError, ex);
+                            WaitForOperationWarningResult();
+
+                            if (GetOperationWarningResult() == OperationWarningResults.Cancel)
+                            {
+                                OnOperationCancelled();
+                                return;
+                            }
+                            else
+                            {
+                                // Assume the rest of the demo is unreadable too, so finish writing.
+                                goto finishWriting;
+                            }
+                        }
+
                         CurrentTimestamp = frame.Timestamp;
 
                         // Remember the offset of the start of the playback segment.
@@ -516,6 +555,8 @@ namespace CDP.HalfLife
 
                         UpdateProgress(inputStream.Position, inputStream.Length);
                     }
+
+                finishWriting:
 
                     if (!foundPlaybackSegment)
                     {
@@ -809,13 +850,32 @@ namespace CDP.HalfLife
 
         private Frame ReadAndWriteFrame(Core.FastFileStream inputStream, Core.FastFileStream outputStream)
         {
-            Frame frame = ReadFrameHeader(inputStream);
+            Frame frame = null;
+
+            try
+            {
+                frame = ReadFrameHeader(inputStream);
+            }
+            catch (Exception ex)
+            {
+                throw new ReadFrameException(ex);
+            }
+
             List<FrameCallback> frameCallbacks = FindFrameCallbacks(frame);
 
             if (frameCallbacks.Count == 0 && frame.CanSkip)
             {
                 long frameStartOffset = inputStream.Position;
-                frame.Skip(inputStream);
+
+                try
+                {
+                    frame.Skip(inputStream);
+                }
+                catch (Exception ex)
+                {
+                    throw new ReadFrameException(ex);
+                }
+
                 int frameLength = (int)(inputStream.Position - frameStartOffset);
                 frame.WriteHeader(outputStream);
 
@@ -827,7 +887,14 @@ namespace CDP.HalfLife
             }
             else
             {
-                frame.Read(inputStream);
+                try
+                {
+                    frame.Read(inputStream);
+                }
+                catch (Exception ex)
+                {
+                    throw new ReadFrameException(ex);
+                }
 
                 foreach (FrameCallback frameCallback in frameCallbacks)
                 {

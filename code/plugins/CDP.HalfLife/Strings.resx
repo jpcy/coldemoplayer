@@ -273,4 +273,7 @@
   <data name="MessageParsingError" xml:space="preserve">
     <value>Error parsing demo messages.</value>
   </data>
+  <data name="FrameReadingError" xml:space="preserve">
+    <value>Error reading frame.</value>
+  </data>
 </root>
