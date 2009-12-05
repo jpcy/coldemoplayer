@@ -526,6 +526,12 @@ namespace CDP.HalfLife
                             }
                             catch (MessageException ex)
                             {
+                                if (!foundPlaybackSegment)
+                                {
+                                    // Can't skip corrupt messages in the loading segment - too much vital information.
+                                    throw;
+                                }
+
                                 OnOperationWarning(Strings.MessageParsingError, ex);
                                 WaitForOperationWarningResult();
 
