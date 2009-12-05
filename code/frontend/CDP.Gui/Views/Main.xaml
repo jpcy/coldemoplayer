@@ -1,8 +1,10 @@
-﻿<Page x:Class="CDP.Gui.Views.Main"
+﻿<Page x:Class="CDP.Gui.Views.Main" x:ClassModifier="internal"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:v="clr-namespace:CDP.Gui.Views"
     xmlns:pv="clr-namespace:CDP.Gui.PartialViews"
+    DragEnter="Page_DragEnter"
+    Drop="Page_Drop"
     Title="Main">
     <Grid>
         <Grid.RowDefinitions>

@@ -4,4 +4,4 @@
     xmlns:local="clr-namespace:CDP.Gui"
     Title="{x:Static local:Strings.MainWindowTitle}"
     Icon="cdp.ico"
-    Width="800" Height="600" WindowStartupLocation="CenterScreen" />
+    Width="800" Height="600" WindowStartupLocation="CenterScreen" AllowDrop="True" />
