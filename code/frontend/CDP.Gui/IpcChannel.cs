@@ -49,6 +49,14 @@ namespace CDP.Gui
     {
         public void OpenFile(string fileName)
         {
+            INavigationService navigationService = ObjectCreator.Get<INavigationService>();
+
+            if (navigationService.CurrentPageTitle != "Main")
+            {
+                // Don't open a demo with IPC if not on the main page.
+                return;
+            }
+
             IMediator mediator = ObjectCreator.Get<IMediator>();
             IFileSystem fileSystem = ObjectCreator.Get<IFileSystem>();
             mediator.Notify<SetFolderMessageParameters>(Messages.SetFolder, new SetFolderMessageParameters(fileSystem.GetDirectoryName(fileName), fileSystem.GetFileName(fileName)));
