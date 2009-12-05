@@ -85,6 +85,7 @@
     <Compile Include="CustomControls\ApplyButton.cs" />
     <Compile Include="CustomControls\BackButton.cs" />
     <Compile Include="CustomControls\CancelButton.cs" />
+    <Compile Include="CustomControls\ContinueButton.cs" />
     <Compile Include="CustomControls\DemoHeader.xaml.cs">
       <DependentUpon>DemoHeader.xaml</DependentUpon>
     </Compile>

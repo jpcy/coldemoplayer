@@ -62,6 +62,8 @@ namespace CDP.Cli
 
             // Write demo.
             demo.ProgressChangedEvent += demo_ProgressChangedEvent;
+            demo.OperationWarningEvent += demo_OperationWarningEvent;
+            demo.OperationCancelledEvent += demo_OperationCancelledEvent;
             demo.OperationCompleteEvent += demo_OperationCompleteEvent;
             Console.Write(Strings.WritingDemo);
             Console.Write(" [");
@@ -80,12 +82,43 @@ namespace CDP.Cli
             Environment.Exit(1);
         }
 
+        static void demo_OperationWarningEvent(object sender, Demo.OperationWarningEventArgs e)
+        {
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine(e.Message);
+            Console.WriteLine();
+            Console.WriteLine(e.Exception);
+            Console.WriteLine();
+            Console.Write(Strings.DemoWarningMessage + " ");
+
+            Demo demo = (Demo)sender;
+
+            if (Console.ReadKey().Key == ConsoleKey.Y)
+            {
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.Write(Strings.ResumeWritingDemo);
+                Console.Write(" [");
+                demo.SetOperationWarningResult(Demo.OperationWarningResults.Continue);
+            }
+            else
+            {
+                demo.SetOperationWarningResult(Demo.OperationWarningResults.Cancel);
+            }
+        }
+
         static void demo_ProgressChangedEvent(object sender, Demo.ProgressChangedEventArgs e)
         {
             if (e.Progress % 10 == 0)
             {
                 Console.Write(".");
             }
+        }
+
+        static void demo_OperationCancelledEvent(object sender, EventArgs e)
+        {
+            Environment.Exit(1);
         }
 
         static void demo_OperationCompleteEvent(object sender, EventArgs e)

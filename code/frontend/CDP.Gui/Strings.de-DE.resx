@@ -198,4 +198,7 @@
   <data name="ShellCommandPlayRadioButton" xml:space="preserve">
     <value>[GERMAN] Play</value>
   </data>
+  <data name="ContinueButtonText" xml:space="preserve">
+    <value>[GERMAN] Continue</value>
+  </data>
 </root>

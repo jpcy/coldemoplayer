@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Collections;
+using System.Threading;
 
 namespace CDP.Core
 {
@@ -51,6 +52,23 @@ namespace CDP.Core
             }
         }
 
+        public class OperationWarningEventArgs : EventArgs
+        {
+            public string Message { get; private set; }
+            public Exception Exception { get; private set; }
+
+            public OperationWarningEventArgs(string message, Exception exception = null)
+            {
+                if (message == null)
+                {
+                    throw new ArgumentNullException("message");
+                }
+
+                Message = message;
+                Exception = exception;
+            }
+        }
+
         public class Detail
         {
             public string Name { get; set; }
@@ -59,6 +77,7 @@ namespace CDP.Core
 
         public event EventHandler<ProgressChangedEventArgs> ProgressChangedEvent;
         public event EventHandler<OperationErrorEventArgs> OperationErrorEvent;
+        public event EventHandler<OperationWarningEventArgs> OperationWarningEvent;
         public event EventHandler OperationCompleteEvent;
         public event EventHandler OperationCancelledEvent;
 
@@ -117,8 +136,14 @@ namespace CDP.Core
         public abstract void Read();
         public abstract void Write(string destinationFileName);
 
+        /// <summary>
+        /// The thread that created this demo.
+        /// </summary>
+        private readonly Thread creationThread;
+
         public Demo()
         {
+            creationThread = Thread.CurrentThread;
             Details = new List<Detail>();
         }
 
@@ -127,6 +152,15 @@ namespace CDP.Core
             if (ProgressChangedEvent != null)
             {
                 ProgressChangedEvent(this, new ProgressChangedEventArgs(progress));
+            }
+        }
+
+        protected void OnOperationWarning(string message, Exception exception)
+        {
+            if (OperationWarningEvent != null)
+            {
+                SetOperationWarningResult(OperationWarningResults.None);
+                OperationWarningEvent(this, new OperationWarningEventArgs(message, exception));
             }
         }
 
@@ -151,6 +185,54 @@ namespace CDP.Core
             if (OperationCancelledEvent != null)
             {
                 OperationCancelledEvent(this, EventArgs.Empty);
+            }
+        }
+
+        public enum OperationWarningResults
+        {
+            None, // No result yet.
+            Continue,
+            Cancel
+        }
+
+        private object operationWarningLock = new object();
+        private OperationWarningResults operationWarningResult;
+
+        protected void WaitForOperationWarningResult()
+        {
+            // Don't block the current thread in a single-threaded environment.
+            if (creationThread == Thread.CurrentThread)
+            {
+                return;
+            }
+
+            while (true)
+            {
+                Thread.Sleep(50);
+
+                lock (operationWarningLock)
+                {
+                    if (operationWarningResult != OperationWarningResults.None)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+
+        protected OperationWarningResults GetOperationWarningResult()
+        {
+            lock (operationWarningLock)
+            {
+                return operationWarningResult;
+            }
+        }
+
+        public void SetOperationWarningResult(OperationWarningResults result)
+        {
+            lock (operationWarningLock)
+            {
+                operationWarningResult = result;
             }
         }
 

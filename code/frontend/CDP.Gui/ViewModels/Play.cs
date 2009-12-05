@@ -32,6 +32,7 @@ namespace CDP.Gui.ViewModels
         {
             this.demo = demo;
             demo.ProgressChangedEvent += demo_ProgressChangedEvent;
+            demo.OperationWarningEvent += demo_OperationWarningEvent;
             demo.OperationErrorEvent += demo_OperationErrorEvent;
             demo.OperationCompleteEvent += demo_OperationCompleteEvent;
             demo.OperationCancelledEvent += demo_OperationCancelledEvent;
@@ -111,6 +112,27 @@ namespace CDP.Gui.ViewModels
             navigationService.Invoke(new Action(() => navigationService.Home()));
         }
 
+        void demo_OperationWarningEvent(object sender, Core.Demo.OperationWarningEventArgs e)
+        {
+            navigationService.Invoke(new Action<Core.Demo, string, Exception>((demo, msg, ex) =>
+            {
+                Action onContinue = delegate
+                {
+                    // Go back to Play view.
+                    navigationService.Back();
+                    demo.SetOperationWarningResult(Core.Demo.OperationWarningResults.Continue);
+                };
+
+                Action onCancel = delegate
+                {
+                    // Set result to cancel and wait for the demo to raise OperationCancelledEvent.
+                    demo.SetOperationWarningResult(Core.Demo.OperationWarningResults.Cancel);
+                };
+
+                navigationService.Navigate(new Views.DemoWarning(), new DemoWarning(demo.FileName, msg, ex, onContinue, onCancel));
+            }), (Core.Demo)sender, e.Message, e.Exception);
+        }
+
         void demo_OperationErrorEvent(object sender, Core.Demo.OperationErrorEventArgs e)
         {
             RemoveDemoWriteEventHandlers();
@@ -123,6 +145,7 @@ namespace CDP.Gui.ViewModels
         private void RemoveDemoWriteEventHandlers()
         {
             demo.ProgressChangedEvent -= demo_ProgressChangedEvent;
+            demo.OperationWarningEvent -= demo_OperationWarningEvent;
             demo.OperationErrorEvent -= demo_OperationErrorEvent;
             demo.OperationCompleteEvent -= demo_OperationCompleteEvent;
             demo.OperationCancelledEvent -= demo_OperationCancelledEvent;

@@ -103,6 +103,10 @@
         <Setter Property="Text" Value="{x:Static l:Strings.OkButtonText}" />
         <Setter Property="IconSource" Value="/Images/ok.png" />
     </Style>
+    <Style BasedOn="{StaticResource {x:Type cc:IconButton}}" TargetType="{x:Type cc:ContinueButton}">
+        <Setter Property="Text" Value="{x:Static l:Strings.ContinueButtonText}" />
+        <Setter Property="IconSource" Value="/Images/ok.png" />
+    </Style>
     
     <!-- Message TextBox -->
     <Style TargetType="{x:Type cc:MessageTextBox}">

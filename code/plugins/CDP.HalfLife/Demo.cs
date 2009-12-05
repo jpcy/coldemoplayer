@@ -481,7 +481,26 @@ namespace CDP.HalfLife
                                 nPlaybackFrames++;
                             }
 
-                            ReadAndWriteMessagesInMessageBlock(ReadMessageBlock(inputStream), outputStream, canSkipMessages);
+                            try
+                            {
+                                ReadAndWriteMessagesInMessageBlock(ReadMessageBlock(inputStream), outputStream, canSkipMessages);
+                            }
+                            catch (MessageException ex)
+                            {
+                                OnOperationWarning(Strings.MessageParsingError, ex);
+                                WaitForOperationWarningResult();
+
+                                if (GetOperationWarningResult() == OperationWarningResults.Cancel)
+                                {
+                                    OnOperationCancelled();
+                                    return;
+                                }
+                                else
+                                {
+                                    // Write an empty frame (no messages).
+                                    outputStream.WriteUInt(0);
+                                }
+                            }
                         }
 
                         if ((!IsCorrupt && inputStream.Position >= header.DirectoryEntriesOffset) || inputStream.Position == inputStream.Length)

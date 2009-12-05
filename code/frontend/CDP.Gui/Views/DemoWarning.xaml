@@ -17,7 +17,10 @@
         </cc:DemoHeader>
         <cc:MessageTextBox Grid.Row="1" Margin="8" BackgroundImageSource="/Images/warning_large.png" Text="{Binding Message, Mode=OneWay}" />
         <cc:Footer Grid.Row="2">
-            <cc:OkButton HorizontalAlignment="Center" Margin="0,8,0,8" Command="{Binding OkCommand}" />
+            <DockPanel LastChildFill="False" Margin="20,8,20,8">
+                <cc:CancelButton DockPanel.Dock="Left" Command="{Binding CancelCommand}" />
+                <cc:ContinueButton DockPanel.Dock="Right" Command="{Binding ContinueCommand}" />
+            </DockPanel>
         </cc:Footer>
     </Grid>
 </Page>

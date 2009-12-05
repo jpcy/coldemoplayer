@@ -267,4 +267,7 @@
   <data name="SteamExeTextBlockText" xml:space="preserve">
     <value>[GERMAN] Steam.exe:</value>
   </data>
+  <data name="MessageParsingError" xml:space="preserve">
+    <value>[GERMAN] Error parsing demo messages.</value>
+  </data>
 </root>
