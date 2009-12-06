@@ -71,6 +71,7 @@ namespace CDP.Gui.ViewModels
         private readonly IDemoManager demoManager = ObjectCreator.Get<IDemoManager>();
         private readonly ISettings settings = ObjectCreator.Get<ISettings>();
         private string fileNameToSelect = null;
+        private Queue<Core.Demo> demosToLoad = new Queue<Core.Demo>();
 
         public Demos()
         {
@@ -91,24 +92,40 @@ namespace CDP.Gui.ViewModels
 
             fileNameToSelect = parameters.FileNameToSelect;
             string[] demoFileExtensions = demoManager.GetAllPluginFileExtensions();
+            demosToLoad.Clear();
 
-            foreach (string fileName in Directory.GetFiles(parameters.Path).Where(f => demoFileExtensions.Contains(fileSystem.GetExtension(f))))
+            foreach (string fileName in Directory.GetFiles(parameters.Path).Where(f => demoFileExtensions.Contains(fileSystem.GetExtension(f))).OrderBy(f => f))
             {
                 Core.Demo demo = demoManager.CreateDemo(fileName);
 
-                if (demo == null)
+                if (demo != null)
                 {
-                    continue;
+                    demosToLoad.Enqueue(demo);
                 }
-
-                demo.OperationErrorEvent += demo_OperationErrorEvent;
-                demo.OperationCompleteEvent += demo_OperationCompleteEvent;
-
-                ThreadPool.QueueUserWorkItem(new WaitCallback(o => 
-                {
-                    demo.Load();
-                }));
             }
+
+            // Start loading demos from the queue. The next demo will be loaded when the first demo completes, and so on.
+            LoadNextDemoInQueue();
+        }
+
+        /// <summary>
+        /// Loads the first enqueued demo in the demo queue, or does nothing if the queue is empty.
+        /// </summary>
+        public void LoadNextDemoInQueue()
+        {
+            if (demosToLoad.Count == 0)
+            {
+                return;
+            }
+
+            Core.Demo demo = demosToLoad.Dequeue();
+            demo.OperationErrorEvent += demo_OperationErrorEvent;
+            demo.OperationCompleteEvent += demo_OperationCompleteEvent;
+
+            ThreadPool.QueueUserWorkItem(new WaitCallback(o =>
+            {
+                demo.Load();
+            }));
         }
 
         void demo_OperationErrorEvent(object sender, Core.Demo.OperationErrorEventArgs e)
@@ -119,6 +136,7 @@ namespace CDP.Gui.ViewModels
                 demo.OperationErrorEvent -= demo_OperationErrorEvent;
                 demo.OperationCompleteEvent -= demo_OperationCompleteEvent;
                 navigationService.OpenModalWindow(new Views.DemoError(), new DemoError(demo.FileName, e.ErrorMessage, e.Exception));
+                LoadNextDemoInQueue();
             });
         }
 
@@ -137,6 +155,8 @@ namespace CDP.Gui.ViewModels
                     SelectedItem = item;
                     OnPropertyChanged("SelectedItem");
                 }
+
+                LoadNextDemoInQueue();
             },
             (Core.Demo)sender);
         }
