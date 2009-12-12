@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Threading;
+using CDP.Core;
 
 namespace CDP.Gui.ViewModels
 {
-    internal class Play : Core.ViewModelBase
+    internal class Play : ViewModelBase
     {
         public string Caption
         {
@@ -21,12 +22,13 @@ namespace CDP.Gui.ViewModels
             }
         }
 
-        public Core.DelegateCommand CancelCommand { get; private set; }
+        public DelegateCommand CancelCommand { get; private set; }
 
         private readonly Core.Demo demo;
-        private readonly INavigationService navigationService = Core.ObjectCreator.Get<INavigationService>();
-        private readonly Core.IDemoManager demoManager = Core.ObjectCreator.Get<Core.IDemoManager>();
-        private Core.Launcher launcher;
+        private readonly INavigationService navigationService = ObjectCreator.Get<INavigationService>();
+        private readonly IDemoManager demoManager = ObjectCreator.Get<IDemoManager>();
+        IFileOperations fileOperations = ObjectCreator.Get<IFileOperations>();
+        private Launcher launcher;
 
         public Play(Core.Demo demo)
         {
@@ -36,7 +38,7 @@ namespace CDP.Gui.ViewModels
             demo.OperationErrorEvent += demo_OperationErrorEvent;
             demo.OperationCompleteEvent += demo_OperationCompleteEvent;
             demo.OperationCancelledEvent += demo_OperationCancelledEvent;
-            CancelCommand = new Core.DelegateCommand(CancelCommandExecute);
+            CancelCommand = new DelegateCommand(CancelCommandExecute);
         }
 
         public override void OnNavigateComplete()
@@ -51,6 +53,7 @@ namespace CDP.Gui.ViewModels
 
             ThreadPool.QueueUserWorkItem(new WaitCallback(o =>
             {
+                fileOperations.Add(new FileDeleteOperation(launcher.CalculateDestinationFileName()));
                 demo.Write(launcher.CalculateDestinationFileName());
             }));
         }
@@ -97,12 +100,13 @@ namespace CDP.Gui.ViewModels
 
             navigationService.Invoke(new Action(() =>
             {
+                fileOperations.Execute();
                 navigationService.ShowWindow();
                 navigationService.Home();
             }));
         }
 
-        void launcher_ProcessFound(object sender, CDP.Core.Launcher.ProcessFoundEventArgs e)
+        void launcher_ProcessFound(object sender, Launcher.ProcessFoundEventArgs e)
         {
         }
 

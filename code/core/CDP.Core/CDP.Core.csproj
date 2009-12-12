@@ -53,6 +53,8 @@
     <Compile Include="Extensions\StreamWriterExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="FastFileStream.cs" />
+    <Compile Include="FileOperation.cs" />
+    <Compile Include="FileOperations.cs" />
     <Compile Include="FileSystem.cs" />
     <Compile Include="FlowDocumentViewer.xaml.cs">
       <DependentUpon>FlowDocumentViewer.xaml</DependentUpon>
@@ -73,6 +75,7 @@
     <Compile Include="Settings.cs" />
     <Compile Include="SteamGame.cs" />
     <Compile Include="SteamLauncher.cs" />
+    <Compile Include="StringArgumentNullOrEmpty.cs" />
     <Compile Include="Strings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

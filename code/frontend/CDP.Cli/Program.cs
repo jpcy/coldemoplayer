@@ -63,6 +63,11 @@ namespace CDP.Cli
             ISettings settings = ObjectCreator.Get<ISettings>();
             settings.Load(demoManager);
 
+            // File operations.
+            IFileOperations fileOperations = ObjectCreator.Get<IFileOperations>();
+            fileOperations.Load();
+            fileOperations.Execute();
+
             // Create and load demo.
             Demo demo = demoManager.CreateDemo(fileName);
 
@@ -91,12 +96,13 @@ namespace CDP.Cli
             demo.OperationWarningEvent += demo_OperationWarningEvent;
             demo.OperationCancelledEvent += demo_OperationCancelledEvent;
             demo.OperationCompleteEvent += demo_OperationCompleteEvent;
+            fileOperations.Add(new FileDeleteOperation(launcher.CalculateDestinationFileName()));
             Console.Write(Strings.WritingDemo);
             Console.Write(" [");
             demo.Write(launcher.CalculateDestinationFileName());
 
             // Launch.
-            // TODO: monitor game process.
+            // TODO: monitor game process, call fileOperations.Execute() when process exits
             launcher.Launch();
         }
 

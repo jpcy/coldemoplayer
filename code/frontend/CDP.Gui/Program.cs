@@ -65,6 +65,11 @@ namespace CDP.Gui
             settings.Add("DefaultShellCommand", "open");
             settings.Load(demoManager);
 
+            // File operations.
+            IFileOperations fileOperations = ObjectCreator.Get<IFileOperations>();
+            fileOperations.Load();
+            fileOperations.Execute();
+
             App app = new App();
             app.InitializeComponent();
             app.Run();
