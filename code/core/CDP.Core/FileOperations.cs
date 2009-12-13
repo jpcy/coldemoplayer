@@ -45,7 +45,7 @@ namespace CDP.Core
         
         public void Load()
         {
-            string fileName = fileSystem.PathCombine(settings.ProgramDataPath, xmlFileName);
+            string fileName = fileSystem.PathCombine(settings.ProgramUserDataPath, xmlFileName);
 
             if (!fileSystem.FileExists(fileName))
             {
@@ -79,7 +79,7 @@ namespace CDP.Core
             }
 
             // Delete the XML file.
-            string fileName = fileSystem.PathCombine(settings.ProgramDataPath, xmlFileName);
+            string fileName = fileSystem.PathCombine(settings.ProgramUserDataPath, xmlFileName);
 
             if (fileSystem.FileExists(fileName))
             {
@@ -90,7 +90,7 @@ namespace CDP.Core
         public void Add(FileOperation fileOperation)
         {
             operations.Add(fileOperation);
-            string fileName = fileSystem.PathCombine(settings.ProgramDataPath, xmlFileName);
+            string fileName = fileSystem.PathCombine(settings.ProgramUserDataPath, xmlFileName);
 
             // Serialize.
             using (StreamWriter stream = new StreamWriter(fileName))

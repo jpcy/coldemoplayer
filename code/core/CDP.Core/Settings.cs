@@ -21,6 +21,7 @@ namespace CDP.Core
         string ComplexityUrl { get; }
         string ProgramExeFullPath { get; }
         string ProgramPath { get; }
+        string ProgramUserDataPath { get; }
         string ProgramDataPath { get; }
         string FileAssociationSettingPrefix { get; }
 
@@ -88,6 +89,7 @@ namespace CDP.Core
 
         private readonly string programExeFullPath;
         private readonly string programPath;
+        private readonly string programUserDataPath;
         private readonly string programDataPath;
 
         public string ProgramExeFullPath
@@ -97,6 +99,10 @@ namespace CDP.Core
         public string ProgramPath
         {
             get { return programPath; }
+        }
+        public string ProgramUserDataPath
+        {
+            get { return programUserDataPath; }
         }
         public string ProgramDataPath
         {
@@ -118,7 +124,13 @@ namespace CDP.Core
 
         public Settings()
         {
-            programDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ProgramName);
+            programUserDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ProgramName);
+            programDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), ProgramName);
+
+            if (!Directory.Exists(programUserDataPath))
+            {
+                Directory.CreateDirectory(programUserDataPath);
+            }
 
             if (!Directory.Exists(programDataPath))
             {
@@ -179,7 +191,7 @@ namespace CDP.Core
             }
 
             IsLoaded = true;
-            string path = Path.Combine(ProgramDataPath, fileName);
+            string path = Path.Combine(ProgramUserDataPath, fileName);
             XDocument xml = null;
 
             if (File.Exists(path))
@@ -239,7 +251,7 @@ namespace CDP.Core
 
         public void Save()
         {
-            using (XmlTextWriter xml = new XmlTextWriter(Path.Combine(ProgramDataPath, fileName), Encoding.Unicode))
+            using (XmlTextWriter xml = new XmlTextWriter(Path.Combine(ProgramUserDataPath, fileName), Encoding.Unicode))
             {
                 xml.Formatting = Formatting.Indented;
                 xml.WriteStartDocument();
