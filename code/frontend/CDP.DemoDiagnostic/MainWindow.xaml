@@ -51,7 +51,7 @@
             </Grid.ColumnDefinitions>
             <ProgressBar Margin="4" Name="diagnoseProgress" Minimum="0" Maximum="100" />
             <Button Grid.Column="1" Margin="4" Name="startButton" Click="startButton_Click" Content="{x:Static local:Strings.StartButtonContent}" />
-            <Button Grid.Column="2" Margin="4" Name="stopButton" Click="stopButton_Click" Content="{x:Static local:Strings.StopButtonContent}" />Button>
+            <Button Grid.Column="2" Margin="4" Name="stopButton" Click="stopButton_Click" Content="{x:Static local:Strings.StopButtonContent}" />
         </Grid>
     </Grid>
 </Window>
