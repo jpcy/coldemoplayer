@@ -306,7 +306,9 @@
     <PostBuildEvent>copy "$(TargetDir)\$(TargetFileName)" "$(SolutionDir)..\..\bin\$(TargetFileName)"
 copy "$(TargetDir)\de-DE\CDP.Gui.resources.dll" "$(SolutionDir)..\..\bin\de-DE\CDP.Gui.resources.dll"
 copy "$(TargetDir)\Interop.Shell32.dll" "$(SolutionDir)..\..\bin\Interop.Shell32.dll"
-copy "$(SolutionDir)..\..\huffman\huffman.dll" "$(TargetDir)"</PostBuildEvent>
+copy "$(SolutionDir)..\..\huffman\huffman.dll" "$(TargetDir)"
+copy "$(SolutionDir)..\..\libraries\SevenZipSharp\7z.dll" "$(TargetDir)"
+copy "$(SolutionDir)..\..\libraries\SevenZipSharp\SevenZipSharp.dll" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
