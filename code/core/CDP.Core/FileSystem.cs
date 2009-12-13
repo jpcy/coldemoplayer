@@ -118,6 +118,13 @@ namespace CDP.Core
         /// <param name="path">The (possibly relative) path.</param>
         /// <returns>An absolute path.</returns>
         string GetFullPath(string path);
+
+        /// <summary>
+        /// Moves or renames a file to the specified path/name.
+        /// </summary>
+        /// <param name="sourceFileName">The name of the file to move or rename.</param>
+        /// <param name="destinationFileName">The new file path and name.</param>
+        void MoveFile(string sourceFileName, string destinationFileName);
     }
 
     public class FileSystem : IFileSystem
@@ -171,7 +178,7 @@ namespace CDP.Core
                 newExtension = "." + newExtension;
             }
 
-            return Path.GetFileNameWithoutExtension(fileName) + newExtension;
+            return Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName) + newExtension);
         }
 
         public string GetFileName(string path)
@@ -234,6 +241,11 @@ namespace CDP.Core
         public string GetFullPath(string path)
         {
             return Path.GetFullPath(path);
+        }
+
+        public void MoveFile(string sourceFileName, string destinationFileName)
+        {
+            File.Move(sourceFileName, destinationFileName);
         }
     }
 }
