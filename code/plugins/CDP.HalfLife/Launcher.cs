@@ -26,13 +26,13 @@ namespace CDP.HalfLife
 
             if (!string.IsNullOrEmpty((string)settings["SteamExeFullPath"]) && !string.IsNullOrEmpty((string)settings["SteamAccountName"]))
             {
-                processExecutableFileName = fileSystem.PathCombine(Path.GetDirectoryName((string)settings["SteamExeFullPath"]), "SteamApps", (string)settings["SteamAccountName"], appFolder, "hl.exe");
+                processExecutableFileName = fileSystem.PathCombine(fileSystem.GetDirectoryName((string)settings["SteamExeFullPath"]), "SteamApps", (string)settings["SteamAccountName"], appFolder, "hl.exe");
             }
         }
 
         public override string CalculateDestinationFileName()
         {
-            return fileSystem.PathCombine(Path.GetDirectoryName((string)settings["SteamExeFullPath"]), "SteamApps", (string)settings["SteamAccountName"], appFolder, gameFolder, demoFileName);
+            return fileSystem.PathCombine(fileSystem.GetDirectoryName((string)settings["SteamExeFullPath"]), "SteamApps", (string)settings["SteamAccountName"], appFolder, gameFolder, demoFileName);
         }
 
         public override bool Verify()
@@ -57,7 +57,8 @@ namespace CDP.HalfLife
             }
 
             // See if the map already exists in the game's "maps" folder.
-            string mapDestinationPath = fileSystem.PathCombine(Path.GetDirectoryName((string)settings["SteamExeFullPath"]), "SteamApps", (string)settings["SteamAccountName"], appFolder, gameFolder, "maps");
+            string gamePath = fileSystem.PathCombine(fileSystem.GetDirectoryName((string)settings["SteamExeFullPath"]), "SteamApps", (string)settings["SteamAccountName"], appFolder, gameFolder);
+            string mapDestinationPath = fileSystem.PathCombine(gamePath, "maps");
             string mapDestinationFileName = fileSystem.PathCombine(mapDestinationPath, demo.MapName + ".bsp");
 
             if (File.Exists(mapDestinationFileName))
@@ -72,17 +73,19 @@ namespace CDP.HalfLife
                 }
             }
 
-            // See if the map exists in the map pool.
-            string mapSourcePath = fileSystem.PathCombine(settings.ProgramDataPath, "maps", "goldsrc", "cstrike", demo.MapChecksum.ToString());
-            string mapSourceFileName = fileSystem.PathCombine(mapSourcePath, demo.MapName + ".bsp");
+            // See if a resource archive exists that matches the map checksum and name.
+            string resourceArchiveFileName = fileSystem.PathCombine(settings.ProgramDataPath, "goldsrc", "cstrike", demo.MapChecksum.ToString() + "_" + demo.MapName + ".7z");
 
-            if (!File.Exists(mapSourceFileName))
+            if (!File.Exists(resourceArchiveFileName))
             {
-                // TODO: block and attempt to download the required map here.
-
+                // TODO: block and attempt to download the required resource archive here.
                 Message = string.Format(Strings.NoSuitableMapFound, demo.MapName, demo.MapChecksum);
                 return false;
             }
+
+            // Extract the resource archive.
+            Core.GameResourceArchive resourceArchive = new Core.GameResourceArchive(resourceArchiveFileName);
+            resourceArchive.SafeExtract(gamePath);
 
             return true;
         }
@@ -90,7 +93,7 @@ namespace CDP.HalfLife
         public override void Launch()
         {
             // Write config file.
-            using (StreamWriter stream = File.CreateText(fileSystem.PathCombine(Path.GetDirectoryName((string)settings["SteamExeFullPath"]), "SteamApps", (string)settings["SteamAccountName"], appFolder, gameFolder, configFileName)))
+            using (StreamWriter stream = File.CreateText(fileSystem.PathCombine(fileSystem.GetDirectoryName((string)settings["SteamExeFullPath"]), "SteamApps", (string)settings["SteamAccountName"], appFolder, gameFolder, configFileName)))
             {
                 stream.WriteLine("alias +col_ff_slow \"host_framerate 0.01; alias col_pause col_pause1\"");
                 stream.WriteLine("alias -col_ff_slow \"host_framerate 0\"");
