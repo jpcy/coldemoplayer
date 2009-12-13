@@ -276,4 +276,8 @@
   <data name="FrameReadingError" xml:space="preserve">
     <value>Error reading frame.</value>
   </data>
+  <data name="NoSuitableMapFound" xml:space="preserve">
+    <value>No suitable map found in the map pool: '{0}' with the checksum '{1}'.</value>
+    <comment>{0} = map name, {1} = map checksum</comment>
+  </data>
 </root>

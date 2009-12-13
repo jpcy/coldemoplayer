@@ -45,8 +45,6 @@
   <ItemGroup>
     <Compile Include="Analysis\ViewModel.cs" />
     <Compile Include="Demo.cs" />
-    <Compile Include="Game.cs" />
-    <Compile Include="Launcher.cs" />
     <Compile Include="Messages\SvcClientData.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -84,8 +82,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)..\..\bin\$(TargetFileName)"
-copy "$(TargetDir)\de-DE\CDP.CounterStrike.resources.dll" "$(SolutionDir)..\..\bin\de-DE\CDP.CounterStrike.resources.dll"
-“$(FrameworkSDKDir)bin\NETFX 4.0 Tools\sgen.exe” /a:"$(SolutionDir)..\..\bin\$(TargetFileName)" /t:CDP.CounterStrike.Game /force</PostBuildEvent>
+copy "$(TargetDir)\de-DE\CDP.CounterStrike.resources.dll" "$(SolutionDir)..\..\bin\de-DE\CDP.CounterStrike.resources.dll"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

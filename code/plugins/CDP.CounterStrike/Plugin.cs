@@ -36,10 +36,11 @@ namespace CDP.CounterStrike
         }
 
         private UserControl settingsView;
-        private Game game;
+        private HalfLife.Game game;
 
         public Plugin()
         {
+            game = games.Single(g => g.ModFolder == "cstrike");
         }
 
         public override bool IsValidDemo(Core.FastFileStreamBase stream, string fileExtension)
@@ -67,7 +68,7 @@ namespace CDP.CounterStrike
 
         public override Core.Launcher CreateLauncher()
         {
-            return new Launcher();
+            return new HalfLife.Launcher();
         }
 
         public override Core.ViewModelBase CreateAnalysisViewModel(Core.Demo demo)
@@ -91,21 +92,6 @@ namespace CDP.CounterStrike
             RegisterEngineMessage<Messages.SvcClientData>();
             RegisterUserMessage<UserMessages.ClCorpse>();
             RegisterUserMessage<UserMessages.SendAudio>();
-        }
-
-        protected override void ReadGameConfig()
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(Game));
-
-            using (StreamReader stream = new StreamReader(fileSystem.PathCombine(settings.ProgramPath, "config", "goldsrc", "cstrike.xml")))
-            {
-                game = (Game)serializer.Deserialize(stream);
-            }
-        }
-
-        public override Core.SteamGame FindGame(string gameFolder)
-        {
-            return game;
         }
     }
 }

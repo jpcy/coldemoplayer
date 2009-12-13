@@ -77,7 +77,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Setting.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="SteamGame.cs" />
     <Compile Include="SteamLauncher.cs" />
     <Compile Include="StringArgumentNullOrEmpty.cs" />
     <Compile Include="Strings.Designer.cs">
@@ -106,8 +105,7 @@
     <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)..\..\bin\$(TargetFileName)"
 copy "$(TargetDir)\de-DE\CDP.Core.resources.dll" "$(SolutionDir)..\..\bin\de-DE\CDP.Core.resources.dll"
 copy "$(SolutionDir)..\..\libraries\SevenZipSharp\7z.dll" "$(SolutionDir)..\..\bin\7z.dll"
-copy "$(SolutionDir)..\..\libraries\SevenZipSharp\SevenZipSharp.dll" "$(SolutionDir)..\..\bin\SevenZipSharp.dll"
-“$(FrameworkSDKDir)bin\NETFX 4.0 Tools\sgen.exe” /a:"$(SolutionDir)..\..\bin\$(TargetFileName)" /t:CDP.Core.SteamGame /force</PostBuildEvent>
+copy "$(SolutionDir)..\..\libraries\SevenZipSharp\SevenZipSharp.dll" "$(SolutionDir)..\..\bin\SevenZipSharp.dll"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

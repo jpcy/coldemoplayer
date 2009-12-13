@@ -120,10 +120,6 @@
   <data name="BrowseForSteamExeButton" xml:space="preserve">
     <value>[GERMAN] Browse...</value>
   </data>
-  <data name="NoSuitableMapFound" xml:space="preserve">
-    <value>[GERMAN] No suitable map found in the map pool: '{0}' with the checksum '{1}'.</value>
-    <comment>{0} = map name, {1} = map checksum</comment>
-  </data>
   <data name="PlaybackMethodGroupBoxHeader" xml:space="preserve">
     <value>[GERMAN] Playback Method</value>
   </data>

@@ -114,7 +114,7 @@ namespace CDP.HalfLife
             }
         }
 
-        public Core.SteamGame Game { get; private set; }
+        public Game Game { get; private set; }
 
         public override string MapName { get; protected set; }
         public override string Perspective { get; protected set; }

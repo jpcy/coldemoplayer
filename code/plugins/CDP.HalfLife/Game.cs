@@ -1,12 +1,19 @@
 ﻿using System;
-using System.Xml.Serialization;
+using System.Collections.Generic;
 using System.Linq;
-using CDP.Core.Extensions;
+using System.Text;
+using System.Xml.Serialization;
 
-namespace CDP.CounterStrike
+namespace CDP.HalfLife
 {
-    public class Game : Core.SteamGame
+    public class Game
     {
+        public int AppId { get; set; }
+        public string AppFolder { get; set; }
+        public string ModFolder { get; set; }
+        public string Name { get; set; }
+        public string[] DemoGameFolders { get; set; }
+
         public class Version
         {
             [XmlAttribute("name")]
@@ -45,29 +52,28 @@ namespace CDP.CounterStrike
         public UserMessage[] UserMessages { get; set; }
         public Resource[] ResourceBlacklist { get; set; }
 
-        public override string GetVersionName(string checksum)
+        public string GetVersionName(string checksum)
         {
             Version version = Versions.FirstOrDefault(v => v.Checksum == checksum);
 
             if (version == null)
             {
-                return Versions.First(v => v.Checksum == "default").Name;
+                // No matching checksum, use the default version.
+                version = Versions.FirstOrDefault(v => v.Checksum == "default");
+            }
+
+            if (version == null)
+            {
+                // Game doesn't have version information.
+                return null;
             }
 
             return version.Name;
         }
 
-        public override int GetVersion(string checksum)
+        public virtual int GetVersion(string checksum)
         {
-            Version version = Versions.FirstOrDefault(v => v.Checksum == checksum);
-
-            if (version == null)
-            {
-                version = Versions.First(v => v.Checksum == "default");
-            }
-
-            // Translate the string names defined in the XML config file (e.g. "1.3") to the enumeration Versions (e.g. "CounterStrike13").
-            return (int)Enum.Parse(typeof(Demo.Versions), "CounterStrike" + version.Name.RemoveChars('.'));
+            return 0;
         }
 
         public bool BuiltInMapExists(uint checksum, string name)

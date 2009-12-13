@@ -70,6 +70,7 @@
     <Compile Include="Frames\PlaySound.cs" />
     <Compile Include="Frames\Unknown.cs" />
     <Compile Include="Frames\WeaponChange.cs" />
+    <Compile Include="Game.cs" />
     <Compile Include="Header.cs" />
     <Compile Include="IMessage.cs" />
     <Compile Include="Launcher.cs" />
@@ -159,7 +160,8 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)..\..\bin\$(TargetFileName)"
-copy "$(TargetDir)\de-DE\CDP.HalfLife.resources.dll" "$(SolutionDir)..\..\bin\de-DE\CDP.HalfLife.resources.dll"</PostBuildEvent>
+copy "$(TargetDir)\de-DE\CDP.HalfLife.resources.dll" "$(SolutionDir)..\..\bin\de-DE\CDP.HalfLife.resources.dll"
+“$(FrameworkSDKDir)bin\NETFX 4.0 Tools\sgen.exe” /a:"$(SolutionDir)..\..\bin\$(TargetFileName)" /t:CDP.HalfLife.Game /force</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

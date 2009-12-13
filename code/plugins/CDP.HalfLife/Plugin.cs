@@ -71,12 +71,18 @@ namespace CDP.HalfLife
         private readonly Dictionary<byte, Type> frames = new Dictionary<byte, Type>();
         private readonly Dictionary<byte, Type> engineMessages = new Dictionary<byte, Type>();
         private readonly Dictionary<string, Type> userMessages = new Dictionary<string, Type>();
-        private Core.SteamGame[] games;
+        protected Game[] games;
 
         public Plugin()
         {
             RegisterMessages();
-            ReadGameConfig();
+
+            // Read config/goldsrc/games.xml
+            using (StreamReader stream = new StreamReader(fileSystem.PathCombine(settings.ProgramPath, "config", "goldsrc", "games.xml")))
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(Game[]));
+                games = (Game[])serializer.Deserialize(stream);
+            }
         }
 
         public override bool IsValidDemo(Core.FastFileStreamBase stream, string fileExtension)
@@ -197,19 +203,9 @@ namespace CDP.HalfLife
             RegisterUserMessage<UserMessages.TextMsg>();
         }
 
-        protected virtual void ReadGameConfig()
+        public Game FindGame(string gameFolder)
         {
-            // Read config/goldsrc/games.xml
-            using (StreamReader stream = new StreamReader(fileSystem.PathCombine(settings.ProgramPath, "config", "goldsrc", "games.xml")))
-            {
-                XmlSerializer serializer = new XmlSerializer(typeof(Core.SteamGame[]));
-                games = (Core.SteamGame[])serializer.Deserialize(stream);
-            }
-        }
-
-        public virtual Core.SteamGame FindGame(string gameFolder)
-        {
-            return games.FirstOrDefault(sg => sg.DemoGameFolders.Contains(gameFolder));
+            return games.FirstOrDefault(g => g.DemoGameFolders.Contains(gameFolder));
         }
 
         public Frame CreateFrame(byte id)

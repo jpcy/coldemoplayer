@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using CDP.Core.Extensions;
 using CDP.HalfLife.Messages;
 using CDP.HalfLife.UserMessages;
 
@@ -52,7 +53,20 @@ namespace CDP.CounterStrike
         public override void Load()
         {
             base.Load();
-            Version = (Versions)Game.GetVersion(clientDllChecksum);
+            Version = CalculateVersion(clientDllChecksum);
+        }
+
+        private Versions CalculateVersion(string checksum)
+        {
+            HalfLife.Game.Version version = Game.Versions.FirstOrDefault(v => v.Checksum == checksum);
+
+            if (version == null)
+            {
+                version = Game.Versions.First(v => v.Checksum == "default");
+            }
+
+            // Translate the string names defined in the XML file (e.g. "1.3") to the enumeration Versions (e.g. "CounterStrike13").
+            return (Versions)Enum.Parse(typeof(Demo.Versions), "CounterStrike" + version.Name.RemoveChars('.'));
         }
 
         public override void Write(string destinationFileName)
@@ -97,8 +111,7 @@ namespace CDP.CounterStrike
         /// <returns>The user message's ID.</returns>
         protected override byte GetUserMessageId(string userMessageName)
         {
-            CounterStrike.Game.UserMessage[] userMessages = ((CounterStrike.Game)Game).UserMessages;
-            CounterStrike.Game.UserMessage userMessage = userMessages.FirstOrDefault(um => um.Name == userMessageName);
+            HalfLife.Game.UserMessage userMessage = Game.UserMessages.FirstOrDefault(um => um.Name == userMessageName);
 
             if (userMessage == null)
             {
@@ -110,7 +123,7 @@ namespace CDP.CounterStrike
                 // Find the the first free user message ID.
                 for (byte i = (byte)(Demo.MaxEngineMessageId + 1); i < 255; i++)
                 {
-                    if (userMessages.FirstOrDefault(um => um.Id == i) == null && !extraUserMessages.ContainsValue(i))
+                    if (Game.UserMessages.FirstOrDefault(um => um.Id == i) == null && !extraUserMessages.ContainsValue(i))
                     {
                         extraUserMessages.Add(userMessageName, i);
                         return i;
@@ -154,8 +167,7 @@ namespace CDP.CounterStrike
 
         private void Write_ResourceList(SvcResourceList message)
         {
-            CounterStrike.Game.Resource[] blacklist = ((CounterStrike.Game)Game).ResourceBlacklist;
-            message.Resources.RemoveAll(r => blacklist.FirstOrDefault(blr => r.Name == blr.Name) != null);
+            message.Resources.RemoveAll(r => Game.ResourceBlacklist.FirstOrDefault(blr => r.Name == blr.Name) != null);
 
             foreach (SvcResourceList.Resource resource in message.Resources)
             {
