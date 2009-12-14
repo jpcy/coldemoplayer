@@ -77,6 +77,7 @@ namespace CDP.Gui.ViewModels
         {
             Items = new ObservableCollection<Item>();
             mediator.Register<SelectedFolderChangedMessageParameters>(Messages.SelectedFolderChanged, SelectedFolderChanged, this);
+            mediator.Register<string>(Messages.SetSelectedDemoName, SetSelectedDemoName, this);
         }
 
         public void SelectedFolderChanged(SelectedFolderChangedMessageParameters parameters)
@@ -106,6 +107,17 @@ namespace CDP.Gui.ViewModels
 
             // Start loading demos from the queue. The next demo will be loaded when the first demo completes, and so on.
             LoadNextDemoInQueue();
+        }
+
+        private void SetSelectedDemoName(string name)
+        {
+            Item item = Items.FirstOrDefault(i => fileSystem.GetFileName(i.Demo.FileName) == fileSystem.GetFileName(name));
+
+            if (item != null)
+            {
+                SelectedItem = item;
+                OnPropertyChanged("SelectedItem");
+            }
         }
 
         /// <summary>

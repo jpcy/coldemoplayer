@@ -8,6 +8,7 @@ namespace CDP.Gui
     internal enum Messages
     {
         SetFolder,
+        SetSelectedDemoName,
         SelectedFolderChanged,
         SelectedDemoChanged
     };

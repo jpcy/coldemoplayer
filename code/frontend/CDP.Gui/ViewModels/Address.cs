@@ -60,6 +60,11 @@ namespace CDP.Gui.ViewModels
                 settings["LastPath"] = selectedFolder;
                 mediator.Notify<SelectedFolderChangedMessageParameters>(Messages.SelectedFolderChanged, new SelectedFolderChangedMessageParameters(selectedFolder, parameters.FileNameToSelect), async);
             }
+            else if (!string.IsNullOrEmpty(parameters.FileNameToSelect))
+            {
+                // Folder hasn't changed, but the selected demo has. Doing this saves having to refresh the all the demos in the current folder.
+                mediator.Notify<string>(Messages.SetSelectedDemoName, parameters.FileNameToSelect);
+            }
         }
     }
 }
