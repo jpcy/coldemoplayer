@@ -79,6 +79,14 @@ namespace CDP.HalfLife
             0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d 
         };
 
+        private static byte[] MungeTable3 =
+        {
+            0x20, 0x07, 0x13, 0x61,
+            0x03, 0x45, 0x17, 0x72,
+            0x0A, 0x2D, 0x48, 0x0C,
+            0x4A, 0x12, 0xA9, 0xB5
+        };
+
         private const int nLumpHeaders = 15;
         private const int readBufferSize = 1024;
         private uint checksum;
@@ -201,6 +209,26 @@ namespace CDP.HalfLife
                 checksum = lookup[buffer[i] ^ (byte)checksum] ^ (checksum >> 8);
                 i++;
             }
+        }
+
+        private static uint FlipBytes32(uint value)
+        {
+            return ((value & 0xFF000000) >> 24) | ((value & 0x00FF0000) >> 8) | ((value & 0x0000FF00) << 8) | ((value & 0x000000FF) << 24);
+        }
+
+        public static uint UnMunge3(uint value, int z)
+        {
+            z = (0xFF - z) & 0xFF;
+            value = (uint)(value ^ z);
+
+            byte[] temp = BitConverter.GetBytes(value);
+
+            for (int i = 0; i < 4; i++)
+            {
+                temp[i] ^= (byte)((((int)MungeTable3[i & 0x0F] | i << i) | i) | 0xA5);
+            }
+
+            return (uint)(FlipBytes32(BitConverter.ToUInt32(temp, 0)) ^ (~z));
         }
 
         public bool Equals(MapChecksum other)

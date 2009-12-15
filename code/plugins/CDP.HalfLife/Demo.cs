@@ -186,6 +186,7 @@ namespace CDP.HalfLife
         public float CurrentTimestamp { get; private set; }
 
         private Plugin plugin;
+        private uint mungedMapChecksum;
         protected string clientDllChecksum;
         private readonly List<MessageCallback> messageCallbacks;
         private readonly List<FrameCallback> frameCallbacks;
@@ -242,6 +243,7 @@ namespace CDP.HalfLife
                 AddMessageCallback<Messages.SvcDeltaDescription>(Load_DeltaDescription);
                 AddMessageCallback<Messages.SvcNewUserMessage>(Load_NewUserMessage);
                 AddMessageCallback<Messages.SvcHltv>(Load_Hltv);
+                AddMessageCallback<Messages.SvcSetView>(Load_SetView);
                 ResetProgress();
 
                 using (Core.FastFileStream stream = new Core.FastFileStream(FileName, Core.FastFileAccess.Read))
@@ -1333,6 +1335,7 @@ namespace CDP.HalfLife
             }
 
             clientDllChecksum = sb.ToString();
+            mungedMapChecksum = message.MungedMapChecksum;
             MaxClients = message.MaxClients;
             AddDetail(Strings.DemoDetailServerSlots, MaxClients);
             ServerName = message.ServerName;
@@ -1427,6 +1430,14 @@ namespace CDP.HalfLife
             IsHltv = true;
             Perspective = "HLTV";
             AddDetail(Strings.DemoDetailPerspective, Perspective);
+        }
+
+        private void Load_SetView(Messages.SvcSetView message)
+        {
+            if (MapChecksum == 0)
+            {
+                MapChecksum = HalfLife.MapChecksum.UnMunge3(mungedMapChecksum, message.EntityId - 1);
+            }
         }
         #endregion
 
