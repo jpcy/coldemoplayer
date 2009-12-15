@@ -456,6 +456,7 @@ namespace CDP.HalfLife
                     int nPlaybackFrames = 0;
                     currentFrameIndex = 0;
                     AddMessageCallback<Messages.SvcServerInfo>(Write_ServerInfo);
+                    AddMessageCallback<Messages.SvcTimeScale>(Write_TimeScale);
                     AddFrameCallback<Frames.ClientCommand>(Write_ClientCommand);
 
                     while (true)
@@ -1480,6 +1481,14 @@ namespace CDP.HalfLife
         {
             message.NetworkProtocol = Demo.NewestNetworkProtocol;
             message.GameFolder = Game.ModFolder;
+        }
+
+        private void Write_TimeScale(Messages.SvcTimeScale message)
+        {
+            if (message.Multiplier < 1.0f && (bool)settings["HlRemoveHltvSlowMotion"])
+            {
+                message.Remove = true;
+            }
         }
 
         private void Write_ClientCommand(Frames.ClientCommand frame)

@@ -283,4 +283,7 @@
   <data name="RemoveHltvAdsCheckBoxContent" xml:space="preserve">
     <value>[GERMAN] Remove HLTV advertisements</value>
   </data>
+  <data name="RemoveHltvSlowMotionCheckBoxContent" xml:space="preserve">
+    <value>[GERMAN] Remove HLTV slow motion</value>
+  </data>
 </root>

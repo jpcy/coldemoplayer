@@ -129,6 +129,9 @@
   <data name="RemoveHltvAdsCheckBoxContent" xml:space="preserve">
     <value>Remove HLTV advertisements</value>
   </data>
+  <data name="RemoveHltvSlowMotionCheckBoxContent" xml:space="preserve">
+    <value>Remove HLTV slow motion</value>
+  </data>
   <data name="RemoveShowscoresCheckBoxContent" xml:space="preserve">
     <value>Remove showscores command</value>
   </data>

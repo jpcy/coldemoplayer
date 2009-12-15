@@ -49,6 +49,12 @@ namespace CDP.HalfLife
             set { settings["HlRemoveHltvAds"] = value; }
         }
 
+        public bool RemoveHltvSlowMotion
+        {
+            get { return (bool)settings["HlRemoveHltvSlowMotion"]; }
+            set { settings["HlRemoveHltvSlowMotion"] = value; }
+        }
+
         public string SteamExeFullPath
         {
             get { return (string)settings["SteamExeFullPath"]; }

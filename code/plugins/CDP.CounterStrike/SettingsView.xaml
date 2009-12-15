@@ -17,7 +17,8 @@
             <CheckBox IsChecked="{Binding StartListenServer}" Content="{x:Static local:Strings.StartListenServerCheckBoxContent}" Margin="0,0,0,4" />
             <CheckBox IsChecked="{Binding RemoveShowscores}" Content="{x:Static local:Strings.RemoveShowscoresCheckBoxContent}" Margin="0,0,0,4" />
             <CheckBox IsChecked="{Binding RemoveFadeToBlack}" Content="{x:Static local:Strings.RemoveFadeToBlackCheckBoxContent}" Margin="0,0,0,4" />
-            <CheckBox IsChecked="{Binding RemoveHltvAds}" Content="{x:Static local:Strings.RemoveHltvAdsCheckBoxContent}" />
+            <CheckBox IsChecked="{Binding RemoveHltvAds}" Content="{x:Static local:Strings.RemoveHltvAdsCheckBoxContent}" Margin="0,0,0,4" />
+            <CheckBox IsChecked="{Binding RemoveHltvSlowMotion}" Content="{x:Static local:Strings.RemoveHltvSlowMotionCheckBoxContent}" />
         </StackPanel>
         <Grid Grid.Column="1">
             <StackPanel Grid.Column="0">
