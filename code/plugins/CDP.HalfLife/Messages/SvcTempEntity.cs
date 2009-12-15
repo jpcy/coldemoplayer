@@ -143,7 +143,7 @@ namespace CDP.HalfLife.Messages
                     break;
 
                 case 27: // TE_DLIGHT
-                    length = 13;
+                    length = 12;
                     break;
 
                 case 28: // TE_ELIGHT
@@ -260,7 +260,7 @@ namespace CDP.HalfLife.Messages
                     break;
 
                 case 122: // TE_PARTICLEBURST
-                    length = 6;
+                    length = 10;
                     break;
 
                 case 123: // TE_FIREFIELD
