@@ -284,6 +284,10 @@ namespace CDP.HalfLife
                         {
                             break;
                         }
+                        else if (frame.Id == (byte)FrameIds.Playback)
+                        {
+                            throw new ApplicationException(Strings.DemoMissingPlaybackSegmentMarker);
+                        }
                         else if (frame.HasMessages)
                         {
                             ReadMessagesInMessageBlock(ReadMessageBlock(stream));
