@@ -58,7 +58,8 @@ namespace CDP.HalfLife
                 {
                     new Core.Setting("HlPlaybackMethod", typeof(PlaybackMethods), PlaybackMethods.Playdemo),
                     new Core.Setting("HlStartListenServer", typeof(bool), true),
-                    new Core.Setting("HlRemoveShowscores", typeof(bool), true)
+                    new Core.Setting("HlRemoveShowscores", typeof(bool), true),
+                    new Core.Setting("HlRemoveHltvAds", typeof(bool), true)
                 };
             }
         }

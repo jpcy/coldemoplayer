@@ -126,6 +126,9 @@
   <data name="RemoveFadeToBlackCheckBoxContent" xml:space="preserve">
     <value>Remove Fade to Black</value>
   </data>
+  <data name="RemoveHltvAdsCheckBoxContent" xml:space="preserve">
+    <value>Remove HLTV advertisements</value>
+  </data>
   <data name="RemoveShowscoresCheckBoxContent" xml:space="preserve">
     <value>Remove showscores command</value>
   </data>

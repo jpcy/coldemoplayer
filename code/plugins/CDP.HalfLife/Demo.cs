@@ -1434,6 +1434,11 @@ namespace CDP.HalfLife
         private void Write_Director(Messages.SvcDirector message)
         {
             haveParsedSvcDirectorMessage = true;
+
+            if ((bool)settings["HlRemoveHltvAds"] && message.Type == Messages.SvcDirector.Types.DRC_CMD_MESSAGE)
+            {
+                message.Remove = true;
+            }
         }
 
         private void Write_Playback(Frames.Playback frame)

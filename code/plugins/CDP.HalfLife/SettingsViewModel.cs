@@ -43,6 +43,12 @@ namespace CDP.HalfLife
             set { settings["HlRemoveShowscores"] = value; }
         }
 
+        public bool RemoveHltvAds
+        {
+            get { return (bool)settings["HlRemoveHltvAds"]; }
+            set { settings["HlRemoveHltvAds"] = value; }
+        }
+
         public string SteamExeFullPath
         {
             get { return (string)settings["SteamExeFullPath"]; }

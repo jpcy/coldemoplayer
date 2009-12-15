@@ -280,4 +280,7 @@
   <data name="DemoMissingPlaybackSegmentMarker" xml:space="preserve">
     <value>[GERMAN] Playback segment marker not found. Demo is too corrupt to load.</value>
   </data>
+  <data name="RemoveHltvAdsCheckBoxContent" xml:space="preserve">
+    <value>[GERMAN] Remove HLTV advertisements</value>
+  </data>
 </root>
