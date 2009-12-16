@@ -703,7 +703,15 @@ namespace CDP.HalfLife
                                             try
                                             {
                                                 byte id = messageReader.ReadByte();
-                                                ReadMessage(messageReader, id, !shouldLogMessage(id));
+                                                IMessage message = ReadMessage(messageReader, id, !shouldLogMessage(id));
+
+                                                log.WriteLine("{0} [{1}] Offset: {2}", message.Name, message.Id, message.Offset);
+
+                                                if (shouldLogMessage(message.Id))
+                                                {
+                                                    message.Log(log);
+                                                    log.WriteLine();
+                                                }
                                             }
                                             catch (Exception ex)
                                             {
@@ -717,17 +725,6 @@ namespace CDP.HalfLife
                                     log.WriteLine("\n*** Error processing message block ***\n");
                                     log.WriteLine(ex.ToString());
                                     log.WriteLine();
-                                }
-
-                                foreach (IMessage message in messageHistory)
-                                {
-                                    log.WriteLine("{0} [{1}] Offset: {2}", message.Name, message.Id, message.Offset);
-
-                                    if (shouldLogMessage(message.Id))
-                                    {
-                                        message.Log(log);
-                                        log.WriteLine();
-                                    }
                                 }
 
                                 log.WriteLine();
@@ -1462,15 +1459,15 @@ namespace CDP.HalfLife
             
             messagesToInsert.Add(new Messages.SvcDirector
             {
-                Data = new byte[] { Messages.SvcDirector.DRC_CMD_START }
+                Type = Messages.SvcDirector.Types.DRC_CMD_START
             });
 
             messagesToInsert.Add(new Messages.SvcDirector
             {
+                Type = Messages.SvcDirector.Types.DRC_CMD_MODE,
                 Data = new byte[]
                 {
-                    Messages.SvcDirector.DRC_CMD_MODE,
-                    Messages.SvcDirector.OBS_IN_EYE
+                    (byte)Messages.SvcDirector.ObserverModes.OBS_IN_EYE
                 }
             });
 

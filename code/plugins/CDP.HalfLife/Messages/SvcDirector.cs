@@ -23,6 +23,19 @@ namespace CDP.HalfLife.Messages
             DRC_CMD_STUFFTEXT = 12	// like the normal svc_stufftext but as director command
         }
 
+        // Spectator Movement modes
+        // See HL SDK: pm_shared.h
+        public enum ObserverModes : byte
+        {
+            OBS_NONE,
+            OBS_CHASE_LOCKED,
+            OBS_CHASE_FREE,
+            OBS_ROAMING,		
+            OBS_IN_EYE,
+            OBS_MAP_FREE,
+            OBS_MAP_CHASE
+        }
+
         public override byte Id
         {
             get { return (byte)EngineMessageIds.svc_director; }
@@ -38,11 +51,7 @@ namespace CDP.HalfLife.Messages
             get { return true; }
         }
 
-        public const byte DRC_CMD_START = 1;
-        public const byte DRC_CMD_MODE = 3;
-        public const byte OBS_IN_EYE = 4;
-
-        public Types Type { get; set; }
+        public Types? Type { get; set; }
         public byte[] Data { get; set; }
 
         public override void Skip(BitReader buffer)
@@ -69,20 +78,42 @@ namespace CDP.HalfLife.Messages
 
         public override void Write(BitWriter buffer)
         {
-            if (Data == null)
+            byte length = 0;
+
+            if (Type != null)
             {
-                buffer.WriteByte(0);
+                length++;
             }
-            else
+
+            if (Data != null)
             {
-                buffer.WriteByte((byte)Data.Length);
+                if (Data.Length > byte.MaxValue)
+                {
+                    throw new InvalidOperationException("Data length must fit in a byte.");
+                }
+
+                length += (byte)Data.Length;
+            }
+
+            buffer.WriteByte(length);
+
+            if (Type != null)
+            {
+                buffer.WriteByte((byte)Type.Value);
+            }
+
+            if (Data != null)
+            {
                 buffer.WriteBytes(Data);
             }
         }
 
         public override void Log(StreamWriter log)
         {
-            log.WriteLine("Type: {0}", Type);
+            if (Type != null)
+            {
+                log.WriteLine("Type: {0}", Type);
+            }
 
             if (Data != null)
             {
