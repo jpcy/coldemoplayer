@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Reflection;
-using System.Windows.Controls;
-using System.Windows.Threading;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace CDP.Gui
 {
@@ -23,6 +22,7 @@ namespace CDP.Gui
         string BrowseForFile(string fileName, string initialPath);
         void OpenModalWindow(Page view, Core.ViewModelBase viewModel);
         void CloseModalWindow(Core.ViewModelBase viewModel);
+        void ForceCommandRequery();
         void Invoke(Action action);
         void Invoke<T>(Action<T> action, T arg);
         void Invoke<T1, T2>(Action<T1, T2> action, T1 arg1, T2 arg2);
@@ -173,6 +173,11 @@ namespace CDP.Gui
                 modalWindows.Remove(window);
                 window.Close();
             }
+        }
+
+        public void ForceCommandRequery()
+        {
+            CommandManager.InvalidateRequerySuggested();
         }
 
         public void Invoke(Action action)

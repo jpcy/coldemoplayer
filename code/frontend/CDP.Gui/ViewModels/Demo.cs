@@ -68,6 +68,7 @@ namespace CDP.Gui.ViewModels
             OnPropertyChanged("Data");
             OnPropertyChanged("MapThumbnailFileName");
             OnPropertyChanged("SettingsView");
+            navigationService.ForceCommandRequery();
         }
     }
 }
