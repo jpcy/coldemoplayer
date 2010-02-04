@@ -1,0 +1,35 @@
+{
+    "Mods":
+    [
+        {
+            "Folder":"baseq3", 
+            "Name":"Quake III Arena", 
+            "CanAnalyse":true
+        }, 
+        {
+            "Folder":"excessive", 
+            "Name":"Quake III Arena (excessive)", 
+            "CanAnalyse":true
+        }, 
+        {
+            "Folder":"instaunlagged", 
+            "Name":"Quake III Arena (instaunlagged)", 
+            "CanAnalyse":true
+        }, 
+        {
+            "Folder":"cpma", 
+            "Name":"CPMA", 
+            "CanAnalyse":true
+        }, 
+        {
+            "Folder":"osp", 
+            "Name":"OSP", 
+            "CanAnalyse":true
+        }
+    ], 
+    "ExecutableFileNames":
+    [
+        "quake3.exe", 
+        "ioquake3.x86.exe"
+    ]
+}

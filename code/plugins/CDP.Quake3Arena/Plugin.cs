@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.IO;
 using System.Windows.Controls;
-using CDP.IdTech3;
-using CDP.IdTech3.Commands;
-using System.Xml.Serialization;
+using JsonExSerializer;
 
 namespace CDP.Quake3Arena
 {
@@ -50,11 +46,11 @@ namespace CDP.Quake3Arena
 
         protected virtual void ReadConfig()
         {
-            using (StreamReader stream = new StreamReader(fileSystem.PathCombine(settings.ProgramPath, "config", "idtech3", "quake3arena.xml")))
+            using (StreamReader stream = new StreamReader(fileSystem.PathCombine(settings.ProgramPath, "config", "idtech3", "quake3arena.json")))
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(Config));
+                Serializer serializer = new Serializer(typeof(Config));
                 config = (Config)serializer.Deserialize(stream);
-            }
+            }            
         }
 
         public override Core.Demo CreateDemo()
