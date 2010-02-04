@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Controls;
+using CDP.Core.Extensions;
 
 namespace CDP.Gui.ViewModels
 {
@@ -7,7 +8,7 @@ namespace CDP.Gui.ViewModels
     {
         public string Header
         {
-            get { return string.Format(Strings.Analysis_Title, demo.Name); }
+            get { return Strings.Analysis_Title.Args(demo.Name); }
         }
 
         public UserControl View { get; private set; }

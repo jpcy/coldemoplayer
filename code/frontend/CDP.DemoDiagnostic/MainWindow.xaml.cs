@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Threading;
 using Microsoft.Win32;
 using CDP.Core;
-using System.Threading;
+using CDP.Core.Extensions;
 
 namespace CDP.DemoDiagnostic
 {
@@ -289,7 +289,7 @@ namespace CDP.DemoDiagnostic
         {
             Dispatcher.Invoke(new Action(delegate
             {
-                MessageBox.Show(string.Format("Message: {0}\r\nException: {1}", e.ErrorMessage, e.Exception));
+                MessageBox.Show("Message: {0}\r\nException: {1}".Args(e.ErrorMessage, e.Exception));
                 OnDiagnoseComplete(false);
             }));
         }

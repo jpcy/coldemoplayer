@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using CDP.Core.Extensions;
 
 namespace CDP.Gui
 {
@@ -130,7 +131,7 @@ namespace CDP.Gui
         {
             Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog
             {
-                Title = string.Format(Strings.BrowseForFileTitle, fileName),
+                Title = Strings.BrowseForFileTitle.Args(fileName),
                 InitialDirectory = initialPath,
                 Filter = fileName + "|" + fileName,
                 RestoreDirectory = true

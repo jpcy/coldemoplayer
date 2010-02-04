@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using CDP.Core.Extensions;
 
 namespace CDP.Gui.ViewModels
 {
@@ -7,7 +8,7 @@ namespace CDP.Gui.ViewModels
     {
         public string Caption
         {
-            get { return string.Format(Strings.Analysis_Progress, demo.Name); }
+            get { return Strings.Analysis_Progress.Args(demo.Name); }
         }
 
         private int progress = 0;

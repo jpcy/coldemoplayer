@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Microsoft.Win32;
 using CDP.Core;
-using System.Diagnostics;
+using CDP.Core.Extensions;
 
 namespace CDP.Gui
 {
@@ -47,7 +48,7 @@ namespace CDP.Gui
 
             if (defaultShellCommand != "open" && defaultShellCommand != "play")
             {
-                throw new ArgumentException(string.Format("Invalid command \'{0}\'. Valid commands are \'open\' and \'play\'.", defaultShellCommand), "defaultShellCommand");
+                throw new ArgumentException("Invalid command \'{0}\'. Valid commands are \'open\' and \'play\'.".Args(defaultShellCommand), "defaultShellCommand");
             }
 
             // Create ".*" entries.
