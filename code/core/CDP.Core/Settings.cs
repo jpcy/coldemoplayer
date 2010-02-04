@@ -1,10 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Xml;
-using System.Text;
 using System.Linq;
-using System.Xml.Linq;
 using Microsoft.Win32;
 using CDP.Core.Extensions;
 
@@ -116,9 +113,9 @@ namespace CDP.Core
 
         public readonly List<Setting> definitions = new List<Setting>();
         public readonly Dictionary<string, object> dictionary = new Dictionary<string, object>();
-        private readonly string fileName = "settings.xml";
-        private readonly string rootElement = "Settings";
+        private readonly string fileName = "settings";
         private readonly string fileAssociationSettingPrefix = "FileAssociation_";
+        private readonly char separator = '|';
         private readonly string useDefaultUrlMarker = "default";
         private bool IsLoaded = false;
 
@@ -194,18 +191,32 @@ namespace CDP.Core
 
             IsLoaded = true;
             string path = Path.Combine(ProgramUserDataPath, fileName);
-            XDocument xml = null;
+            List<Tuple<string, string>> lines = null;
 
+            // Open the settings file and read its contents.
             if (File.Exists(path))
             {
+                lines = new List<Tuple<string, string>>();
+
                 try
                 {
-                    xml = XDocument.Load(path);
+                    using (StreamReader stream = new StreamReader(path))
+                    {
+                        while (!stream.EndOfStream)
+                        {
+                            string[] s = stream.ReadLine().Split(separator);
+
+                            if (s.Length == 2 && !string.IsNullOrEmpty(s[0]) && !string.IsNullOrEmpty(s[1]))
+                            {
+                                lines.Add(new Tuple<string, string>(s[0], s[1]));
+                            }
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
                     new ErrorReporter().LogWarning(null, ex);
-                    xml = null;
+                    lines = null;
                 }
             }
 
@@ -213,27 +224,27 @@ namespace CDP.Core
             {
                 object value = setting.DefaultValue;
 
-                if (xml != null)
+                if (lines != null)
                 {
-                    XElement element = xml.Root.Elements().SingleOrDefault(x => x.Name == setting.Key);
+                    Tuple<string, string> line = lines.FirstOrDefault(v => v.Item1 == setting.Key);
 
-                    if (element != null)
+                    if (line != null)
                     {
-                        if (setting.IsUrl && element.Value == useDefaultUrlMarker)
+                        if (setting.IsUrl && line.Item2 == useDefaultUrlMarker)
                         {
                             value = setting.DefaultValue;
                         }
                         else if (setting.Type == typeof(bool))
                         {
-                            value = bool.Parse(element.Value);
+                            value = bool.Parse(line.Item2);
                         }
                         else if (setting.Type.IsEnum)
                         {
-                            value = Enum.Parse(setting.Type, element.Value);
+                            value = Enum.Parse(setting.Type, line.Item2);
                         }
                         else if (setting.Type == typeof(string))
                         {
-                            value = element.Value;
+                            value = line.Item2;
                         }
                         else
                         {
@@ -245,7 +256,7 @@ namespace CDP.Core
                 dictionary.Add(setting.Key, value);
             }
 
-            if (xml == null)
+            if (lines == null)
             {
                 PopulateDefaults();
             }
@@ -253,35 +264,28 @@ namespace CDP.Core
 
         public void Save()
         {
-            using (XmlTextWriter xml = new XmlTextWriter(Path.Combine(ProgramUserDataPath, fileName), Encoding.Unicode))
+            using (StreamWriter stream = File.CreateText(Path.Combine(ProgramUserDataPath, fileName)))
             {
-                xml.Formatting = Formatting.Indented;
-                xml.WriteStartDocument();
-                xml.WriteStartElement(rootElement);
-
                 foreach (Setting setting in definitions)
                 {
                     object value = dictionary[setting.Key];
 
                     if (value != null)
                     {
-                        xml.WriteStartElement(setting.Key);
+                        string valueToWrite;
 
                         if (setting.IsUrl && value == setting.DefaultValue)
                         {
-                            xml.WriteValue(useDefaultUrlMarker);
+                            valueToWrite = useDefaultUrlMarker;
                         }
                         else
                         {
-                            xml.WriteValue(value.ToString());
+                            valueToWrite = value.ToString();
                         }
 
-                        xml.WriteEndElement();
+                        stream.WriteLine("{0}{1}{2}", setting.Key, separator, valueToWrite);
                     }
                 }
-
-                xml.WriteEndElement();
-                xml.WriteEndDocument();
             }
         }
 
