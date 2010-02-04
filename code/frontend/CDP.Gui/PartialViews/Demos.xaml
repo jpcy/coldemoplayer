@@ -5,7 +5,7 @@
     <ListView Margin="8" SelectionMode="Single" ItemsSource="{Binding Items}" SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}">
         <ListView.View>
             <GridView>
-                <GridViewColumn Header="{x:Static l:Strings.Demos_NameColumnHeader}">
+                <GridViewColumn Header="{x:Static l:Strings.Demos_GameColumnHeader}">
                     <GridViewColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
@@ -14,12 +14,12 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                 <Image Grid.Column="0" Width="16" Margin="0,0,2,0" VerticalAlignment="Center" Source="{Binding Icon}" />
-                                <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding Name}" />
+                                <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding Game}" />
                             </Grid>
                         </DataTemplate>
                     </GridViewColumn.CellTemplate>
                 </GridViewColumn>
-                <GridViewColumn Header="{x:Static l:Strings.Demos_GameColumnHeader}" DisplayMemberBinding="{Binding Game}" />
+                <GridViewColumn Header="{x:Static l:Strings.Demos_NameColumnHeader}" DisplayMemberBinding="{Binding Name}" />
                 <GridViewColumn Header="{x:Static l:Strings.Demos_MapColumnHeader}" DisplayMemberBinding="{Binding Map}" />
                 <GridViewColumn Header="{x:Static l:Strings.Demos_PerspectiveColumnHeader}" DisplayMemberBinding="{Binding Perspective}" />
                 <GridViewColumn Header="{x:Static l:Strings.Demos_DurationColumnHeader}" DisplayMemberBinding="{Binding Duration}" />
