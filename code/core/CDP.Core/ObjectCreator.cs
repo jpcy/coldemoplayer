@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using CDP.Core.Extensions;
 
 namespace CDP.Core
 {
@@ -51,7 +52,7 @@ namespace CDP.Core
         {
             if (!mappings.ContainsKey(typeof(T)))
             {
-                throw new ArgumentException(string.Format("No mapping for type '{0}' found.", typeof(T).ToString()));
+                throw new ArgumentException("No mapping for type '{0}' found.".Args(typeof(T).ToString()));
             }
 
             Mapping mapping = mappings[typeof(T)];

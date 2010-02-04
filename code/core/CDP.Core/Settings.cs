@@ -5,8 +5,8 @@ using System.Xml;
 using System.Text;
 using System.Linq;
 using System.Xml.Linq;
-using System.Xml.Serialization;
 using Microsoft.Win32;
+using CDP.Core.Extensions;
 
 namespace CDP.Core
 {
@@ -78,7 +78,7 @@ namespace CDP.Core
         {
             get
             {
-                return string.Format("{0}.{1}.{2}", ProgramVersionMajor, ProgramVersionMinor, ProgramVersionUpdate);
+                return "{0}.{1}.{2}".Args(ProgramVersionMajor, ProgramVersionMinor, ProgramVersionUpdate);
             }
         }
 
@@ -237,7 +237,7 @@ namespace CDP.Core
                         }
                         else
                         {
-                            throw new ApplicationException(string.Format("Unsupported setting type \"{0}\".", setting.Type));
+                            throw new ApplicationException("Unsupported setting type \"{0}\".".Args(setting.Type));
                         }
                     }
                 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CDP.Core.Extensions;
 
 namespace CDP.Core
 {
@@ -34,7 +35,7 @@ namespace CDP.Core
 
         public override string ToString()
         {
-            return string.Format("{0} {1} {2}", X, Y, Z);
+            return "{0} {1} {2}".Args(X, Y, Z);
         }
     }
 }

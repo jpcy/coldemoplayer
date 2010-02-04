@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using CDP.Core.Extensions;
 
 namespace CDP.Core
 {
@@ -35,7 +36,7 @@ namespace CDP.Core
             // Verify that steam.exe exists.
             if (!File.Exists((string)settings["SteamExeFullPath"]))
             {
-                Message = string.Format(Strings.SteamExePathNotSet, settings["SteamExeFullPath"]);
+                Message = Strings.SteamExePathNotSet.Args(settings["SteamExeFullPath"]);
                 return false;
             }
 
@@ -44,7 +45,7 @@ namespace CDP.Core
 
             if (!Directory.Exists(steamAccountPath))
             {
-                Message = string.Format(Strings.SteamAccountFolderDoesNotExist, settings["SteamAccountName"]);
+                Message = Strings.SteamAccountFolderDoesNotExist.Args(settings["SteamAccountName"]);
                 return false;
             }
 
@@ -53,7 +54,7 @@ namespace CDP.Core
 
             if (!Directory.Exists(gamePath))
             {
-                Message = string.Format(Strings.SteamGameFolderDoesNotExist, gameName, gamePath);
+                Message = Strings.SteamGameFolderDoesNotExist.Args(gameName, gamePath);
                 return false;
             }
 
@@ -72,7 +73,7 @@ namespace CDP.Core
             // Verify that the game is not already running.
             if (FindProcess(Path.GetFileNameWithoutExtension(processExecutableFileName), processExecutableFileName) != null)
             {
-                Message = string.Format(Strings.SteamGameAlreadyRunning, gameName);
+                Message = Strings.SteamGameAlreadyRunning.Args(gameName);
                 return false;
             }
 

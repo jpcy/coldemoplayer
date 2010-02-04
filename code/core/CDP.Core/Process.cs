@@ -1,5 +1,6 @@
 ﻿using System;
 using FrameworkProcess = System.Diagnostics.Process;
+using CDP.Core.Extensions;
 
 namespace CDP.Core
 {
@@ -40,7 +41,7 @@ namespace CDP.Core
                     {
                         if (attemptsLeft == 0)
                         {
-                            throw new ApplicationException(string.Format("Process MainModule still null after {0} attempts.", attemptsLeft));
+                            throw new ApplicationException("Process MainModule still null after {0} attempts.".Args(attemptsLeft));
                         }
 
                         System.Threading.Thread.Sleep(100);

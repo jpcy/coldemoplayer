@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using CDP.Core.Extensions;
 using SevenZip;
 
 namespace CDP.Core
@@ -14,7 +15,7 @@ namespace CDP.Core
         public class ContainsBackupFileException : Exception
         {
             public ContainsBackupFileException(string backupFileExtension)
-                : base(string.Format("Archive contains a file with the same extension as backup files (.{0}).", backupFileExtension))
+                : base("Archive contains a file with the same extension as backup files (.{0}).".Args(backupFileExtension))
             {
             }
         }
