@@ -6,6 +6,11 @@ namespace CDP.Core.Extensions
 {
     public static class StringExtensions
     {
+        public static string Args(this string s, params object[] args)
+        {
+            return string.Format(s, args);
+        }
+
         public static string RemoveChars(this string s, params char[] chars)
         {
             StringBuilder sb = new StringBuilder();
