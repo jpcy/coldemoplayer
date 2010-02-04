@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
 
 namespace CDP.HalfLife
 {
@@ -16,34 +15,24 @@ namespace CDP.HalfLife
 
         public class Version
         {
-            [XmlAttribute("name")]
             public string Name { get; set; }
-
-            [XmlAttribute("checksum")]
             public string Checksum { get; set; }
         }
 
         public class Map
         {
-            [XmlAttribute("name")]
             public string Name { get; set; }
-
-            [XmlAttribute("checksum")]
             public uint Checksum { get; set; }
         }
 
         public class UserMessage
         {
-            [XmlAttribute("name")]
             public string Name { get; set; }
-
-            [XmlAttribute("id")]
             public byte Id { get; set; }
         }
 
         public class Resource
         {
-            [XmlAttribute("name")]
             public string Name { get; set; }
         }
 

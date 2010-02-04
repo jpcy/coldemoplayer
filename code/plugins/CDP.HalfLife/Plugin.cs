@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.IO;
-using System.Xml.Serialization;
 using System.Windows.Controls;
+using JsonExSerializer;
 
 namespace CDP.HalfLife
 {
@@ -79,10 +78,10 @@ namespace CDP.HalfLife
         {
             RegisterMessages();
 
-            // Read config/goldsrc/games.xml
-            using (StreamReader stream = new StreamReader(fileSystem.PathCombine(settings.ProgramPath, "config", "goldsrc", "games.xml")))
+            // Read config/goldsrc/games.json
+            using (StreamReader stream = new StreamReader(fileSystem.PathCombine(settings.ProgramPath, "config", "goldsrc", "games.json")))
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(Game[]));
+                Serializer serializer = new Serializer(typeof(Game[]));
                 games = (Game[])serializer.Deserialize(stream);
             }
         }

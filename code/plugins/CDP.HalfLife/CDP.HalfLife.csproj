@@ -35,11 +35,13 @@
     <Reference Include="CDP.Core">
       <HintPath>..\..\..\bin\CDP.Core.dll</HintPath>
     </Reference>
+    <Reference Include="JsonExSerializer">
+      <HintPath>..\..\..\libraries\JsonExSerializer\JsonExSerializer.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -161,7 +163,7 @@
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)..\..\bin\$(TargetFileName)"
 copy "$(TargetDir)\de-DE\CDP.HalfLife.resources.dll" "$(SolutionDir)..\..\bin\de-DE\CDP.HalfLife.resources.dll"
-“$(FrameworkSDKDir)bin\NETFX 4.0 Tools\sgen.exe” /a:"$(SolutionDir)..\..\bin\$(TargetFileName)" /t:CDP.HalfLife.Game /force</PostBuildEvent>
+</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
