@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using CDP.Core;
+using CDP.Core.Extensions;
 
 namespace CDP.HalfLife
 {
@@ -36,14 +37,14 @@ namespace CDP.HalfLife
 
             if (DemoProtocol != expectedDemoProtocol)
             {
-                throw new ApplicationException(string.Format(Strings.UnsupportedDemoProtocol, DemoProtocol, expectedDemoProtocol));
+                throw new ApplicationException(Strings.UnsupportedDemoProtocol.Args(DemoProtocol, expectedDemoProtocol));
             }
 
             NetworkProtocol = br.ReadUInt();
 
             if (NetworkProtocol < minimumNetworkProtocol)
             {
-                throw new ApplicationException(string.Format(Strings.UnsupportedNetworkProtocol, NetworkProtocol, minimumNetworkProtocol));
+                throw new ApplicationException(Strings.UnsupportedNetworkProtocol.Args(NetworkProtocol, minimumNetworkProtocol));
             }
 
             MapName = br.ReadString(mapNameLength);

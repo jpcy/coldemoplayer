@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
+﻿using System.IO;
 using System.Diagnostics;
 using CDP.Core;
+using CDP.Core.Extensions;
 
 namespace CDP.UnrealTournament2004
 {
@@ -47,7 +45,7 @@ namespace CDP.UnrealTournament2004
 
             if (!File.Exists(processExecutableFileName) )
             {
-                Message = string.Format(Strings.ExeNotFound, processExecutableFileName);
+                Message = Strings.ExeNotFound.Args(processExecutableFileName);
                 return false;
             }
 

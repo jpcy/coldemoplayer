@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using CDP.Core;
+using CDP.Core.Extensions;
 
 namespace CDP.UnrealTournament2004
 {
@@ -160,7 +161,7 @@ namespace CDP.UnrealTournament2004
 
             if (stream.BytesLeft < length)
             {
-                throw new ApplicationException(string.Format("Unexpected end of stream. \'{0}\' bytes left, need \'{1}\'", stream.BytesLeft, length));
+                throw new ApplicationException("Unexpected end of stream. \'{0}\' bytes left, need \'{1}\'".Args(stream.BytesLeft, length));
             }
 
             string s = stream.ReadString();
@@ -168,7 +169,7 @@ namespace CDP.UnrealTournament2004
 
             if (stringLength != length)
             {
-                throw new ApplicationException(string.Format("Unexpected string length. Expected \'{0}\', got \'{1}\'.", length, stringLength));
+                throw new ApplicationException("Unexpected string length. Expected \'{0}\', got \'{1}\'.".Args(length, stringLength));
             }
 
             return s;

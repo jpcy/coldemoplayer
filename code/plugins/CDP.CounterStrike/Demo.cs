@@ -152,7 +152,7 @@ namespace CDP.CounterStrike
                 // Change the actual structure, which will be used for writing deltas from now on.
                 for (int i = 1; i <= 2; i++)
                 {
-                    message.Structure.AddEntry(string.Format("iparam{0}", i), 18, 1.0f, CDP.HalfLife.DeltaStructure.EntryFlags.Integer | CDP.HalfLife.DeltaStructure.EntryFlags.Signed);
+                    message.Structure.AddEntry("iparam{0}".Args(i), 18, 1.0f, CDP.HalfLife.DeltaStructure.EntryFlags.Integer | CDP.HalfLife.DeltaStructure.EntryFlags.Signed);
                 }
 
                 // Overwrite the existing structure.

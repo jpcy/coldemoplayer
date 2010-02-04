@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using CDP.Core.Extensions;
 
 namespace CDP.HalfLife.Messages
 {
@@ -71,7 +72,7 @@ namespace CDP.HalfLife.Messages
 
             if (footer != (1 << 5) - 1) // All 1's.
             {
-                throw new ApplicationException(string.Format("Bad svc_spawnbaseline footer \"{0}\".", footer));
+                throw new ApplicationException("Bad svc_spawnbaseline footer \"{0}\".".Args(footer));
             }
 
             uint nExtraEntityDeltas = buffer.ReadUBits(6);
@@ -133,7 +134,7 @@ namespace CDP.HalfLife.Messages
 
             if (footer != (1 << 5) - 1) // All 1's.
             {
-                throw new ApplicationException(string.Format("Bad svc_spawnbaseline footer \"{0}\".", footer));
+                throw new ApplicationException("Bad svc_spawnbaseline footer \"{0}\".".Args(footer));
             }
 
             uint nExtraEntityDeltas = buffer.ReadUBits(6);

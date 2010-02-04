@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using CDP.Core.Extensions;
 
 namespace CDP.HalfLife.UserMessages
 {
@@ -31,7 +32,7 @@ namespace CDP.HalfLife.UserMessages
             }
             else if (Length != 0)
             {
-                throw new ApplicationException(string.Format("Bad user message length \"{0}\".", Length));
+                throw new ApplicationException("Bad user message length \"{0}\".".Args(Length));
             }
         }
 

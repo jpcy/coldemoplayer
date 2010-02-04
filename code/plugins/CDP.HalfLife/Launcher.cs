@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Diagnostics;
+using CDP.Core.Extensions;
 
 namespace CDP.HalfLife
 {
@@ -79,7 +80,7 @@ namespace CDP.HalfLife
             if (!File.Exists(resourceArchiveFileName))
             {
                 // TODO: block and attempt to download the required resource archive here.
-                Message = string.Format(Strings.NoSuitableMapFound, demo.MapName, demo.MapChecksum);
+                Message = Strings.NoSuitableMapFound.Args(demo.MapName, demo.MapChecksum);
                 return false;
             }
 
@@ -148,17 +149,17 @@ namespace CDP.HalfLife
                 stream.WriteLine("echo \"  +col_slowmo ({0})\"", Strings.GameConfigSlowMotion);
                 stream.WriteLine("echo \"  col_pause ({0})\"", Strings.GameConfigTogglePause);
                 stream.WriteLine("echo \"\"");
-                stream.WriteLine("echo \"{0}\"", string.Format(Strings.GameConfigPlayingMessage, demo.Name));
+                stream.WriteLine("echo \"{0}\"", Strings.GameConfigPlayingMessage.Args(demo.Name));
                 // TODO: duration, recorded by.
                 stream.WriteLine("echo \"\"");
             }
 
-            string launchParameters = string.Format("-applaunch {0}", appId);
+            string launchParameters = "-applaunch {0}".Args(appId);
 
             // TODO: check demo capabilities to see if starting a listen server is possible
             if ((bool)settings["HlStartListenServer"] == true)
             {
-                launchParameters += string.Format(" -nomaster +maxplayers 10 +sv_lan 1 +map {0}", demo.MapName);
+                launchParameters += " -nomaster +maxplayers 10 +sv_lan 1 +map {0}".Args(demo.MapName);
             }
 
             launchParameters += " +exec " + configFileName;

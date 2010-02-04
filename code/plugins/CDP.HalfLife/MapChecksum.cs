@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using CDP.Core.Extensions;
 
 namespace CDP.HalfLife
 {
@@ -116,7 +117,7 @@ namespace CDP.HalfLife
 
                 if (version != 29 && version != 30)
                 {
-                    throw new ApplicationException(string.Format("Unknown map version {0}, expected 29 or 30.", version));
+                    throw new ApplicationException("Unknown map version {0}, expected 29 or 30.".Args(version));
                 }
 
                 // Read lump headers.

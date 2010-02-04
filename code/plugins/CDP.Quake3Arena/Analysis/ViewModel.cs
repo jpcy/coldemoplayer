@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Documents;
 using System.Windows.Media;
 using CDP.Core;
@@ -194,27 +193,27 @@ namespace CDP.Quake3Arena.Analysis
                 if (mod == modTable["MOD_KAMIKAZE"])
                     message = "goes out with a bang";
                 else if (mod == modTable["MOD_GRENADE_SPLASH"])
-                    message = string.Format("tripped on {0} own grenade", genderIdentifier);
+                    message = "tripped on {0} own grenade".Args(genderIdentifier);
                 else if (mod == modTable["MOD_ROCKET_SPLASH"])
-                    message = string.Format("blew {0}self up", genderIdentifier);
+                    message = "blew {0}self up".Args(genderIdentifier);
                 else if (mod == modTable["MOD_PLASMA_SPLASH"])
-                    message = string.Format("melted {0}self", genderIdentifier);
+                    message = "melted {0}self".Args(genderIdentifier);
                 else if (mod == modTable["MOD_BFG_SPLASH"])
                     message = "should have used a smaller gun";
                 else if (mod == modTable["MOD_PROXIMITY_MINE"])
-                    message = string.Format("found {0} prox mine", gender == Genders.Neutral ? "it's" : genderIdentifier);
+                    message = "found {0} prox mine".Args(gender == Genders.Neutral ? "it's" : genderIdentifier);
                 else
-                    message = string.Format("killed {0}self", genderIdentifier);
+                    message = "killed {0}self".Args(genderIdentifier);
             }
 
             if (message != null)
             {
-                return string.Format("{0} {1}.", playerNames[(int)victimIndex], message);
+                return "{0} {1}.".Args(playerNames[(int)victimIndex], message);
             }
 
             if (killerIndex >= playerNames.Count)
             {
-                return string.Format("{0} died.", playerNames[(int)victimIndex]);
+                return "{0} died.".Args(playerNames[(int)victimIndex]);
             }
 
             string message2 = string.Empty;
@@ -298,7 +297,7 @@ namespace CDP.Quake3Arena.Analysis
 		        message = "was killed by";
 
             // Set string colour back to default (white) after each player name.
-            return string.Format("{0}^7 {1} {2}^7{3}.", playerNames[(int)victimIndex], message, playerNames[(int)killerIndex], message2);
+            return "{0}^7 {1} {2}^7{3}.".Args(playerNames[(int)victimIndex], message, playerNames[(int)killerIndex], message2);
         }
 
         /// <summary>
@@ -340,7 +339,7 @@ namespace CDP.Quake3Arena.Analysis
 
             if (message != null)
             {
-                return string.Format("{0} died ({1}).", playerNames[(int)victimIndex], message);
+                return "{0} died ({1}).".Args(playerNames[(int)victimIndex], message);
             }
 
             // Suicide using own weapon.
@@ -353,11 +352,11 @@ namespace CDP.Quake3Arena.Analysis
                 if (mod == modTable["MOD_KAMIKAZE"])
                     message = "kamikaze";
                 else if (mod == modTable["MOD_GRENADE_SPLASH"])
-                    message = string.Format("grenade", genderIdentifier);
+                    message = "grenade".Args(genderIdentifier);
                 else if (mod == modTable["MOD_ROCKET_SPLASH"])
-                    message = string.Format("rocket", genderIdentifier);
+                    message = "rocket".Args(genderIdentifier);
                 else if (mod == modTable["MOD_PLASMA_SPLASH"])
-                    message = string.Format("plasma", genderIdentifier);
+                    message = "plasma".Args(genderIdentifier);
                 else if (mod == modTable["MOD_BFG_SPLASH"])
                     message = "bfg";
                 else if (mod == modTable["MOD_PROXIMITY_MINE"])
@@ -368,13 +367,13 @@ namespace CDP.Quake3Arena.Analysis
 
             if (message != null)
             {
-                return string.Format("{0} suicided ({1}).", playerNames[(int)victimIndex], message);
+                return "{0} suicided ({1}).".Args(playerNames[(int)victimIndex], message);
             }
 
             // Died (unknown killer).
             if (killerIndex >= playerNames.Count)
             {
-                return string.Format("{0} died.", playerNames[(int)victimIndex]);
+                return "{0} died.".Args(playerNames[(int)victimIndex]);
             }
 
             // Killed.
@@ -422,7 +421,7 @@ namespace CDP.Quake3Arena.Analysis
                 message = "Unknown Weapon";
 
             // Set string colour back to default (white) after each player name.
-            return string.Format("{0}^7 killed {1}^7 with {2}.", playerNames[(int)killerIndex], playerNames[(int)victimIndex], weapon);
+            return "{0}^7 killed {1}^7 with {2}.".Args(playerNames[(int)killerIndex], playerNames[(int)victimIndex], weapon);
         }
 
         /// <summary>

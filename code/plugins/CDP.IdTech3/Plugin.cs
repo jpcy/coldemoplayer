@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows.Controls;
 using System.Collections.Generic;
 using System.Linq;
+using CDP.Core.Extensions;
 
 namespace CDP.IdTech3
 {
@@ -183,7 +184,7 @@ namespace CDP.IdTech3
 
                 if (!Enum.IsDefined(typeof(Protocols), protocol))
                 {
-                    throw new ApplicationException(string.Format("Unknown protocol \'{0}\'.", protocol));
+                    throw new ApplicationException("Unknown protocol \'{0}\'.".Args(protocol));
                 }
 
                 return (Protocols)protocol;

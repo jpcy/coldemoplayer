@@ -5,6 +5,7 @@ using System.Text;
 using System.Collections;
 using System.IO;
 using System.Reflection;
+using CDP.Core.Extensions;
 
 namespace CDP.IdTech3
 {
@@ -350,7 +351,7 @@ namespace CDP.IdTech3
 
                 if (command == null)
                 {
-                    throw new ApplicationException(string.Format("Unknown command \'{0}\'.", commandId));
+                    throw new ApplicationException("Unknown command \'{0}\'.".Args(commandId));
                 }
 
                 bool writeToLog = (log == null ? false : commandsToLog.Contains(commandId));
@@ -452,7 +453,7 @@ namespace CDP.IdTech3
 
                 if (command == null)
                 {
-                    throw new ApplicationException(string.Format("Unknown command \'{0}\'.", commandId));
+                    throw new ApplicationException("Unknown command \'{0}\'.".Args(commandId));
                 }
 
                 writer.WriteByte((byte)commandId);
@@ -503,7 +504,7 @@ namespace CDP.IdTech3
         {
             if (!Enum.IsDefined(typeof(Protocols), protocol))
             {
-                throw new ApplicationException(string.Format("Unknown protocol \'{0}\'.", protocol));
+                throw new ApplicationException("Unknown protocol \'{0}\'.".Args(protocol));
             }
 
             Protocol = (Protocols)protocol;

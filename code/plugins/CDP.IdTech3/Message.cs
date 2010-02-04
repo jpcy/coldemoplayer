@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using CDP.Core.Extensions;
 
 namespace CDP.IdTech3
 {
@@ -31,7 +32,7 @@ namespace CDP.IdTech3
 
             if (Length < 0 || Length > MAX_MSGLEN)
             {
-                throw new ApplicationException(string.Format("Message length \'{0}\' is out of range. Minimum is \'0\', maximum is \'{1}\'.", Length, MAX_MSGLEN));
+                throw new ApplicationException("Message length \'{0}\' is out of range. Minimum is \'0\', maximum is \'{1}\'.".Args(Length, MAX_MSGLEN));
             }
 
             Reader = new BitReader(stream.ReadBytes(Length), protocol >= Protocols.Protocol66);

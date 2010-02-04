@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using CDP.Core.Extensions;
 
 namespace CDP.HalfLife.Messages
 {
@@ -284,7 +285,7 @@ namespace CDP.HalfLife.Messages
                     break;
 
                 default:
-                    throw new ApplicationException(String.Format("Unknown temp entity type \"{0}\".", Type));
+                    throw new ApplicationException("Unknown temp entity type \"{0}\".".Args(Type));
             }
 
             if (length > 0)

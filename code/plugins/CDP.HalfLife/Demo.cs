@@ -106,7 +106,7 @@ namespace CDP.HalfLife
             {
                 if (Game == null)
                 {
-                    return string.Format("Unknown ({0})", GameFolderName);
+                    return "Unknown ({0})".Args(GameFolderName);
                 }
 
                 string version = Game.GetVersionName(clientDllChecksum);
@@ -828,7 +828,7 @@ namespace CDP.HalfLife
 
             if (frame == null)
             {
-                throw new ApplicationException(string.Format("Unknown frame type \"{0}\" at offset \"{1}\"", id, stream.Position - 1));
+                throw new ApplicationException("Unknown frame type \"{0}\" at offset \"{1}\"".Args(id, stream.Position - 1));
             }
 
             frame.Demo = this;
@@ -1072,7 +1072,7 @@ namespace CDP.HalfLife
 
             if (message == null)
             {
-                throw new ApplicationException(string.Format("Unknown message type \"{0}\".", id));
+                throw new ApplicationException("Unknown message type \"{0}\".".Args(id));
             }
 
             message.Demo = this;
@@ -1407,7 +1407,7 @@ namespace CDP.HalfLife
                         ulong authId = sid - 76561197960265728;
                         int serverId = ((authId % 2) == 0 ? 0 : 1);
                         authId = (authId - (ulong)serverId) / 2;
-                        player.SteamId = string.Format("STEAM_0:{0}:{1}", serverId, authId);
+                        player.SteamId = "STEAM_0:{0}:{1}".Args(serverId, authId);
                     }
                 }
             }

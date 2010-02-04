@@ -70,13 +70,13 @@ namespace CDP.HalfLife.Analysis
             }
 
             GameLogWriteTimestamp();
-            gameLog.Write(string.Format("Round {0}:\n", newRound.Number), Brushes.Black, TextDecorations.Underline);
+            gameLog.Write("Round {0}:\n".Args(newRound.Number), Brushes.Black, TextDecorations.Underline);
         }
 
         protected void GameLogWriteTimestamp()
         {
             TimestampConverter converter = new TimestampConverter();
-            gameLog.Write(string.Format("{0}: ", converter.Convert(demo.CurrentTimestamp, null, null, null)), Brushes.Brown);
+            gameLog.Write("{0}: ".Args(converter.Convert(demo.CurrentTimestamp, null, null, null)), Brushes.Brown);
         }
 
         protected string DetokeniseTitle(string[] strings)
@@ -116,7 +116,7 @@ namespace CDP.HalfLife.Analysis
                 int wildcardNumber = result[wildcardIndex + 2] - '0';
 
                 // replace the wildcard with the correct string
-                result = result.Replace(string.Format("%s{0}", wildcardNumber), strings[wildcardNumber]);
+                result = result.Replace("%s{0}".Args(wildcardNumber), strings[wildcardNumber]);
             }
 
             return result;

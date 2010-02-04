@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CDP.Core;
+using CDP.Core.Extensions;
 using CDP.IdTech3.Commands;
 using CDP.IdTech3;
 
@@ -15,7 +16,7 @@ namespace CDP.Quake3Arena
             {
                 if (mod == null)
                 {
-                    return string.Format("Quake III Arena ({0})", gameName);
+                    return "Quake III Arena ({0})".Args(gameName);
                 }
                 else
                 {

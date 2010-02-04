@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Collections;
-using System.IO;
 using System.Linq;
+using CDP.Core.Extensions;
 
 namespace CDP.HalfLife
 {
@@ -353,7 +351,7 @@ namespace CDP.HalfLife
                 return buffer.ReadString();
             }
 
-            throw new ApplicationException(string.Format("Unknown delta entry type {0}.", e.Flags));
+            throw new ApplicationException("Unknown delta entry type {0}.".Args(e.Flags));
         }
 
         private int ParseInt(BitReader buffer, Entry e)
@@ -432,7 +430,7 @@ namespace CDP.HalfLife
             }
             else
             {
-                throw new ApplicationException(string.Format("Unknown delta entry type {0}.", e.Flags));
+                throw new ApplicationException("Unknown delta entry type {0}.".Args(e.Flags));
             }
         }
 

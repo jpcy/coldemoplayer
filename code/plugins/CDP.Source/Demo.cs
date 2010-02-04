@@ -223,7 +223,7 @@ namespace CDP.Source
 
             if (frame == null)
             {
-                throw new ApplicationException(string.Format("Unknown frame type \"{0}\" at offset \"{1}\"", id, stream.Position - 1));
+                throw new ApplicationException("Unknown frame type \"{0}\" at offset \"{1}\"".Args(id, stream.Position - 1));
             }
 
             frame.Demo = this;
@@ -374,7 +374,7 @@ namespace CDP.Source
 
             if (message == null)
             {
-                throw new ApplicationException(string.Format("Unknown message type \"{0}\".", id));
+                throw new ApplicationException("Unknown message type \"{0}\".".Args(id));
             }
 
             message.Demo = this;

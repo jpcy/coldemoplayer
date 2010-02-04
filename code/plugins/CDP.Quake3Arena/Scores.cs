@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CDP.IdTech3;
+using CDP.Core.Extensions;
 
 namespace CDP.Quake3Arena
 {
@@ -30,7 +31,7 @@ namespace CDP.Quake3Arena
 
             if (!serverCommand.StartsWith(scoresServerCommandMarker))
             {
-                throw new ArgumentException(string.Format("String does not start with \'{0}\'", scoresServerCommandMarker), "serverCommand");
+                throw new ArgumentException("String does not start with \'{0}\'".Args(scoresServerCommandMarker), "serverCommand");
             }
 
             // Strip the server command marker.

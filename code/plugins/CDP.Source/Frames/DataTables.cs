@@ -85,7 +85,7 @@ namespace CDP.Source.Frames
 
                     if (!Enum.IsDefined(typeof(Prop.Types), prop.Type))
                     {
-                        throw new ApplicationException(string.Format("Unknown prop type\'{0}\'", prop.Type));
+                        throw new ApplicationException("Unknown prop type\'{0}\'".Args(prop.Type));
                     }
 
                     prop.Name = buffer.ReadString();

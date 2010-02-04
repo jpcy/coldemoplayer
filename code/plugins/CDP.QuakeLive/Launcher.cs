@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using CDP.Core;
+using CDP.Core.Extensions;
 
 namespace CDP.QuakeLive
 {
@@ -41,7 +42,7 @@ namespace CDP.QuakeLive
                 }
                 else
                 {
-                    throw new ApplicationException(string.Format("SHGetKnownFolderPath failed with HRESULT \'{0}\'.", result));
+                    throw new ApplicationException("SHGetKnownFolderPath failed with HRESULT \'{0}\'.".Args(result));
                 }
             }
             else

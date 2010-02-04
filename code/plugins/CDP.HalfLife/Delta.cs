@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CDP.Core.Extensions;
 
 namespace CDP.HalfLife
 {
@@ -47,7 +48,7 @@ namespace CDP.HalfLife
 
             if (entry == null)
             {
-                throw new ApplicationException(string.Format("Delta entry {0} not found.", name));
+                throw new ApplicationException("Delta entry {0} not found.".Args(name));
             }
 
             entry.Value = value;

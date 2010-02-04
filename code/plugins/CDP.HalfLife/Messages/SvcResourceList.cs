@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using CDP.Core.Extensions;
 
 namespace CDP.HalfLife.Messages
 {
@@ -168,7 +169,7 @@ namespace CDP.HalfLife.Messages
                 {
                     if (resource.Hash.Length != hashLength)
                     {
-                        throw new ApplicationException(string.Format("Bad resource hash length. Length is \"{0}\", expected \"{1}\".", resource.Hash.Length, hashLength));
+                        throw new ApplicationException("Bad resource hash length. Length is \"{0}\", expected \"{1}\".".Args(resource.Hash.Length, hashLength));
                     }
 
                     buffer.WriteBytes(resource.Hash);
@@ -182,7 +183,7 @@ namespace CDP.HalfLife.Messages
                 {
                     if (resource.Reserved.Length != reservedLength)
                     {
-                        throw new ApplicationException(string.Format("Bad resource reserved data length. Length is \"{0}\", expected \"{1}\".", resource.Reserved.Length, reservedLength));
+                        throw new ApplicationException("Bad resource reserved data length. Length is \"{0}\", expected \"{1}\".".Args(resource.Reserved.Length, reservedLength));
                     }
 
                     buffer.WriteBoolean(true);

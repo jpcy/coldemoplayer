@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
+﻿using System.IO;
 using System.Diagnostics;
+using CDP.Core.Extensions;
 
 namespace CDP.Quake3Arena
 {
@@ -58,7 +55,7 @@ namespace CDP.Quake3Arena
 
             if (!File.Exists(exeFullPath))
             {
-                Message = string.Format(Strings.ExeNotFound, exeFullPath);
+                Message = Strings.ExeNotFound.Args(exeFullPath);
                 return false;
             }
 
