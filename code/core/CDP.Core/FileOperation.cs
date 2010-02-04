@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Xml.Serialization;
 
 namespace CDP.Core
 {
@@ -10,10 +9,7 @@ namespace CDP.Core
 
     public class FileMoveOperation : FileOperation
     {
-        [XmlAttribute("sourceFileName")]
         public string SourceFileName { get; set; }
-
-        [XmlAttribute("destinationFilename")]
         public string DestinationFileName { get; set; }
 
         public FileMoveOperation()
@@ -43,7 +39,6 @@ namespace CDP.Core
 
     public class FileDeleteOperation : FileOperation
     {
-        [XmlAttribute("fileName")]
         public string FileName { get; set; }
 
         public FileDeleteOperation()
