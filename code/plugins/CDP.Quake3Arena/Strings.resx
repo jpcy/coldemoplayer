@@ -130,4 +130,7 @@
   <data name="ExeNotSet" xml:space="preserve">
     <value>Quake III Arena executable path not set.</value>
   </data>
+  <data name="ExePathTitle" xml:space="preserve">
+    <value>Quake III Arena executable path:</value>
+  </data>
 </root>

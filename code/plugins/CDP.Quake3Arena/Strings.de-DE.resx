@@ -117,8 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BrowseButtonContent" xml:space="preserve">
+    <value>[GERMAN] Browse...</value>
+  </data>
   <data name="BrowseForExeDialogTitle" xml:space="preserve">
     <value>[GERMAN] Browse for Quake III Arena executable...</value>
+  </data>
+  <data name="ExePathTitle" xml:space="preserve">
+    <value>[GERMAN] Quake III Arena executable path:</value>
   </data>
   <data name="Quake3ExeNotFound" xml:space="preserve">
     <value>[GERMAN] Quake III Arena executable not found at '{0}'.</value>

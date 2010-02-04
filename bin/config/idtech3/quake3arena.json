@@ -27,9 +27,15 @@
             "CanAnalyse":true
         }
     ], 
-    "ExecutableFileNames":
+	"Executables":
     [
-        "quake3.exe", 
-        "ioquake3.x86.exe"
+		{
+			"Name":"Quake III Arena", 
+			"FileName":"quake3.exe"
+		},
+		{
+			"Name":"ioquake3", 
+			"FileName":"ioquake3.x86.exe"
+		}
     ]
 }

@@ -79,7 +79,7 @@ namespace CDP.Quake3Arena
             {
                 settingsView = new SettingsView
                 {
-                    DataContext = new SettingsViewModel(config.ExecutableFileNames)
+                    DataContext = new SettingsViewModel(config.Executables)
                 };
             }
 

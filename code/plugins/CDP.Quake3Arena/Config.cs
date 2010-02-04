@@ -12,9 +12,15 @@ namespace CDP.Quake3Arena
         public bool CanAnalyse { get; set; }
     }
 
+    public class Executable
+    {
+        public string Name { get; set; }
+        public string FileName { get; set; }
+    }
+
     public class Config
     {
         public Mod[] Mods { get; set; }
-        public string[] ExecutableFileNames { get; set; }
+        public Executable[] Executables { get; set; }
     }
 }
