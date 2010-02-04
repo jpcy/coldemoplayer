@@ -1,0 +1,3021 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>JsonExSerializer</name>
+    </assembly>
+    <members>
+        <member name="T:JsonExSerializer.Collections.ArrayBuilder">
+            <summary>
+            Collection builder class for arrays
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Collections.ICollectionBuilder">
+            <summary>
+            Interface for an item that can build a collection object
+            </summary>
+        </member>
+        <member name="F:JsonExSerializer.Collections.ArrayBuilder._arrayType">
+            <summary>
+            The type for the array
+            </summary>
+        </member>
+        <member name="F:JsonExSerializer.Collections.ArrayBuilder.result">
+            <summary>
+            The final array being built
+            </summary>
+        </member>
+        <member name="F:JsonExSerializer.Collections.ArrayBuilder.index">
+            <summary>
+            The current index for insertion into the array
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Collections.ArrayBuilder.#ctor(System.Type,System.Int32)">
+            <summary>
+            Initializes an ArrayBuilder to build an array of Type <paramref name="arrayType"/> containing
+            <paramref name="itemCount"/> elements.
+            </summary>
+            <param name="arrayType">The type of the array to build</param>
+            <param name="itemCount">The number of elements in the array</param>
+        </member>
+        <member name="M:JsonExSerializer.Collections.ArrayBuilder.Add(System.Object)">
+            <summary>
+            Adds an element to the array
+            </summary>
+            <param name="item">the item to add</param>
+        </member>
+        <member name="M:JsonExSerializer.Collections.ArrayBuilder.GetResult">
+            <summary>
+            Returns the array that was built
+            </summary>
+            <returns>an array</returns>
+        </member>
+        <member name="M:JsonExSerializer.Collections.ArrayBuilder.GetReference">
+            <summary>
+            Returns a reference to the array being built
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:JsonExSerializer.Collections.ArrayHandler">
+            <summary>
+            Collection handler class for arrays
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Collections.CollectionHandler.IsCollection(System.Type)">
+            <summary>
+            Checks to see if the collection type is handled by this handler.
+            </summary>
+            <param name="collectionType">the type to check</param>
+            <returns>true if this handler can process the collection type</returns>
+        </member>
+        <member name="M:JsonExSerializer.Collections.CollectionHandler.ConstructBuilder(System.Type,System.Int32)">
+            <summary>
+            Constructs a collection builder for the given collection type.  The
+            type must be supported by this handler.
+            </summary>
+            <param name="collectionType">the type to construct a builder for</param>
+            <returns>a collection builder</returns>
+        </member>
+        <member name="M:JsonExSerializer.Collections.CollectionHandler.ConstructBuilder(System.Object)">
+            <summary>
+            Constructs a collection builder to update an existing collection.  The
+            type must be supported by this handler.
+            </summary>
+            <param name="collection">an existing istance of the collection class to be populated</param>
+            <param name="collectionType">the type to construct a builder for</param>
+            <returns>a collection builder</returns>
+        </member>
+        <member name="M:JsonExSerializer.Collections.CollectionHandler.GetItemType(System.Type)">
+            <summary>
+            Gets the type of items that this collection type holds.  The default is System.Object.
+            </summary>
+            <param name="CollectionType">the type of the collection</param>
+            <returns>the item type</returns>
+        </member>
+        <member name="M:JsonExSerializer.Collections.CollectionHandler.GetEnumerable(System.Object)">
+            <summary>
+            Gets the enumerable property of the collection.  This is normally
+            just the collection itself, but can be implemented to provide a custom enumerable
+            </summary>
+            <param name="collection">the collection</param>
+            <returns>an IEnumerable object</returns>
+        </member>
+        <member name="T:JsonExSerializer.Collections.CollectionConstructorHandler">
+            <summary>
+            Handles collection classes implementing ICollection
+            with an constructor matching (ICollection) or (IEnumerable&lt;&gt;)
+            or (IEnumerable).
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Collections.CollectionHandlerWrapper">
+            <summary>
+            A wrapper class that allows you to wrap another collection handler and specify
+            the Collection class and Item class
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Collections.GenericCollectionBuilder`1">
+            <summary>
+            Implements a collection builder for types implementing the
+            generic version of ICollection.
+            </summary>
+            <typeparam name="ItemT">the item type of the ICollection interface</typeparam>
+        </member>
+        <member name="T:JsonExSerializer.Collections.GenericCollectionHandler">
+            <summary>
+            Handler class for Generic ICollection interface
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Collections.GenericStackHandler">
+            <summary>
+            Collection handler for a non-generic System.Collections.Stack
+            class.
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Collections.ListHandler">
+            <summary>
+            Handler class for classes implementing IList
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Collections.StackBuilder">
+            <summary>
+            Builder for a non-generic System.Collections.Stack
+            class.
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Collections.StackHandler">
+            <summary>
+            Collection handler for a non-generic System.Collections.Stack
+            class.
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.ConstructorParameterAttribute">
+            <summary>
+            This attribute is used to decorate a property that will be used as an argument to the
+            constructor rather than written out as a normal property.
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.ConstructorParameterAttribute.#ctor(System.Int32)">
+            <summary>
+            Indicates that this property will be passed to the constructor.
+            </summary>
+            <param name="index">the 0-based position of the property within the constructor's arguments</param>
+        </member>
+        <member name="M:JsonExSerializer.ConstructorParameterAttribute.#ctor">
+            <summary>
+            Indicates that this property will be passed to the constructor with a constructor argument with the same name as
+            the property
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.ConstructorParameterAttribute.#ctor(System.String)">
+            <summary>
+            Indicates that this property will be passed to the constructor with a constructor argument with the 
+            specified <param name="name" />
+            </summary>
+            <param name="name">The name of the constructor argument</param>
+        </member>
+        <member name="P:JsonExSerializer.ConstructorParameterAttribute.Position">
+            <summary>
+            The constructor argument index
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.ConstructorParameterAttribute.Name">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerBase">
+            <summary>
+            A default instance of IExpressionHandler to use as a base class.
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Framework.ExpressionHandlers.IExpressionHandler">
+            <summary>
+            Defines methods to help serialize/deserialize objects to and from expression objects
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.IExpressionHandler.GetExpression(System.Object,JsonExSerializer.Framework.Expressions.JsonPath,JsonExSerializer.Framework.ExpressionHandlers.ISerializerHandler)">
+            <summary>
+            Take an object and convert it to an expression to be serialized.  Child names/indexes should be appended to the
+            currentPath before serializing child objects.
+            </summary>
+            <param name="data">the object to convert</param>
+            <param name="CurrentPath">the current path to this object from the root, used for tracking references</param>
+            <param name="serializer">serializer instance for serializing child objects</param>
+            <returns>an expression which represents a json structure</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.IExpressionHandler.CanHandle(System.Type)">
+            <summary>
+            Determines whether this handler is able to convert an this object type to an expression
+            </summary>
+            <param name="objectType">the object type that will be serialized</param>
+            <returns>true if this handler can handle the type</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.IExpressionHandler.CanHandle(JsonExSerializer.Framework.Expressions.Expression)">
+            <summary>
+            Determines whether this handler is able to convert the expression back into an object.
+            </summary>
+            <param name="expression">the expression that will be deserialized</param>
+            <returns>true if this handler can handle the expression</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.IExpressionHandler.Evaluate(JsonExSerializer.Framework.Expressions.Expression,JsonExSerializer.Framework.ExpressionHandlers.IDeserializerHandler)">
+            <summary>
+            Convert the expression into an object by creating a new instance of the desired type and
+            populating it with any necessary values.
+            </summary>
+            <param name="expression">the expression to deserialize</param>
+            <param name="deserializer">deserializer instance to use to deserialize any child expressions</param>
+            <returns>a fully deserialized object</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.IExpressionHandler.Evaluate(JsonExSerializer.Framework.Expressions.Expression,System.Object,JsonExSerializer.Framework.ExpressionHandlers.IDeserializerHandler)">
+            <summary>
+            Convert the expression into an object by populating an existing object with any necessary values.
+            The existingObject will usually come from the get method of a property on an object that doesn't
+            allow writing to the property.
+            </summary>
+            <param name="expression">the expression to deserialize</param>
+            <param name="existingObject">an existing object to populate</param>
+            <param name="deserializer">deserializer instance to use to deserialize any child expressions</param>
+            <returns>a fully deserialized object</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerBase.#ctor">
+            <summary>
+            Initializes a default instance without a Serialization Context.  Protected since the class is abstract.
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerBase.#ctor(JsonExSerializer.SerializationContext)">
+            <summary>
+            Initializes an instance with a Serialization Context.
+            </summary>
+            <param name="Context">the Serialization Context</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerBase.GetExpression(System.Object,JsonExSerializer.Framework.Expressions.JsonPath,JsonExSerializer.Framework.ExpressionHandlers.ISerializerHandler)">
+            <summary>
+            Take an object and convert it to an expression to be serialized.  Child names/indexes should be appended to the
+            currentPath before serializing child objects.
+            </summary>
+            <param name="data">the object to convert</param>
+            <param name="CurrentPath">the current path to this object from the root, used for tracking references</param>
+            <param name="serializer">serializer instance for serializing child objects</param>
+            <returns>an expression which represents a json structure</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerBase.CanHandle(System.Type)">
+            <summary>
+            Checks to see if this handler is able to convert an this object type to an expression
+            </summary>
+            <param name="objectType">the object type that will be serialized</param>
+            <returns>true if this handler can handle the type</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerBase.CanHandle(JsonExSerializer.Framework.Expressions.Expression)">
+            <summary>
+            Checks to see if this handler is able to convert the expression back into an object.
+            </summary>
+            <param name="expression">the expression that will be deserialized</param>
+            <returns>true if this handler can handle the expression</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerBase.Evaluate(JsonExSerializer.Framework.Expressions.Expression,JsonExSerializer.Framework.ExpressionHandlers.IDeserializerHandler)">
+            <summary>
+            Convert the expression into an object by creating a new instance of the desired type and
+            populating it with any necessary values.
+            </summary>
+            <param name="expression">the epxression to deserialize</param>
+            <param name="deserializer">deserializer instance to use to deserialize any child expressions</param>
+            <returns>a fully deserialized object</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerBase.Evaluate(JsonExSerializer.Framework.Expressions.Expression,System.Object,JsonExSerializer.Framework.ExpressionHandlers.IDeserializerHandler)">
+            <summary>
+            Convert the expression into an object by populating an existing object with any necessary values.
+            The existingObject will usually come from the get method of a property on an object that doesn't
+            allow writing to the property.
+            </summary>
+            <param name="expression">the epxression to deserialize</param>
+            <param name="existingObject">an existing object to populate</param>
+            <param name="deserializer">deserializer instance to use to deserialize any child expressions</param>
+            <returns>a fully deserialized object</returns>
+        </member>
+        <member name="P:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerBase.Context">
+            <summary>
+            Gets/sets the Serialization Context, which can be used to retrieve type information, serialization options, etc.
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.Framework.ExpressionHandlers.DateTimeExpressionHandler.DateFormat">
+            <summary>
+            Sets the date time format to use when deserializing dates
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.Framework.ExpressionHandlers.DateTimeExpressionHandler.DateTimeStyle">
+            <summary>
+            Date time styles to use when serializing and deserializing dates
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.Framework.ExpressionHandlers.DateTimeExpressionHandler.Culture">
+            <summary>
+            The culture to use for formatting when serializing and deserializing dates
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Framework.Expressions.Expression">
+            <summary>
+            The base class for all expressions
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Expressions.Expression.Accept(JsonExSerializer.Framework.Visitors.IVisitor)">
+            <summary>
+            Accept a visitor to this node
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.Framework.Expressions.Expression.ResultType">
+            <summary>
+            The type for the evaluated result
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Framework.Expressions.ComplexExpressionBase">
+            <summary>
+            Base class for complex types: objects and collections
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.Framework.Expressions.ComplexExpressionBase.ConstructorArguments">
+            <summary>
+            Arguments to the constructor if any
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Expressions.CtorArgTypeResolver.GetBestMatch(System.Type,System.Type[])">
+            <summary>
+            Returns the first type in the list that is compatible with TypeToMatch
+            </summary>
+            <param name="TypeToMatch"></param>
+            <param name="TypesToCheck"></param>
+            <returns></returns>
+        </member>
+        <member name="T:JsonExSerializer.Framework.Expressions.CtorArgTypeResolver.ConstructorResult">
+            <summary>
+            Data holder
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Framework.Expressions.KeyValueExpression">
+            <summary>
+            Key Value pairs in Object Expression.
+            This class will alter the normal evaluation of the value by loading the propertyinfo
+            for this key, from the parent and checking for a property converter.
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Framework.Expressions.ArrayExpression">
+            <summary>
+            Expression to represent a javascript List/Array
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Framework.Expressions.ObjectExpression">
+            <summary>
+            Represents a javascript object
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Expressions.ObjectExpression.IndexOf(System.String)">
+            <summary>
+            Finds the index of the given key in the property list
+            </summary>
+            <param name="key">the key to find</param>
+            <returns>0-based index of the key/value property in the list or -1 if not found</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Expressions.ObjectExpression.Add(JsonExSerializer.Framework.Expressions.Expression,JsonExSerializer.Framework.Expressions.Expression)">
+            <summary>
+            Add a property to this object
+            </summary>
+            <param name="key">the key for the property</param>
+            <param name="value">the value for the property</param>
+            <returns>KeyValueExpression that was added</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Expressions.ObjectExpression.Add(JsonExSerializer.Framework.Expressions.KeyValueExpression)">
+            <summary>
+            Add a property to this object
+            </summary>
+            <param name="expression">the key value expression to add</param>
+            <returns>KeyValueExpression that was added</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Expressions.ObjectExpression.Add(System.String,JsonExSerializer.Framework.Expressions.Expression)">
+            <summary>
+            Add a property to this object
+            </summary>
+            <param name="key">the key for the property</param>
+            <param name="value">the value for the property</param>
+            <returns>KeyValueExpression that was added</returns>
+        </member>
+        <member name="P:JsonExSerializer.Framework.Expressions.ObjectExpression.Properties">
+            <summary>
+            The object's properties
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Framework.Expressions.ReferenceExpression">
+            <summary>
+            A reference to another object
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Framework.Expressions.JsonPath">
+            <summary>    
+            a class for working with a reference identifier
+            e.g. this.Customer.Address[1].Name;
+            </summary>
+        </member>
+        <member name="F:JsonExSerializer.Framework.Expressions.JsonPath.Root">
+            <summary>
+            Identifier for the Root object
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Expressions.JsonPath.Append(System.String)">
+            <summary>
+            Adds a part to the reference.  A part
+            is one value between the period separators of a reference.
+            </summary>
+            <param name="part">the part to add</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Expressions.JsonPath.ChildReference">
+            <summary>
+            The child path
+            </summary>
+            <returns>the child path</returns> 
+        </member>
+        <member name="P:JsonExSerializer.Framework.Expressions.JsonPath.Top">
+            <summary>
+            The current piece of the reference
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.Framework.Expressions.JsonPath.TopAsInt">
+            <summary>
+            The current piece as an integer, for collections
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.Framework.Expressions.JsonPath.IsEmpty">
+            <summary>
+            Returns true if the path is empty
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Framework.ExpressionWriter">
+            <summary>
+            Writes expressions to the JsonWriter
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Framework.ExpressionHandlers.BooleanExpressionHandler">
+            <summary>
+            IExpressionHandler implementation that handles BooleanExpressions
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.BooleanExpressionHandler.#ctor">
+            <summary>
+            Initializes a default instance of a BooleanExpressionHandler with no SerializationContext
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.BooleanExpressionHandler.#ctor(JsonExSerializer.SerializationContext)">
+            <summary>
+            Initializes an instance of a BooleanExpressionHandler with a SerializationContext object
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.BooleanExpressionHandler.GetExpression(System.Object,JsonExSerializer.Framework.Expressions.JsonPath,JsonExSerializer.Framework.ExpressionHandlers.ISerializerHandler)">
+            <summary>
+            Converts a boolean value into a BooleanExpression
+            </summary>
+            <param name="data">the data to convert to an expression</param>
+            <param name="currentPath">the current path to the object, ignored for BooleanExpression</param>
+            <param name="serializer">serializer instance, ignored</param>
+            <returns>a BooleanExpression</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.BooleanExpressionHandler.CanHandle(System.Type)">
+            <summary>
+            Checks to see if this handler can handle this type, returns true for bool type.
+            </summary>
+            <param name="objectType">the object type to check</param>
+            <returns>true if this handler handles the type</returns>
+        </member>
+        <member name="T:JsonExSerializer.Framework.ExpressionHandlers.CastExpressionHandler">
+            <summary>
+            An IExpressionHandler instance that handles CastExpressions.
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.CastExpressionHandler.#ctor">
+            <summary>
+            Initializes a default instance of the class with no Serialization Context.
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.CastExpressionHandler.#ctor(JsonExSerializer.SerializationContext)">
+            <summary>
+            Initializes an instance of the class with a Serialization Context
+            </summary>
+            <param name="Context">the Serialization Context</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.CastExpressionHandler.GetExpression(System.Object,JsonExSerializer.Framework.Expressions.JsonPath,JsonExSerializer.Framework.ExpressionHandlers.ISerializerHandler)">
+            <summary>
+            GetExpression is not valid for a CastExpression.  CastExpressions should be created directly
+            during serialization whenever type information is needed.
+            </summary>
+            <param name="data">data to serialize</param>
+            <param name="currentPath">the current path to the object</param>
+            <param name="serializer">serializer instance</param>
+            <returns>expression</returns>
+            <exception cref="T:System.InvalidOperationException">This will throw an exception if called</exception>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.CastExpressionHandler.CanHandle(System.Type)">
+            <summary>
+            CanHandle(Type) will always return false for CastExpression because it can't be determined if a cast
+            is needed by type only.
+            </summary>
+            <param name="objectType">the object type</param>
+            <returns>false</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.CastExpressionHandler.CanHandle(JsonExSerializer.Framework.Expressions.Expression)">
+            <summary>
+            Checks to see if this handler can handle the expression.  The CastExpressionHandler handles
+            CastExpression only.
+            </summary>
+            <param name="expression">the expression to check</param>
+            <returns>true if this handler handles the expression</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.CastExpressionHandler.Evaluate(JsonExSerializer.Framework.Expressions.Expression,JsonExSerializer.Framework.ExpressionHandlers.IDeserializerHandler)">
+            <summary>
+            Evaluates an expression and constructs the correct object instance
+            </summary>
+            <param name="expression">the epxression to evaluate</param>
+            <param name="deserializer">the deserializer instance</param>
+            <returns>constructed object</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.CastExpressionHandler.Evaluate(JsonExSerializer.Framework.Expressions.Expression,System.Object,JsonExSerializer.Framework.ExpressionHandlers.IDeserializerHandler)">
+            <summary>
+            Evaluates an expression and populates an existing object with any necessary values
+            </summary>
+            <param name="expression">expression to evaluate</param>
+            <param name="existingObject">the object to populate</param>
+            <param name="deserializer">the deserializer instance</param>
+            <returns>constructed object</returns>
+        </member>
+        <member name="T:JsonExSerializer.Framework.ExpressionHandlers.ArrayExpressionHandler">
+            <summary>
+            Handler for a Json List/Array expression and collections
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ArrayExpressionHandler.#ctor">
+            <summary>
+            Initializes a default instance with no Serialization Context
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ArrayExpressionHandler.#ctor(JsonExSerializer.SerializationContext)">
+            <summary>
+            Initializes an instance with a Serialization Context
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ArrayExpressionHandler.CanHandle(System.Type)">
+            <summary>
+            Determines if the specified type can be handled by this handler.  This handler handles
+            collections using the CollectionHandler/ICollectionBuilder classes.
+            </summary>
+            <param name="objectType">the type of the object</param>
+            <returns>true if this object is a collection</returns>
+            <seealso cref="T:JsonExSerializer.Collections.CollectionHandler"/>
+            <seealso cref="T:JsonExSerializer.Collections.ICollectionBuilder"/>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ArrayExpressionHandler.GetExpression(System.Object,JsonExSerializer.Framework.Expressions.JsonPath,JsonExSerializer.Framework.ExpressionHandlers.ISerializerHandler)">
+            <summary>
+            Serializes the data into a json array expression.
+            </summary>
+            <param name="data">the data to serialize</param>
+            <param name="currentPath">the current path to the data</param>
+            <param name="serializer">serializer instance to use to serialize list items</param>
+            <returns>a json array expression representation</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ArrayExpressionHandler.Evaluate(JsonExSerializer.Framework.Expressions.Expression,JsonExSerializer.Framework.ExpressionHandlers.IDeserializerHandler)">
+            <summary>
+            Deserializes an expression into a collection instance
+            </summary>
+            <param name="expression">the expression to deserialize</param>
+            <param name="deserializer">deserializer to deserialize list items</param>
+            <returns>deserialized object</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ArrayExpressionHandler.Evaluate(JsonExSerializer.Framework.Expressions.Expression,System.Object,JsonExSerializer.Framework.ExpressionHandlers.IDeserializerHandler)">
+            <summary>
+            Deserializes an expression by populating an existing object collection with the expression's items.
+            </summary>
+            <param name="expression">the expression to deserialize</param>
+            <param name="existingObject">the collection to populate</param>
+            <param name="deserializer">deserializer to deserialize list items</param>
+            <returns>deserialized object</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ArrayExpressionHandler.EvaluateItems(JsonExSerializer.Framework.Expressions.ArrayExpression,JsonExSerializer.Collections.ICollectionBuilder,System.Type,JsonExSerializer.Framework.ExpressionHandlers.IDeserializerHandler)">
+            <summary>
+            Evaluates the items in the expression and assigns them to the collection using the builder
+            </summary>
+            <param name="expression">the expression to evaluate</param>
+            <param name="builder">builder used to build the collection</param>
+            <param name="itemType">the type of the collection's elements</param>
+            <param name="deserializer">deserializer instance to deserialize items</param>
+            <returns>evaluated collection object</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ArrayExpressionHandler.ConstructBuilder(System.Object,JsonExSerializer.Framework.Expressions.ArrayExpression,System.Type@)">
+            <summary>
+            Constructs a builder used to build the deserialized collection
+            </summary>
+            <param name="collection">an existing collection object or null for a new collection</param>
+            <param name="list">the list expression</param>
+            <param name="itemType">the type of the items</param>
+            <returns>collection builder</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.Collections.CollectionObjectHandlerBase.AddItem(System.Object,System.Object)">
+            <summary>
+            Adds the item to the collection
+            </summary>
+            <param name="Collection"></param>
+            <param name="itemResult"></param>
+        </member>
+        <member name="T:JsonExSerializer.Framework.ExpressionHandlers.DictionaryObjectExpressionHandler">
+            <summary>
+            ExpressionHandler that is capable of handling an IDictionary or IDictionary{K,V} instance.
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Framework.ExpressionHandlers.ObjectExpressionHandler">
+            <summary>
+            ExpressionHandler for a json object or non-primitive object that is not a collection.  This is usually the
+            default handler.
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ObjectExpressionHandler.#ctor">
+            <summary>
+            Initializes a default instance with no Serialization Context
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ObjectExpressionHandler.#ctor(JsonExSerializer.SerializationContext)">
+            <summary>
+            Initializes an instance with a Serialization Context
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ObjectExpressionHandler.GetExpression(System.Object,JsonExSerializer.Framework.Expressions.JsonPath,JsonExSerializer.Framework.ExpressionHandlers.ISerializerHandler)">
+            <summary>
+            Creates an json object expression from object data.
+            </summary>
+            <param name="data">the data to serialize</param>
+            <param name="currentPath">current path to the object</param>
+            <param name="serializer">serializer instance used to serialize key values</param>
+            <returns>json object expression</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ObjectExpressionHandler.Evaluate(JsonExSerializer.Framework.Expressions.Expression,JsonExSerializer.Framework.ExpressionHandlers.IDeserializerHandler)">
+            <summary>
+            Evaluates the expression and deserializes it.
+            </summary>
+            <param name="expression">json object expression</param>
+            <param name="deserializer">deserializer for deserializing key values</param>
+            <returns>deserialized object</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ObjectExpressionHandler.Evaluate(JsonExSerializer.Framework.Expressions.Expression,System.Object,JsonExSerializer.Framework.ExpressionHandlers.IDeserializerHandler)">
+            <summary>
+            Evaluates the expression and populates an existing object with the expression's properties
+            </summary>
+            <param name="expression">json object expression</param>
+            <param name="existingObject">the existing object to populate</param>
+            <param name="deserializer">deserializer for deserializing key values</param>
+            <returns>deserialized object</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ObjectExpressionHandler.ConstructObject(JsonExSerializer.Framework.Expressions.ObjectExpression,JsonExSerializer.Framework.ExpressionHandlers.IDeserializerHandler)">
+            <summary>
+            Constructs a new instance of the object represented by the expression.
+            </summary>
+            <param name="expression">json object expression</param>
+            <param name="deserializer">deserializer for deserializing constructor arguments if any</param>
+            <returns>constructed, but unpopulated object</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ObjectExpressionHandler.ResolveConstructorTypes(JsonExSerializer.SerializationContext,JsonExSerializer.Framework.Expressions.ObjectExpression)">
+            <summary>
+            Resolves and updates the types of any constructor arguments
+            </summary>
+            <param name="context">serialization context</param>
+            <param name="expression">object expression</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ObjectExpressionHandler.GetConstructorParameterTypes(System.Collections.Generic.IList{JsonExSerializer.MetaData.IPropertyData})">
+            <summary>
+            Gets the default types of any constructor parameters from the type metadata
+            </summary>
+            <param name="constructorParameters">constructor parameter list</param>
+            <returns>default types</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ObjectExpressionHandler.CanHandle(System.Type)">
+            <summary>
+            Determines whether this handler can handle a specific object type
+            </summary>
+            <param name="objectType">the object type</param>
+            <returns>true if this handler handles the type</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.DictionaryObjectExpressionHandler.#ctor">
+            <summary>
+            Initializes a default instance with no Serialization Context
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.DictionaryObjectExpressionHandler.#ctor(JsonExSerializer.SerializationContext)">
+            <summary>
+            Initializes an instance with a Serialization Context
+            </summary>
+            <param name="Context">the Serialization Context</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.DictionaryObjectExpressionHandler.GetExpression(System.Object,JsonExSerializer.Framework.Expressions.JsonPath,JsonExSerializer.Framework.ExpressionHandlers.ISerializerHandler)">
+            <summary>
+            Serialize an object implementing IDictionary.  The serialized data is similar to a regular
+            object, except that the keys of the dictionary are used instead of properties.
+            </summary>
+            <param name="data">the dictionary object</param>
+            <param name="currentPath">object's path</param>
+            <param name="serializer">the serializer instance, used to serialize keys and values</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.DictionaryObjectExpressionHandler.CanHandle(System.Type)">
+            <summary>
+            Checks to see if this handler can handle the object type.  This handler can only handle IDictionary 
+            and IDictionary{K,V} instances.
+            </summary>
+            <param name="objectType">the object type to check</param>
+            <returns>true if this handler handles the type</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.DictionaryObjectExpressionHandler.Evaluate(JsonExSerializer.Framework.Expressions.Expression,System.Object,JsonExSerializer.Framework.ExpressionHandlers.IDeserializerHandler)">
+            <summary>
+            Evaluates the expression and populates an existing object with keys and values.
+            </summary>
+            <param name="expression">the expression to evaluate</param>
+            <param name="existingObject">the existing object to populate</param>
+            <param name="deserializer">the deserializer instance to use to deserialize other expressions</param>
+            <returns>a populated object</returns>
+        </member>
+        <member name="T:JsonExSerializer.Framework.ExpressionHandlers.IDeserializerHandler">
+            <summary>
+            Defines methods that are used during deserialization to deserialize expressions.
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.IDeserializerHandler.Evaluate(JsonExSerializer.Framework.Expressions.Expression)">
+            <summary>
+            Evaluates an expression converting it into an object
+            </summary>
+            <param name="expression">the expression to evaluate</param>
+            <returns>the object</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.IDeserializerHandler.Evaluate(JsonExSerializer.Framework.Expressions.Expression,System.Object)">
+            <summary>
+            Evaluates an expression and populates an existing object
+            </summary>
+            <param name="expression">the expression to evaluate</param>
+            <param name="existingObject">the existing object to populate</param>
+            <returns>the populated object</returns>
+        </member>
+        <member name="T:JsonExSerializer.Framework.ExpressionHandlers.ISerializerHandler">
+            <summary>
+            Defines methods to serialize objects into json expressions
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ISerializerHandler.Serialize(System.Object,JsonExSerializer.Framework.Expressions.JsonPath)">
+            <summary>
+            Serialize the object into an expression.
+            </summary>
+            <param name="value">the value to serialize</param>
+            <param name="currentPath">the current path to the value</param>
+            <returns>a json expression representing the value</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ISerializerHandler.Serialize(System.Object,JsonExSerializer.Framework.Expressions.JsonPath,JsonExSerializer.TypeConversion.IJsonTypeConverter)">
+            <summary>
+            Serialize an object into an expression using a specific type converter
+            </summary>
+            <param name="value">the value to serialize</param>
+            <param name="currentPath">the current path to the value</param>
+            <param name="converter">the type converter to use to convert the object</param>
+            <returns>a json expression representing the value</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ISerializerHandler.HandleReference(System.Object,JsonExSerializer.Framework.Expressions.JsonPath)">
+            <summary>
+            Checks for previous references to this object and acts accordingly based on the Reference options.
+            If an expression is returned, then further evaluation of the object should stop.  If no expression
+            is returned then the object should be serialized normally.
+            </summary>
+            <param name="referenceValue"></param>
+            <param name="CurrentPath"></param>
+            <returns></returns>
+            <exception cref="T:System.InvalidOperationException">Throws InvalidOperationException if there is a circular reference or an object
+            is not in a referencable state</exception>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ISerializerHandler.SetCanReference(System.Object)">
+            <summary>
+            Indicates that the object can now be referenced.  Any attempts to build a reference to the current object before
+            this method is called will result in an exception.
+            </summary>
+            <param name="value">the object being referenced</param>
+        </member>
+        <member name="T:JsonExSerializer.Framework.ExpressionHandlers.NullExpressionHandler">
+            <summary>
+            Expression Handler for handling null values and expressions
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.NullExpressionHandler.GetExpression(System.Object,JsonExSerializer.Framework.Expressions.JsonPath,JsonExSerializer.Framework.ExpressionHandlers.ISerializerHandler)">
+            <summary>
+            Creates a null expression
+            </summary>
+            <param name="data">the data</param>
+            <param name="currentPath">current path</param>
+            <param name="serializer">serializer instance</param>
+            <returns>NullExpression</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.NullExpressionHandler.CanHandle(System.Type)">
+            <summary>
+            CanHandle always returns false.  This handler should be set as the NullHandler on the ExpressionHandlerCollection.
+            </summary>
+            <param name="objectType">the object type</param>
+            <returns>always returns false</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.NullExpressionHandler.CanHandle(JsonExSerializer.Framework.Expressions.Expression)">
+            <summary>
+            Determines whether this handler can deserialize a specific expression.  The NullExpressionHandler
+            only handles NullExpressions.
+            </summary>
+            <param name="expression">the expression</param>
+            <returns>true if this handler handles the expression</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.NullExpressionHandler.Evaluate(JsonExSerializer.Framework.Expressions.Expression,JsonExSerializer.Framework.ExpressionHandlers.IDeserializerHandler)">
+            <summary>
+            Converts the expression back into an object
+            </summary>
+            <param name="expression">the expression</param>
+            <param name="deserializer">the deserializer</param>
+            <returns>null</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.NullExpressionHandler.Evaluate(JsonExSerializer.Framework.Expressions.Expression,System.Object,JsonExSerializer.Framework.ExpressionHandlers.IDeserializerHandler)">
+            <summary>
+            Converts an existing object
+            </summary>
+            <param name="expression">the expression</param>
+            <param name="existingObject">an existing object</param>
+            <param name="deserializer">deserializer</param>
+            <returns>the existing object</returns>
+        </member>
+        <member name="T:JsonExSerializer.Framework.ExpressionHandlers.NumericExpressionHandler">
+            <summary>
+            An expression handler instance for handling numbers and numeric expressions.  The NumericExpresisonHandler
+            handlers byte, short, int, long, float, double, decimal as well as any signed/unsigned equivalent types.
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.NumericExpressionHandler.#ctor">
+            <summary>
+            Initializes a default instance with no Serialization Context
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.NumericExpressionHandler.#ctor(JsonExSerializer.SerializationContext)">
+            <summary>
+            Initializes an instance with a Serialization Context
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.NumericExpressionHandler.GetExpression(System.Object,JsonExSerializer.Framework.Expressions.JsonPath,JsonExSerializer.Framework.ExpressionHandlers.ISerializerHandler)">
+            <summary>
+            Creates a numeric expression from the data
+            </summary>
+            <param name="data">the data, should be a number type</param>
+            <param name="currentPath">current path to the value</param>
+            <param name="serializer">serializer instance</param>
+            <returns>a numeric expression representing the data</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.NumericExpressionHandler.CanHandle(System.Type)">
+            <summary>
+            Determines whether this handler can handle a specific type.  
+            </summary>
+            <param name="objectType">the object type</param>
+            <returns></returns>
+        </member>
+        <member name="T:JsonExSerializer.Framework.ExpressionHandlers.ReferenceExpressionHandler">
+            <summary>
+            Expression handler for handling Json references, a serializer json extension.
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ReferenceExpressionHandler.#ctor">
+            <summary>
+            Initializes a default instance with no Serialization Context
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ReferenceExpressionHandler.#ctor(JsonExSerializer.SerializationContext)">
+            <summary>
+            Initializes an instance with a Serialization Context
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ReferenceExpressionHandler.GetExpression(System.Object,JsonExSerializer.Framework.Expressions.JsonPath,JsonExSerializer.Framework.ExpressionHandlers.ISerializerHandler)">
+            <summary>
+            Returns a reference expression to the current data
+            </summary>
+            <param name="data">the object data</param>
+            <param name="currentPath">current path to this object</param>
+            <param name="serializer">serializer instance</param>
+            <returns>reference expression</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ReferenceExpressionHandler.CanHandle(System.Type)">
+            <summary>
+            Determines whether this handler is able to convert an this object type to an expression
+            </summary>
+            <param name="objectType">the object type that will be serialized</param>
+            <returns>true if this handler can handle the type</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ReferenceExpressionHandler.CanHandle(JsonExSerializer.Framework.Expressions.Expression)">
+            <summary>
+            Determines whether this handler is able to convert the expression back into an object.
+            </summary>
+            <param name="expression">the expression that will be deserialized</param>
+            <returns>true if this handler can handle the expression</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ReferenceExpressionHandler.Evaluate(JsonExSerializer.Framework.Expressions.Expression,JsonExSerializer.Framework.ExpressionHandlers.IDeserializerHandler)">
+            <summary>
+            Resolves the reference to another object and returns that object
+            </summary>
+            <param name="expression">the expression to deserialize</param>
+            <param name="deserializer">deserializer instance to use to deserialize any child expressions</param>
+            <returns>a fully deserialized object</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ReferenceExpressionHandler.Evaluate(JsonExSerializer.Framework.Expressions.Expression,System.Object,JsonExSerializer.Framework.ExpressionHandlers.IDeserializerHandler)">
+            <summary>
+            This method is invalid for Reference expressions.  References can't be updated
+            </summary>
+            <param name="expression">reference expression</param>
+            <param name="existingObject">existing object, ignored</param>
+            <param name="deserializer">deserializer instance</param>
+            <returns>nothing</returns>
+            <exception cref="T:System.InvalidOperationException">References cannot be updated</exception>
+        </member>
+        <member name="T:JsonExSerializer.Framework.ExpressionHandlers.TypeConverterExpressionHandler">
+            <summary>
+            Expression handler that uses TypeConverters for serialization and deserialization
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.TypeConverterExpressionHandler.#ctor">
+            <summary>
+            Initializes a default instance with no Serialization Context
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.TypeConverterExpressionHandler.#ctor(JsonExSerializer.SerializationContext)">
+            <summary>
+            Initializes an instance with a Serialization Context
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.TypeConverterExpressionHandler.GetExpression(System.Object,JsonExSerializer.Framework.Expressions.JsonPath,JsonExSerializer.Framework.ExpressionHandlers.ISerializerHandler)">
+            <summary>
+            Gets an expression for a value by first converting it with its registered type converter and then calling Serialize
+            </summary>
+            <param name="value">the value to generate an expression for</param>
+            <param name="currentPath">the current path to the value</param>
+            <param name="serializer">serializer instance</param>
+            <returns>an expression for the value</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.TypeConverterExpressionHandler.GetExpression(System.Object,JsonExSerializer.TypeConversion.IJsonTypeConverter,JsonExSerializer.Framework.Expressions.JsonPath,JsonExSerializer.Framework.ExpressionHandlers.ISerializerHandler)">
+            <summary>
+            Gets an expression for a value by first converting it with a specific type converter and then calling Serialize.  This
+            method can be called directly when using a Property Converter
+            </summary>
+            <param name="value">the value to generate an expression for</param>
+            <param name="converter">the type converter to use for conversion</param>
+            <param name="currentPath">the current path to the value</param>
+            <param name="serializer">serializer instance</param>
+            <returns>an expression for the value</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.TypeConverterExpressionHandler.CanHandle(System.Type)">
+            <summary>
+            Determines whether this handler can serialize an object of the specified type.  The type
+            must have a converter assigned to it, or implement IJsonTypeConverter.
+            </summary>
+            <param name="objectType">the object type to check</param>
+            <returns>true if this handler handles the type</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.TypeConverterExpressionHandler.Evaluate(JsonExSerializer.Framework.Expressions.Expression,JsonExSerializer.Framework.ExpressionHandlers.IDeserializerHandler)">
+            <summary>
+            Converts an expression to an object by first Evaluating the expression as its converted type and
+            then converting that result using a type converter.
+            </summary>
+            <param name="expression">the expression to convert</param>
+            <param name="deserializer">deserializer instance</param>
+            <returns>an object created from the expression</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.TypeConverterExpressionHandler.Evaluate(JsonExSerializer.Framework.Expressions.Expression,JsonExSerializer.Framework.ExpressionHandlers.IDeserializerHandler,JsonExSerializer.TypeConversion.IJsonTypeConverter)">
+            <summary>
+            Converts an expression to an object by first Evaluating the expression as its converted type and
+            then converting that result using the specified type converter.
+            </summary>
+            <param name="expression">the expression to convert</param>
+            <param name="deserializer">deserializer instance</param>
+            <param name="converter">the converter to use to convert the object</param>
+            <returns>an object created from the expression</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.TypeConverterExpressionHandler.Evaluate(JsonExSerializer.Framework.Expressions.Expression,System.Object,JsonExSerializer.Framework.ExpressionHandlers.IDeserializerHandler)">
+            <summary>
+            This method is invalid for TypeConverterExpressionHandler
+            </summary>
+            <exception cref="T:System.NotSupportedException">Evaluating an existing object is not supported by TypeConverterExpressionHandler</exception>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.TypeConverterExpressionHandler.Evaluate(JsonExSerializer.Framework.Expressions.Expression,System.Object,JsonExSerializer.Framework.ExpressionHandlers.IDeserializerHandler,JsonExSerializer.TypeConversion.IJsonTypeConverter)">
+            <summary>
+            This method is invalid for TypeConverterExpressionHandler
+            </summary>
+            <exception cref="T:System.NotSupportedException">Evaluating an existing object is not supported by TypeConverterExpressionHandler</exception>
+        </member>
+        <member name="T:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection">
+            <summary>
+            Collection of ExpressionHandler objects as well as methods for looking up a handler based on Type, Expression, or object.
+            </summary>
+        </member>
+        <member name="F:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection._nullHandler">
+            <summary>
+            The handler used for handling null objects
+            </summary>
+        </member>
+        <member name="F:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection._defaultHandler">
+            <summary>
+            The handler used for handling any object, type or expression without an explicit handler
+            </summary>
+        </member>
+        <member name="F:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection._context">
+            <summary>
+            Serialization context
+            </summary>
+        </member>
+        <member name="F:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection._cache">
+            <summary>
+            Cache for finding a handler based on type.  Once a handler is found for a type, the combination
+            is stored for quick retrieval by subsequent calls.
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection.#ctor(JsonExSerializer.SerializationContext)">
+            <summary>
+            Initializes an instance with the serialization context and a default set of handlers.
+            </summary>
+            <param name="Context">serialization context</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection.InitializeDefaultHandlers">
+            <summary>
+            Initializes this context with the default Expression Handlers
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection.Add(JsonExSerializer.Framework.ExpressionHandlers.IExpressionHandler)">
+            <summary>
+            Adds a handler to the end of the list.
+            </summary>
+            <param name="Handler">the expression handler to add</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection.Find(System.Type)">
+            <summary>
+            Finds the first handler of a given type in the list or null if no handler
+            of that type is available.
+            </summary>
+            <param name="handlerType">the type of handler to find</param>
+            <returns>the handler if found</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection.GetHandler(System.Object)">
+            <summary>
+            Retrieves a handler that can serialize the specified object.  Generally the first handler that
+            can handle the object is returned.
+            </summary>
+            <param name="data">object to get a handler for</param>
+            <returns>an expression handler that can serialize the object</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection.GetHandler(JsonExSerializer.Framework.Expressions.Expression)">
+            <summary>
+            Get a handler based on Expression type.  Generally the first handler that can handle the
+            expression is returned
+            </summary>
+            <param name="expression">expression to find a handler for</param>
+            <returns>and expression handler that can deserialize the expression</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection.GetHandler(System.Type)">
+            <summary>
+            Get a handler based on data type
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection.IndexOf(JsonExSerializer.Framework.ExpressionHandlers.IExpressionHandler)">
+            <summary>
+            Determines the index of a specific handler in the list
+            </summary>
+            <param name="item">the item to find</param>
+            <returns>the handler's index or -1 if not found</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection.Insert(System.Int32,JsonExSerializer.Framework.ExpressionHandlers.IExpressionHandler)">
+            <summary>
+            Inserts a handler into the list at the specified index
+            </summary>
+            <param name="index">the insertion index</param>
+            <param name="item">the handler to insert</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection.InsertBefore(System.Type,JsonExSerializer.Framework.ExpressionHandlers.IExpressionHandler)">
+            <summary>
+            Inserts a handler into the list before an existing handler of a specified type
+            </summary>
+            <param name="handlerType">the handler type that new handler will be inserted before</param>
+            <param name="item">the handler to insert</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection.InsertAfter(System.Type,JsonExSerializer.Framework.ExpressionHandlers.IExpressionHandler)">
+            <summary>
+            Inserts a handler into the list after an existing handler of a specified type
+            </summary>
+            <param name="handlerType">the handler type that new handler will be inserted after</param>
+            <param name="item">the handler to insert</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection.IndexOf(System.Type)">
+            <summary>
+            Finds the index of a specific type of handler in the list
+            </summary>
+            <param name="handlerType">the type of handler to find</param>
+            <returns>the handler's index or -1 if not found</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection.Contains(JsonExSerializer.Framework.ExpressionHandlers.IExpressionHandler)">
+            <summary>
+            Determines whether the list contains the handler
+            </summary>
+            <param name="item">the handler to find</param>
+            <returns>true if the list contains the handler</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection.CopyTo(JsonExSerializer.Framework.ExpressionHandlers.IExpressionHandler[],System.Int32)">
+            <summary>
+            Copies the handler list to an array
+            </summary>
+            <param name="array">the array to copy to</param>
+            <param name="arrayIndex">the 0-based index in the array at which copying begins</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection.Remove(JsonExSerializer.Framework.ExpressionHandlers.IExpressionHandler)">
+            <summary>
+            Removes a handler from the list
+            </summary>
+            <param name="item">the handler to remove</param>
+            <returns>true if the handler existed in the list</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection.GetEnumerator">
+            <summary>
+            Returns an enumerator over the list
+            </summary>
+            <returns>an enumerator</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection.InvalidateCache">
+            <summary>
+            Invalidates the Type/Handler cache
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection.OnClearComplete">
+            <summary>
+            Handles the clear method by invalidating the cache
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection.OnInsertComplete(System.Int32,System.Object)">
+            <summary>
+            Invalidates the Type/Handler cache whenever a new handler is inserted
+            </summary>
+            <param name="index">the insertion point</param>
+            <param name="value">the inserted item</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection.OnSetComplete(System.Int32,System.Object,System.Object)">
+            <summary>
+            Invalidates the Type/Handler cache whenever a handler is updated
+            </summary>
+            <param name="index">the 0-based index of the item</param>
+            <param name="oldValue">the old value</param>
+            <param name="newValue">the new value</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection.Reset">
+            <summary>
+            Clears all existing handlers and resets to the default handlers
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection.DefaultHandler">
+            <summary>
+            Gets or sets the default expression handler that will be used when no handler in the standard
+            handler list explicitly handles a type or expression.
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection.NullHandler">
+            <summary>
+            Gets or sets the handler used to handle null values.
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection.Context">
+            <summary>
+            The serialization context
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection.Item(System.Int32)">
+            <summary>
+            Gets or sets an item in the list
+            </summary>
+            <param name="index">The 0-based index of the item to get or set</param>
+            <returns>the item at the specified index in the list</returns>
+        </member>
+        <member name="P:JsonExSerializer.Framework.ExpressionHandlers.ExpressionHandlerCollection.IsReadOnly">
+            <summary>
+            Gets a value indicating whether the list is read only
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Framework.Parsing.Evaluator">
+            <summary>
+            Evaluates an expression tree to construct the object
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.Evaluator.Evaluate(JsonExSerializer.Framework.Expressions.Expression)">
+            <summary>
+            Evaluate the expression and return an object
+            </summary>
+            <param name="Expression">expression to evaluate</param>
+            <returns>the constructed object</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.Evaluator.Evaluate(JsonExSerializer.Framework.Expressions.Expression,System.Object)">
+            <summary>
+            Evaluates an expression and applies the results to an existing object
+            </summary>
+            <param name="Expression">the expression to evaluate</param>
+            <param name="existingObject">the object to apply to</param>
+            <returns>the evaluated object</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ReflectionUtils.GetAttribute``1(System.Reflection.ICustomAttributeProvider,System.Boolean)">
+            <summary>
+            Returns the first attribute matching <typeparamref name="T"/> or null if none exist.
+            </summary>
+            <typeparam name="T">the custom attribute type</typeparam>
+            <param name="provider">member with custom attributes</param>
+            <param name="inherit">When true look up the hierarchy chain for inherited attributes</param>
+            <returns>the first attribute</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ReflectionUtils.AreEquivalentTypes(System.Type,System.Type)">
+            <summary>
+            Tests whether two types are equivalent.  Types are equivalent if the
+            types are equal, or if one type is the nullable type of the other type
+            </summary>
+            <param name="a">first type to test</param>
+            <param name="b">second type to test</param>
+            <returns>true if equivalent</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.ReflectionUtils.IsNullableType(System.Type)">
+            <summary>
+            Checks to see if the type is a nullable type
+            </summary>
+            <param name="checkType">the type to check</param>
+            <returns>true if the type is a nullable type</returns>
+        </member>
+        <member name="T:JsonExSerializer.Framework.Visitors.ExpressionWalkerVisitor">
+            <summary>
+            Base adapter class for a visitor that walks the expression tree.  Subclasses
+            can override only methods for expression types that they care about
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Framework.Visitors.VisitorBase">
+            <summary>
+            Base implementation of the Visitor class that achieves multi-dispatch
+            using reflection.  Methods starting with "Visit" will be found and
+            matched with the incoming type.
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Visitors.ExpressionWalkerVisitor.Visit(JsonExSerializer.Framework.Expressions.ValueExpression)">
+            <summary>
+            Visit a value expression.  NOTE: this method is not called for subclasses
+            of ValueExpression.  To perform an operation on ValueExpression and all of its
+            subclasses, override the OnValue method.
+            </summary>
+            <param name="expression">value expression</param>
+            <seealso cref="M:JsonExSerializer.Framework.Visitors.ExpressionWalkerVisitor.OnValue(JsonExSerializer.Framework.Expressions.ValueExpression)"/>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Visitors.ExpressionWalkerVisitor.OnValue(JsonExSerializer.Framework.Expressions.ValueExpression)">
+            <summary>
+            Called for ValueExpression and all subclasses
+            </summary>
+            <param name="expression"></param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Visitors.ExpressionWalkerVisitor.OnObjectStart(JsonExSerializer.Framework.Expressions.ObjectExpression)">
+            <summary>
+            Called on an object expression before the properties and constructor arguments are visited
+            </summary>
+            <param name="expression"></param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Visitors.ExpressionWalkerVisitor.OnObjectEnd(JsonExSerializer.Framework.Expressions.ObjectExpression)">
+            <summary>
+            Called on an object expression after the properties and constructor arguments are visited
+            </summary>
+            <param name="expression"></param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Visitors.ExpressionWalkerVisitor.OnArrayStart(JsonExSerializer.Framework.Expressions.ArrayExpression)">
+            <summary>
+            Called on an array expression before the items are visited
+            </summary>
+            <param name="expression"></param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Visitors.ExpressionWalkerVisitor.OnArrayEnd(JsonExSerializer.Framework.Expressions.ArrayExpression)">
+            <summary>
+            Called on an array expression after the items are visited
+            </summary>
+            <param name="expression"></param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Visitors.ReferenceVisitor.VisitListExpression(JsonExSerializer.Framework.Expressions.ArrayExpression)">
+            <summary>
+            Resolve a reference to an item within the collection
+            </summary>
+            <param name="refID">the reference to resolve</param>
+            <returns>the referenced expression</returns>
+        </member>
+        <member name="T:JsonExSerializer.Framework.Expressions.ValueExpression">
+            <summary>
+            Value types such as string, bool, or number
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.Framework.Expressions.ValueExpression.StringValue">
+            <summary>
+            The value for the expression
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Framework.Expressions.NumericExpression">
+            <summary>
+            distinguished types for evaluator purposes
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Framework.Expressions.BooleanExpression">
+            <summary>
+            distinguished types for evaluator purposes
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Framework.Parsing.AssignReferenceStage">
+            <summary>
+            Resolves references to other expressions
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.Framework.Visitors.CollectReferencesVisitor.References">
+            <summary>
+            The list of references that were collected
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.IDeserializationCallback">
+            <summary>
+            An interface to control deserialization.  The OnAfterDeserialization method
+            is called after an object has been deserialized.  All properties will be set before
+            the method is called.
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.IDeserializationCallback.OnAfterDeserialization">
+            <summary>
+            Called after an object has been deserialized
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.IJsonWriter.WriteConstructorStart(System.Type)">
+            <summary>
+            Starts a constructed object
+            </summary>
+            <param name="constructorType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.IJsonWriter.WriteConstructorStart(System.String)">
+            <summary>
+            Starts a constructed object with the given type information
+            </summary>
+            <param name="namespaceAndClass">The fully-qualified class name without assembly reference</param>
+            <returns></returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.IJsonWriter.WriteConstructorStart(System.String,System.String)">
+            <summary>
+            Starts a constructed object
+            </summary>
+            <param name="namespaceAndClass">The fully-qualified class name without assembly reference</param>
+            <param name="assembly">The assembly name</param>
+            <returns></returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.IJsonWriter.WriteConstructorArgsStart">
+            <summary>
+            Starts the arguments for a constructed object
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.IJsonWriter.WriteConstructorArgsEnd">
+            <summary>
+            Ends the arguments for a constructed object
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.IJsonWriter.WriteConstructorEnd">
+            <summary>
+            Ends the constructed object
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.IJsonWriter.WriteObjectStart">
+            <summary>
+            Starts an object
+            </summary>
+            <returns>the writer instance for stacking</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.IJsonWriter.WriteObjectEnd">
+            <summary>
+            Ends an object definition
+            </summary>
+            <returns>the writer instance for stacking</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.IJsonWriter.WriteArrayStart">
+            <summary>
+            Starts an array sequence
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.IJsonWriter.WriteArrayEnd">
+            <summary>
+            Ends an array
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.IJsonWriter.WriteValue(System.Boolean)">
+            <summary>
+            Writes a boolean value
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.IJsonWriter.WriteValue(System.Int64)">
+            <summary>
+            Writes a long value
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.IJsonWriter.WriteValue(System.Double)">
+            <summary>
+            Writes a double value
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.IJsonWriter.WriteValue(System.Single)">
+            <summary>
+            Writes a float value
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.IJsonWriter.WriteQuotedValue(System.String)">
+            <summary>
+            Writes a quoted value
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.IJsonWriter.WriteSpecialValue(System.String)">
+            <summary>
+            Writes a special string value that is not
+            quoted such as null, or some other keyword.
+            </summary>
+            <param name="value">the value to write</param>
+            <returns></returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.IJsonWriter.WriteComment(System.String)">
+            <summary>
+            Writes a comment.  The comment characters /* */ or // should be included in the comment string
+            </summary>
+            <param name="comment">the comment string</param>
+            <returns></returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.IJsonWriter.WriteCast(System.Type)">
+            <summary>
+            Writes an object cast
+            (MyClass) ...
+            </summary>
+            <param name="castedType">The type for the cast</param>
+            <returns></returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.IJsonWriter.WriteCast(System.String)">
+            <summary>
+            Writes an object cast with the type name specified as a string.  The NamespaceAndClass
+            contains the class name and possibly the Namespace but no assembly.
+            (MyNamespace.MyClass) ...
+            </summary>
+            <param name="namespaceAndClass">The fully-qualified class name without assembly reference</param>
+            <returns></returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.IJsonWriter.WriteCast(System.String,System.String)">
+            <summary>
+            Writes an object cast with the fully qualified type name and assemble reference
+            ("MyNamespace.MyClass, MyAssembly") ...
+            </summary>
+            <param name="namespaceAndClass">The fully-qualified class name without assembly reference</param>
+            <param name="assembly">The assembly name</param>
+            <returns></returns>
+        </member>
+        <member name="T:JsonExSerializer.ISerializationCallback">
+            <summary>
+            Interface for an object to receive events during serialization.  The OnBeforeSerialization
+            will be called immediately before an object is serialized.  The OnAfterSerialization method
+            will be called after the object has been serialized.
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.ISerializationCallback.OnBeforeSerialization">
+            <summary>
+            Called before serialization of an object implementing the interface
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.ISerializationCallback.OnAfterSerialization">
+            <summary>
+            Called after serialization of the object
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.JsonExCollectionAttribute">
+            <summary>
+            Specifies a collection handler for a class, and/or overrides the item type for an existing
+            handler.
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.JsonExCollectionAttribute.#ctor">
+            <summary>
+            Assign the CollectionHandler to this class.  The class will then be treated as a JSON array.
+            </summary>
+            <param name="CollectionHandlerType">The type for the CollectionHandler</param>
+            <see cref="!:http://code.google.com/p/jsonexserializer/wiki/Collections"/>
+        </member>
+        <member name="T:JsonExSerializer.Collections.ListCollectionBuilder">
+            <summary>
+            Collection builder for types implementing IList
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.JsonExSerializationException">
+            <summary>
+            Base class for all serialization exceptions
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.JsonExPropertyAttribute">
+            <summary>
+            Force serialization of a property that would otherwise be ignored
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.JsonWriter.#ctor(System.IO.TextWriter,System.Boolean)">
+            <summary>
+            Creates a json writer that writes to the <paramref name="writer"/> and uses
+            the InvariantCulture for any formatting.
+            </summary>
+            <param name="writer">the text writer that will be written to</param>
+            <param name="indent">setting that specifies whether to indent</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.JsonWriter.#ctor(System.IO.TextWriter,System.Boolean,System.Globalization.CultureInfo)">
+            <summary>
+            Creates a json writer that writes to the <paramref name="writer"/> and uses
+            the InvariantCulture for any formatting.
+            </summary>
+            <param name="writer">the text writer that will be written to</param>
+            <param name="indent">setting that specifies whether to indent</param>
+            <param name="culture">The culture to use for formatting</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.JsonWriter.WriteTypeInfo(System.Type)">
+            <summary>
+            Writes out the type for an object in regular C# code syntax
+            </summary>
+            <param name="t">the type to write</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.JsonWriter.WriteTypeInfo(System.String)">
+            <summary>
+            Writes out the type info specified by the NamespaceAndClass string.
+            </summary>
+            <param name="NamespaceAndClass">the fully-qualified type with namespace and class, but not assembly</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.JsonWriter.WriteTypeInfo(System.String,System.String)">
+            <summary>
+            Writes out the type info specified by the NamespaceAndClass string and assembly.
+            </summary>
+            <param name="NamespaceAndClass">the fully-qualified type with namespace and class, but not assembly</param>
+            <param name="assembly">The assembly for the type</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.JsonWriter.IState.PreWrite(JsonExSerializer.Framework.JsonWriter.OpType)">
+            <summary>
+            Called before a write operation occurs
+            </summary>
+            <param name="operation"></param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.JsonWriter.IState.ReturnFrom(JsonExSerializer.Framework.JsonWriter.IState,JsonExSerializer.Framework.JsonWriter.OpType)">
+            <summary>
+            Called when control is returned back to a prior state. 
+            The current state implementing the transition should pass itself
+            as the "other" state.
+            </summary>
+            <param name="otherState">the state that is returning control back to the previous state</param>
+            <param name="operation">the current operation that is causing control to return</param>
+        </member>
+        <member name="P:JsonExSerializer.Framework.JsonWriter.IState.PreviousState">
+            <summary>
+            Reference to the previous state, this should be
+            set when a new state is created
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Framework.JsonWriter.StateBase">
+            <summary>
+            Base class for states, implements helper functions for transitions
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.JsonWriter.StateBase.PreWrite(JsonExSerializer.Framework.JsonWriter.OpType)">
+            <summary>
+            Called before write operations to check for
+            valid states and to transition to new states
+            </summary>
+            <param name="operation"></param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.JsonWriter.StateBase.InvalidState(JsonExSerializer.Framework.JsonWriter.OpType)">
+            <summary>
+            The current operation is invalid for the given state, throw an exception
+            </summary>
+            <param name="operation">the operation</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.JsonWriter.StateBase.ReturnToPrevious(JsonExSerializer.Framework.JsonWriter.OpType)">
+            <summary>
+            Return control to the previous state with formatting performed
+            </summary>
+            <param name="operation">the current operation</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.JsonWriter.StateBase.ReturnToPrevious(JsonExSerializer.Framework.JsonWriter.OpType,System.Boolean)">
+            <summary>
+            Return control to the previous state
+            </summary>
+            <param name="operation">the current operation</param>
+            <param name="doFormatting">flag to indicate whether formatting options such as indenting should be performed</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.JsonWriter.StateBase.NewState(JsonExSerializer.Framework.JsonWriter.IState)">
+            <summary>
+            Transition to a new state, the current state will be set as
+            the PreviousState property of the newState.  Formatting will be performed
+            </summary>
+            <param name="newState">the new state to transition to</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.JsonWriter.StateBase.NewState(JsonExSerializer.Framework.JsonWriter.IState,System.Boolean)">
+            <summary>
+            Transition to a new state, the current state will be set as
+            the PreviousState property of the newState.
+            </summary>
+            <param name="newState">the new state to transition to</param>
+            <param name="doFormatting">flag to indicate whether formatting options such as indenting should be performed</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.JsonWriter.StateBase.Current(JsonExSerializer.Framework.JsonWriter.OpType)">
+            <summary>
+            Stay on the current state
+            </summary>
+            <param name="operation">the current operation</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.JsonWriter.StateBase.Current(JsonExSerializer.Framework.JsonWriter.OpType,System.Boolean)">
+            <summary>
+            Stay on the current state
+            </summary>
+            <param name="operation">the current operation</param>
+            <param name="doFormatting">flag to indicate whether formatting options such as indenting should be performed</param>
+        </member>
+        <member name="T:JsonExSerializer.Framework.JsonWriter.InitialState">
+            <summary>
+            The initial state of the writer
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Framework.JsonWriter.ArrayState">
+            <summary>
+            State when an array is in progress
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Framework.JsonWriter.CtorState">
+            <summary>
+            State when a constructor is in progress
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Framework.JsonWriter.CtorArgsState">
+            <summary>
+            State when an constructor args are in progress
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Framework.JsonWriter.ObjectState">
+            <summary>
+            State when a javascript object is in progress
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.MetaData.AbstractPropertyData">
+            <summary>
+            Base Implementation of an object property that does not require a member of a Type, such as a Property or Field,
+            for implementation.
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.MetaData.MetaDataBase">
+            <summary>
+            Base class for <see cref="T:JsonExSerializer.MetaData.TypeData"/> and <see cref="T:JsonExSerializer.MetaData.PropertyData"/>
+            </summary>
+        </member>
+        <member name="F:JsonExSerializer.MetaData.MetaDataBase.forType">
+            <summary>
+            The declaring type for this member
+            </summary>
+        </member>
+        <member name="F:JsonExSerializer.MetaData.MetaDataBase.converterInstance">
+            <summary>
+            The converter for this MetaData if applicable
+            </summary>
+        </member>
+        <member name="F:JsonExSerializer.MetaData.MetaDataBase.converterCreated">
+            <summary>
+            Flag to indicate whether an attempt to create the converter has occurred.  If
+            the converterInstance is null and converterCreated is true then this instance does
+            not have a converter.
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.MetaDataBase.#ctor(System.Type)">
+            <summary>
+            Initialize an instance for a specific type
+            </summary>
+            <param name="forType">the containing type</param>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.MetaDataBase.CreateTypeConverter">
+            <summary>
+            Constructs the type converter instance for this instance, if applicable
+            </summary>
+            <returns>constructed type converter, or null if no converter defined</returns>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.MetaDataBase.CreateTypeConverter(System.Reflection.ICustomAttributeProvider)">
+            <summary>
+            Constructs a type converter defined by the custom attributes of this member
+            </summary>
+            <param name="provider">Customer attribute provider to read custom attributes from</param>
+            <returns>constructed type converter or null if no converter defined</returns>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.MetaDataBase.CreateTypeConverter(JsonExSerializer.JsonConvertAttribute)">
+            <summary>
+            Constructs a converter from the convert attribute
+            </summary>
+            <param name="attribute">the JsonConvertAttribute decorating a property or class</param>
+            <returns>converter</returns>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.MetaDataBase.ForType">
+            <summary>
+            The declaring type for this member
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.MetaDataBase.TypeConverter">
+            <summary>
+            Gets or sets the TypeConverter defined for this object
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.MetaDataBase.HasConverter">
+            <summary>
+            Returns true if there is a TypeConverter defined for this object
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.MetaData.IPropertyData">
+            <summary>
+            Defines data about a property or field of a type
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.IPropertyData.GetValue(System.Object)">
+            <summary>
+            Gets the value of the property from the specified object instance
+            </summary>
+            <param name="instance">the instance of an object for the declaring type of this property</param>
+            <returns>the value of the property</returns>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.IPropertyData.SetValue(System.Object,System.Object)">
+             <summary>
+             Sets the value of the property on the specified object instance
+             </summary>
+             <param name="instance">the instance of an object for the declaring type of this property</param>
+            <param name="value">the value to set the property to</param>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.IPropertyData.Ignored">
+            <summary>
+            Gets or sets a value indicating whether this property is ignored.  Ignored properties
+            do not get written during serialization, and may not be read during deserialization depending
+            on the <see cref="T:JsonExSerializer.SerializationContext.IgnoredPropertyOption"/>
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.IPropertyData.IsConstructorArgument">
+            <summary>
+            Gets a value indicating whether this property is a Constructor argument.
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.IPropertyData.ConstructorParameterName">
+            <summary>
+            Gets the name of this property in the type's constructor parameter list, if this property is a
+            constructor argument.
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.IPropertyData.Name">
+            <summary>
+            Gets the name of the property
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.IPropertyData.Position">
+            <summary>
+            Returns the 0-based index in the constructor arguments for a constructor parameter
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.IPropertyData.PropertyType">
+            <summary>
+            Gets the type of the property
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.IPropertyData.CanWrite">
+            <summary>
+            Returns true if this member can be written to
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.IPropertyData.ForType">
+            <summary>
+            The declaring type for this member
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.IPropertyData.TypeConverter">
+            <summary>
+            Gets or sets the TypeConverter defined for this object
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.IPropertyData.HasConverter">
+            <summary>
+            Returns true if there is a TypeConverter defined for this object
+            </summary>
+        </member>
+        <member name="F:JsonExSerializer.MetaData.AbstractPropertyData.ignored">
+            <summary>
+            Ignored flag
+            </summary>
+        </member>
+        <member name="F:JsonExSerializer.MetaData.AbstractPropertyData.position">
+            <summary>
+            Index in constructor arguments for a constructor parameter
+            </summary>
+        </member>
+        <member name="F:JsonExSerializer.MetaData.AbstractPropertyData.constructorParameterName">
+            <summary>
+            The name of the parameter corresponding to this property in the type's constructor parameter list
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.AbstractPropertyData.#ctor(System.Type)">
+            <summary>
+            Initializes an instance for the specific declaring type
+            </summary>
+            <param name="forType">the declaring type for this property</param>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.AbstractPropertyData.GetValue(System.Object)">
+            <summary>
+            Gets the value of the property from the specified object instance
+            </summary>
+            <param name="instance">the instance of an object for the declaring type of this property</param>
+            <returns>the value of the property</returns>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.AbstractPropertyData.SetValue(System.Object,System.Object)">
+             <summary>
+             Sets the value of the property on the specified object instance
+             </summary>
+             <param name="instance">the instance of an object for the declaring type of this property</param>
+            <param name="value">the value to set the property to</param>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.AbstractPropertyData.Name">
+            <summary>
+            Gets the name of the property
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.AbstractPropertyData.Position">
+            <summary>
+            Returns the 0-based index in the constructor arguments for a constructor parameter
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.AbstractPropertyData.PropertyType">
+            <summary>
+            Gets the type of the property
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.AbstractPropertyData.IsConstructorArgument">
+            <summary>
+            Gets a value indicating whether this property is a Constructor argument.
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.AbstractPropertyData.ConstructorParameterName">
+            <summary>
+            Gets the name of this property in the type's constructor parameter list, if this property is a
+            constructor argument.
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.AbstractPropertyData.Ignored">
+            <summary>
+            Gets or sets a value indicating whether this property is ignored.  Ignored properties
+            do not get written during serialization, and may not be read during deserialization depending
+            on the <see cref="T:JsonExSerializer.SerializationContext.IgnoredPropertyOption"/>
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.AbstractPropertyData.CanWrite">
+            <summary>
+            Returns true if this member can be written to
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.MetaData.CustomTypeDataRepository">
+            <summary>
+            TypeHandlerFactory implementation that allows you to specify the TypeHandler
+            class that gets created when the factory creates ITypeHandler implementations
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.MetaData.TypeDataRepository">
+            <summary>
+            Factory for TypeHandlers
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.MetaData.DynamicMethodUtil">
+            <summary>
+            Utility class for light weigh code-gen methods
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.MetaData.PropertyData">
+            <summary>
+            Implementation of IPropertyData that uses a <see cref="T:System.Reflection.PropertyInfo"/> instance
+            as the underlying property type.
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.MetaData.MemberInfoPropertyDataBase">
+            <summary>
+            Base class for Properties and Fields of a Type
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.MemberInfoPropertyDataBase.Name">
+            <summary>
+             The name of the property
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.PropertyData.#ctor(System.Reflection.PropertyInfo)">
+            <summary>
+            Initializes an instance of PropertyData with the specified PropertyInfo object that is
+            not a constructor argument.
+            </summary>
+            <param name="property">the backing property object</param>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.PropertyData.#ctor(System.Reflection.PropertyInfo,System.Int32)">
+            <summary>
+            Initializes an instance of PropertyData with the specified PropertyInfo object that is also
+            a Constructor Parameter at the specified <paramref name="position"/>.
+            </summary>
+            <param name="property">the backing property object</param>
+            <param name="position">the property's 0-based index in the constructor arguments</param>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.PropertyData.Initialize">
+            <summary>
+            Initializes the object
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.PropertyData.GetValue(System.Object)">
+            <summary>
+            Get the value of the property from the given object
+            </summary>
+            <param name="instance">the object to retrieve this property value from</param>
+            <returns>property value</returns>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.PropertyData.SetValue(System.Object,System.Object)">
+            <summary>
+            Sets the value of the property for the object
+            </summary>
+            <param name="instance">the object instance to set the property value on</param>
+            <param name="value">the new value to set</param>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.PropertyData.Property">
+            <summary>
+            The backing property object
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.PropertyData.PropertyType">
+            <summary>
+            The type for the property
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.PropertyData.CanWrite">
+            <summary>
+            Gets a value indicating whether this property can be written to
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.MetaData.TypeData">
+            <summary>
+            Helper class for dealing with types during serialization
+            </summary>
+        </member>
+        <member name="F:JsonExSerializer.MetaData.TypeData.properties">
+            <summary>
+            The properties for this type
+            </summary>
+        </member>
+        <member name="F:JsonExSerializer.MetaData.TypeData.constructorArgs">
+            <summary>
+            The properties that also correspond to constructor parameters
+            </summary>
+        </member>
+        <member name="F:JsonExSerializer.MetaData.TypeData.collectionLookedUp">
+            <summary>
+            Flag that indicates whether the collection handler lookup has been attempted
+            </summary>
+        </member>
+        <member name="F:JsonExSerializer.MetaData.TypeData.collectionHandler">
+            <summary>
+            The collection handler for this type
+            </summary>
+        </member>
+        <member name="F:JsonExSerializer.MetaData.TypeData.context">
+            <summary>
+            The serializer's context
+            </summary>
+        </member>
+        <member name="F:JsonExSerializer.MetaData.TypeData.empty">
+            <summary>
+            flag indicating whether this type has any properties that are not ignored
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.TypeData.#ctor(System.Type,JsonExSerializer.SerializationContext)">
+            <summary>
+            Initializes an instance with the specific <paramref name="type"/> and
+            <paramref name="context" />.
+            </summary>
+            <param name="type">the .NET type that the metadata is for</param>
+            <param name="context">the serializer context</param>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.TypeData.LoadProperties">
+            <summary>
+            Loads the properties for the type if they haven't already been loaded
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.TypeData.ReadDeclaredProperties">
+            <summary>
+            Reads the properties and constructor arguments from type metadata declared on this type
+            </summary>
+            <param name="Properties">properties collection</param>
+            <param name="ConstructorArguments">constructor arguments</param>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.TypeData.MergeBaseProperties(System.Collections.Generic.IList{JsonExSerializer.MetaData.IPropertyData})">
+            <summary>
+            Merges in the properties from the base class to the property list
+            </summary>
+            <param name="properties">property list to merge into</param>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.TypeData.GetConstructorParameters(System.Collections.Generic.IList{JsonExSerializer.MetaData.IPropertyData})">
+            <summary>
+            Returns an enumerator of the Constructor Parameters in the <paramref name="properties"/> list.
+            </summary>
+            <param name="properties">the properties to extract constructor parameters from</param>
+            <returns>enumerable list of constructor parameters</returns>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.TypeData.IsLooseMatch(System.Reflection.ConstructorInfo,JsonExSerializer.MetaData.IPropertyData[])">
+            <summary>
+            Checks that the constructor matches the constructor parameters by doing type conversion if necessary
+            </summary>
+            <param name="constructor">the constructor</param>
+            <param name="properties">constructor parameter fields</param>
+            <returns>true if this constructor matches the types in the constructor parameters</returns>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.TypeData.CreatePropertyHandler(System.Reflection.PropertyInfo)">
+            <summary>
+            Constructs a PropertyHandler instance from the PropertyInfo
+            </summary>
+            <param name="Property"></param>
+            <returns></returns>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.TypeData.CreateFieldHandler(System.Reflection.FieldInfo)">
+            <summary>
+            Constructs a FieldHandler instance from the FieldInfo
+            </summary>
+            <param name="Field"></param>
+            <returns></returns>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.TypeData.CreateInstance(System.Object[])">
+            <summary>
+            Creates an instance of this Type with the specified arguments
+            </summary>
+            <param name="args">the arguments passed to the constructor if any</param>
+            <returns>the created object</returns>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.TypeData.FindProperty(System.String)">
+            <summary>
+            Finds a property by its name.  The property must follow the same rules as
+            those returned from the Properties list, i.e. must be readable and writable and
+            not have an ignore attribute.
+            </summary>
+            <param name="Name">the name of the property</param>
+            <returns>TypeHandlerProperty instance for the property or null if not found</returns>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.TypeData.IgnoreProperty(System.String)">
+            <summary>
+            Ignore a property to keep from being serialized, same as if the JsonExIgnore attribute had been set
+            </summary>
+            <param name="name">the name of the property</param>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.TypeData.IsCollection">
+            <summary>
+            Returns true if this type is a collection type
+            </summary>
+            <param name="context">the serialization context</param>
+            <returns>true if a collection</returns>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.TypeData.GetCollectionHandlerFromAttribute">
+            <summary>
+            Reads the JsonExCollection attribute for the class and loads the collection handler from that.  It first
+            checks the list of collectionhandlers to see if its already been loaded.
+            </summary>
+            <returns>CollectionHandler specified by the JsonExCollection attribute</returns>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.TypeData.GetCollectionHandler">
+            <summary>
+            Returns a collection handler if this object is a collection
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.TypeData.ConstructorParameters">
+            <summary>
+            Get the list of constructor parameters for this type
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.TypeData.IsEmpty">
+            <summary>
+            Indicates whether there are any properties for this object that are not ignored.
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.TypeData.AllProperties">
+            <summary>
+            Get the list of properties for this type
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.MetaData.FieldData">
+            <summary>
+            Handles a public field on an object
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.FieldData.#ctor(System.Reflection.FieldInfo)">
+            <summary>
+            Constructs a FieldHandler for a field on a type that is not a constructor
+            parameter
+            </summary>
+            <param name="field">field info</param>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.FieldData.#ctor(System.Reflection.FieldInfo,System.Int32)">
+            <summary>
+            Constructs a FieldHandler for a field on a type that is also a constructor
+            parameter at the specified position in the constructor arguments.
+            </summary>
+            <param name="field">field info</param>
+            <param name="position">its position in the constructor</param>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.FieldData.GetValue(System.Object)">
+            <summary>
+            Gets the value of the field from an object instance
+            </summary>
+            <param name="instance">the object instance to retrieve the field value from</param>
+            <returns>field value</returns>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.FieldData.SetValue(System.Object,System.Object)">
+            <summary>
+            Sets the value of the field on the object
+            </summary>
+            <param name="instance">the object instance to retrieve the field value from</param>
+            <param name="value">field value</param>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.FieldData.Field">
+            <summary>
+            The fieldInfo object for this FieldHandler
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.FieldData.PropertyType">
+            <summary>
+            Gets the type of the field
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.MetaData.TypeAliasCollection">
+            <summary>
+            Provides a collection of bindings from Type to alias.  When type information is rendered for any types
+            registered in the collection, its alias is rendered instead.
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.TypeAliasCollection.#ctor">
+            <summary>
+            Initializes a default intance of the TypeAliasCollection with aliases for primitive types
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.TypeAliasCollection.AddDefaultAliases">
+            <summary>
+            Adds default aliases for primitive types
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.TypeAliasCollection.Add(System.Type,System.String)">
+            <summary>
+            Adds an alias for a type.  When the type is encountered during serialization, the alias
+            will be written out instead of the normal type info if a cast or type information is needed.
+            </summary>
+            <param name="type">the type object</param>
+            <param name="alias">the type's alias</param>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.TypeAliasCollection.Clear">
+            <summary>
+            Clears all aliases
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.TypeAliasCollection.Remove(System.Type)">
+            <summary>
+            Removes an alias for a specific type
+            </summary>
+            <param name="type">the type to remove</param>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.TypeAliasCollection.Remove(System.String)">
+            <summary>
+            Removes an alias for a specific type by alias
+            </summary>
+            <param name="alias">the alias to remove</param>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.TypeAliasCollection.GetTypeAlias(System.Type)">
+            <summary>
+            Looks up an alias for a registered type
+            </summary>
+            <param name="type">the type to lookup</param>
+            <returns>a type alias or null if not found</returns>
+        </member>
+        <member name="M:JsonExSerializer.MetaData.TypeAliasCollection.GetTypeBinding(System.String)">
+            <summary>
+            Looks up a type, given an alias for the type.
+            </summary>
+            <param name="alias">the alias to look up</param>
+            <returns>the type representing the alias or null</returns>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.TypeAliasCollection.Item(System.Type)">
+            <summary>
+            Looks up an alias for a registered type
+            </summary>
+            <param name="type">the type to lookup</param>
+            <returns>a type alias or null if not found</returns>
+        </member>
+        <member name="P:JsonExSerializer.MetaData.TypeAliasCollection.Item(System.String)">
+            <summary>
+            Looks up a type, given an alias for the type.
+            </summary>
+            <param name="typeAlias">the alias to look up</param>
+            <returns>the type representing the alias or null</returns>
+        </member>
+        <member name="T:JsonExSerializer.ParseException">
+            <summary>
+            Indicates an error parsing the input stream for deserialization
+            </summary>
+        </member>
+        <member name="F:JsonExSerializer.Framework.Parsing.Parser.GenericArgsStart">
+            <summary> &gt; </summary>
+        </member>
+        <member name="F:JsonExSerializer.Framework.Parsing.Parser.GenericArgsEnd">
+            <summary> &lt; </summary>
+        </member>
+        <member name="F:JsonExSerializer.Framework.Parsing.Parser.NewToken">
+            <summary> new </summary>
+        </member>
+        <member name="F:JsonExSerializer.Framework.Parsing.Parser.ColonToken">
+            <summary> : </summary>
+        </member>
+        <member name="F:JsonExSerializer.Framework.Parsing.Parser.PeriodToken">
+            <summary> . </summary>
+        </member>
+        <member name="F:JsonExSerializer.Framework.Parsing.Parser.CommaToken">
+            <summary> , </summary>
+        </member>
+        <member name="F:JsonExSerializer.Framework.Parsing.Parser.LParenToken">
+            <summary> ( </summary>
+        </member>
+        <member name="F:JsonExSerializer.Framework.Parsing.Parser.RParenToken">
+            <summary> ) </summary>
+        </member>
+        <member name="F:JsonExSerializer.Framework.Parsing.Parser.LSquareToken">
+            <summary> ( </summary>
+        </member>
+        <member name="F:JsonExSerializer.Framework.Parsing.Parser.RSquareToken">
+            <summary> ) </summary>
+        </member>
+        <member name="F:JsonExSerializer.Framework.Parsing.Parser.LBraceToken">
+            <summary> ( </summary>
+        </member>
+        <member name="F:JsonExSerializer.Framework.Parsing.Parser.RBraceToken">
+            <summary> ) </summary>
+        </member>
+        <member name="F:JsonExSerializer.Framework.Parsing.Parser.ReferenceStartToken">
+            <summary> this </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.Parser.Parse">
+            <summary>
+            Parses the stream and returns the object result
+            </summary>
+            <returns>the object constructed from the stream</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.Parser.PeekToken">
+            <summary>
+            Peeks at the next token in the list
+            </summary>
+            <returns>the token</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.Parser.ReadToken">
+            <summary>
+            Reads the next token and removes it from the list
+            </summary>
+            <returns>the next toke</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.Parser.ParseReference">
+            <summary>
+            Parses a reference to an object
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.Parser.ParseCast">
+            <summary>
+            Parses a type cast.  Will also parse the expression that the cast applies to.
+            The result will be the expression following the cast with the ResultType set to
+            the type of the cast.
+            </summary>
+            <returns>casted expression</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.Parser.ParseCollection">
+            <summary>
+            Parses a javascript array
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.Parser.ParseObject">
+            <summary>
+            Parses a javascript object
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.Parser.ParseKeyValue">
+            <summary>
+            Parses a key value pair of an javascript object
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.Parser.ReadAhead(JsonExSerializer.Framework.Parsing.Token,JsonExSerializer.Framework.Parsing.Token,JsonExSerializer.Framework.Parsing.Parser.ExpressionMethod,JsonExSerializer.Framework.Expressions.Expression@)">
+            <summary>
+            Handler for 1 or more construct
+            </summary>
+            <param name="separator">the separator token between items</param>
+            <param name="terminal">the ending token</param>
+            <param name="meth">the method to call to parse an item</param>
+            <param name="result">the parsed expression</param>
+            <returns>true if match parsed, false otherwise</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.Parser.ParseConstructedObject">
+            <summary>
+            Parses a constructor expression
+            </summary>
+            <returns>complex expression</returns>
+            <example>
+               new MyType("arg1", "arg2")
+               new MyType("argA", "argB") { "argC": "C", "argD": "D" }
+            </example>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.Parser.ParseTypeSpecifier">
+            <summary>
+            Parses a type specifier, used by cast and constructor types.  The final
+            result is "Type" which is then pushed on the values stack. 
+            Examples:
+            
+            <para>  System.Int32    -- int</para>
+            <para>  System.Object[]   -- obect array</para>
+            <para>  System.Collections.Generic.List&lt;System.String&gt; -- list of strings</para>
+            <para>  System.Collections.Generic.List&lt;System.String&gt;[]  -- array of list of strings</para>
+            <para>  System.Collections.Generic.List&lt;System.String[]&gt;  -- list of string arrays</para>
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.Parser.ParseString">
+            <summary>
+            Parses a single or double quoted string, or a character
+            </summary>
+            <returns>the parsed string or char</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.Parser.RequireToken(JsonExSerializer.Framework.Parsing.Token,JsonExSerializer.Framework.Parsing.Token,System.String)">
+            <summary>
+            Asserts that the token read is the one expected
+            </summary>
+            <param name="expected">the expected token</param>
+            <param name="actual">the actual token</param>
+            <param name="message">message to use in the exception if expected != actual</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.Parser.IsQuotedString(JsonExSerializer.Framework.Parsing.Token)">
+            <summary>
+            Test the token to see if its a quoted string
+            </summary>
+            <param name="tok">the token to test</param>
+            <returns>true if its a quoted string</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.Parser.IsIdentifier(JsonExSerializer.Framework.Parsing.Token)">
+            <summary>
+            Test the token to see if its an identifier
+            </summary>
+            <param name="tok">the token to test</param>
+            <returns>true if its an identifier</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.Parser.IsKeyword(JsonExSerializer.Framework.Parsing.Token)">
+            <summary>
+            Test the token to see if its a keyword
+            </summary>
+            <param name="tok">the token to test</param>
+            <returns>true if its a keyword</returns>
+        </member>
+        <member name="T:JsonExSerializer.Framework.Parsing.Parser.ExpressionMethod">
+            <summary>
+            Delegate method to call for the ReadAhead method.  The method will be called for
+            each item found by the ReadAhead method.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:JsonExSerializer.Framework.ReferenceEqualityComparer`1">
+            <summary>
+            An equality comparer for a Dictionary instance that compares equality using ReferenceEquals rather
+            than Equals.  This is to ensure that 2 objects are actually the same and not just equal for reference
+            checking purposes.
+            </summary>
+            <typeparam name="T">the type of object to check</typeparam>
+        </member>
+        <member name="T:JsonExSerializer.Serializer">
+            <summary>
+            The Serializer class is the main entry point into the Serialization framework.  To
+            get an instance of the Serializer, call the GetSerializer factory method with the type of
+            the object that you want to Serialize or Deserialize.  
+            </summary>
+            <example>
+            <c>
+                Serializer serializerObject = new Serializer(typeof(MyClass));
+                MyClass myClass = new MyClass();
+                /* set properties on myClass */
+                string data = serializerObject.Serialize(myClass);
+            </c>
+            </example>
+        </member>
+        <member name="M:JsonExSerializer.Serializer.GetSerializer(System.Type)">
+            <summary>
+            Gets a serializer for the given type
+            </summary>
+            <param name="t">type</param>
+            <returns>a serializer</returns>
+        </member>
+        <member name="M:JsonExSerializer.Serializer.GetSerializer(System.Type,System.String)">
+            <summary>
+            Gets a serializer for the given type
+            </summary>
+            <param name="t">type</param>
+            <returns>a serializer</returns>
+        </member>
+        <member name="M:JsonExSerializer.Serializer.#ctor(System.Type)">
+            <summary>
+            Constructs a serializer to (de)serialize the given type using the
+            default configuration section "JsonExSerializer" if it exists.
+            </summary>
+            <param name="t">the type to serialize/deserialize</param>
+        </member>
+        <member name="M:JsonExSerializer.Serializer.#ctor(System.Type,System.String)">
+            <summary>
+            Constructs a serializer to (de)serialize the given type using the
+            specified configuration section.
+            </summary>
+            <param name="t">the type to serialize/deserialize</param>
+        </member>
+        <member name="M:JsonExSerializer.Serializer.#ctor(System.Type,JsonExSerializer.SerializationContext)">
+            <summary>
+            Constructs a serializer with an existing context  to (de)serialize the given type
+            </summary>
+            <param name="t">the type to serialize/deserialize</param>
+            <param name="context"></param>
+        </member>
+        <member name="M:JsonExSerializer.Serializer.Serialize(System.Object,System.IO.Stream)">
+            <summary>
+            Serialize the object and write the data to the stream parameter.
+            </summary>
+            <param name="o">the object to serialize</param>
+            <param name="stream">stream for the serialized data</param>
+        </member>
+        <member name="M:JsonExSerializer.Serializer.Serialize(System.Object,System.IO.TextWriter)">
+            <summary>
+            Serialize the object and write the data to the writer parameter.
+            The caller is expected to close the writer when done.
+            </summary>
+            <param name="o">the object to serialize</param>
+            <param name="writer">writer for the serialized data</param>
+        </member>
+        <member name="M:JsonExSerializer.Serializer.Serialize(System.Object)">
+            <summary>
+            Serialize the object and return the serialized data as a string.
+            </summary>
+            <param name="o">the object to serialize</param>
+            <returns>serialized data string</returns>
+        </member>
+        <member name="M:JsonExSerializer.Serializer.Deserialize(System.IO.Stream)">
+            <summary>
+            Read the serialized data from the stream and return the
+            deserialized object.
+            </summary>
+            <param name="stream">stream to read the data from</param>
+            <returns>the deserialized object</returns>
+        </member>
+        <member name="M:JsonExSerializer.Serializer.Deserialize(System.IO.TextReader)">
+            <summary>
+            Read the serialized data from the reader and return the
+            deserialized object.
+            </summary>
+            <param name="reader">TextReader to read the data from</param>
+            <returns>the deserialized object</returns>
+        </member>
+        <member name="M:JsonExSerializer.Serializer.Deserialize(System.String)">
+            <summary>
+            Read the serialized data from the input string and return the
+            deserialized object.
+            </summary>
+            <param name="input">the string containing the serialized data</param>
+            <returns>the deserialized object</returns>
+        </member>
+        <member name="P:JsonExSerializer.Serializer.Context">
+            <summary>
+            The Serialization context for this serializer.  The SerializationContext contains
+            options for serializing as well as serializer helper classes such as TypeConverters
+            and CollectionHandlers.
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.Serializer.SerializedType">
+            <summary>
+            The expected type of object to be serailized or deserialized.  This may be a base
+            class of the actual type, including System.Object.
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Framework.SerializerHelper">
+            <summary>
+            Class to do the work of serializing an object
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.SerializerHelper.Serialize(System.Object)">
+            <summary>
+            Serialize the given object
+            </summary>
+            <param name="value">object to serialize</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.SerializerHelper.Serialize(System.Object,JsonExSerializer.Framework.Expressions.JsonPath,JsonExSerializer.TypeConversion.IJsonTypeConverter)">
+            <summary>
+            Serialize the given object at the current indent level.  The path to the object is represented by
+            currentPath such as "this.name", etc.  This is an internal method that can be called recursively.
+            </summary>
+            <param name="value">the object to serialize</param>
+            <param name="currentPath">the current path for reference writing</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.SerializerHelper.SetCanReference(System.Object)">
+            <summary>
+            Indicates that the object can now be referenced.  Any attempts to build a reference to the current object before
+            this method is called will result in an exception.
+            </summary>
+            <param name="value">the object being referenced</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.SerializerHelper.WriteTypeInfo(System.Type)">
+            <summary>
+            Writes out the type for an object in regular C# code syntax
+            </summary>
+            <param name="t">the type to write</param>
+        </member>
+        <member name="T:JsonExSerializer.Framework.SerializerHelper.ReferenceInfo">
+            <summary>
+            Helper class to store information about a reference
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.SerializationContext">
+            <summary>
+            Provides options controlling Serializing and Deserializing of objects.
+            </summary>
+        </member>
+        <member name="F:JsonExSerializer.SerializationContext._typeAliases">
+            <summary>
+            Mapping of Types to aliases
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.SerializationContext.SetJsonStrictOptions">
+            <summary>
+            This will set the serializer to output in Json strict mode which will only
+            output information compatible with the JSON standard.
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.SerializationContext.AddTypeBinding(System.Type,System.String)">
+            <summary>
+            Adds a different binding for a type.  When the type is encountered during serialization, the alias
+            will be written out instead of the normal type info if a cast or type information is needed.
+            </summary>
+            <param name="type">the type object</param>
+            <param name="typeAlias">the type's alias</param>
+        </member>
+        <member name="M:JsonExSerializer.SerializationContext.ClearTypeBindings">
+            <summary>
+            Clears all type bindings
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.SerializationContext.RemoveTypeBinding(System.Type)">
+            <summary>
+            Removes a type binding
+            </summary>
+            <param name="type">the bound type to remove</param>
+        </member>
+        <member name="M:JsonExSerializer.SerializationContext.RemoveTypeBinding(System.String)">
+            <summary>
+            Removes a type binding
+            </summary>
+            <param name="alias">the type alias to remove</param>
+        </member>
+        <member name="M:JsonExSerializer.SerializationContext.GetTypeAlias(System.Type)">
+            <summary>
+            Looks up an alias for a given type that was registered with AddTypeBinding.
+            </summary>
+            <param name="type">the type to lookup</param>
+            <returns>a type alias or null</returns>
+        </member>
+        <member name="M:JsonExSerializer.SerializationContext.GetTypeBinding(System.String)">
+            <summary>
+            Looks up a type, given an alias for the type.
+            </summary>
+            <param name="typeAlias">the alias to look up</param>
+            <returns>the type representing the alias or null</returns>
+        </member>
+        <member name="M:JsonExSerializer.SerializationContext.RegisterTypeConverter(System.Type,JsonExSerializer.TypeConversion.IJsonTypeConverter)">
+            <summary>
+            Register a type converter with the DefaultConverterFactory.
+            </summary>
+            <param name="forType">the type to register</param>
+            <param name="converter">the converter</param>
+        </member>
+        <member name="M:JsonExSerializer.SerializationContext.RegisterTypeConverter(System.Type,System.String,JsonExSerializer.TypeConversion.IJsonTypeConverter)">
+            <summary>
+            Register a type converter with the DefaultConverterFactory.
+            </summary>
+            <param name="forType">the property to register</param>
+            <param name="converter">the converter</param>
+        </member>
+        <member name="M:JsonExSerializer.SerializationContext.RegisterCollectionHandler(JsonExSerializer.Collections.CollectionHandler)">
+            <summary>
+            Registers a collection handler which provides support for a certain type
+            or multiple types of collections.
+            </summary>
+            <param name="handler">the collection handler</param>
+        </member>
+        <member name="M:JsonExSerializer.SerializationContext.IgnoreProperty(System.Type,System.String)">
+            <summary>
+            Ignore a property to keep from being serialized, same as if the JsonExIgnore attribute had been set
+            </summary>
+            <param name="objectType">the type that contains the property</param>
+            <param name="propertyName">the name of the property</param>
+        </member>
+        <member name="P:JsonExSerializer.SerializationContext.IsCompact">
+            <summary>
+            If true, string output will be as compact as possible with minimal spacing.  Thus, cutting
+            down on space.  This option has no effect on Deserialization.
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.SerializationContext.OutputTypeComment">
+            <summary>
+            If true a comment will be written out containing type information for the root object
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.SerializationContext.OutputTypeInformation">
+            <summary>
+            If set to true, type information will be written when necessary to properly deserialize the 
+            object.  This is only when the type information derived from the serialized type will not
+            be specific enough to deserialize correctly.  
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.SerializationContext.ReferenceWritingType">
+            <summary>
+            Controls how references to previously serialized objects are written out.
+            If the option is set to WriteIdentifier a reference identifier is written.
+            The reference identifier is the path from the root to the first reference to the object.
+            Example: $['SomeProp'][1]['MyClassVar'];
+            Otherwise a copy of the object is written unless a circular reference is detected, then
+            this option controls how the circular reference is handled.  If IgnoreCircularReferences
+            is set, then null is written when a circular reference is detected.  If ErrorCircularReferences
+            is set, then an error will be thrown.
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.SerializationContext.IgnoredPropertyAction">
+            <summary>
+            Controls the action taken when an ignored property is encountered upon deserialization
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.SerializationContext.TypeAliases">
+            <summary>
+            Collection of Type-Alias mappings.  When a type has a registered alias, the alias will be 
+            rendered in place of the type any time the type would normally be rendered.
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.SerializationContext.SerializerInstance">
+            <summary>
+            The current serializer instance that created and is using this
+            context.
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.SerializationContext.Parameters">
+            <summary>
+            User defined parameters
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.SerializationContext.CollectionHandlers">
+            <summary>
+            CollectionHandlers provide support for collections(JSON Arrays)
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.SerializationContext.TypeHandlerFactory">
+            <summary>
+            Gets or sets the TypeHandlerFactory which is responsible for
+            creating ITypeHandlers which manage type metadata
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.SerializationContext.IgnoredPropertyOption">
+            <summary>
+            Set of options for handling Ignored properties encountered upon Deserialization
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Framework.Parsing.TokenType">
+            <summary>
+            The type for a given token
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Framework.Parsing.Token">
+            <summary>
+            Structure to represent a token from the input stream
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.Framework.Parsing.TokenStream">
+            <summary>
+            Tokenizes input from the specified reader and returns tokens for the parser to parse.
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.TokenStream.#ctor(System.IO.TextReader)">
+            <summary>
+            Create an instance of the token stream to read from the given reader.
+            </summary>
+            <param name="reader"></param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.TokenStream.PeekToken">
+            <summary>
+            Peek at the next available token without consuming it.
+            </summary>
+            <returns>the next available token, or the empty token if all tokens have been read</returns>
+            <see cref="F:JsonExSerializer.Framework.Parsing.Token.Empty"/>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.TokenStream.ReadToken">
+            <summary>
+            Reads the next available token and consumes it.
+            </summary>
+            <returns>the next available token, or the empty token if all tokens have been read</returns>
+            <see cref="F:JsonExSerializer.Framework.Parsing.Token.Empty"/>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.TokenStream.IsEmpty">
+            <summary>
+            Checks to see if there are any more tokens to be read
+            </summary>
+            <returns>true if no more tokens</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.TokenStream.ReadTokenFromReader">
+            <summary>
+            Reads a token from the text reader and returns it
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.TokenStream.ReadMultilineComment(System.Char)">
+            <summary>
+            Reads a C# multiline comment
+            <example>
+            /*
+              This is a multiline comment
+            */
+            </example>
+            </summary>
+            <param name="ch">the starting character</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.TokenStream.ReadLineComment(System.Char)">
+            <summary>
+            Reads a single line comment // comment
+            </summary>
+            <param name="ch">the starting character</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.TokenStream.GetSymbol(System.Char)">
+            <summary>
+            Parses a symbol from the reader such as "," "." etc
+            </summary>
+            <param name="ch">the starting character</param>
+            <param name="buffer">a buffer to store input</param>
+            <returns>symbol token</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.TokenStream.GetIdentifier(System.Char,System.Text.StringBuilder)">
+            <summary>
+            Gets an identifier from the reader such as a variable reference, null, true, or false.
+            Follows C# rules, non-qouted string starting with a letter or "_" followed by letters digits or "_"
+            </summary>
+            <param name="start">the starting character</param>
+            <param name="buffer">a buffer to hold input</param>
+            <returns>identifier token</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.TokenStream.GetNumber(System.Char,System.Text.StringBuilder)">
+            <summary>
+            Gets a number from the reader, which can be integer, floating point or scientific notation
+            Examples: 123343, -123232, 12.345, -45.3434, 3.45E+10
+            </summary>
+            <param name="start">the starting character</param>
+            <param name="buffer">buffer to hold input</param>
+            <returns>number token</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.TokenStream.GetIntegerPart(System.Text.StringBuilder)">
+            <summary>
+            Gets an integer portion of a number, stopping at a "." or the start of an exponent "e" or "E"
+            </summary>
+            <param name="buffer">buffer to store input</param>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.TokenStream.GetQuotedString(System.Char,System.Text.StringBuilder)">
+            <summary>
+            Gets a single or double qouted string from the reader, handling and escape characters
+            </summary>
+            <param name="start">the starting character</param>
+            <param name="buffer">buffer for input</param>
+            <returns>string token</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.TokenStream.IsQuoteStart(System.Char)">
+            <summary>
+            Is the character a starting quote character
+            </summary>
+            <param name="ch">character to test</param>
+            <returns>true if quote start</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.TokenStream.IsNumberStart(System.Char)">
+            <summary>
+            Is the character the start of a number
+            </summary>
+            <param name="ch">character to test</param>
+            <returns>true if number start</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.TokenStream.IsIdentifierStart(System.Char)">
+            <summary>
+            Is the character the start of an identifier
+            </summary>
+            <param name="ch">character to test</param>
+            <returns>true if identifier start</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.TokenStream.IsSymbolStart(System.Char)">
+            <summary>
+            Is the character the start of a symbol
+            </summary>
+            <param name="ch">character to test</param>
+            <returns>true if symbol start</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.TokenStream.IsLineCommentStart(System.Char)">
+            <summary>
+            Is the character the start of a single line comment
+            </summary>
+            <param name="ch">character to start</param>
+            <returns>true if single line comment start</returns>
+        </member>
+        <member name="M:JsonExSerializer.Framework.Parsing.TokenStream.IsMultilineCommentStart(System.Char)">
+            <summary>
+            Is the character the start of a multiline comment
+            </summary>
+            <param name="ch">character to test</param>
+            <returns>true if multiline start</returns>
+        </member>
+        <member name="T:JsonExSerializer.Framework.TwoWayDictionary`2">
+            <summary>
+            A Bidirectional dictionary used by the context to store types.  items can be looked based on
+            key or value.  A lookup on the value will return the key.
+            </summary>
+            <typeparam name="K">the type of the key</typeparam>
+            <typeparam name="V">the type of the value</typeparam>
+        </member>
+        <member name="T:JsonExSerializer.TypeConversion.BitArrayConverter">
+            <summary>
+            Converter for the System.Collections.BitArray type
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.TypeConversion.IJsonTypeConverter">
+            <summary>
+            An interface for converting from one type to another for serialization/deserialization.  The resulting
+            type is left unspecified.
+            </summary>
+            <typeparam name="SrcT">The type of the object before serialization or after deserialization</typeparam>
+        </member>
+        <member name="M:JsonExSerializer.TypeConversion.IJsonTypeConverter.ConvertFrom(System.Object,JsonExSerializer.SerializationContext)">
+            <summary>
+            This method is called before serialization.  The <paramref name="item"/> parameter should be converted
+            to a type suitable for serialization and returned.
+            </summary>
+            <param name="item">the item to be converted</param>
+            <returns>the converted item to be serialized</returns>
+        </member>
+        <member name="M:JsonExSerializer.TypeConversion.IJsonTypeConverter.ConvertTo(System.Object,System.Type,JsonExSerializer.SerializationContext)">
+            <summary>
+            This method will be called upon deserialization.  The item returned from ConvertFrom on serialization
+            will be passed as the <paramref name="item"/> parameter.  This object should be converted back to the
+            desired type and returned.
+            </summary>
+            <param name="item"></param>
+            <returns>the desired object</returns>
+        </member>
+        <member name="P:JsonExSerializer.TypeConversion.IJsonTypeConverter.Context">
+            <summary>
+            Context parameter to control conversion
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.TypeConversion.BitArrayConverter.ConvertFrom(System.Object,JsonExSerializer.SerializationContext)">
+            converts a bit array into a string of the format:  "63,FFEF10002EFA"
+            length,HexEncodedBits
+        </member>
+        <member name="T:JsonExSerializer.TypeConversion.ChainedConverter">
+            <summary>
+            Type converter that wraps multiple converters.  Used when multiple
+            JsonConvert attributes are specified on an element.
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.TypeConversion.ChainedConverter.Converters">
+            <summary>
+            The list of type converters for this instance
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.TypeConversion.ConverterUtil">
+            <summary>
+            Helper class for custom type conversion.  Will populate an object from a dictionary
+            or copy its properties to a dictionary.
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.TypeConversion.ConverterUtil.PopulateFromDictionary(System.Object,System.Collections.IDictionary,System.Boolean)">
+            <summary>
+            Populates the properties of an object from a map
+            </summary>
+            <param name="instance">the object to populate, the type must match the one that this instance was created for</param>
+            <param name="values">a dictionary of values</param>
+            <param name="ignoreMissingProperties">true to ignore any keys in the dictionary that are not properties on the object.
+            If false, an exception will be thrown if a property cannot be found.</param>
+        </member>
+        <member name="M:JsonExSerializer.TypeConversion.ConverterUtil.CopyToDictionary(System.Object,System.Collections.IDictionary)">
+            <summary>
+            Copies an object's properties to a dictionary
+            </summary>
+            <param name="instance">the object to copy</param>
+            <param name="values">the dictionary to copy to, cannot be null</param>
+        </member>
+        <member name="T:JsonExSerializer.TypeConversion.DictionaryToListConverter">
+            <summary>
+            Converts a dictionary of objects to a list.  On Deserialization, a property
+            of the value type is used as the key.
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.TypeConversion.JsonConverterBase.Context">
+            <summary>
+            Provides an optional parameter to the converter to control some of its functionality.   The Context
+            is Converter-dependent.
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.TypeConversion.TypeConverterAdapter">
+            <summary>
+            TypeConverter that utilizes the System.ComponentModel.TypeConverter for
+            a given type.
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.TypeConversion.TypeConverterAdapter.GetAdapter(System.Type)">
+            <summary>
+            Gets a TypeConverterAdapter instace for the type if there is a valid
+            System.ComponentModel.TypeConverter for the type.  Otherwise
+            it returns null
+            </summary>
+            <param name="ForType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:JsonExSerializer.XmlConfigurator.AddTypeBinding(System.String,System.String[])">
+            <summary>
+            Handler for TypeBinding/add tag
+            </summary>
+            <param name="tag">tag name</param>
+            <param name="values">attribute values</param>
+        </member>
+        <member name="M:JsonExSerializer.XmlConfigurator.RemoveTypeBinding(System.String,System.String[])">
+            <summary>
+            Handler for TypeBinding/remove tag
+            </summary>
+            <param name="tag">tag name</param>
+            <param name="values">attribute values</param>
+        </member>
+        <member name="M:JsonExSerializer.XmlConfigurator.HandleTypeBindings">
+            <summary>
+            Handles the "TypeBindings" tag of the config
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.XmlConfigurator.AddTypeConverter(System.String,System.String[])">
+            <summary>
+            Handles the TypeConverters/add tag of the config file
+            </summary>
+            <param name="tagName">name of the tag, should be "add"</param>
+            <param name="values">attribute values in the order: type, property, converter</param>
+        </member>
+        <member name="M:JsonExSerializer.XmlConfigurator.HandleTypeConverters">
+            <summary>
+            Handles the configuration of Type Converters for the TypeConverters node
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.XmlConfigurator.HandleCollectionHandlers">
+            <summary>
+            Handles the configuration of Type Converters factories for the TypeConverterFactories node
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.XmlConfigurator.MethodMap">
+            <summary>
+            encapsulates a method delegate for processing a tag.  The
+            parameters list is a list of valid attributes for the tag.  They will be
+            passed in the order listed to the delegate.
+            </summary>
+        </member>
+        <member name="M:JsonExSerializer.XmlConfigurator.MethodMap.#ctor(System.String,System.String,JsonExSerializer.XmlConfigurator.MethodDelegate)">
+            <summary>
+            Creates a method map for the tag
+            </summary>
+            <param name="name">the name of the method</param>
+            <param name="parameters">space separated list of attributes for the tag</param>
+            <param name="method">the delegate</param>
+        </member>
+        <member name="P:JsonExSerializer.XmlConfigurator.MethodMap.Name">
+            <summary>
+            The name of the tag
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.XmlConfigurator.MethodMap.Parameters">
+            <summary>
+            The valid attributes for the tag
+            </summary>
+        </member>
+        <member name="P:JsonExSerializer.XmlConfigurator.MethodMap.Method">
+            <summary>
+            The delegate to call when the tag is encountered
+            </summary>
+        </member>
+        <member name="T:JsonExSerializer.XmlConfigurator.SectionHandler">
+            <summary>
+            Handles a given section of the xml file
+            </summary>
+        </member>
+    </members>
+</doc>
