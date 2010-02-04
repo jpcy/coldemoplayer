@@ -10,7 +10,7 @@
                     <TextBlock>Game log</TextBlock>
                 </StackPanel>
             </TabItem.Header>
-            <core:FlowDocumentViewer Background="LightGray" FontFamily="Courier New" FontSize="12" Document="{Binding GameLogDocument}" />
+            <core:FlowDocumentViewer Background="Black" FontFamily="Courier New" FontSize="14" Document="{Binding GameLogDocument}" />
         </TabItem>
         <TabItem>
             <TabItem.Header>
@@ -19,7 +19,7 @@
                     <TextBlock>Console log</TextBlock>
                 </StackPanel>
             </TabItem.Header>
-            <core:FlowDocumentViewer Background="LightGray" FontFamily="Courier New" FontSize="12" Document="{Binding ConsoleLogDocument}" />
+            <core:FlowDocumentViewer Background="Black" FontFamily="Courier New" FontSize="14" Document="{Binding ConsoleLogDocument}" />
         </TabItem>
     </TabControl>
 </UserControl>

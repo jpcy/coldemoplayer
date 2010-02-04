@@ -26,7 +26,7 @@ namespace CDP.Quake3Arena.Analysis
 
         private readonly SolidColorBrush[] stringColours =
         {
-            Brushes.Black,
+            Brushes.White, // Should be black, but due to colour clashes the background is set to black.
             Brushes.Red,
             Brushes.Green,
             Brushes.Yellow,
