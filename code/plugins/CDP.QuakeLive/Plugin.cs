@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using System.Windows.Controls;
+using JsonExSerializer;
 using CDP.Core;
 using CDP.Quake3Arena;
 
@@ -27,11 +25,27 @@ namespace CDP.QuakeLive
 
         public override Setting[] Settings
         {
-            get { return null; }
+            get
+            {
+                return new Setting[]
+                {
+                    new Setting("QuakeLiveExeFullPath", typeof(string), string.Empty)
+                };
+            }
         }
+
+        private readonly IFileSystem fileSystem = ObjectCreator.Get<IFileSystem>();
+        private readonly ISettings settings = ObjectCreator.Get<ISettings>();
+        private UserControl settingsView;
+        private Config config;
 
         protected override void ReadConfig()
         {
+            using (StreamReader stream = new StreamReader(fileSystem.PathCombine(settings.ProgramPath, "config", "idtech3", "quakelive.json")))
+            {
+                Serializer serializer = new Serializer(typeof(Config));
+                config = (Config)serializer.Deserialize(stream);
+            }
         }
 
         public override Core.Demo CreateDemo()
@@ -46,7 +60,15 @@ namespace CDP.QuakeLive
 
         public override UserControl CreateSettingsView(Core.Demo demo)
         {
-            return null;
+            if (settingsView == null)
+            {
+                settingsView = new SettingsView
+                {
+                    DataContext = new SettingsViewModel(config.Executables)
+                };
+            }
+
+            return settingsView;
         }
 
         public override Mod FindMod(string modFolder)

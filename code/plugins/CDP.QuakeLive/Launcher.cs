@@ -54,28 +54,71 @@ namespace CDP.QuakeLive
         public override void Initialise(Core.Demo demo)
         {
             this.demo = (Demo)demo;
-            processExecutableFileName = null;
+            processExecutableFileName = (string)settings["QuakeLiveExeFullPath"];
         }
 
         public override string CalculateDestinationFileName()
         {
-            return fileSystem.PathCombine(appDataPath, "id Software", "quakelive", "home", "baseq3", "demos", demoFileName);
+            return fileSystem.PathCombine(CalculateDemosPath(), demoFileName);
         }
 
         public override bool Verify()
         {
-            string demosFolderPath = fileSystem.PathCombine(appDataPath, "id Software", "quakelive", "home", "baseq3", "demos");
-
-            if (!Directory.Exists(demosFolderPath))
+            if (string.IsNullOrEmpty(processExecutableFileName))
             {
-                Directory.CreateDirectory(demosFolderPath);
+                Message = Strings.ExeNotSet;
+                return false;
             }
+
+            if (!fileSystem.FileExists(processExecutableFileName))
+            {
+                Message = Strings.ExeNotFound.Args(processExecutableFileName);
+                return false;
+            }
+
+            string demosPath = CalculateDemosPath();
+
+            if (!Directory.Exists(demosPath))
+            {
+                Directory.CreateDirectory(demosPath);
+            }
+
+            // TODO: make sure the game process isn't already running.
 
             return true;
         }
 
         public override void Launch()
         {
+            ProcessStartInfo psi = new ProcessStartInfo
+            {
+                FileName = processExecutableFileName,
+                Arguments = "+demo {0}".Args(demoFileName),
+                WorkingDirectory = fileSystem.GetDirectoryName(processExecutableFileName)
+            };
+
+            System.Diagnostics.Process.Start(psi);
+        }
+
+        private string CalculateDemosPath()
+        {
+            string exeFullPath = (string)settings["QuakeLiveExeFullPath"];
+            string exeDirectory = fileSystem.GetDirectoryName(exeFullPath);
+
+            // Wolfcam Demo Player.
+            if (exeFullPath.EndsWith("qldemoplayer.exe"))
+            {
+                return fileSystem.PathCombine(exeDirectory, "wolfcam-ql", "demos");
+            }
+
+            // Quake Live Offline - quakeliveoffline.exe in the same folder as quakelive.dll behaviour.
+            if (fileSystem.FileExists(fileSystem.PathCombine(exeDirectory, "quakelive.dll")))
+            {
+                return fileSystem.PathCombine(exeDirectory, "demos");
+            }
+
+            // Quake Live Offline - find Quake Live behaviour.
+            return fileSystem.PathCombine(appDataPath, "id Software", "quakelive", "home", "baseq3", "demos");
         }
     }
 }

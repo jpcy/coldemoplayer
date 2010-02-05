@@ -1,0 +1,13 @@
+{
+    "Executables":
+    [
+		{
+			"Name":"Quake Live Offline", 
+			"FileName":"quakeliveoffline.exe"
+		},
+		{
+			"Name":"Wolfcam Quake Live Demo Player", 
+			"FileName":"qldemoplayer.exe"
+		}
+    ]
+}
