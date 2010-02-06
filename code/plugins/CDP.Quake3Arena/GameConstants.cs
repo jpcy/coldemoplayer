@@ -302,6 +302,29 @@ namespace CDP.Quake3Arena
         );
 
         /// <summary>
+        /// Entity events for protocols 73.
+        /// </summary>
+        public static LookupTable_uint EntityEvents_Protocol73 = new LookupTable_uint
+        (
+            // TODO: figure out the rest of these as needed.
+            new LookupElement<uint>("EV_PAIN", 53),
+            new LookupElement<uint>("EV_DEATH1", 54),
+            new LookupElement<uint>("EV_DEATH2", 55),
+            new LookupElement<uint>("EV_DEATH3", 56),
+            new LookupElement<uint>("EV_DROWN", 57),
+            new LookupElement<uint>("EV_OBITUARY", 58),
+            new LookupElement<uint>("EV_POWERUP_QUAD", 59),
+            new LookupElement<uint>("EV_POWERUP_BATTLESUIT", 60),
+            new LookupElement<uint>("EV_POWERUP_REGEN", 61), // and 62?
+            new LookupElement<uint>("EV_GIB_PLAYER", 63),
+            new LookupElement<uint>("EV_DEBUG_LINE", 73),
+            new LookupElement<uint>("EV_FOOTSTEP_SNOW", 81),
+            new LookupElement<uint>("EV_FOOTSTEP_WOOD", 82),
+            new LookupElement<uint>("EV_ITEM_PICKUP_SPEC", 83),
+            new LookupElement<uint>("EV_GAMEOVER", 45)
+        );
+
+        /// <summary>
         /// Means of deaths for protocols 43 and 45.
         /// </summary>
         public static LookupTable_uint MeansOfDeath_Protocol43 = new LookupTable_uint
