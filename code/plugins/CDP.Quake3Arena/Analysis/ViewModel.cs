@@ -208,12 +208,12 @@ namespace CDP.Quake3Arena.Analysis
 
             if (message != null)
             {
-                return "{0} {1}.".Args(playerNames[(int)victimIndex], message);
+                return "{0} {1}.".Args(GetPlayerName(victimIndex), message);
             }
 
             if (killerIndex >= playerNames.Count)
             {
-                return "{0} died.".Args(playerNames[(int)victimIndex]);
+                return "{0} died.".Args(GetPlayerName(victimIndex));
             }
 
             string message2 = string.Empty;
@@ -297,7 +297,7 @@ namespace CDP.Quake3Arena.Analysis
 		        message = "was killed by";
 
             // Set string colour back to default (white) after each player name.
-            return "{0}^7 {1} {2}^7{3}.".Args(playerNames[(int)victimIndex], message, playerNames[(int)killerIndex], message2);
+            return "{0}^7 {1} {2}^7{3}.".Args(GetPlayerName(victimIndex), message, GetPlayerName(killerIndex), message2);
         }
 
         /// <summary>
@@ -339,7 +339,7 @@ namespace CDP.Quake3Arena.Analysis
 
             if (message != null)
             {
-                return "{0} died ({1}).".Args(playerNames[(int)victimIndex], message);
+                return "{0} died ({1}).".Args(GetPlayerName(victimIndex), message);
             }
 
             // Suicide using own weapon.
@@ -367,13 +367,13 @@ namespace CDP.Quake3Arena.Analysis
 
             if (message != null)
             {
-                return "{0} suicided ({1}).".Args(playerNames[(int)victimIndex], message);
+                return "{0} suicided ({1}).".Args(GetPlayerName(victimIndex), message);
             }
 
             // Died (unknown killer).
             if (killerIndex >= playerNames.Count)
             {
-                return "{0} died.".Args(playerNames[(int)victimIndex]);
+                return "{0} died.".Args(GetPlayerName(victimIndex));
             }
 
             // Killed.
@@ -421,7 +421,20 @@ namespace CDP.Quake3Arena.Analysis
                 message = "Unknown Weapon";
 
             // Set string colour back to default (white) after each player name.
-            return "{0}^7 killed {1}^7 with {2}.".Args(playerNames[(int)killerIndex], playerNames[(int)victimIndex], weapon);
+            return "{0}^7 killed {1}^7 with {2}.".Args(GetPlayerName(killerIndex), GetPlayerName(victimIndex), weapon);
+        }
+
+        /// <summary>
+        /// Gets a player's name.
+        /// </summary>
+        /// <param name="index">The player's index number.</param>
+        /// <returns>The player's name if the index is valid, otherwise "*unknown*".</returns>
+        private string GetPlayerName(uint index)
+        {
+            if (index >= playerNames.Count)
+                return "*unknown*";
+
+            return playerNames[(int)index];
         }
 
         /// <summary>
@@ -461,6 +474,11 @@ namespace CDP.Quake3Arena.Analysis
             {
                 eTypesTable = GameConstants.EntityTypes_Protocol43;
                 entityEventsTable = GameConstants.EntityEvents_Protocol43;
+            }
+            else if (demo.Protocol == Protocols.Protocol73)
+            {
+                eTypesTable = GameConstants.EntityTypes_Protocol48;
+                entityEventsTable = GameConstants.EntityEvents_Protocol73;
             }
             else
             {
