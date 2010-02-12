@@ -228,6 +228,8 @@ namespace compLexity_Demo_Player
 
                                 // bleh
                                 Boolean connected = false;
+                                Int32 attempts = 0;
+
                                 do
                                 {
                                     try
@@ -238,16 +240,25 @@ namespace compLexity_Demo_Player
                                     catch (RemotingException)
                                     {
                                         connected = false;
+                                        attempts++;
+                                        Thread.Sleep(50);
                                     }
                                 }
-                                while (!connected);
+                                while (!connected && attempts < 10);
 
-                                if (remote.IsDeprecated())
+                                if (!connected)
                                 {
-                                    MessageBox.Show("Warning: HLAE interface depreciated.");
+                                    MessageBox.Show("Failed to communicate with the HLAE process remotely. You must manually launch the game and enter the command \"exec coldemoplayer.cfg\" in the console.", Config.ProgramName);
                                 }
+                                else
+                                {
+                                    if (remote.IsDeprecated())
+                                    {
+                                        MessageBox.Show("Warning: HLAE interface depreciated.");
+                                    }
 
-                                remote.LaunchEx(remote.GetCustomArgs() + launchParameters);
+                                    remote.LaunchEx(remote.GetCustomArgs() + launchParameters);
+                                }
                             }
                             finally
                             {
