@@ -82,7 +82,7 @@ namespace compLexity_Demo_Player
         {
             public String GamePath = "please select";
             public String Modification = "cstrike";
-            public String CustomCmdLine = "-demoedit";
+            public String CustomCmdLine = "+toggleconsole";
             public Boolean GfxForce = true;
             public UInt16 GfxWidth = 800;
             public UInt16 GfxHeight = 600;
@@ -91,14 +91,28 @@ namespace compLexity_Demo_Player
             public Boolean ForceAlpha = false;
             public Boolean OptimizeDesktopRes = true;
             public Boolean OptimizeVisibilty = true;
-            public Boolean StartDocked = true;
             public Boolean FullScreen = false;
             public Byte RenderMode = 0;
+        }
+
+        public class HlaeCustomLoader
+        {
+            public String HookDllPath;
+            public String ProgramPath;
+            public String CmdLine = "-steam -window -console -game cstrike";
+        }
+
+        public class HlaeDemoTools
+        {
+            public String OutputFolder;
         }
 
         public class HlaeSettings
         {
             public HlaeLauncher Launcher = new HlaeLauncher();
+            public HlaeCustomLoader CustomLoader = new HlaeCustomLoader();
+            public HlaeDemoTools DemoTools = new HlaeDemoTools();
+            public Int32 UpdateCheck = 1;
         }
 
         public String Version = "unknown";
