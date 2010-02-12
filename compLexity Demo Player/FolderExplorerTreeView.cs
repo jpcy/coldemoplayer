@@ -105,9 +105,18 @@ namespace compLexity_Demo_Player
                     foreach (TreeViewItem tvi in root.Items)
                     {
                         Shell32.FolderItem folderItem = (Shell32.FolderItem)tvi.Tag;
+                        String compare = folderItem.Path;
 
-                        // drives use path, folders use name
-                        String compare = (i == 0 ? folderItem.Path : folderItem.Name);
+                        // remove everything leading up to the last directory separator (except for drives)
+                        if (i != 0)
+                        {
+                            Int32 lastDirSeparatorIndex = compare.LastIndexOf(System.IO.Path.DirectorySeparatorChar);
+
+                            if (lastDirSeparatorIndex != -1)
+                            {
+                                compare = compare.Remove(0, lastDirSeparatorIndex + 1);
+                            }
+                        }
 
                         if (String.Equals(compare, pathComponents[i], StringComparison.CurrentCultureIgnoreCase))
                         {
