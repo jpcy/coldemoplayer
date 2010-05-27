@@ -389,7 +389,7 @@ namespace compLexity_Demo_Player
             // if running for the first time, prompt the user to setup their Steam account details
             if (Program.FirstRun)
             {
-                Common.Message(this, Config.ProgramName + " is being run for the first time. Please set your Steam path and select your Steam account folder.");
+                Common.Message(this, Config.ProgramName + " is running for the first time. Please ensure the detected Steam path and the selected Steam account folder are correct.");
                 ShowPreferencesWindow(true);
             }
 
