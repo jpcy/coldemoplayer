@@ -11,7 +11,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Threading;
-using System.Data; // DataTable
 using System.Diagnostics; // Process
 using System.Windows.Threading;
 using System.Collections.ObjectModel; // ObservableCollection
