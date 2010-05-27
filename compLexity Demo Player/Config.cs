@@ -202,16 +202,9 @@ namespace compLexity_Demo_Player
             ProgramDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\" + ProgramName;
             ProgramExeFullPath = Common.SanitisePath(Environment.GetCommandLineArgs()[0]);
 #if DEBUG
-            // BLEH: this is what happens when you can't use macros in setting the debug working directory.
-            ProgramPath = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
-
-            for (Int32 i = 0; i < 3; i++)
-            {
-                Int32 lastSeparatorIndex = ProgramPath.LastIndexOf("\\");
-                ProgramPath = ProgramPath.Remove(lastSeparatorIndex, ProgramPath.Length - lastSeparatorIndex);
-            }
-
-            ProgramPath += "\\bin";
+            // Use the working directory when debugging. This is due to the Express edition of VS2008's limited debugging options.
+            // The working directory should be set to the bin sub-directory (e.g. trunk\bin).
+            ProgramPath = Environment.CurrentDirectory;
 #else
             ProgramPath = Path.GetDirectoryName(ProgramExeFullPath);
 #endif
