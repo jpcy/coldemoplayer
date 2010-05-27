@@ -201,7 +201,20 @@ namespace compLexity_Demo_Player
         {
             ProgramDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\" + ProgramName;
             ProgramExeFullPath = Common.SanitisePath(Environment.GetCommandLineArgs()[0]);
+#if DEBUG
+            // BLEH: this is what happens when you can't use macros in setting the debug working directory.
+            ProgramPath = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
+
+            for (Int32 i = 0; i < 3; i++)
+            {
+                Int32 lastSeparatorIndex = ProgramPath.LastIndexOf("\\");
+                ProgramPath = ProgramPath.Remove(lastSeparatorIndex, ProgramPath.Length - lastSeparatorIndex);
+            }
+
+            ProgramPath += "\\bin";
+#else
             ProgramPath = Path.GetDirectoryName(ProgramExeFullPath);
+#endif
 
             Settings = null;
             Boolean result = true;
@@ -317,6 +330,7 @@ namespace compLexity_Demo_Player
 
         static public void AssociateWithDemFiles()
         {
+#if !DEBUG
             Boolean refreshIcon = false;
 
             // create ".dem" entry
@@ -360,6 +374,7 @@ namespace compLexity_Demo_Player
                 IntPtr p = new IntPtr();
                 SHChangeNotify(0x08000000, 0, p, p);
             }
+#endif
         }
 
         public static void AddHlswProtocolAssociation()
