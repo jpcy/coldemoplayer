@@ -111,6 +111,9 @@ namespace compLexity_Demo_Player
                 {
                     compare = p.MainModule.FileName;
                 }
+                catch (System.NullReferenceException)
+                {
+                }
                 catch (System.ComponentModel.Win32Exception)
                 {
                 }
