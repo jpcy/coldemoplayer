@@ -63,6 +63,7 @@ namespace compLexity_Demo_Player
         public Boolean PlaybackConvertNetworkProtocol { get; set; }
         public Boolean PlaybackCloseWhenFinished { get; set; }
         public Boolean PlaybackUseHlae { get; set; }
+        public Boolean PlaybackRemoveWeaponAnimations { get; set; }
 
         // analysis
         public System.Windows.WindowState AnalysisWindowState { get; set; }
@@ -107,6 +108,7 @@ namespace compLexity_Demo_Player
             PlaybackConvertNetworkProtocol = true;
             PlaybackCloseWhenFinished = false;
             PlaybackUseHlae = false;
+            PlaybackRemoveWeaponAnimations = false;
             AnalysisWindowState = System.Windows.WindowState.Normal;
             LogMessageParsingErrors = false;
             MinimizeToTray = false;

@@ -304,6 +304,12 @@ namespace compLexity_Demo_Player
                     throw new ApplicationException("Unexpected client command frame data length.");
                 }
             }
+            else if (Config.Settings.PlaybackRemoveWeaponAnimations && frameHeader.Type == 7)
+            {
+                parser.Seek(8);
+                writeFrame = false;
+                return null;
+            }
             else if (frameHeader.Type != 5)
             {
                 Int32 frameLength = parser.GetFrameLength(frameHeader.Type);

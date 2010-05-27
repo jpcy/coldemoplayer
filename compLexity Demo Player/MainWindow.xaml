@@ -136,6 +136,7 @@
                             <CheckBox Name="uiOptionsCloseWhenFinishedCheckBox" Margin="4">Close when finished</CheckBox>
                             <CheckBox Name="uiOptionsRemoveShowscoresCheckBox" Margin="4">Remove Showscores</CheckBox>
                             <CheckBox Name="uiOptionsRemoveFtbCheckBox" Margin="4">Remove Fade To Black</CheckBox>
+                            <CheckBox Name="uiOptionsRemoveWeaponAnimations" Margin="4">Remove POV weapon change animations</CheckBox>
                             <CheckBox Name="uiOptionsRemoveHltvAds" Margin="4">Remove HLTV Advertisements</CheckBox>
                             <CheckBox Name="uiOptionsRemoveHltvSlowMotion" Margin="4">Remove HLTV Slow Motion</CheckBox>
                         </StackPanel>
