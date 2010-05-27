@@ -728,6 +728,12 @@ namespace compLexity_Demo_Player
 
             for (Int32 i = 0; i < infoKeyTokens.Length; i += 2)
             {
+                if (i + 1 >= infoKeyTokens.Length)
+                {
+                    // Must be an odd number of strings - a key without a value - ignore it.
+                    break;
+                }
+
                 String key = infoKeyTokens[i];
 
                 // If the key already exists, overwrite it.

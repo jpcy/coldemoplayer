@@ -204,6 +204,12 @@ namespace compLexity_Demo_Player
 
             for (int i = 0; i < infoKeyTokens.Length; i += 2)
             {
+                if (i + 1 >= infoKeyTokens.Length)
+                {
+                    // Must be an odd number of strings - a key without a value - ignore it.
+                    break;
+                }
+
                 String key = infoKeyTokens[i];
                 String value = infoKeyTokens[i + 1];
 
