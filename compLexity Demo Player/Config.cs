@@ -23,6 +23,7 @@ namespace compLexity_Demo_Player
         public String UpdateUrl { get; set; }
         public String UpdateUrl2 { get; set; }
         public String MapsUrl { get; set; }
+        public String MapsUrl2 { get; set; }
         public Boolean AutoUpdate { get; set; }
 
         // last path/file
@@ -85,9 +86,10 @@ namespace compLexity_Demo_Player
 
         public ProgramSettings()
         {
-            UpdateUrl = "http://coldemoplayer.gittodachoppa.com/update115/";
+            UpdateUrl = String.Empty;
             UpdateUrl2 = "http://coldemoplayer.googlecode.com/svn/trunk/hosted/update/";
-            MapsUrl = "http://coldemoplayer.gittodachoppa.com/maps/";
+            MapsUrl = String.Empty;
+            MapsUrl2 = "http://coldemoplayer.googlecode.com/svn/trunk/hosted/maps/";
             AutoUpdate = true;
             WindowState = System.Windows.WindowState.Normal;
             WindowWidth = 800.0;
