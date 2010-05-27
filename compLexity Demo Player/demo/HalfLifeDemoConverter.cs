@@ -82,6 +82,7 @@ namespace compLexity_Demo_Player
             parser.AddUserMessageHandler("ClCorpse", MessageClCorpse);
             parser.AddUserMessageHandler("ScreenFade", MessageScreenFade);
             parser.AddUserMessageHandler("SendAudio", MessageSendAudio);
+            parser.AddUserMessageHandler("TextMsg", MessageTextMsg);
 
             Procedure<String> removeMessage = (s) =>
             {
@@ -1105,6 +1106,27 @@ namespace compLexity_Demo_Player
             {
                 parser.Seek(-5);
                 parser.BitBuffer.RemoveBytes(5);
+            }
+        }
+
+        private void MessageTextMsg()
+        {
+            Byte length = parser.BitBuffer.ReadByte();
+            Int32 messageDataOffset = parser.BitBuffer.CurrentByte;
+
+            parser.Seek(1); // slot
+            string s = parser.BitBuffer.ReadString();
+
+            // Remove "* No Time Limit *" and "Time Remaining: x".
+            if (s.StartsWith("#Game_timelimit") || s.StartsWith("#Game_no_timelimit"))
+            {
+                // Remove the entire message.
+                parser.Seek(messageDataOffset - 2, SeekOrigin.Begin);
+                parser.BitBuffer.RemoveBytes(2 + length);
+            }
+            else
+            {
+                parser.Seek(messageDataOffset + length, SeekOrigin.Begin);
             }
         }
 
