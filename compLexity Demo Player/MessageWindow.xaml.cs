@@ -105,7 +105,7 @@ namespace compLexity_Demo_Player
                             appendExceptionInfo(e.InnerException);
                         }
 
-                        text += e.Message + "\r\n\r\n" + "Inner Exception: " + (e != ex).ToString() + "\r\n\r\n" + "Source: " + e.Source + "\r\n\r\n" + "Type: " + e.GetType().ToString() + "\r\n\r\n" + e.StackTrace;
+                        text += e.Message + "\r\n\r\n" + "Inner Exception: " + (e != ex).ToString() + "\r\n\r\n" + "Source: " + e.Source + "\r\n\r\n" + "Type: " + e.GetType().ToString() + "\r\n\r\n" + e.StackTrace + "\r\n\r\n";
                     };
 
                     appendExceptionInfo(ex);

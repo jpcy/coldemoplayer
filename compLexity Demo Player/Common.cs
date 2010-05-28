@@ -354,6 +354,7 @@ namespace compLexity_Demo_Player
                     writer.WriteLine("Inner Exception: " + (e != ex).ToString());
                     writer.WriteLine(ex.StackTrace);
                     writer.WriteLine();
+                    writer.WriteLine();
                 };
 
                 logException(e);
