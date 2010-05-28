@@ -142,7 +142,7 @@ namespace compLexity_Demo_Player
         {
             get
             {
-                return 9;
+                return 10;
             }
         }
 
