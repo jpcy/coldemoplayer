@@ -90,7 +90,7 @@ namespace compLexity_Demo_Player
             // download changelog
             try
             {
-                WebRequest request = WebRequest.Create(Config.Settings.UpdateUrl2 + changeLogFileName);
+                WebRequest request = WebRequest.Create(Config.UpdateUrl + changeLogFileName);
 
                 using (WebResponse response = request.GetResponse())
                 {

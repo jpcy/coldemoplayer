@@ -78,7 +78,7 @@ namespace compLexity_Demo_Player
         {
             try
             {
-                WebRequest request = WebRequest.Create(Config.Settings.UpdateUrl2 + versionFileName);
+                WebRequest request = WebRequest.Create(Config.UpdateUrl + versionFileName);
 
                 using (WebResponse response = request.GetResponse())
                 {

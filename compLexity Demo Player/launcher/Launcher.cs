@@ -100,7 +100,7 @@ namespace compLexity_Demo_Player
 
             if (!File.Exists(mapSourceFileName))
             {
-                DownloadMapWindow downloadMapWindow = new DownloadMapWindow(Demo.MapName, Config.Settings.MapsUrl2 + "goldsrc/" + String.Format("{0}/{1}_{2}.zip", Demo.GameFolderName, Demo.MapChecksum, Demo.MapName), mapSourcePath + "\\" + Demo.MapName + ".zip");
+                DownloadMapWindow downloadMapWindow = new DownloadMapWindow(Demo.MapName, Config.MapsUrl + "goldsrc/" + String.Format("{0}/{1}_{2}.zip", Demo.GameFolderName, Demo.MapChecksum, Demo.MapName), mapSourcePath + "\\" + Demo.MapName + ".zip");
                 downloadMapWindow.Owner = Owner;
 
                 if (downloadMapWindow.ShowDialog() == false)

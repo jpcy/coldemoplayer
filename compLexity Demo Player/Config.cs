@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Xml;
-using System.Xml.Serialization;
 using Microsoft.Win32; // Registry
 using System.IO;
 using System.Runtime.InteropServices; // DllImport
 using System.Security.Permissions;
 using System.Diagnostics; // ProcessPriorityClass
+using JsonExSerializer;
 
 namespace compLexity_Demo_Player
 {
@@ -21,9 +20,7 @@ namespace compLexity_Demo_Player
 
         // updating, on-demand map downloading
         public String UpdateUrl { get; set; }
-        public String UpdateUrl2 { get; set; }
         public String MapsUrl { get; set; }
-        public String MapsUrl2 { get; set; }
         public Boolean AutoUpdate { get; set; }
 
         // last path/file
@@ -86,9 +83,7 @@ namespace compLexity_Demo_Player
         public ProgramSettings()
         {
             UpdateUrl = String.Empty;
-            UpdateUrl2 = "http://coldemoplayer.googlecode.com/svn/trunk/hosted/update/";
             MapsUrl = String.Empty;
-            MapsUrl2 = "http://coldemoplayer.googlecode.com/svn/trunk/hosted/maps/";
             AutoUpdate = true;
             WindowState = System.Windows.WindowState.Normal;
             WindowWidth = 800.0;
@@ -183,6 +178,36 @@ namespace compLexity_Demo_Player
             }
         }
 
+        public static String UpdateUrl
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(Settings.UpdateUrl))
+                {
+                    return "http://coldemoplayer.googlecode.com/svn/trunk/hosted/update/";
+                }
+                else
+                {
+                    return Settings.UpdateUrl;
+                }
+            }
+        }
+
+        public static String MapsUrl
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(Settings.MapsUrl))
+                {
+                    return "http://coldemoplayer.googlecode.com/svn/trunk/hosted/maps/";
+                }
+                else
+                {
+                    return Settings.MapsUrl;
+                }
+            }
+        }
+
         public static String ProgramExeFullPath { get; private set; }
         public static String ProgramPath { get; private set; }
         public static String ProgramDataPath { get; private set; }
@@ -191,7 +216,7 @@ namespace compLexity_Demo_Player
 
         [DllImport("shell32.dll")]
         private static extern void SHChangeNotify(int eventId, uint flags, IntPtr item1, IntPtr item2);
-        private const String fileName = "config.xml";
+        private const String fileName = "config.json";
 
         /// <summary>
         /// Reads the program configuration from the configuration file, if it exists. Otherwise, default values and information from the registry are used.
@@ -218,9 +243,13 @@ namespace compLexity_Demo_Player
                 // deserialize
                 try
                 {
-                    Settings = (ProgramSettings)Common.XmlFileDeserialize(configFullPath, typeof(ProgramSettings));
+                    using (StreamReader stream = new StreamReader(configFullPath))
+                    {
+                        Serializer serializer = new Serializer(typeof(ProgramSettings));
+                        Settings = (ProgramSettings)serializer.Deserialize(stream);
+                    }
                 }
-                catch (InvalidOperationException ex)
+                catch (Exception ex)
                 {
                     // Assume the file has been corrupted by the user or some other external influence. Log the exception as a warning, delete the file and use default config values.
                     Common.LogException(ex, true);
@@ -244,7 +273,11 @@ namespace compLexity_Demo_Player
         /// </summary>
         public static void Write()
         {
-            Common.XmlFileSerialize(ProgramDataPath + "\\" + fileName, Settings, typeof(ProgramSettings));
+            using (StreamWriter stream = new StreamWriter(ProgramDataPath + "\\" + fileName))
+            {
+                Serializer serializer = new Serializer(typeof(ProgramSettings));
+                serializer.Serialize(Settings, stream);
+            }
         }
 
         /// <summary>
