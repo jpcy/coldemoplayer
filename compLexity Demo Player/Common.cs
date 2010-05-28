@@ -14,6 +14,7 @@ using System.Net;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
+using System.Globalization;
 
 namespace compLexity_Demo_Player
 {
@@ -314,6 +315,11 @@ namespace compLexity_Demo_Player
             LogException(e, false);
         }
 
+        private static void LogCultureInfo(TextWriter writer, String description, CultureInfo cultureInfo)
+        {
+            writer.WriteLine("{0}: \'{1}\', \'{2}\', \'{3}\'", description, cultureInfo.Name, cultureInfo.DisplayName, cultureInfo.EnglishName);
+        }
+
         public static void LogException(Exception e, bool warning)
         {
             String logsFullFolderPath = Config.ProgramDataPath + "\\logs";
@@ -325,6 +331,14 @@ namespace compLexity_Demo_Player
 
             using (TextWriter writer = new StreamWriter(logsFullFolderPath + "\\" + DateTime.Now.ToShortDateString().Replace('/', '-') + "_" + (warning == true ? "warning_" : String.Empty) + Path.ChangeExtension(Path.GetRandomFileName(), ".log")))
             {
+                writer.WriteLine("Timestamp: \'{0}\'.", DateTime.Now);
+                writer.WriteLine("Environment.OSVersion: \'{0}\'", Environment.OSVersion);
+                writer.WriteLine("Environment.Version: \'{0}\'", Environment.Version);
+                LogCultureInfo(writer, "Current Culture", CultureInfo.CurrentCulture);
+                LogCultureInfo(writer, "Current UI Culture", CultureInfo.CurrentUICulture);
+                LogCultureInfo(writer, "Installed UI Culture", CultureInfo.InstalledUICulture);
+                writer.WriteLine();
+
                 Procedure<Exception> logException = null;
 
                 logException = delegate(Exception ex)
