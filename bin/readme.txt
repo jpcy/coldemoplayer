@@ -134,6 +134,14 @@ See copying.txt or http://www.gnu.org/licenses/ for a copy of the GNU General Pu
 4. 3RD PARTY LICENCES
 ======================
 
+JsonExSerializer
+----------------
+Copyright (c) 2007, Ted Elliott
+All rights reserved.
+
+http://code.google.com/p/jsonexserializer/
+http://www.opensource.org/licenses/bsd-license.php
+ 
 SharpZipLib
 -----------
 http://www.icsharpcode.net/OpenSource/SharpZipLib/

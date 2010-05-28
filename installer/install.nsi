@@ -85,6 +85,7 @@ Section ""
   SetOutPath "$INSTDIR"
   File "..\bin\compLexity Demo Player.exe"
   File "..\bin\compLexity Demo Player.exe.config"
+  File "..\bin\JsonExSerializer.dll"
   File "..\bin\ICSharpCode.SharpZipLib.dll"
   File "..\bin\Interop.Shell32.dll"
   File "..\bin\ZedGraph.dll"
@@ -97,12 +98,12 @@ Section ""
   ; config
   CreateDirectory "$INSTDIR\config"
   SetOutPath "$INSTDIR\config"
-  File "..\bin\config\steam.xml"
+  File "..\bin\config\steam.json"
   
   ; game configs
   CreateDirectory "$INSTDIR\config\goldsrc"
   SetOutPath "$INSTDIR\config\goldsrc"
-  File /r "..\bin\config\goldsrc\*.xml"
+  File /r "..\bin\config\goldsrc\*.json"
   
   ; icons
   CreateDirectory "$INSTDIR\icons"
@@ -198,6 +199,7 @@ Section "Uninstall"
   ; install files
   Delete "$INSTDIR\compLexity Demo Player.exe"
   Delete "$INSTDIR\compLexity Demo Player.exe.config"
+  Delete "$INSTDIR\JsonExSerializer.dll"
   Delete "$INSTDIR\ICSharpCode.SharpZipLib.dll"
   Delete "$INSTDIR\Interop.Shell32.dll"
   Delete "$INSTDIR\ZedGraph.dll"

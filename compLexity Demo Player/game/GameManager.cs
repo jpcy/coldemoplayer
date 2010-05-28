@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Windows.Media;
+using JsonExSerializer;
 
 namespace compLexity_Demo_Player
 {
     public static class GameManager
     {
-        private static readonly String steamConfigFileName = "steam.xml";
+        private static readonly String steamConfigFileName = "steam.json";
         private static List<Game> games = new List<Game>();
 
         /// <summary>
@@ -21,8 +22,14 @@ namespace compLexity_Demo_Player
             games.Add(new Games.CounterStrike());
             games.Add(new Games.CounterStrikeSource());
 
-            // Read from steam.xml.
-            SteamGameInfo[] steamGames = (SteamGameInfo[])Common.XmlFileDeserialize(configPath + "\\" + steamConfigFileName, typeof(SteamGameInfo[]));
+            // Read from steam.json.
+            SteamGameInfo[] steamGames;
+
+            using (StreamReader stream = new StreamReader(configPath + "\\" + steamConfigFileName))
+            {
+                Serializer serializer = new Serializer(typeof(SteamGameInfo[]));
+                steamGames = (SteamGameInfo[])serializer.Deserialize(stream);
+            }
 
             foreach (SteamGameInfo sgi in steamGames)
             {

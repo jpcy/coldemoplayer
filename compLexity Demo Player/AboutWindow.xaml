@@ -15,6 +15,9 @@
             <TextBlock TextWrapping="Wrap">Icons used from the Silk icon set 1.3 under a
 Creative Commons Attribution 2.5 License.</TextBlock>
             <local:HyperlinkControl Margin="0,0,0,8" Url="http://www.famfamfam.com/lab/icons/silk/" />
+            <TextBlock TextWrapping="Wrap">JsonExSerializer is used under an The BSD License.</TextBlock>
+            <TextBlock TextWrapping="Wrap">JsonExSerializer is Copyright (c) 2007, Ted Elliott. All rights reserved.</TextBlock>
+            <local:HyperlinkControl Margin="0,0,0,8" Url="http://code.google.com/p/jsonexserializer/" />
             <TextBlock TextWrapping="Wrap">SharpZipLib is used under an a modified version of the GPL licence.</TextBlock>
             <local:HyperlinkControl Margin="0,0,0,8" Url="http://www.icsharpcode.net/OpenSource/SharpZipLib/" />
             <TextBlock TextWrapping="Wrap">ZedGraph is used under the LGPL licence.</TextBlock>

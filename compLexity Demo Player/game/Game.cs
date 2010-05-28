@@ -6,6 +6,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Windows.Media;
 using System.Collections.Specialized;
+using JsonExSerializer;
 
 namespace compLexity_Demo_Player
 {
@@ -44,14 +45,21 @@ namespace compLexity_Demo_Player
 
         protected void ReadConfig()
         {
-            String configFileName = Config.ProgramPath + "\\config\\" + (Engine == Engines.HalfLife ? "goldsrc" : "source") + "\\" + Folder + ".xml";
+            String configFileName = Config.ProgramPath + "\\config\\" + (Engine == Engines.HalfLife ? "goldsrc" : "source") + "\\" + Folder + ".json";
 
             if (!File.Exists(configFileName))
             {
                 return;
             }
 
-            GameConfig config = (GameConfig)Common.XmlFileDeserialize(configFileName, typeof(GameConfig));
+            GameConfig config;
+
+            using (StreamReader stream = new StreamReader(configFileName))
+            {
+                Serializer serializer = new Serializer(typeof(GameConfig));
+                config = (GameConfig)serializer.Deserialize(stream);
+            }
+
             HasConfig = true;
             versions = new Dictionary<String, String>(config.Versions.Length);
 

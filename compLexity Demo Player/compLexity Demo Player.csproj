@@ -67,6 +67,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\libraries\SharpZipLib\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
+    <Reference Include="JsonExSerializer, Version=3.1.148.219, Culture=neutral, PublicKeyToken=6be1316762335bd4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libraries\JsonExSerializer\JsonExSerializer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -381,6 +385,7 @@
     </PreBuildEvent>
     <PostBuildEvent>copy "$(ProjectDir)bin\Release\$(TargetFileName)" "$(SolutionDir)bin\$(TargetFileName)"
 copy "$(ProjectDir)bin\Release\compLexity Demo Player.exe.config" "$(SolutionDir)bin\compLexity Demo Player.exe.config"
+copy "$(ProjectDir)bin\Release\JsonExSerializer.dll" "$(SolutionDir)bin\JsonExSerializer.dll"
 copy "$(ProjectDir)bin\Release\ICSharpCode.SharpZipLib.dll" "$(SolutionDir)bin\ICSharpCode.SharpZipLib.dll"
 copy "$(ProjectDir)bin\Release\Interop.Shell32.dll" "$(SolutionDir)bin\Interop.Shell32.dll"
 copy "$(ProjectDir)bin\Release\ZedGraph.dll" "$(SolutionDir)bin\ZedGraph.dll"</PostBuildEvent>
