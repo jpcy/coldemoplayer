@@ -63,10 +63,6 @@
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HtmlAgilityPack, Version=1.3.0.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\libraries\HtmlAgilityPack\HtmlAgilityPack.dll</HintPath>
-    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\libraries\SharpZipLib\ICSharpCode.SharpZipLib.dll</HintPath>
@@ -385,7 +381,6 @@
     </PreBuildEvent>
     <PostBuildEvent>copy "$(ProjectDir)bin\Release\$(TargetFileName)" "$(SolutionDir)bin\$(TargetFileName)"
 copy "$(ProjectDir)bin\Release\compLexity Demo Player.exe.config" "$(SolutionDir)bin\compLexity Demo Player.exe.config"
-copy "$(ProjectDir)bin\Release\HtmlAgilityPack.dll" "$(SolutionDir)bin\HtmlAgilityPack.dll"
 copy "$(ProjectDir)bin\Release\ICSharpCode.SharpZipLib.dll" "$(SolutionDir)bin\ICSharpCode.SharpZipLib.dll"
 copy "$(ProjectDir)bin\Release\Interop.Shell32.dll" "$(SolutionDir)bin\Interop.Shell32.dll"
 copy "$(ProjectDir)bin\Release\ZedGraph.dll" "$(SolutionDir)bin\ZedGraph.dll"</PostBuildEvent>
