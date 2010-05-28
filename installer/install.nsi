@@ -90,6 +90,7 @@ Section ""
   File "..\bin\Interop.Shell32.dll"
   File "..\bin\ZedGraph.dll"
   File "..\bin\readme.txt"
+  File "..\bin\copying.txt"
   
   ; dotnet framework client profile installer
   File "DotNetFx35ClientSetup.exe"
@@ -130,6 +131,7 @@ Section ""
   CreateDirectory "$SMPROGRAMS\compLexity Demo Player"
   CreateShortCut "$SMPROGRAMS\compLexity Demo Player\compLexity Demo Player.lnk" "$INSTDIR\compLexity Demo Player.exe"
   CreateShortCut "$SMPROGRAMS\compLexity Demo Player\View Readme.lnk" "$INSTDIR\readme.txt"
+  CreateShortCut "$SMPROGRAMS\compLexity Demo Player\View Licence.lnk" "$INSTDIR\copying.txt"
   CreateShortCut "$SMPROGRAMS\compLexity Demo Player\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
   
   ; desktop shortcut
@@ -202,6 +204,7 @@ Section "Uninstall"
   Delete "$INSTDIR\Interop.Shell32.dll"
   Delete "$INSTDIR\ZedGraph.dll"
   Delete "$INSTDIR\readme.txt"
+  Delete "$INSTDIR\copying.txt"
   Delete "$INSTDIR\Uninstall.exe"
   
   RMDir /r "$INSTDIR\config"
