@@ -36,6 +36,7 @@
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="_Readme" Name="uiReadmeMenuItem" Click="uiReadmeMenuItem_Click" />
+                <MenuItem Header="_View Error and Warning logs" Name="uiViewLogs" Click="uiViewLogs_Click" />
                 <MenuItem Header="Check for _Updates..." Name="uiCheckForUpdatesMenuItem" Click="uiCheckForUpdatesMenuItem_Click" />
                 <MenuItem Header="_About..." Name="uiAboutMenuItem" Click="uiAboutMenuItem_Click" />
             </MenuItem>

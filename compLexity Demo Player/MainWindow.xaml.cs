@@ -602,6 +602,26 @@ namespace compLexity_Demo_Player
             }
         }
 
+        private void uiViewLogs_Click(object sender, RoutedEventArgs e)
+        {
+            String logsFolder = System.IO.Path.Combine(Config.ProgramDataPath, "logs");
+
+            if (!System.IO.Directory.Exists(logsFolder))
+            {
+                Common.Message("No log files found.");
+                return;
+            }
+
+            try
+            {
+                Process.Start(logsFolder);
+            }
+            catch (Exception)
+            {
+                // don't care about errors
+            }
+        }
+
         private void uiReadmeMenuItem_Click(object sender, RoutedEventArgs e)
         {
             try
