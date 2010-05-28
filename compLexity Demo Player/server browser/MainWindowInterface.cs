@@ -13,46 +13,12 @@ namespace Server_Browser
 {
     public interface IMainWindow
     {
-        void SetGotfragStatus(String status);
-        void AddGotfragServer(GotfragServer server);
         void SetServerProperty(Server server, String propertyName, Object propertyValue);
         void AddPlayerToServer(Server server, Player player);
     }
 
     public partial class MainWindow : IMainWindow, ILauncher
     {
-        /// <summary>
-        /// Called by the Gotfrag update thread to set the current status, or hide the status text block (allowing the listview behind it to be displayed).
-        /// </summary>
-        /// <param name="status"></param>
-        public void SetGotfragStatus(String status)
-        {
-            Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Procedure(() =>
-            {
-                if (status == null)
-                {
-                    uiGotfragListView.Visibility = Visibility.Visible;
-                    uiGotfragStatusLabel.Visibility = Visibility.Hidden;
-                }
-                else
-                {
-                    uiGotfragListView.Visibility = Visibility.Hidden;
-                    uiGotfragStatusLabel.Visibility = Visibility.Visible;
-                }
-
-                uiGotfragStatusLabel.Content = status;
-            }));
-        }
-
-        public void AddGotfragServer(GotfragServer server)
-        {
-            Dispatcher.Invoke(DispatcherPriority.Normal, new Procedure(() =>
-            {
-                gotfragScoreboard.Servers.Add(server);
-                server.Refresh();
-            }));
-        }
-
         public void SetServerProperty(Server server, String propertyName, Object propertyValue)
         {
             Dispatcher.Invoke(DispatcherPriority.Normal, new Procedure(() =>

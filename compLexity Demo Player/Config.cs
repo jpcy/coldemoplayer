@@ -79,10 +79,8 @@ namespace compLexity_Demo_Player
 
         // server browser
         public System.Windows.WindowState ServerBrowserWindowState { get; set; }
-        public Boolean ServerBrowserConvertTimeZone { get; set; }
         public Boolean ServerBrowserStartListenServer { get; set; }
         public Boolean ServerBrowserCloseWhenFinished { get; set; }
-        public String ServerBrowserLastGotfragGame { get; set; }
         public String[] ServerBrowserFavourites { get; set; }
 
         public ProgramSettings()
@@ -114,10 +112,8 @@ namespace compLexity_Demo_Player
             MinimizeToTray = false;
             GameProcessPriority = ProcessPriorityClass.Normal;
             ServerBrowserWindowState = System.Windows.WindowState.Normal;
-            ServerBrowserConvertTimeZone = true;
             ServerBrowserStartListenServer = false;
             ServerBrowserCloseWhenFinished = false;
-            ServerBrowserLastGotfragGame = "Counter-Strike 1.6";
         }
     }
 

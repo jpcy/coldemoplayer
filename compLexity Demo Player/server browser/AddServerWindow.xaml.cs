@@ -50,7 +50,7 @@ namespace Server_Browser
             // check validity of address
             if (!Regex.IsMatch(uiServerAddressTextBox.Text, @"[-a-zA-Z0-9.]+(:\d+)"))
             {
-                Common.Message(this, "Invalid address. The address must be in the format ip:port or name:port.\r\n\r\nExamples: 66.228.122.147:27025 or hltv.gotfrag.com:3101.");
+                Common.Message(this, "Invalid address. The address must be in the format ip:port or name:port.\r\n\r\nExamples: 66.228.122.147:27025 or hltv4.verygames.net:27098.");
                 return;
             }
 

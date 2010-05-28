@@ -215,13 +215,11 @@
     <Compile Include="server browser\MainWindowInterface.cs" />
     <Compile Include="server browser\Player.cs" />
     <Compile Include="server browser\server collection\Favourites.cs" />
-    <Compile Include="server browser\server collection\Gotfrag.cs" />
     <Compile Include="server browser\server collection\ServerCollection.cs" />
     <Compile Include="server browser\AddServerWindow.xaml.cs">
       <DependentUpon>AddServerWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="server browser\server\GotfragServer.cs" />
-    <Compile Include="server browser\server\Server.cs" />
+    <Compile Include="server browser\Server.cs" />
     <Compile Include="server browser\TimedUdpClient.cs" />
     <Compile Include="SystemTrayIcon.cs" />
     <Compile Include="UpdateCheckWindow.xaml.cs">
@@ -360,7 +358,6 @@
     <Resource Include="data\download.png" />
     <Resource Include="data\error.png" />
     <Resource Include="data\favourite.png" />
-    <Resource Include="data\gotfrag.png" />
     <Resource Include="data\refresh.png" />
     <Resource Include="data\remove.png" />
     <Resource Include="data\status_failed.png" />

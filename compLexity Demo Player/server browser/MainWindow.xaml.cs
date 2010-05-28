@@ -1,7 +1,4 @@
-﻿// Comment me out to test .NET framework 3.0 compilation.
-#define USE_TIMEZONEINFO
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -37,8 +34,6 @@ namespace Server_Browser
 
         private Procedure windowClosed;
         private Favourites favourites;
-        private Gotfrag gotfragScoreboard;
-        private Boolean gotfragUpdateVirgin = true;
         private WindowState lastWindowState;
         private Launcher launcher;
         private Boolean canOpenServer = true;
@@ -51,53 +46,12 @@ namespace Server_Browser
 
             // stop the retarded thing from triggering an event before the window has been created (in InitializeComponent())
             uiServerBrowserTabControl.SelectionChanged += new SelectionChangedEventHandler(uiServerBrowserTabControl_SelectionChanged);
-
-            if (Config.Settings.ServerBrowserConvertTimeZone && !CanUseTimeZoneInfo(false))
-            {
-                Config.Settings.ServerBrowserConvertTimeZone = false;
-            }
         }
 
         public void OpenServer(String address)
         {
             RestoreFromTray();
             uiFavouritesListView.SelectedItem = favourites.Add(address);
-        }
-
-        private void TestTimeZoneInfo()
-        {
-#if USE_TIMEZONEINFO
-            TimeZoneInfo.GetSystemTimeZones();
-#endif
-        }
-
-        private Boolean CanUseTimeZoneInfo(Boolean showWarning)
-        {
-            try
-            {
-                TestTimeZoneInfo();
-            }
-            catch (FileNotFoundException)
-            {
-                if (showWarning)
-                {
-                    Common.Message("The .NET Framework 3.5 is required to convert times to the local timezone.");
-                }
-
-                return false;
-            }
-
-            return true;
-        }
-
-        private void GotfragUpdate()
-        {
-            GotfragGame gg = (GotfragGame)uiGotfragGameComboBox.SelectedItem;
-
-            if (gg != null)
-            {
-                gotfragScoreboard.Update(gg.ScoreboardUrl);
-            }
         }
 
         private void ConnectToServer(Server server)
@@ -203,17 +157,7 @@ namespace Server_Browser
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             favourites = new Favourites((IMainWindow)this);
-            gotfragScoreboard = new Gotfrag((IMainWindow)this);
             uiFavouritesListView.ItemsSource = favourites.Servers;
-            uiGotfragListView.ItemsSource = gotfragScoreboard.Servers;
-
-            foreach (GotfragGame gg in uiGotfragGameComboBox.Items)
-            {
-                if (gg.Name.Equals(Config.Settings.ServerBrowserLastGotfragGame, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    uiGotfragGameComboBox.SelectedItem = gg;
-                }
-            }
 
             if (Config.Settings.ServerBrowserFavourites != null)
             {
@@ -223,7 +167,6 @@ namespace Server_Browser
                 }
             }
 
-            uiOptionsConvertTimeZoneCheckBox.IsChecked = Config.Settings.ServerBrowserConvertTimeZone;
             uiOptionsStartListenServerCheckBox.IsChecked = Config.Settings.ServerBrowserStartListenServer;
             uiOptionsCloseWhenFinishedCheckBox.IsChecked = Config.Settings.ServerBrowserCloseWhenFinished;
             WindowState = Config.Settings.ServerBrowserWindowState;
@@ -257,14 +200,6 @@ namespace Server_Browser
         private void Window_Closed(object sender, EventArgs e)
         {
             favourites.AbortAllThreads();
-            gotfragScoreboard.AbortAllThreads();
-
-            GotfragGame gg = (GotfragGame)uiGotfragGameComboBox.SelectedItem;
-
-            if (gg != null)
-            {
-                Config.Settings.ServerBrowserLastGotfragGame = gg.Name;
-            }
 
             if (favourites.Servers.Count > 0)
             {
@@ -293,27 +228,11 @@ namespace Server_Browser
             {
                 dataContext = uiFavouritesListView.SelectedItem;
                 uiServerInfoAddressStackPanel.Visibility = Visibility.Collapsed;
-                uiGotfragGameComboBox.Visibility = Visibility.Hidden;
                 uiServerInfoGroupBox.Visibility = Visibility.Visible;
                 Grid.SetRowSpan(uiServerBrowserTabControl, 1);
-            }
-            else if (uiServerBrowserTabControl.SelectedItem == uiGotfragTabItem)
-            {
-                dataContext = uiGotfragListView.SelectedItem;
-                uiServerInfoAddressStackPanel.Visibility = Visibility.Visible;
-                uiGotfragGameComboBox.Visibility = Visibility.Visible;
-                uiServerInfoGroupBox.Visibility = Visibility.Visible;
-                Grid.SetRowSpan(uiServerBrowserTabControl, 1);
-
-                if (gotfragUpdateVirgin)
-                {
-                    gotfragUpdateVirgin = false;
-                    GotfragUpdate();
-                }
             }
             else
             {
-                uiGotfragGameComboBox.Visibility = Visibility.Hidden;
                 uiServerInfoGroupBox.Visibility = Visibility.Hidden;
                 Grid.SetRowSpan(uiServerBrowserTabControl, 2);
             }
@@ -371,66 +290,6 @@ namespace Server_Browser
             ConnectToServer((Server)uiFavouritesListView.SelectedItem);
         }
 
-        private void uiGotfragGameComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (gotfragUpdateVirgin)
-            {
-                return;
-            }
-
-            GotfragUpdate();
-        }
-
-        private void uiGotfragUpdateServerListButton_Click(object sender, RoutedEventArgs e)
-        {
-            GotfragUpdate();
-        }
-
-        private void uiGotfragRefreshServerListButton_Click(object sender, RoutedEventArgs e)
-        {
-            gotfragScoreboard.RefreshAll();
-        }
-
-        private void uiGotfragAddToFavouritesButton_Click(object sender, RoutedEventArgs e)
-        {
-            Server server = (Server)uiGotfragListView.SelectedItem;
-
-            if (server != null)
-            {
-                // select the favourites tab and the newly added server
-                uiServerBrowserTabControl.SelectedItem = uiFavouritesTabItem;
-                uiFavouritesListView.SelectedItem = favourites.Add(server.Address);
-            }
-        }
-
-        private void uiGotfragRefreshButton_Click(object sender, RoutedEventArgs e)
-        {
-            Server server = (Server)uiGotfragListView.SelectedItem;
-
-            if (server != null)
-            {
-                server.Refresh();
-            }
-        }
-
-        private void uiGotfragConnectButton_Click(object sender, RoutedEventArgs e)
-        {
-            ConnectToServer((Server)uiGotfragListView.SelectedItem);
-        }
-
-        private void uiOptionsConvertTimeZoneCheckBox_CheckedChanged(object sender, RoutedEventArgs e)
-        {
-            if (uiOptionsConvertTimeZoneCheckBox.IsChecked == true)
-            {
-                if (!CanUseTimeZoneInfo(true))
-                {
-                    uiOptionsConvertTimeZoneCheckBox.IsChecked = false;
-                }
-            }
-
-            Config.Settings.ServerBrowserConvertTimeZone = (Boolean)uiOptionsConvertTimeZoneCheckBox.IsChecked;
-        }
-
         private void uiOptionsStartListenServerCheckBox_CheckedChanged(object sender, RoutedEventArgs e)
         {
             Config.Settings.ServerBrowserStartListenServer = (Boolean)uiOptionsStartListenServerCheckBox.IsChecked;
@@ -453,16 +312,6 @@ namespace Server_Browser
             LaunchedProcessClosed();
         }
         #endregion
-    }
-
-
-    // TODO: make subclass
-    public class GotfragGame
-    {
-        public String Name { get; set; }
-        public String Folder { get; set; }
-        public Boolean SourceEngine { get; set; }
-        public String ScoreboardUrl { get; set; }
     }
 
     // TODO: make subclass
