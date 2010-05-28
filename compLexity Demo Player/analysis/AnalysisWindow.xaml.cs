@@ -56,6 +56,9 @@ namespace compLexity_Demo_Player
         #region Event handlers
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            uiGameLog.Document = new FlowDocument();
+            uiGameLog.Document.FontSize = 14;
+            uiGameLog.Document.FontFamily = new FontFamily("Times New Roman");
             WindowState = Config.Settings.AnalysisWindowState;
 
             // show progress window/start parsing thread

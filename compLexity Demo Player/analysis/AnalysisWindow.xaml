@@ -12,7 +12,7 @@
         <TabControl Margin="4" Name="uiAnalysisTabControl" SelectionChanged="uiAnalysisTabControl_SelectionChanged">
             <!-- Game Log -->
             <TabItem Name="uiGameLogTabItem" Header="Game Log">
-                <RichTextBox Name="uiGameLogRichTextBox" IsReadOnly="True" VerticalScrollBarVisibility="Auto" />
+                <FlowDocumentScrollViewer Name="uiGameLog" VerticalScrollBarVisibility="Auto" />
             </TabItem>
 
             <!-- Scoreboard -->

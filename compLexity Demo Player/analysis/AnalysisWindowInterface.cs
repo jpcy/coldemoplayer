@@ -71,7 +71,7 @@ namespace compLexity_Demo_Player
                 {
                     gameLog.Save(ms);
 
-                    TextRange textRange = new TextRange(uiGameLogRichTextBox.Document.ContentStart, uiGameLogRichTextBox.Document.ContentEnd);
+                    TextRange textRange = new TextRange(uiGameLog.Document.ContentStart, uiGameLog.Document.ContentEnd);
                     textRange.Load(ms, DataFormats.Xaml);
                 }
 
