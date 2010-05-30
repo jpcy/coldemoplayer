@@ -71,6 +71,13 @@
     }, 
     {
         "Engine":"Source", 
+        "AppId":260, 
+        "GameFolder":"cstrike_beta", 
+        "GameFolderExtended":"counterstrike source beta", 
+        "GameName":"Counter-Strike: Source Beta"
+    }, 	
+    {
+        "Engine":"Source", 
         "AppId":280, 
         "GameFolder":"hls", 
         "GameFolderExtended":"half-life source", 

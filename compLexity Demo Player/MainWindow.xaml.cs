@@ -803,7 +803,16 @@ namespace compLexity_Demo_Player
             // map tab
             uiMapTextBlock.Text = demo.MapName;
             String engineFolder = (demo.Engine == Demo.Engines.Source ? "source" : "goldsrc");
-            String imagePartialPath = "\\" + engineFolder + "\\" + demo.GameFolderName + "\\" + demo.MapName + ".jpg";
+            String gameFolder = demo.GameFolderName;
+
+            // Most beta versions use the exact same maps anyway...
+            if (gameFolder.EndsWith("_beta"))
+            {
+                gameFolder = gameFolder.Replace("_beta", "");
+            }
+
+            String imagePartialPath = "\\" + engineFolder + "\\" + gameFolder + "\\" + demo.MapName + ".jpg";
+
             try
             {
                 uiMapPreviewImage.Source = new BitmapImage(new Uri(Config.ProgramPath + "\\previews" + imagePartialPath));
