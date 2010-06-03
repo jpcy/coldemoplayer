@@ -864,6 +864,14 @@ namespace compLexity_Demo_Player
 
             uiDetailsProtocolTextBox.Text = String.Format("{0}/{1}", demo.DemoProtocol, demo.NetworkProtocol);
 
+            if (demo.Engine == Demo.Engines.Source && demo.NetworkProtocol == 15)
+            {
+                if (((SourceDemo)demo).Protocol15Hack)
+                {
+                    uiDetailsProtocolTextBox.Text += "a";
+                }
+            }
+
             if (demo.MapChecksum != 0)
             {
                 uiDetailsMapChecksumTextBox.Text = String.Format("{0}", demo.MapChecksum);

@@ -48,6 +48,8 @@ namespace compLexity_Demo_Player
                 return timeDeltaPerTick;
             }
         }
+
+        public Boolean Protocol15Hack { get; private set; }
         #endregion
 
         public SourceDemo(String fileName)
@@ -58,6 +60,7 @@ namespace compLexity_Demo_Player
             status = StatusEnum.Ok;
 
             playerList = new List<Player>();
+            Protocol15Hack = false;
         }
 
         #region Reading
@@ -122,6 +125,8 @@ namespace compLexity_Demo_Player
                 parser.Open();
                 parser.Seek(HeaderSizeInBytes);
 
+                Boolean firstSignonFrameParsed = false;
+
                 while (true)
                 {
                     // frame header
@@ -157,6 +162,27 @@ namespace compLexity_Demo_Player
                             {
                                 try
                                 {
+                                    if (!firstSignonFrameParsed)
+                                    {
+                                        firstSignonFrameParsed = true;
+
+                                        if (networkProtocol == 15)
+                                        {
+                                            Int64 start = parser.Position;
+
+                                            try
+                                            {
+                                                CalculateProtocol15Hack(frameLength);
+                                            }
+                                            catch (Exception)
+                                            {
+                                                Protocol15Hack = true;
+                                            }
+
+                                            parser.Seek(start, SeekOrigin.Begin);
+                                        }
+                                    }
+
                                     parser.ParsePacketMessages(frameLength);
                                 }
                                 catch (ThreadAbortException)
@@ -179,6 +205,48 @@ namespace compLexity_Demo_Player
             finally
             {
                 parser.Close();
+            }
+        }
+
+        private void CalculateProtocol15Hack(Int32 dataLength)
+        {
+            /*
+             * Valve broke network protocol 15 by changing the protocol without incrementing the protocol number.
+             * 
+             * The change adds an extra bit after each message ID, so the only thing that's guaranteed to read correctly with every protocol 15 demo now if the header.
+             * 
+             * The first message in the first sigon frame is always svc_print or svc_serverinfo, so if either of those are invalid, odds are that the demo uses the changed protocol.
+             * 
+             */
+
+            // read in data block
+            Byte[] frameData = parser.Reader.ReadBytes(dataLength);
+            BitBuffer bitBuffer = new BitBuffer(frameData);
+
+            // parse messages
+            SourceDemoParser.MessageId messageId = (SourceDemoParser.MessageId)bitBuffer.ReadUnsignedBits(5);
+
+            if (messageId == SourceDemoParser.MessageId.SVC_Print)
+            {
+                String s = bitBuffer.ReadString();
+
+                if (s.Contains("Map") || s.Contains("Build") || s.Contains("Players"))
+                {
+                    // Looks like a valid svc_print string.
+                    return;
+                }
+
+                Protocol15Hack = true;
+            }
+            else if (messageId == SourceDemoParser.MessageId.SVC_ServerInfo)
+            {
+                UInt32 networkProtocol = bitBuffer.ReadUnsignedBits(16);
+
+                if (networkProtocol != this.networkProtocol)
+                {
+                    // Should match header, must be invalid.
+                    Protocol15Hack = true;
+                }
             }
         }
 

@@ -253,7 +253,7 @@ namespace compLexity_Demo_Player
                 Int32 messageFrameOffset = bitBuffer.CurrentBit;
                 Byte messageId = (Byte)bitBuffer.ReadUnsignedBits(5);
 
-                if (demo.DemoProtocol == 3 && demo.NetworkProtocol == 15 && demo.GameFolderName == "cstrike_beta")
+                if (demo.Protocol15Hack)
                 {
                     bitBuffer.SeekBits(1);
                 }
