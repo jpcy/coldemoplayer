@@ -256,17 +256,17 @@ namespace compLexity_Demo_Player
 
             demoProtocol = br.ReadUInt32();
 
-            /*if (demoProtocol != 3)
+            if (demoProtocol > 3)
             {
-                throw new ApplicationException(String.Format("Unknown demo protocol \"{0}\", should be 3.", demoProtocol));
-            }*/
+                throw new ApplicationException(String.Format("Unsupported demo protocol \"{0}\", should be 3.", demoProtocol));
+            }
 
             networkProtocol = br.ReadUInt32();
 
-            /*if (networkProtocol != 7)
+            if (networkProtocol > 15)
             {
-                throw new ApplicationException(String.Format("Unknown network protocol \"{0}\", should be 7.", networkProtocol));
-            }*/
+                throw new ApplicationException(String.Format("Unsupported network protocol \"{0}\", should be 15 or less.", networkProtocol));
+            }
 
             serverName = Common.ReadNullTerminatedString(br, 260);
             recorderName = Common.ReadNullTerminatedString(br, 260);
