@@ -182,6 +182,12 @@ namespace compLexity_Demo_Player
                 return false;
             }
 
+            if (Game == null)
+            {
+                // Unknown game, can't determine whether it's a beta Steam demo, so assume it isn't.
+                return false;
+            }
+
             // May be beta Steam HLTV. This can only determine via the client.dll checksum (i.e. this is mod specific).
             return Game.IsBetaSteamHltvDemo(this);
         }
