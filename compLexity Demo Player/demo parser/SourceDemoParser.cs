@@ -251,7 +251,7 @@ namespace compLexity_Demo_Player
                 }
 
                 Int32 messageFrameOffset = bitBuffer.CurrentBit;
-                Byte messageId = (Byte)bitBuffer.ReadUnsignedBits(5);
+                Byte messageId = (Byte)bitBuffer.ReadUnsignedBits(demo.NetworkProtocol == 16 ? 6 : 5);
 
                 if (demo.Protocol15Hack)
                 {
@@ -419,6 +419,11 @@ namespace compLexity_Demo_Player
             bitBuffer.ReadString(); // map name (same as header - unless there's a map change?)
             bitBuffer.ReadString(); // sky name
             bitBuffer.ReadString(); // server name (different from header - header is usually the address)
+
+            if (demo.NetworkProtocol >= 16)
+            {
+                bitBuffer.SeekBits(1);
+            }
         }
 
         public void MessageClassInfo()

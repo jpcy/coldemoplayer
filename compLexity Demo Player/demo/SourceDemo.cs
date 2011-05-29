@@ -263,9 +263,9 @@ namespace compLexity_Demo_Player
 
             networkProtocol = br.ReadUInt32();
 
-            if (networkProtocol > 15)
+            if (networkProtocol > 16)
             {
-                throw new ApplicationException(String.Format("Unsupported network protocol \"{0}\", should be 15 or less.", networkProtocol));
+                throw new ApplicationException(String.Format("Unsupported network protocol \"{0}\", should be 16 or less.", networkProtocol));
             }
 
             serverName = Common.ReadNullTerminatedString(br, 260);
@@ -316,11 +316,19 @@ namespace compLexity_Demo_Player
 
             if (buildNumber == 0)
             {
-                Int32 buildIndex = s.IndexOf("Build ");
+                String buildString = "Build ";
+                Int32 buildIndex = s.IndexOf(buildString);
+
+                if (buildIndex == -1)
+                {
+                    // Try an alternate format.
+                    buildString = "Build: ";
+                    buildIndex = s.IndexOf(buildString);
+                }
 
                 if (buildIndex != -1)
                 {
-                    String temp = s.Remove(0, buildIndex + 6);
+                    String temp = s.Remove(0, buildIndex + buildString.Length);
                     Int32 newLineIndex = temp.IndexOf('\n');
 
                     if (newLineIndex != -1)
@@ -372,7 +380,13 @@ namespace compLexity_Demo_Player
             // server name (different from header - header is usually the address)
             // if this message is never parsed, the header value is used, otherwise it is expanded upon.
             serverName = parser.BitBuffer.ReadString() + " (" + serverName + ")";
+
+            if (NetworkProtocol >= 16)
+            {
+                parser.BitBuffer.SeekBits(1);
+            }
         }
+
         public void ReadMessageCreateStringTable()
         {
             if (NetworkProtocol >= 15)
