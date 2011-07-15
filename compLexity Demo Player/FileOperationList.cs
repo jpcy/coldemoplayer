@@ -41,7 +41,12 @@ namespace compLexity_Demo_Player
             }
 
             operations.Clear();
-            File.Delete(programPath + "\\" + fileName);
+            String configFullPath = programPath + "\\" + fileName;
+
+            if (File.Exists(configFullPath))
+            {
+                File.Delete(programPath + "\\" + fileName);
+            }
         }
 
         static public void Initialise(String _programPath, String _fileName)

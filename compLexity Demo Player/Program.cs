@@ -94,7 +94,7 @@ namespace compLexity_Demo_Player
             }
             catch (Exception ex)
             {
-                Common.Message(null, "Error reading from \"steam.xml\". Reinstalling may fix the problem.", ex, MessageWindow.Flags.Error);
+                Common.Message(null, "Error reading from \"steam.json\". Reinstalling may fix the problem.", ex, MessageWindow.Flags.Error);
                 return;
             }
 

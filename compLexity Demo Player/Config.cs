@@ -273,6 +273,12 @@ namespace compLexity_Demo_Player
         /// </summary>
         public static void Write()
         {
+            // The data path should have been created by the installer, but it's possible the installer wasn't used (e.g. portable copy on a removable drive).
+            if (!Directory.Exists(ProgramDataPath))
+            {
+                Directory.CreateDirectory(ProgramDataPath);
+            }
+
             using (StreamWriter stream = new StreamWriter(ProgramDataPath + "\\" + fileName))
             {
                 Serializer serializer = new Serializer(typeof(ProgramSettings));
