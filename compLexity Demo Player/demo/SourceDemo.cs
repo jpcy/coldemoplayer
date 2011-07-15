@@ -263,9 +263,9 @@ namespace compLexity_Demo_Player
 
             networkProtocol = br.ReadUInt32();
 
-            if (networkProtocol > 16)
+            if (networkProtocol > 17)
             {
-                throw new ApplicationException(String.Format("Unsupported network protocol \"{0}\", should be 16 or less.", networkProtocol));
+                throw new ApplicationException(String.Format("Unsupported network protocol \"{0}\", should be 17 or less.", networkProtocol));
             }
 
             serverName = Common.ReadNullTerminatedString(br, 260);

@@ -251,7 +251,7 @@ namespace compLexity_Demo_Player
                 }
 
                 Int32 messageFrameOffset = bitBuffer.CurrentBit;
-                Byte messageId = (Byte)bitBuffer.ReadUnsignedBits(demo.NetworkProtocol == 16 ? 6 : 5);
+                Byte messageId = (Byte)bitBuffer.ReadUnsignedBits(demo.NetworkProtocol >= 16 ? 6 : 5);
 
                 if (demo.Protocol15Hack)
                 {
