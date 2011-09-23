@@ -50,6 +50,7 @@ namespace compLexity_Demo_Player
         }
 
         public Boolean Protocol15Hack { get; private set; }
+        public Boolean UnsupportedNetworkProtocol { get; private set; }
         #endregion
 
         public SourceDemo(String fileName)
@@ -61,6 +62,7 @@ namespace compLexity_Demo_Player
 
             playerList = new List<Player>();
             Protocol15Hack = false;
+            UnsupportedNetworkProtocol = false;
         }
 
         #region Reading
@@ -75,7 +77,14 @@ namespace compLexity_Demo_Player
             }
             catch (Exception ex)
             {
-                mainWindowInterface.Error("Error reading demo file \"" + fileFullPath + "\".", ex);
+                String errorMessage = "Error reading demo file \"" + fileFullPath + "\".";
+
+                if (UnsupportedNetworkProtocol)
+                {
+                    errorMessage += String.Format("\n\nProbable cause for error: demo uses unsupported network protocol \"{0}\".", networkProtocol);
+                }
+
+                mainWindowInterface.Error(errorMessage, ex);
                 demoListViewInterface.DemoLoadingFinished(null);
                 return;
             }
@@ -265,7 +274,7 @@ namespace compLexity_Demo_Player
 
             if (networkProtocol > 17)
             {
-                throw new ApplicationException(String.Format("Unsupported network protocol \"{0}\", should be 17 or less.", networkProtocol));
+                UnsupportedNetworkProtocol = true;
             }
 
             serverName = Common.ReadNullTerminatedString(br, 260);
@@ -546,7 +555,14 @@ namespace compLexity_Demo_Player
             }
             catch (Exception ex)
             {
-                writeProgressWindowInterface.Error("Error writing demo file \"" + fileFullPath + "\".", ex, false, null);
+                String errorMessage = "Error writing demo file \"" + fileFullPath + "\".";
+
+                if (UnsupportedNetworkProtocol)
+                {
+                    errorMessage += String.Format("\n\nProbable cause for error: demo uses unsupported network protocol \"{0}\".", networkProtocol);
+                }
+
+                writeProgressWindowInterface.Error(errorMessage, ex, false, null);
                 writeProgressWindowInterface.CloseWithResult(false);
                 return;
             }

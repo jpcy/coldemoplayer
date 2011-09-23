@@ -96,7 +96,14 @@ namespace compLexity_Demo_Player
             }
             catch (Exception ex)
             {
-                progressWindowInterface.Error("Error generating statisitics.", ex, false, null);
+                String errorMessage = "Error generating statisitics.";
+
+                if (((SourceDemo)demo).UnsupportedNetworkProtocol)
+                {
+                    errorMessage += String.Format("\n\nProbable cause for error: demo uses unsupported network protocol \"{0}\".", demo.NetworkProtocol);
+                }
+
+                progressWindowInterface.Error(errorMessage, ex, false, null);
             }
 
             ParsingFinished(null, null, null);
