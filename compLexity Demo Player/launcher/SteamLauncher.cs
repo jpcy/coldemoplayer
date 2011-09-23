@@ -146,10 +146,16 @@ namespace compLexity_Demo_Player
 
             if ((JoiningServer && Config.Settings.ServerBrowserStartListenServer && !ServerSourceEngine) || (!JoiningServer && (Config.Settings.PlaybackStartListenServer || Demo.GameFolderName == "tfc") && Demo.Engine != Demo.Engines.Source))
             {
-                launchParameters += "-nomaster +maxplayers 10 +sv_lan 1 +map " + mapName;
+                launchParameters += "-nomaster +maxplayers 10 +sv_lan 1 +map " + mapName + " ";
             }
 
-            launchParameters += " +exec " + Config.LaunchConfigFileName + " " + Config.Settings.SteamAdditionalLaunchParameters;
+            if (!JoiningServer && Demo.Engine == Demo.Engines.Source && Demo.GameFolderName == "tf")
+            {
+                // skip the valve logo intro video, and show the console when loading the demo
+                launchParameters += "-novid +toggleconsole ";
+            }
+
+            launchParameters += "+exec " + Config.LaunchConfigFileName + " " + Config.Settings.SteamAdditionalLaunchParameters;
 
             // launch the program process
             if (UseHlae)
