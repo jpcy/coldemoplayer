@@ -376,7 +376,15 @@ namespace compLexity_Demo_Player
         {
             parser.BitBuffer.SeekBits(16); // network protocol (same as header)
             parser.BitBuffer.SeekBits(32); // spawn count
-            parser.BitBuffer.SeekBits(90); // ...
+
+            if (NetworkProtocol >= 18)
+            {
+                parser.BitBuffer.SeekBits(186); // ...
+            }
+            else
+            {
+                parser.BitBuffer.SeekBits(90); // ...
+            }
 
             maxClients = parser.BitBuffer.ReadByte();
             timeDeltaPerTick = parser.BitBuffer.ReadSingle();
