@@ -272,7 +272,7 @@ namespace compLexity_Demo_Player
 
             networkProtocol = br.ReadUInt32();
 
-            if (networkProtocol > 17)
+            if (networkProtocol > 18)
             {
                 UnsupportedNetworkProtocol = true;
             }
