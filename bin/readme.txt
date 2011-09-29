@@ -1,5 +1,5 @@
 compLexity Demo Player
-Version: 1.1.12
+Version: 1.1.13
 http://code.google.com/p/coldemoplayer/
 http://www.complexitygaming.com/
 
