@@ -20,13 +20,13 @@ namespace compLexity_Demo_Player
             // don't bother with steam half-life, since it uses "common" instead of the steam account folder now
             String steamAccountFullPath = String.Empty;
 
-            if (Demo.Engine != Demo.Engines.HalfLifeSteam)
+            if (Demo.Engine == Demo.Engines.Source)
             {
                 steamAccountFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\" + Config.Settings.SteamAccountFolder;
 
-                if (Directory.Exists(steamAccountFullPath))
+                if (!Directory.Exists(steamAccountFullPath))
                 {
-                    throw new ApplicationException("Steam account folder \"" + gameFullPath + "\"doesn't exist. Go to Options\\Preferences and select a valid Steam account folder.");
+                    throw new ApplicationException("Steam account folder \"" + steamAccountFullPath + "\" doesn't exist. Go to Options\\Preferences and select a valid Steam account folder.");
                 }
             }
 
@@ -62,14 +62,14 @@ namespace compLexity_Demo_Player
             }
 
             // verify that the game folder exists
-            if (Demo.Engine == Demo.Engines.HalfLifeSteam)
+            if (Demo.Engine == Demo.Engines.Source)
             {
-                // steam half-life uses "Steam\steamapps\common\Half-Life\cstrike" now.
-                gameFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\common\\Half-Life\\" + gameFolderName;
+                gameFullPath = steamAccountFullPath + "\\" + game.FolderExtended + "\\" + gameFolderName;
             }
             else
             {
-                gameFullPath = steamAccountFullPath + "\\" + game.FolderExtended + "\\" + gameFolderName;
+                // steam half-life uses "Steam\steamapps\common\Half-Life\cstrike" now.
+                gameFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\common\\Half-Life\\" + gameFolderName;
             }
 
             if (!Directory.Exists(gameFullPath))
@@ -117,14 +117,14 @@ namespace compLexity_Demo_Player
             }
 
             // even if HLAE is being used, still need to check that game isn't already running
-            if (Demo.Engine == Demo.Engines.HalfLifeSteam)
+            if (Demo.Engine == Demo.Engines.Source)
             {
-                // steam half-life uses "Steam\steamapps\common\Half-Life" now.
-                processExeFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\common\\Half-Life\\";
+                processExeFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\" + Config.Settings.SteamAccountFolder + "\\" + game.FolderExtended + "\\";
             }
             else
             {
-                processExeFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\" + Config.Settings.SteamAccountFolder + "\\" + game.FolderExtended + "\\";
+                // steam half-life uses "Steam\steamapps\common\Half-Life" now.
+                processExeFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\common\\Half-Life\\";                
             }
 
             if ((JoiningServer && ServerSourceEngine) || (!JoiningServer && Demo.Engine == Demo.Engines.Source))
