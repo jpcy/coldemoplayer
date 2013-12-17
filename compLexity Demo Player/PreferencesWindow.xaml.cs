@@ -102,6 +102,7 @@ namespace compLexity_Demo_Player
             uiSteamAdditionalLaunchParametersTextBox.Text = Config.Settings.SteamAdditionalLaunchParameters;
             uiHalfLifeExeTextBox.Text = Config.Settings.HlExeFullPath;
             uiHalfLifeAdditionalLaunchParametersTextBox.Text = Config.Settings.HlAdditionalLaunchParameters;
+            uiForceHalfLifeExeInSteamCheckBox.IsChecked = Config.Settings.HlForceHalfLifeExeInSteam;
             uiHlaeExeTextBox.Text = Config.Settings.HlaeExeFullPath;
             uiDemAssociateCheckBox.IsChecked = Config.Settings.AssociateWithDemFiles;
             uiHlswAssociateCheckBox.IsChecked = Config.Settings.AssociateWithHlswProtocol;
@@ -183,6 +184,15 @@ namespace compLexity_Demo_Player
             {
                 uiHalfLifeExeTextBox.Text = s;
             }
+        }
+        private void uiForceHalfLifeExeInSteamCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            Config.Settings.HlForceHalfLifeExeInSteam = (Boolean)uiForceHalfLifeExeInSteamCheckBox.IsChecked;
+        }
+
+        private void uiForceHalfLifeExeInSteamCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Config.Settings.HlForceHalfLifeExeInSteam = false;
         }
 
         private void uiHlaeExeBrowseButton_Click(object sender, RoutedEventArgs e)

@@ -64,8 +64,9 @@
                         </Grid>
                         <TextBlock Margin="0,8,0,0">Additional Launch Parameters:</TextBlock>
                         <TextBox Name="uiHalfLifeAdditionalLaunchParametersTextBox" />
+                        <CheckBox Margin="0,8,0,0" Name="uiForceHalfLifeExeInSteamCheckBox" Checked="uiForceHalfLifeExeInSteamCheckBox_Checked" Unchecked="uiForceHalfLifeExeInSteamCheckBox_Unchecked">Force hl.exe in Steam and HLAE</CheckBox>
                     </StackPanel>
-                </Grid>
+                 </Grid>
             </Expander>
             <Expander Name="uiHlaeExpander" Header="HLAE" Margin="4" BorderBrush="Black" BorderThickness="1" IsExpanded="False">
                 <Grid Margin="8">

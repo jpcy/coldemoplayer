@@ -42,6 +42,8 @@ namespace compLexity_Demo_Player
         // half-life
         public String HlExeFullPath { get; set; }
         public String HlAdditionalLaunchParameters { get; set; }
+        public Boolean HlForceHalfLifeExeInSteam { get; set; }
+        
 
         // hlae
         public String HlaeExeFullPath { get; set; }
@@ -90,6 +92,7 @@ namespace compLexity_Demo_Player
             WindowHeight = 600.0;
             ExplorerPaneWidth = 320.0;
             DemoListPaneHeight = 150.0;
+            HlForceHalfLifeExeInSteam = false;
             AssociateWithDemFiles = true;
             AssociateWithHlswProtocol = false;
             PlaybackType = Playback.Playdemo;
