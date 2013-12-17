@@ -31,7 +31,7 @@ namespace compLexity_Demo_Player
         public System.Windows.WindowState WindowState { get; set; }
         public Double WindowWidth { get; set; }
         public Double WindowHeight { get; set; }
-        public Double ExplorerPaneWidth { get; set; }
+        public Double ExplorerPaneWidth { get; set; } // unused legacy property. here to prevent json deserializer warnings.
         public Double DemoListPaneHeight { get; set; }
 
         // steam
@@ -90,7 +90,6 @@ namespace compLexity_Demo_Player
             WindowState = System.Windows.WindowState.Normal;
             WindowWidth = 800.0;
             WindowHeight = 600.0;
-            ExplorerPaneWidth = 320.0;
             DemoListPaneHeight = 150.0;
             HlForceHalfLifeExeInSteam = false;
             AssociateWithDemFiles = true;

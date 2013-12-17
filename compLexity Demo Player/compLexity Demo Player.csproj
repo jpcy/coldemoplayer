@@ -236,7 +236,6 @@
     <Compile Include="demo\HalfLifeDemo.cs" />
     <Compile Include="demo\HalfLifeDemoWriter.cs" />
     <Compile Include="demo\SourceDemo.cs" />
-    <Compile Include="FolderExplorerTreeView.cs" />
     <Compile Include="HalfLifeMapChecksum.cs" />
     <Compile Include="HyperlinkControl.xaml.cs">
       <DependentUpon>HyperlinkControl.xaml</DependentUpon>
@@ -287,16 +286,6 @@
     <Resource Include="data\banner.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <COMReference Include="Shell32">
-      <Guid>{50A7E9B0-70EF-11D1-B75A-00A0C90564FE}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-    </COMReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="data\col.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -343,9 +332,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="data\splitter_vertical.bmp" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="data\splitter_horizontal.bmp" />
   </ItemGroup>
   <ItemGroup>
@@ -371,6 +357,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="data\floppy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="data\folder.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

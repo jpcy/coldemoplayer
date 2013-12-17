@@ -7,21 +7,17 @@
     Activated="Window_Activated" StateChanged="Window_StateChanged"
     WindowStartupLocation="CenterScreen" AllowDrop="True">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Name="uiExplorerColumnDefinition" Width="320"/>
-            <ColumnDefinition Width="Auto" MinWidth="8" />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" MinHeight="21" />
             <RowDefinition Height="Auto" MinHeight="48" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Name="uiDemoListRowDefinition" Height="150" />
             <RowDefinition Height="8" MinHeight="8" />
             <RowDefinition Height="287.665*" />
         </Grid.RowDefinitions>
         
         <!-- Menu -->
-        <Menu Name="mainMenu" Height="Auto" VerticalAlignment="Top" Grid.ColumnSpan="3">
+        <Menu Name="mainMenu" Height="Auto" VerticalAlignment="Top">
             <MenuItem Header="_File">
                 <MenuItem Header="_Open..." Name="uiOpenMenuItem" Click="uiOpenMenuItem_Click" />
                 <MenuItem Header="E_xit" Name="uiExitMenuItem" Click="uiExitMenuItem_Click" />
@@ -43,24 +39,31 @@
         </Menu>
         
         <!-- Banner -->
-        <Grid Grid.Row="1" Grid.ColumnSpan="3" Name="uiBannerGrid" Background="Black" Cursor="Hand" MouseUp="uiBannerGrid_MouseUp">
+        <Grid Grid.Row="1" Name="uiBannerGrid" Background="Black" Cursor="Hand" MouseUp="uiBannerGrid_MouseUp">
             <Image Stretch="Fill" Source="data\banner.jpg" StretchDirection="Both" MinHeight="0" MaxHeight="47" VerticalAlignment="Top" Height="47" HorizontalAlignment="Left" Width="609" />
         </Grid>
         
-        <!-- Splitters -->
-        <GridSplitter Grid.Column="1" Grid.Row="2" Grid.RowSpan="3" HorizontalAlignment="Center" Width="8" MinWidth="8" MaxWidth="8">
-            <GridSplitter.Background>
-                <ImageBrush ImageSource="data\splitter_vertical.bmp" Opacity="0.75" />
-            </GridSplitter.Background>
-        </GridSplitter>
-        <GridSplitter Grid.Column="2" Grid.Row="3" Height="8" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="0,0,-1,0">
+        <!-- Set current folder -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox Margin="8,8,8,0" Name="uiCurrentPathTextBox" IsReadOnly="True" />
+            <Button Grid.Column="2" Margin="0,8,8,0" Name="uiSetCurrentPathButton" Click="uiSetCurrentPathButton_Click" Width="Auto" Height="Auto">
+                <Image Source="data\folder.png" />
+            </Button>
+        </Grid>
+        
+        <!-- Splitter -->
+        <GridSplitter Grid.Row="4" Height="8" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="0,0,-1,0">
             <GridSplitter.Background>
                 <ImageBrush ImageSource="data\splitter_horizontal.bmp" Opacity="0.75" />
             </GridSplitter.Background>
         </GridSplitter>
         
         <!-- Demo information, operations -->
-        <Grid Grid.Column="2" Grid.Row="4" Margin="8">
+        <Grid Grid.Row="5" Margin="8">
             <Grid.RowDefinitions>
                 <RowDefinition Height="236.473*" />
                 <RowDefinition Height="Auto" MinHeight="78" />
@@ -170,11 +173,8 @@
             </StackPanel>
         </Grid>
         
-        <!-- Explorer TreeView -->
-        <local:FolderExplorerTreeView Grid.Row="2" Grid.RowSpan="3" x:Name="uiExplorerTreeView" Margin="8" SelectedItemChanged="uiExplorerTreeView_SelectedItemChanged" />
-        
         <!-- Demo ListView -->
-        <local:DemoListView Grid.Column="2" Grid.Row="2" x:Name="uiDemoListView" Margin="8" VirtualizingStackPanel.IsVirtualizing="False" SelectionMode="Single" SelectionChanged="uiDemoListView_SelectionChanged">
+        <local:DemoListView Grid.Row="3" x:Name="uiDemoListView" Margin="8" VirtualizingStackPanel.IsVirtualizing="False" SelectionMode="Single" SelectionChanged="uiDemoListView_SelectionChanged">
             <local:DemoListView.View>
                 <GridView>
                     <GridView.Columns>

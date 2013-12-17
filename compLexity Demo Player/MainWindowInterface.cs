@@ -29,13 +29,13 @@ namespace compLexity_Demo_Player
                 // Restore the window if the program is minimized to the tray.
                 RestoreFromTray();
 
-                // select demo, but don't trigger the event handler
+                // select demo
+                // set the current path variable instead of the property so we can call uiDemoListView.SetCurrentPath with the demo filename
+                // setting the property will call uiDemoListView.SetCurrentPath with just the path (no demo name)
                 String path = System.IO.Path.GetDirectoryName(fileName);
-                uiExplorerTreeView.SelectedItemChanged -= uiExplorerTreeView_SelectedItemChanged;
-                uiExplorerTreeView.CurrentFolderPath = path;
-                uiDemoListView.SetCurrentPath(uiExplorerTreeView.CurrentFolderPath, System.IO.Path.GetFileNameWithoutExtension(fileName));
-                uiExplorerTreeView.SelectedItemChanged += uiExplorerTreeView_SelectedItemChanged;
-
+                currentPath = path;
+                uiDemoListView.SetCurrentPath(path, System.IO.Path.GetFileNameWithoutExtension(fileName));
+                uiCurrentPathTextBox.Text = path;
                 return true;
             };
 

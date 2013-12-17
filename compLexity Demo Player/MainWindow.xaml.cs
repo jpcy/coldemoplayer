@@ -71,6 +71,23 @@ namespace compLexity_Demo_Player
             public Demo Demo { get; set; }
         }
 
+        private String currentPath;
+
+        private String CurrentPath
+        {
+            get
+            {
+                return currentPath;
+            }
+
+            set
+            {
+                currentPath = value;
+                uiCurrentPathTextBox.Text = currentPath;
+                uiDemoListView.SetCurrentPath(currentPath);
+            }
+        }
+
         private Boolean hasActivated = false;
         private Boolean canOpenDemo = true;
         private Boolean serverWindowOpen = false;
@@ -338,7 +355,6 @@ namespace compLexity_Demo_Player
             WindowState = Config.Settings.WindowState;
             Width = Config.Settings.WindowWidth;
             Height = Config.Settings.WindowHeight;
-            uiExplorerColumnDefinition.Width = new GridLength(Config.Settings.ExplorerPaneWidth);
             uiDemoListRowDefinition.Height = new GridLength(Config.Settings.DemoListPaneHeight);
             
             // playback type
@@ -441,15 +457,20 @@ namespace compLexity_Demo_Player
                 }
                 else
                 {
-                    uiExplorerTreeView.CurrentFolderPath = Config.Settings.LastPath;
+                    CurrentPath = Config.Settings.LastPath;
                 }
+            }
+            else
+            {
+                // default current path to desktop path
+                CurrentPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             }
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
             // store the last path and filename
-            Config.Settings.LastPath = uiExplorerTreeView.CurrentFolderPath;
+            Config.Settings.LastPath = CurrentPath;
 
             Demo selectedDemo = uiDemoListView.GetSelectedDemo();
             if (selectedDemo != null)
@@ -465,7 +486,6 @@ namespace compLexity_Demo_Player
             Config.Settings.WindowState = (WindowState == WindowState.Minimized ? WindowState.Normal : WindowState);
             Config.Settings.WindowWidth = Width;
             Config.Settings.WindowHeight = Height;
-            Config.Settings.ExplorerPaneWidth = uiExplorerColumnDefinition.Width.Value;
             Config.Settings.DemoListPaneHeight = uiDemoListRowDefinition.Height.Value;
 
             // write the config file
@@ -521,6 +541,7 @@ namespace compLexity_Demo_Player
 
             dialog.Title = "Open Demo";
             dialog.Filter = "Demo files (*.dem)|*.dem";
+            dialog.InitialDirectory = CurrentPath;
             dialog.RestoreDirectory = true;
 
             canOpenDemo = false;
@@ -577,7 +598,6 @@ namespace compLexity_Demo_Player
             WindowState = WindowState.Normal;
             Width = 800.0;
             Height = 600.0;
-            uiExplorerColumnDefinition.Width = new GridLength(320);
             uiDemoListRowDefinition.Height = new GridLength(150);
         }
 
@@ -652,6 +672,17 @@ namespace compLexity_Demo_Player
         private void uiBannerGrid_MouseUp(object sender, MouseButtonEventArgs e)
         {
             Process.Start(Config.ComplexityUrl);
+        }
+
+        private void uiSetCurrentPathButton_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
+            dialog.SelectedPath = CurrentPath;
+
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                CurrentPath = dialog.SelectedPath;
+            }
         }
 
         private void uiPlayButton_Click(object sender, RoutedEventArgs e)
@@ -759,11 +790,6 @@ namespace compLexity_Demo_Player
             {
                 canOpenDemo = true;
             }
-        }
-
-        private void uiExplorerTreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            uiDemoListView.SetCurrentPath(uiExplorerTreeView.CurrentFolderPath);
         }
 
         private void uiDemoListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
