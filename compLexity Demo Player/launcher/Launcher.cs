@@ -257,7 +257,14 @@ namespace compLexity_Demo_Player
                                         MessageBox.Show("Warning: HLAE interface depreciated.");
                                     }
 
-                                    remote.LaunchEx(remote.GetCustomArgs() + launchParameters);
+                                    try
+                                    {
+                                        remote.LaunchEx(remote.GetCustomArgs() + launchParameters);
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        MessageBox.Show("Warning: " + e.Message, "IPC error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                                    }
                                 }
                             }
                             finally
