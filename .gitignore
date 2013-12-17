@@ -1,0 +1,11 @@
+/bin/ICSharpCode.SharpZipLib.dll
+/bin/Interop.Shell32.dll
+/bin/JsonExSerializer.dll
+/bin/ZedGraph.dll
+/bin/compLexity Demo Player.exe
+/bin/compLexity Demo Player.exe.config
+/compLexity Demo Player/bin/
+/compLexity Demo Player/obj/
+
+/*.suo
+*.csproj.user
