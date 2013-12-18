@@ -69,10 +69,10 @@ namespace compLexity_Demo_Player
             else
             {
                 // steam half-life uses "Steam\steamapps\common\Half-Life\cstrike" now.
-
-                if (Config.Settings.HlForceHalfLifeExeInSteam)
+                // if the user is using a custom Steam hl.exe path, use that to calculate the game path instead.
+                if (File.Exists(Config.Settings.SteamHlExeFullPath))
                 {
-                    gameFullPath = Path.GetDirectoryName(Config.Settings.HlExeFullPath) + "\\" + Demo.GameFolderName;
+                    gameFullPath = Path.GetDirectoryName(Config.Settings.SteamHlExeFullPath) + "\\" + Demo.GameFolderName;
                 }
                 else
                 {

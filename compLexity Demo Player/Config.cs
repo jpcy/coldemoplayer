@@ -36,14 +36,13 @@ namespace compLexity_Demo_Player
 
         // steam
         public String SteamExeFullPath { get; set; }
+        public String SteamHlExeFullPath { get; set; }
         public String SteamAccountFolder { get; set; }
         public String SteamAdditionalLaunchParameters { get; set; }
 
         // half-life
         public String HlExeFullPath { get; set; }
         public String HlAdditionalLaunchParameters { get; set; }
-        public Boolean HlForceHalfLifeExeInSteam { get; set; }
-        
 
         // hlae
         public String HlaeExeFullPath { get; set; }
@@ -91,7 +90,6 @@ namespace compLexity_Demo_Player
             WindowWidth = 800.0;
             WindowHeight = 600.0;
             DemoListPaneHeight = 150.0;
-            HlForceHalfLifeExeInSteam = false;
             AssociateWithDemFiles = true;
             AssociateWithHlswProtocol = false;
             PlaybackType = Playback.Playdemo;

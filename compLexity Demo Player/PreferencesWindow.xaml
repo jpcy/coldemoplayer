@@ -32,6 +32,8 @@
                     <RowDefinition />
                     <RowDefinition Height="4" /> <!-- padding -->
                     <RowDefinition />
+                    <RowDefinition Height="4" /> <!-- padding -->
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -47,10 +49,19 @@
                     <TextBox Margin="0,0,8,0" Name="uiSteamExeTextBox" IsReadOnly="True" />
                     <Button Grid.Column="1" Name="uiSteamExeBrowseButton" Click="uiSteamExeBrowseButton_Click" Padding="16,0,16,0"> Browse...</Button>
                 </Grid>
-                <TextBlock Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center">Steam Account</TextBlock>
-                <ComboBox Grid.Row="2" Grid.Column="2" Name="uiSteamAccountNameComboBox" />
-                <TextBlock Grid.Row="4" HorizontalAlignment="Right" VerticalAlignment="Center">Launch Options</TextBlock>
-                <TextBox  Grid.Row="4" Grid.Column="2" Name="uiSteamAdditionalLaunchParametersTextBox" />
+                <TextBlock Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center">hl.exe (optional)</TextBlock>
+                <Grid Grid.Row="2" Grid.Column="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox Margin="0,0,8,0" Name="uiSteamHlExeTextBox" IsReadOnly="True" />
+                    <Button Grid.Column="1" Name="uiSteamHlExeBrowseButton" Click="uiSteamHlExeBrowseButton_Click" Padding="16,0,16,0">Browse...</Button>
+                </Grid>
+                <TextBlock Grid.Row="4" HorizontalAlignment="Right" VerticalAlignment="Center">Steam Account</TextBlock>
+                <ComboBox Grid.Row="4" Grid.Column="2" Name="uiSteamAccountNameComboBox" />
+                <TextBlock Grid.Row="6" HorizontalAlignment="Right" VerticalAlignment="Center">Launch Options</TextBlock>
+                <TextBox  Grid.Row="6" Grid.Column="2" Name="uiSteamAdditionalLaunchParametersTextBox" />
             </Grid>
         </GroupBox>
         <GroupBox Margin="0,0,0,8">
@@ -64,8 +75,6 @@
             </GroupBox.HeaderTemplate>
             <Grid Margin="4">
                 <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition Height="4" /> <!-- padding -->
                     <RowDefinition />
                     <RowDefinition Height="4" /> <!-- padding -->
                     <RowDefinition />
@@ -86,7 +95,6 @@
                 </Grid>
                 <TextBlock Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center">Launch Options</TextBlock>
                 <TextBox Grid.Row="2" Grid.Column="2" Name="uiHalfLifeAdditionalLaunchParametersTextBox" />
-                <CheckBox Grid.Row="4" Grid.Column="2" Name="uiForceHalfLifeExeInSteamCheckBox" Checked="uiForceHalfLifeExeInSteamCheckBox_Checked" Unchecked="uiForceHalfLifeExeInSteamCheckBox_Unchecked">Force hl.exe in Steam and HLAE</CheckBox>
              </Grid>
         </GroupBox>
         <GroupBox Margin="0,0,0,8">
