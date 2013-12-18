@@ -376,7 +376,6 @@
 copy "$(ProjectDir)bin\Release\compLexity Demo Player.exe.config" "$(SolutionDir)bin\compLexity Demo Player.exe.config"
 copy "$(ProjectDir)bin\Release\JsonExSerializer.dll" "$(SolutionDir)bin\JsonExSerializer.dll"
 copy "$(ProjectDir)bin\Release\ICSharpCode.SharpZipLib.dll" "$(SolutionDir)bin\ICSharpCode.SharpZipLib.dll"
-copy "$(ProjectDir)bin\Release\Interop.Shell32.dll" "$(SolutionDir)bin\Interop.Shell32.dll"
 copy "$(ProjectDir)bin\Release\ZedGraph.dll" "$(SolutionDir)bin\ZedGraph.dll"</PostBuildEvent>
   </PropertyGroup>
 </Project>
