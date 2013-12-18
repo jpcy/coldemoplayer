@@ -669,7 +669,7 @@ namespace compLexity_Demo_Player
             }
         }
 
-        private void uiBannerGrid_MouseUp(object sender, MouseButtonEventArgs e)
+        private void uiLogoImage_MouseUp(object sender, MouseButtonEventArgs e)
         {
             Process.Start(Config.ComplexityUrl);
         }

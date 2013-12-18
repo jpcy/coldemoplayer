@@ -9,7 +9,6 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" MinHeight="21" />
-            <RowDefinition Height="Auto" MinHeight="48" />
             <RowDefinition Height="Auto" />
             <RowDefinition Name="uiDemoListRowDefinition" Height="150" />
             <RowDefinition Height="8" MinHeight="8" />
@@ -38,13 +37,8 @@
             </MenuItem>
         </Menu>
         
-        <!-- Banner -->
-        <Grid Grid.Row="1" Name="uiBannerGrid" Background="Black" Cursor="Hand" MouseUp="uiBannerGrid_MouseUp">
-            <Image Stretch="Fill" Source="data\banner.jpg" StretchDirection="Both" MinHeight="0" MaxHeight="47" VerticalAlignment="Top" Height="47" HorizontalAlignment="Left" Width="609" />
-        </Grid>
-        
         <!-- Set current folder -->
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition Width="Auto" />
@@ -56,17 +50,17 @@
         </Grid>
         
         <!-- Splitter -->
-        <GridSplitter Grid.Row="4" Height="8" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="0,0,-1,0">
+        <GridSplitter Grid.Row="3" Height="8" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="0,0,-1,0">
             <GridSplitter.Background>
                 <ImageBrush ImageSource="data\splitter_horizontal.bmp" Opacity="0.75" />
             </GridSplitter.Background>
         </GridSplitter>
         
         <!-- Demo information, operations -->
-        <Grid Grid.Row="5" Margin="8">
+        <Grid Grid.Row="4" Margin="8">
             <Grid.RowDefinitions>
-                <RowDefinition Height="236.473*" />
-                <RowDefinition Height="Auto" MinHeight="78" />
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <TabControl Name="tabControl1" Margin="0,0,0,8">
                 <TabItem Header="Map">
@@ -147,34 +141,41 @@
                     </ScrollViewer>
                 </TabItem>
             </TabControl>
-            <StackPanel Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Orientation="Horizontal">
-                <GroupBox Header="Playback" Name="uiPlaybackTypeGroupBox" Margin="4" Padding="4">
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <GroupBox Header="Playback" Name="uiPlaybackTypeGroupBox" Margin="4" Padding="4">
+                            <StackPanel>
+                                <RadioButton Height="16" Name="uiPlaydemoRadioButton" Checked="uiPlaybackType_Changed" Unchecked="uiPlaybackType_Changed" Margin="1,1,4,1">playdemo</RadioButton>
+                                <RadioButton Height="16" Name="uiViewdemoRadioButton" Checked="uiPlaybackType_Changed" Unchecked="uiPlaybackType_Changed" Margin="1">viewdemo</RadioButton>
+                            </StackPanel>
+                    </GroupBox>
+                    <GroupBox Header="Operations" Name="uiOperationsGroupBox" Margin="4" Padding="4">
                         <StackPanel>
-                            <RadioButton Height="16" Name="uiPlaydemoRadioButton" Checked="uiPlaybackType_Changed" Unchecked="uiPlaybackType_Changed" Margin="1,1,4,1">playdemo</RadioButton>
-                            <RadioButton Height="16" Name="uiViewdemoRadioButton" Checked="uiPlaybackType_Changed" Unchecked="uiPlaybackType_Changed" Margin="1">viewdemo</RadioButton>
+                            <Button Name="uiPlayButton" Click="uiPlayButton_Click" Margin="0,0,0,2" HorizontalContentAlignment="Left" Padding="0,0,15,0" VerticalAlignment="Top" IsEnabled="False">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image VerticalAlignment="Center" Source="data\control_play_blue.png" Margin="0,0,4,0" />
+                                    <TextBlock VerticalAlignment="Center">Play</TextBlock>
+                                </StackPanel>
+                            </Button>
+                            <Button Name="uiAnalyseButton" Click="uiAnalyseButton_Click" HorizontalContentAlignment="Left" Padding="0,0,15,0" IsEnabled="False">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image VerticalAlignment="Center" Source="data\chart_line.png" Margin="0,0,4,0" />
+                                    <TextBlock VerticalAlignment="Center">Analyse</TextBlock>
+                                </StackPanel>
+                            </Button>
                         </StackPanel>
-                </GroupBox>
-                <GroupBox Header="Operations" Name="uiOperationsGroupBox" Margin="4" Padding="4">
-                    <StackPanel>
-                        <Button Name="uiPlayButton" Click="uiPlayButton_Click" Margin="0,0,0,2" HorizontalContentAlignment="Left" Padding="0,0,15,0" VerticalAlignment="Top" IsEnabled="False">
-                            <StackPanel Orientation="Horizontal">
-                                <Image VerticalAlignment="Center" Source="data\control_play_blue.png" Margin="0,0,4,0" />
-                                <TextBlock VerticalAlignment="Center">Play</TextBlock>
-                            </StackPanel>
-                        </Button>
-                        <Button Name="uiAnalyseButton" Click="uiAnalyseButton_Click" HorizontalContentAlignment="Left" Padding="0,0,15,0" IsEnabled="False">
-                            <StackPanel Orientation="Horizontal">
-                                <Image VerticalAlignment="Center" Source="data\chart_line.png" Margin="0,0,4,0" />
-                                <TextBlock VerticalAlignment="Center">Analyse</TextBlock>
-                            </StackPanel>
-                        </Button>
-                    </StackPanel>
-                </GroupBox>
-            </StackPanel>
+                    </GroupBox>
+                </StackPanel>
+                <Image Grid.Column="2" Source="data\logo.png" Margin="0,0,16,0" Cursor="Hand" Name="uiLogoImage" MouseUp="uiLogoImage_MouseUp" />
+            </Grid>
         </Grid>
         
         <!-- Demo ListView -->
-        <local:DemoListView Grid.Row="3" x:Name="uiDemoListView" Margin="8" VirtualizingStackPanel.IsVirtualizing="False" SelectionMode="Single" SelectionChanged="uiDemoListView_SelectionChanged">
+        <local:DemoListView Grid.Row="2" x:Name="uiDemoListView" Margin="8" VirtualizingStackPanel.IsVirtualizing="False" SelectionMode="Single" SelectionChanged="uiDemoListView_SelectionChanged">
             <local:DemoListView.View>
                 <GridView>
                     <GridView.Columns>
