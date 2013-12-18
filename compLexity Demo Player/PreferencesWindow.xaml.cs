@@ -24,19 +24,6 @@ namespace compLexity_Demo_Player
             InitializeComponent();
         }
 
-        /// <summary>
-        /// If program is being run for the first time, the user is prompted with the preferences window with all but the Steam expander hidden.
-        /// </summary>
-        /// <param name="firstRun"></param>
-        public PreferencesWindow(Boolean firstRun) : this()
-        {
-            if (firstRun)
-            {
-                uiHalfLifeExpander.IsExpanded = false;
-                uiMiscExpander.IsExpanded = false;
-            }
-        }
-
         private void UpdateSteamAccountNames()
         {
             uiSteamAccountNameComboBox.Items.Clear();

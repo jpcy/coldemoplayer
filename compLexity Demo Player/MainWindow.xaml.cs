@@ -248,9 +248,9 @@ namespace compLexity_Demo_Player
             return false;
         }
 
-        private void ShowPreferencesWindow(Boolean firstRun)
+        private void ShowPreferencesWindow()
         {
-            PreferencesWindow window = new PreferencesWindow(firstRun);
+            PreferencesWindow window = new PreferencesWindow();
             window.Owner = this;
 
             try
@@ -411,7 +411,7 @@ namespace compLexity_Demo_Player
             if (Program.FirstRun)
             {
                 Common.Message(this, Config.ProgramName + " is running for the first time. Please ensure the detected Steam path and the selected Steam account folder are correct.");
-                ShowPreferencesWindow(true);
+                ShowPreferencesWindow();
             }
 
             // start auto update thread
@@ -564,7 +564,7 @@ namespace compLexity_Demo_Player
 
         private void uiPreferencesMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            ShowPreferencesWindow(false);
+            ShowPreferencesWindow();
         }
 
         private void uiServerBrowserMenuItem_Click(object sender, RoutedEventArgs e)

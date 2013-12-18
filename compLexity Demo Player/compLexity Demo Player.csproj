@@ -283,14 +283,7 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="data\banner.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="data\col.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="data\preferences_hl.jpg" />
-    <Resource Include="data\preferences_steam.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="data\chart_line.png" />
@@ -335,9 +328,6 @@
     <Resource Include="data\splitter_horizontal.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="data\preferences_hlae.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="data\accept.png" />
     <Resource Include="data\add.png" />
     <Resource Include="data\connect.png" />
@@ -350,7 +340,6 @@
     <Resource Include="data\status_idle.png" />
     <Resource Include="data\status_querying.png" />
     <Resource Include="data\status_succeeded.png" />
-    <Resource Include="data\steam.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="data\trim.png" />
@@ -363,6 +352,13 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="data\logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="data\steam.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="data\hl.ico" />
+    <Resource Include="data\hlae.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

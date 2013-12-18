@@ -4,7 +4,7 @@
     xmlns:diagnostics="clr-namespace:System.Diagnostics;assembly=System"
     xmlns:local="clr-namespace:compLexity_Demo_Player"
     Loaded="Window_Loaded" Closed="Window_Closed"
-    Title="Preferences" Width="500" WindowStyle="ToolWindow" ShowInTaskbar="False" SizeToContent="Height" WindowStartupLocation="CenterOwner">
+    Title="Preferences" Width="400" WindowStyle="ToolWindow" ShowInTaskbar="False" SizeToContent="Height" WindowStartupLocation="CenterOwner">
     <Window.Resources>
         <x:Array Type="{x:Type local:ProcessPriority}" x:Key="gameProcessPriority">
             <local:ProcessPriority Name="Idle" Value="Idle" />
@@ -15,92 +15,119 @@
             <local:ProcessPriority Name="Realtime" Value="RealTime" />
         </x:Array>
     </Window.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0">
-            <Expander Name="uiSteamExpander" Header="Steam" Margin="4" BorderBrush="Black" BorderThickness="1" IsExpanded="True">
-                <Grid Margin="8">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="200" />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <Image Grid.Column="0" Source="data\preferences_steam.jpg" Margin="0,0,16,0" VerticalAlignment="Top" />
-                    <StackPanel Grid.Column="1">
-                        <TextBlock>Steam.exe:</TextBlock>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBox Grid.Column="0" Name="uiSteamExeTextBox" IsReadOnly="True" Margin="0,0,8,0" />
-                            <Button Grid.Column="1" Name="uiSteamExeBrowseButton" Click="uiSteamExeBrowseButton_Click" Padding="16,0,16,0"> Browse...</Button>
-                        </Grid>
-                        <TextBlock Margin="0,8,0,0">Steam Account:</TextBlock>
-                        <ComboBox Name="uiSteamAccountNameComboBox" />
-                        <TextBlock Margin="0,8,0,0">Additional Launch Parameters:</TextBlock>
-                        <TextBox Name="uiSteamAdditionalLaunchParametersTextBox" />
+    <StackPanel>
+        <GroupBox Margin="0,0,0,8">
+            <GroupBox.HeaderTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="data/steam.ico" />
+                        <Label>Steam</Label>
                     </StackPanel>
+                </DataTemplate>
+            </GroupBox.HeaderTemplate>
+            <Grid Margin="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="4" /> <!-- padding -->
+                    <RowDefinition />
+                    <RowDefinition Height="4" /> <!-- padding -->
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="8" /> <!-- padding -->
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center">steam.exe</TextBlock>
+                <Grid Grid.Column="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox Margin="0,0,8,0" Name="uiSteamExeTextBox" IsReadOnly="True" />
+                    <Button Grid.Column="1" Name="uiSteamExeBrowseButton" Click="uiSteamExeBrowseButton_Click" Padding="16,0,16,0"> Browse...</Button>
                 </Grid>
-            </Expander>
-            <Expander Name="uiHalfLifeExpander" Header="Half-Life" Margin="4" BorderBrush="Black" BorderThickness="1" IsExpanded="True">
-                <Grid Margin="8">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="200"/>
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <Image Grid.Column="0" Source="data\preferences_hl.jpg" Margin="0,0,16,0" />
-                    <StackPanel Grid.Column="1">
-                        <TextBlock>hl.exe:</TextBlock>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBox Grid.Column="0" Name="uiHalfLifeExeTextBox" IsReadOnly="True" Margin="0,0,8,0" />
-                            <Button Grid.Column="1" Name="uiHalfLifeExeBrowseButton" Click="uiHalfLifeExeBrowseButton_Click" Padding="16,0,16,0">Browse...</Button>
-                        </Grid>
-                        <TextBlock Margin="0,8,0,0">Additional Launch Parameters:</TextBlock>
-                        <TextBox Name="uiHalfLifeAdditionalLaunchParametersTextBox" />
-                        <CheckBox Margin="0,8,0,0" Name="uiForceHalfLifeExeInSteamCheckBox" Checked="uiForceHalfLifeExeInSteamCheckBox_Checked" Unchecked="uiForceHalfLifeExeInSteamCheckBox_Unchecked">Force hl.exe in Steam and HLAE</CheckBox>
+                <TextBlock Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center">Steam Account</TextBlock>
+                <ComboBox Grid.Row="2" Grid.Column="2" Name="uiSteamAccountNameComboBox" />
+                <TextBlock Grid.Row="4" HorizontalAlignment="Right" VerticalAlignment="Center">Launch Options</TextBlock>
+                <TextBox  Grid.Row="4" Grid.Column="2" Name="uiSteamAdditionalLaunchParametersTextBox" />
+            </Grid>
+        </GroupBox>
+        <GroupBox Margin="0,0,0,8">
+            <GroupBox.HeaderTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="data/hl.ico" Width="16" />
+                        <Label>Half-Life</Label>
                     </StackPanel>
-                 </Grid>
-            </Expander>
-            <Expander Name="uiHlaeExpander" Header="HLAE" Margin="4" BorderBrush="Black" BorderThickness="1" IsExpanded="False">
-                <Grid Margin="8">
+                </DataTemplate>
+            </GroupBox.HeaderTemplate>
+            <Grid Margin="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="4" /> <!-- padding -->
+                    <RowDefinition />
+                    <RowDefinition Height="4" /> <!-- padding -->
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="8" /> <!-- padding -->
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center">hl.exe:</TextBlock>
+                <Grid Grid.Column="2">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="200" />
                         <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <Image Grid.Column="0" Source="data\preferences_hlae.jpg" Margin="0,0,16,0" />
-                    <StackPanel Grid.Column="1">
-                        <TextBlock>hlae.exe:</TextBlock>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBox Grid.Column="0" Name="uiHlaeExeTextBox" IsReadOnly="True" Margin="0,0,8,0" />
-                            <Button Grid.Column="1" Name="uiHlaeExeBrowseButton" Click="uiHlaeExeBrowseButton_Click"  Padding="16,0,16,0">Browse...</Button>
-                        </Grid>
-                    </StackPanel>
+                    <TextBox Grid.Column="0" Name="uiHalfLifeExeTextBox" IsReadOnly="True" Margin="0,0,8,0" />
+                    <Button Grid.Column="1" Name="uiHalfLifeExeBrowseButton" Click="uiHalfLifeExeBrowseButton_Click" Padding="16,0,16,0">Browse...</Button>
                 </Grid>
-            </Expander>
-            <Expander Name="uiMiscExpander" Header="Miscellaneous" Margin="4" BorderBrush="Black" BorderThickness="1" IsExpanded="True">
-                <StackPanel Margin="8">
-                    <CheckBox Margin="0,0,0,4" Name="uiDemAssociateCheckBox" Checked="uiDemAssociateCheckBox_Checked" Unchecked="uiDemAssociateCheckBox_Unchecked">Associate with *.dem files</CheckBox>
-                    <CheckBox Margin="0,0,0,4" Name="uiHlswAssociateCheckBox" Checked="uiHlswAssociateCheckBox_Checked" Unchecked="uiHlswAssociateCheckBox_Unchecked">Associate with the HLSW protocol</CheckBox>
-                    <CheckBox Margin="0,0,0,4" Name="uiAutoUpdateCheckBox">Check for updates on startup</CheckBox>
-                    <CheckBox Margin="0,0,0,8" Name="uiMinimizeToTray">Minimize to system tray</CheckBox>
-                    <TextBlock>Game process priority:</TextBlock>
-                    <UniformGrid Columns="3">
+                <TextBlock Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center">Launch Options</TextBlock>
+                <TextBox Grid.Row="2" Grid.Column="2" Name="uiHalfLifeAdditionalLaunchParametersTextBox" />
+                <CheckBox Grid.Row="4" Grid.Column="2" Name="uiForceHalfLifeExeInSteamCheckBox" Checked="uiForceHalfLifeExeInSteamCheckBox_Checked" Unchecked="uiForceHalfLifeExeInSteamCheckBox_Unchecked">Force hl.exe in Steam and HLAE</CheckBox>
+             </Grid>
+        </GroupBox>
+        <GroupBox Margin="0,0,0,8">
+            <GroupBox.HeaderTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="data/hlae.ico" Width="16" />
+                        <Label>HLAE</Label>
+                    </StackPanel>
+                </DataTemplate>
+            </GroupBox.HeaderTemplate>
+            <Grid Margin="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="8" /> <!-- padding -->
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center">hlae.exe</TextBlock>
+                <TextBox Grid.Column="2" Name="uiHlaeExeTextBox" IsReadOnly="True" Margin="0,0,8,0" />
+                <Button Grid.Column="3" Name="uiHlaeExeBrowseButton" Click="uiHlaeExeBrowseButton_Click" Padding="16,0,16,0">Browse...</Button>
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="Miscellaneous">
+            <StackPanel Margin="4">
+                <CheckBox Margin="0,0,0,4" Name="uiDemAssociateCheckBox" Checked="uiDemAssociateCheckBox_Checked" Unchecked="uiDemAssociateCheckBox_Unchecked">Associate with *.dem files</CheckBox>
+                <CheckBox Margin="0,0,0,4" Name="uiHlswAssociateCheckBox" Checked="uiHlswAssociateCheckBox_Checked" Unchecked="uiHlswAssociateCheckBox_Unchecked">Associate with the HLSW protocol</CheckBox>
+                <CheckBox Margin="0,0,0,4" Name="uiAutoUpdateCheckBox">Check for updates on startup</CheckBox>
+                <CheckBox Margin="0,0,0,8" Name="uiMinimizeToTray">Minimize to system tray</CheckBox>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Margin="0,0,8,0" VerticalAlignment="Center">Game process priority</TextBlock>
+                    <UniformGrid Grid.Column="1" Columns="3">
                         <ComboBox Name="uiGameProcessPriorityComboBox" ItemsSource="{Binding Source={StaticResource gameProcessPriority}}" DisplayMemberPath="Name" IsReadOnly="True" />
                     </UniformGrid>
-                </StackPanel>
-            </Expander>
-        </StackPanel>
+                </Grid>
+            </StackPanel>
+        </GroupBox>
         <Button Grid.Row="1" Name="uiCloseButton" Click="uiCloseButton_Click" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="4" Padding="16,0,16,0">Close</Button>
-    </Grid>
+    </StackPanel>
 </Window>
