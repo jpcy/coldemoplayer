@@ -66,16 +66,15 @@ namespace compLexity_Demo_Player
 
         private String BrowseForFile(String fileName, String initialFolder)
         {
-            Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
+            System.Windows.Forms.OpenFileDialog dialog = new System.Windows.Forms.OpenFileDialog();
 
             dialog.Title = "Browse for \"" + fileName + "\"...";
             dialog.InitialDirectory = initialFolder;
             dialog.Filter = fileName + "|" + fileName;
             dialog.RestoreDirectory = true;
 
-            if (dialog.ShowDialog(this) == true)
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                // TODO: need File.Exists check here?
                 return dialog.FileName;
             }
 

@@ -171,13 +171,13 @@ namespace compLexity_Demo_Player
             }
 
             // open file dialog
-            Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
+            System.Windows.Forms.OpenFileDialog dialog = new System.Windows.Forms.OpenFileDialog();
 
             dialog.Title = "Add Map";
             dialog.Filter = "BSP files (*.bsp)|*.bsp";
             dialog.RestoreDirectory = true;
 
-            if (dialog.ShowDialog(this) == false)
+            if (dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
             {
                 return;
             }

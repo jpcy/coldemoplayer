@@ -537,7 +537,7 @@ namespace compLexity_Demo_Player
         private void uiOpenMenuItem_Click(object sender, RoutedEventArgs e)
         {
             // open file dialog
-            Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
+            System.Windows.Forms.OpenFileDialog dialog = new System.Windows.Forms.OpenFileDialog();
 
             dialog.Title = "Open Demo";
             dialog.Filter = "Demo files (*.dem)|*.dem";
@@ -546,7 +546,7 @@ namespace compLexity_Demo_Player
 
             canOpenDemo = false;
 
-            if (dialog.ShowDialog(this) == false)
+            if (dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
             {
                 canOpenDemo = true;
                 return;
