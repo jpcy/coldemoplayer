@@ -123,6 +123,10 @@ namespace compLexity_Demo_Player
                 }
             }
 
+            // don't try to parse messages if the demo uses an unsupported network protocol
+            if (UnsupportedNetworkProtocol)
+                return;
+
             try
             {
                 // initialise parser
