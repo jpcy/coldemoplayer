@@ -198,6 +198,7 @@
     <Compile Include="game\games\CounterStrikeSource.cs" />
     <Compile Include="game\SteamGameInfo.cs" />
     <Compile Include="Hlae.cs" />
+    <Compile Include="launcher\CounterStrikeLauncher.cs" />
     <Compile Include="launcher\LauncherInterface.cs" />
     <Compile Include="launcher\SteamLauncher.cs" />
     <Compile Include="MainWindowInterface.cs" />
@@ -359,6 +360,9 @@
   <ItemGroup>
     <Resource Include="data\hl.ico" />
     <Resource Include="data\hlae.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="data\cstrike.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

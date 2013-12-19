@@ -149,7 +149,7 @@ namespace compLexity_Demo_Player
                 return true;
             }
 
-            if (NetworkProtocol >= 43 && NetworkProtocol <= 46 && Config.Settings.PlaybackConvertNetworkProtocol)
+            if (NetworkProtocol >= 43 && NetworkProtocol <= 46 && (Config.Settings.PlaybackProgramOldCs == ProgramSettings.PlaybackProgram.CounterStrike || Config.Settings.PlaybackProgramOldCs == ProgramSettings.PlaybackProgram.Steam))
             {
                 return true;
             }
@@ -159,7 +159,7 @@ namespace compLexity_Demo_Player
 
         public Boolean ConvertToCurrentNetworkProtocol()
         {
-            return (ConvertNetworkProtocol() || NetworkProtocol == 47);
+            return (ConvertNetworkProtocol() || (NetworkProtocol == 47 && Config.Settings.PlaybackProgramOldCs == ProgramSettings.PlaybackProgram.Steam));
         }
 
         public Boolean IsBetaSteam()

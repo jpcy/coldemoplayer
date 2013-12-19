@@ -84,7 +84,7 @@
                     <ColumnDefinition Width="8" /> <!-- padding -->
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center">hl.exe:</TextBlock>
+                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center">hl.exe</TextBlock>
                 <Grid Grid.Column="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -96,6 +96,39 @@
                 <TextBlock Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center">Launch Options</TextBlock>
                 <TextBox Grid.Row="2" Grid.Column="2" Name="uiHalfLifeAdditionalLaunchParametersTextBox" />
              </Grid>
+        </GroupBox>
+        <GroupBox Margin="0,0,0,8">
+            <GroupBox.HeaderTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="data/cstrike.ico" Width="16" />
+                        <Label>Counter-Strike 1.6</Label>
+                    </StackPanel>
+                </DataTemplate>
+            </GroupBox.HeaderTemplate>
+            <Grid Margin="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="4" /> <!-- padding -->
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="8" /> <!-- padding -->
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center">cstrike.exe</TextBlock>
+                <Grid Grid.Column="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" Name="uiCounterStrikeExeTextBox" IsReadOnly="True" Margin="0,0,8,0" />
+                    <Button Grid.Column="1" Name="uiCounterStrikeExeBrowseButton" Click="uiCounterStrikeExeBrowseButton_Click" Padding="16,0,16,0">Browse...</Button>
+                </Grid>
+                <TextBlock Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center">Launch Options</TextBlock>
+                <TextBox Grid.Row="2" Grid.Column="2" Name="uiCounterStrikeAdditionalLaunchParametersTextBox" />
+            </Grid>
         </GroupBox>
         <GroupBox Margin="0,0,0,8">
             <GroupBox.HeaderTemplate>

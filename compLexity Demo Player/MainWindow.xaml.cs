@@ -165,7 +165,6 @@ namespace compLexity_Demo_Player
             Config.Settings.PlaybackRemoveHltvSlowMotion = (Boolean)uiOptionsRemoveHltvSlowMotion.IsChecked;
             Config.Settings.PlaybackRemoveWeaponAnimations = (Boolean)uiOptionsRemoveWeaponAnimations.IsChecked;
             Config.Settings.PlaybackStartListenServer = (Boolean)uiOptionsStartListenServerCheckBox.IsChecked;
-            Config.Settings.PlaybackConvertNetworkProtocol = (Boolean)uiOptionsConvertNetworkProtocolCheckBox.IsChecked;
             Config.Settings.PlaybackCloseWhenFinished = (Boolean)uiOptionsCloseWhenFinishedCheckBox.IsChecked;
             Config.Settings.PlaybackUseHlae = (Boolean)uiOptionsUseHlaeCheckBox.IsChecked;
 
@@ -176,7 +175,6 @@ namespace compLexity_Demo_Player
             uiOptionsRemoveHltvSlowMotion.IsEnabled = false;
             uiOptionsRemoveWeaponAnimations.IsEnabled = false;
             uiOptionsStartListenServerCheckBox.IsEnabled = false;
-            uiOptionsConvertNetworkProtocolCheckBox.IsEnabled = false;
             uiOptionsCloseWhenFinishedCheckBox.IsEnabled = false;
             uiOptionsUseHlaeCheckBox.IsEnabled = false;
 
@@ -195,14 +193,9 @@ namespace compLexity_Demo_Player
                     uiOptionsRemoveShowscoresCheckBox.IsEnabled = true;
                     uiOptionsRemoveWeaponAnimations.IsEnabled = true;
                 }
-
-                if (GameManager.CanConvertNetworkProtocol(demo))
-                {
-                    uiOptionsConvertNetworkProtocolCheckBox.IsEnabled = true;
-                }
             }
 
-            if ((demo.Engine == Demo.Engines.HalfLifeSteam && demo.GameFolderName != "tfc") || (demo.Engine == Demo.Engines.HalfLife && uiOptionsConvertNetworkProtocolCheckBox.IsEnabled && (Boolean)uiOptionsConvertNetworkProtocolCheckBox.IsChecked))
+            if ((demo.Engine == Demo.Engines.HalfLifeSteam && demo.GameFolderName != "tfc") || demo.Engine == Demo.Engines.HalfLife)
             {
                 uiOptionsStartListenServerCheckBox.IsEnabled = true;
             }
@@ -361,6 +354,11 @@ namespace compLexity_Demo_Player
             uiPlaydemoRadioButton.IsChecked = (Config.Settings.PlaybackType == ProgramSettings.Playback.Playdemo ? true : false);
             uiViewdemoRadioButton.IsChecked = !uiPlaydemoRadioButton.IsChecked;
 
+            // playback program (old cs demos)
+            uiPlayOldCsDemosWithHlRadioButton.IsChecked = Config.Settings.PlaybackProgramOldCs == ProgramSettings.PlaybackProgram.HalfLife;
+            uiPlayOldCsDemosWithCsRadioButton.IsChecked = Config.Settings.PlaybackProgramOldCs == ProgramSettings.PlaybackProgram.CounterStrike;
+            uiPlayOldCsDemosWithSteamRadioButton.IsChecked = Config.Settings.PlaybackProgramOldCs == ProgramSettings.PlaybackProgram.Steam;
+
             // player list
             playerCollection = new ObservableCollection<PlayerListViewData>();
             uiPlayersListView.ItemsSource = playerCollection;
@@ -372,7 +370,6 @@ namespace compLexity_Demo_Player
             uiOptionsRemoveHltvSlowMotion.IsChecked = Config.Settings.PlaybackRemoveHltvSlowMotion;
             uiOptionsRemoveWeaponAnimations.IsChecked = Config.Settings.PlaybackRemoveWeaponAnimations;
             uiOptionsStartListenServerCheckBox.IsChecked = Config.Settings.PlaybackStartListenServer;
-            uiOptionsConvertNetworkProtocolCheckBox.IsChecked = Config.Settings.PlaybackConvertNetworkProtocol;
             uiOptionsCloseWhenFinishedCheckBox.IsChecked = Config.Settings.PlaybackCloseWhenFinished;
             uiOptionsUseHlaeCheckBox.IsChecked = Config.Settings.PlaybackUseHlae;
 
@@ -388,8 +385,6 @@ namespace compLexity_Demo_Player
             uiOptionsRemoveWeaponAnimations.Unchecked += new RoutedEventHandler(uiOptions_Changed);
             uiOptionsStartListenServerCheckBox.Checked += new RoutedEventHandler(uiOptions_Changed);
             uiOptionsStartListenServerCheckBox.Unchecked += new RoutedEventHandler(uiOptions_Changed);
-            uiOptionsConvertNetworkProtocolCheckBox.Checked += new RoutedEventHandler(uiOptions_Changed);
-            uiOptionsConvertNetworkProtocolCheckBox.Unchecked += new RoutedEventHandler(uiOptions_Changed);
             uiOptionsCloseWhenFinishedCheckBox.Checked += new RoutedEventHandler(uiOptions_Changed);
             uiOptionsCloseWhenFinishedCheckBox.Unchecked += new RoutedEventHandler(uiOptions_Changed);
             uiOptionsUseHlaeCheckBox.Checked += new RoutedEventHandler(uiOptions_Changed);
@@ -927,6 +922,22 @@ namespace compLexity_Demo_Player
             // operations
             uiPlayButton.IsEnabled = true;
             uiAnalyseButton.IsEnabled = (demo == null ? false : GameManager.CanAnalyse(demo));
+        }
+
+        private void uiPlaybackProgramOldCs_Changed(object sender, RoutedEventArgs e)
+        {
+            if (uiPlayOldCsDemosWithHlRadioButton.IsChecked == true)
+            {
+                Config.Settings.PlaybackProgramOldCs = ProgramSettings.PlaybackProgram.HalfLife;
+            }
+            else if (uiPlayOldCsDemosWithCsRadioButton.IsChecked == true)
+            {
+                Config.Settings.PlaybackProgramOldCs = ProgramSettings.PlaybackProgram.CounterStrike;
+            }
+            else
+            {
+                Config.Settings.PlaybackProgramOldCs = ProgramSettings.PlaybackProgram.Steam;
+            }
         }
 
         private void uiPlaybackType_Changed(object sender, RoutedEventArgs e)

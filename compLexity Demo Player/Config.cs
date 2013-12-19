@@ -18,6 +18,13 @@ namespace compLexity_Demo_Player
             Viewdemo
         }
 
+        public enum PlaybackProgram
+        {
+            HalfLife,
+            CounterStrike,
+            Steam
+        }
+
         // updating, on-demand map downloading
         public String UpdateUrl { get; set; }
         public String MapsUrl { get; set; }
@@ -43,6 +50,10 @@ namespace compLexity_Demo_Player
         public String HlExeFullPath { get; set; }
         public String HlAdditionalLaunchParameters { get; set; }
 
+        // cs 1.6
+        public String CstrikeExeFullPath { get; set; }
+        public String CstrikeAdditionalLaunchParameters { get; set; }
+
         // hlae
         public String HlaeExeFullPath { get; set; }
 
@@ -52,12 +63,12 @@ namespace compLexity_Demo_Player
 
         // playback
         public Playback PlaybackType { get; set; }
+        public PlaybackProgram PlaybackProgramOldCs { get; set; }
         public Boolean PlaybackRemoveShowscores { get; set; }
         public Boolean PlaybackRemoveFtb { get; set; }
         public Boolean PlaybackRemoveHltvAds { get; set; }
         public Boolean PlaybackRemoveHltvSlowMotion { get; set; }
         public Boolean PlaybackStartListenServer { get; set; }
-        public Boolean PlaybackConvertNetworkProtocol { get; set; }
         public Boolean PlaybackCloseWhenFinished { get; set; }
         public Boolean PlaybackUseHlae { get; set; }
         public Boolean PlaybackRemoveWeaponAnimations { get; set; }
@@ -92,12 +103,12 @@ namespace compLexity_Demo_Player
             AssociateWithDemFiles = true;
             AssociateWithHlswProtocol = false;
             PlaybackType = Playback.Playdemo;
+            PlaybackProgramOldCs = PlaybackProgram.Steam;
             PlaybackRemoveShowscores = true;
             PlaybackRemoveFtb = true;
             PlaybackRemoveHltvAds = false;
             PlaybackRemoveHltvSlowMotion = false;
             PlaybackStartListenServer = true;
-            PlaybackConvertNetworkProtocol = true;
             PlaybackCloseWhenFinished = false;
             PlaybackUseHlae = false;
             PlaybackRemoveWeaponAnimations = false;

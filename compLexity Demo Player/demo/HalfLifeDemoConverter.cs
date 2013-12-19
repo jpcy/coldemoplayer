@@ -110,6 +110,10 @@ namespace compLexity_Demo_Player
             {
                 header[12] = HalfLifeDemo.CurrentNetworkProtocol;
             }
+            else if (demo.ConvertNetworkProtocol())
+            {
+                header[12] = 47;
+            }
         }
 
         public void ProcessFirstGameDataFrame(ref Byte[] frameData)
@@ -354,6 +358,11 @@ namespace compLexity_Demo_Player
             {
                 parser.BitBuffer.RemoveBytes(4);
                 parser.BitBuffer.InsertBytes(new Byte[] { (Byte)HalfLifeDemo.CurrentNetworkProtocol, 0, 0, 0 });
+            }
+            else if (demo.ConvertNetworkProtocol())
+            {
+                parser.BitBuffer.RemoveBytes(4);
+                parser.BitBuffer.InsertBytes(new Byte[] { (Byte)47, 0, 0, 0 });
             }
             else
             {

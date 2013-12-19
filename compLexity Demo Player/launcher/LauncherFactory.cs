@@ -41,7 +41,14 @@ namespace compLexity_Demo_Player
                     case Demo.Engines.HalfLife:
                         if (((HalfLifeDemo)demo).ConvertNetworkProtocol())
                         {
-                            launcher = new HalfLifeSteamLauncher();
+                            if (Config.Settings.PlaybackProgramOldCs == ProgramSettings.PlaybackProgram.CounterStrike)
+                            {
+                                launcher = new CounterStrikeLauncher();
+                            }
+                            else
+                            {
+                                launcher = new HalfLifeSteamLauncher();
+                            }
                         }
                         else
                         {
@@ -50,7 +57,14 @@ namespace compLexity_Demo_Player
                         break;
 
                     case Demo.Engines.HalfLifeSteam:
-                        launcher = new HalfLifeSteamLauncher();
+                        if (((HalfLifeDemo)demo).NetworkProtocol == 47 && demo.GameFolderName == "cstrike" && Config.Settings.PlaybackProgramOldCs == ProgramSettings.PlaybackProgram.CounterStrike)
+                        {
+                            launcher = new CounterStrikeLauncher();
+                        }
+                        else
+                        {
+                            launcher = new HalfLifeSteamLauncher();
+                        }
                         break;
 
                     case Demo.Engines.Source:

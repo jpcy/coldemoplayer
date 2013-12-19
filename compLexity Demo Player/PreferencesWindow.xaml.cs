@@ -85,9 +85,12 @@ namespace compLexity_Demo_Player
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             uiSteamExeTextBox.Text = Config.Settings.SteamExeFullPath;
+            uiSteamHlExeTextBox.Text = Config.Settings.SteamHlExeFullPath;
             uiSteamAdditionalLaunchParametersTextBox.Text = Config.Settings.SteamAdditionalLaunchParameters;
             uiHalfLifeExeTextBox.Text = Config.Settings.HlExeFullPath;
             uiHalfLifeAdditionalLaunchParametersTextBox.Text = Config.Settings.HlAdditionalLaunchParameters;
+            uiCounterStrikeExeTextBox.Text = Config.Settings.CstrikeExeFullPath;
+            uiCounterStrikeAdditionalLaunchParametersTextBox.Text = Config.Settings.CstrikeAdditionalLaunchParameters;
             uiHlaeExeTextBox.Text = Config.Settings.HlaeExeFullPath;
             uiDemAssociateCheckBox.IsChecked = Config.Settings.AssociateWithDemFiles;
             uiHlswAssociateCheckBox.IsChecked = Config.Settings.AssociateWithHlswProtocol;
@@ -108,9 +111,12 @@ namespace compLexity_Demo_Player
         private void Window_Closed(object sender, EventArgs e)
         {
             Config.Settings.SteamExeFullPath = uiSteamExeTextBox.Text;
+            Config.Settings.SteamHlExeFullPath = uiSteamHlExeTextBox.Text;
+            Config.Settings.SteamAdditionalLaunchParameters = uiSteamAdditionalLaunchParametersTextBox.Text;
             Config.Settings.HlExeFullPath = uiHalfLifeExeTextBox.Text;
             Config.Settings.HlAdditionalLaunchParameters = uiHalfLifeAdditionalLaunchParametersTextBox.Text;
-            Config.Settings.SteamAdditionalLaunchParameters = uiSteamAdditionalLaunchParametersTextBox.Text;
+            Config.Settings.CstrikeExeFullPath = uiCounterStrikeExeTextBox.Text;
+            Config.Settings.CstrikeAdditionalLaunchParameters = uiCounterStrikeAdditionalLaunchParametersTextBox.Text;
 
             String selectedSteamAccountName = (String)uiSteamAccountNameComboBox.SelectedItem;
 
@@ -185,6 +191,23 @@ namespace compLexity_Demo_Player
             if (s != null)
             {
                 uiHalfLifeExeTextBox.Text = s;
+            }
+        }
+
+        private void uiCounterStrikeExeBrowseButton_Click(object sender, RoutedEventArgs e)
+        {
+            String initialFolder = "";
+
+            if (File.Exists(uiCounterStrikeExeTextBox.Text))
+            {
+                initialFolder = System.IO.Path.GetDirectoryName(uiCounterStrikeExeTextBox.Text);
+            }
+
+            String s = BrowseForFile("cstrike.exe", initialFolder);
+
+            if (s != null)
+            {
+                uiCounterStrikeExeTextBox.Text = s;
             }
         }
 

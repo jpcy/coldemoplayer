@@ -127,17 +127,33 @@
                 </TabItem>
                 <TabItem Header="Options">
                     <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
-                        <StackPanel Margin="4">
-                            <CheckBox Name="uiOptionsUseHlaeCheckBox" Margin="4">Use HLAE</CheckBox>
-                            <CheckBox Name="uiOptionsConvertNetworkProtocolCheckBox" Margin="4">Play Counter-Strike 1.0 to 1.5 demos with 1.6</CheckBox>
-                            <CheckBox Name="uiOptionsStartListenServerCheckBox" Margin="4">Start Listen Server</CheckBox>
-                            <CheckBox Name="uiOptionsCloseWhenFinishedCheckBox" Margin="4">Close when finished</CheckBox>
-                            <CheckBox Name="uiOptionsRemoveShowscoresCheckBox" Margin="4">Remove Showscores</CheckBox>
-                            <CheckBox Name="uiOptionsRemoveFtbCheckBox" Margin="4">Remove Fade To Black</CheckBox>
-                            <CheckBox Name="uiOptionsRemoveWeaponAnimations" Margin="4">Remove POV weapon change animations</CheckBox>
-                            <CheckBox Name="uiOptionsRemoveHltvAds" Margin="4">Remove HLTV Advertisements</CheckBox>
-                            <CheckBox Name="uiOptionsRemoveHltvSlowMotion" Margin="4">Remove HLTV Slow Motion</CheckBox>
-                        </StackPanel>
+                        <UniformGrid Columns="2">
+                            <StackPanel Margin="4">
+                                <CheckBox Name="uiOptionsUseHlaeCheckBox" Margin="4">Use HLAE</CheckBox>
+                                <CheckBox Name="uiOptionsStartListenServerCheckBox" Margin="4">Start Listen Server</CheckBox>
+                                <CheckBox Name="uiOptionsCloseWhenFinishedCheckBox" Margin="4">Close when finished</CheckBox>
+                                <CheckBox Name="uiOptionsRemoveShowscoresCheckBox" Margin="4">Remove Showscores</CheckBox>
+                                <CheckBox Name="uiOptionsRemoveFtbCheckBox" Margin="4">Remove Fade To Black</CheckBox>
+                                <CheckBox Name="uiOptionsRemoveWeaponAnimations" Margin="4">Remove POV weapon change animations</CheckBox>
+                                <CheckBox Name="uiOptionsRemoveHltvAds" Margin="4">Remove HLTV Advertisements</CheckBox>
+                                <CheckBox Name="uiOptionsRemoveHltvSlowMotion" Margin="4">Remove HLTV Slow Motion</CheckBox>
+                            </StackPanel>
+                            <GroupBox Grid.Column="1" Margin="4">
+                                <GroupBox.HeaderTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Source="data/cstrike.ico" Width="16" />
+                                            <Label>Old Counter-Strike demos</Label>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </GroupBox.HeaderTemplate>
+                                <StackPanel>
+                                    <RadioButton Margin="4" Name="uiPlayOldCsDemosWithHlRadioButton" Checked="uiPlaybackProgramOldCs_Changed" Unchecked="uiPlaybackProgramOldCs_Changed">Play with Half-Life - don't convert</RadioButton>
+                                    <RadioButton Margin="4" Name="uiPlayOldCsDemosWithCsRadioButton" Checked="uiPlaybackProgramOldCs_Changed" Unchecked="uiPlaybackProgramOldCs_Changed">Play with Counter-Strike 1.6 - convert to protocol 47</RadioButton>
+                                    <RadioButton Margin="4" Name="uiPlayOldCsDemosWithSteamRadioButton" Checked="uiPlaybackProgramOldCs_Changed" Unchecked="uiPlaybackProgramOldCs_Changed">Play with Steam - convert to protocol 48</RadioButton>
+                                </StackPanel>
+                            </GroupBox>
+                        </UniformGrid>
                     </ScrollViewer>
                 </TabItem>
             </TabControl>
