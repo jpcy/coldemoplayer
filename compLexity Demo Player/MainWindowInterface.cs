@@ -19,7 +19,7 @@ namespace compLexity_Demo_Player
         // called from this class, as well as from Main via IPC (which is why there's a canOpenDemo check)
         public Boolean OpenDemo(String fileName)
         {
-            Function<String, Boolean> func = delegate
+            Function<Boolean> func = delegate
             {
                 if (!canOpenDemo)
                 {
@@ -41,17 +41,17 @@ namespace compLexity_Demo_Player
 
             if (Thread.CurrentThread != Dispatcher.Thread)
             {
-                return (Boolean)Dispatcher.Invoke(DispatcherPriority.Normal, func, fileName);
+                return (Boolean)Dispatcher.Invoke(DispatcherPriority.Normal, func);
             }
             else
             {
-                return func(fileName);
+                return func();
             }
         }
 
         public Boolean OpenServer(String hlswAddress)
         {
-            Function<String, Boolean> func = delegate
+            Function<Boolean> func = delegate
             {
                 if (!canOpenDemo && !serverWindowOpen)
                 {
@@ -72,11 +72,11 @@ namespace compLexity_Demo_Player
 
             if (Thread.CurrentThread != Dispatcher.Thread)
             {
-                return (Boolean)Dispatcher.Invoke(DispatcherPriority.Normal, func, hlswAddress);
+                return (Boolean)Dispatcher.Invoke(DispatcherPriority.Normal, func);
             }
             else
             {
-                return func(hlswAddress);
+                return func();
             }
         }
 
