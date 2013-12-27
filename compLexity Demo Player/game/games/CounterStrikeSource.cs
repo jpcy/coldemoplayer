@@ -14,6 +14,7 @@ namespace compLexity_Demo_Player.Games
             Folder = "cstrike";
             FolderExtended = "counter-strike source";
             Name = "Counter-Strike: Source";
+            UsesCommonFolder = true;
         }
 
         public override bool CanAnalyse(Demo demo)

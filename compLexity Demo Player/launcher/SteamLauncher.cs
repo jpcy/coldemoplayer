@@ -16,20 +16,6 @@ namespace compLexity_Demo_Player
                 throw new ApplicationException("Unable to find \"Steam.exe\" at \"" + Config.Settings.SteamExeFullPath + "\". Go to Options\\Preferences and select the correct Steam path.");
             }
 
-            // verify that the steam account folder exists
-            // don't bother with steam half-life, since it uses "common" instead of the steam account folder now
-            String steamAccountFullPath = String.Empty;
-
-            if (Demo.Engine == Demo.Engines.Source)
-            {
-                steamAccountFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\" + Config.Settings.SteamAccountFolder;
-
-                if (!Directory.Exists(steamAccountFullPath))
-                {
-                    throw new ApplicationException("Steam account folder \"" + steamAccountFullPath + "\" doesn't exist. Go to Options\\Preferences and select a valid Steam account folder.");
-                }
-            }
-
             // verify there is steam app info for this server/demo
             Game game = null;
             String gameFolderName;
@@ -61,14 +47,23 @@ namespace compLexity_Demo_Player
                 throw new ApplicationException(s);
             }
 
-            // verify that the game folder exists
-            if (Demo.Engine == Demo.Engines.Source)
+            // verify that the steam account folder exists
+            // don't bother if the game uses the "common" folder instead
+            String steamAccountFullPath = String.Empty;
+
+            if (!game.UsesCommonFolder)
             {
-                gameFullPath = steamAccountFullPath + "\\" + game.FolderExtended + "\\" + gameFolderName;
+                steamAccountFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\" + Config.Settings.SteamAccountFolder;
+
+                if (!Directory.Exists(steamAccountFullPath))
+                {
+                    throw new ApplicationException("Steam account folder \"" + steamAccountFullPath + "\" doesn't exist. Go to Options\\Preferences and select a valid Steam account folder.");
+                }
             }
-            else
+
+            // verify that the game folder exists
+            if (game.UsesCommonFolder)
             {
-                // steam half-life uses "Steam\steamapps\common\Half-Life\cstrike" now.
                 // if the user is using a custom Steam hl.exe path, use that to calculate the game path instead.
                 if (File.Exists(Config.Settings.SteamHlExeFullPath))
                 {
@@ -78,7 +73,10 @@ namespace compLexity_Demo_Player
                 {
                     gameFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\common\\Half-Life\\" + gameFolderName;
                 }
-
+            }
+            else
+            {
+                gameFullPath = steamAccountFullPath + "\\" + game.FolderExtended + "\\" + gameFolderName;
             }
 
             if (!Directory.Exists(gameFullPath))
@@ -126,14 +124,13 @@ namespace compLexity_Demo_Player
             }
 
             // even if HLAE is being used, still need to check that game isn't already running
-            if (Demo.Engine == Demo.Engines.Source)
+            if (game.UsesCommonFolder)
             {
-                processExeFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\" + Config.Settings.SteamAccountFolder + "\\" + game.FolderExtended + "\\";
+                processExeFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\common\\Half-Life\\";                
             }
             else
             {
-                // steam half-life uses "Steam\steamapps\common\Half-Life" now.
-                processExeFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\common\\Half-Life\\";                
+                processExeFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\" + Config.Settings.SteamAccountFolder + "\\" + game.FolderExtended + "\\";                
             }
 
             if ((JoiningServer && ServerSourceEngine) || (!JoiningServer && Demo.Engine == Demo.Engines.Source))

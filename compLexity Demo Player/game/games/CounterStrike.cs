@@ -25,6 +25,7 @@ namespace compLexity_Demo_Player.Games
             Folder = "cstrike";
             FolderExtended = "counter-strike";
             Name = "Counter-Strike";
+            UsesCommonFolder = true;
             ReadConfig();
         }
 

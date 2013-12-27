@@ -4,139 +4,159 @@
         "AppId":20, 
         "GameFolder":"tfc", 
         "GameFolderExtended":"team fortress classic", 
-        "GameName":"Team Fortress Classic"
+        "GameName":"Team Fortress Classic",
+		"UsesCommonFolder":false
     }, 
     {
         "Engine":"HalfLife", 
         "AppId":30, 
         "GameFolder":"dod", 
         "GameFolderExtended":"day of defeat", 
-        "GameName":"Day of Defeat"
+        "GameName":"Day of Defeat",
+		"UsesCommonFolder":false
     }, 
     {
         "Engine":"HalfLife", 
         "AppId":40, 
         "GameFolder":"dmc", 
         "GameFolderExtended":"deathmatch classic", 
-        "GameName":"Deathmatch Classic"
+        "GameName":"Deathmatch Classic",
+		"UsesCommonFolder":false
     }, 
     {
         "Engine":"HalfLife", 
         "AppId":50, 
         "GameFolder":"op4", 
         "GameFolderExtended":"opposing force", 
-        "GameName":"Half-Life: Opposing Force"
+        "GameName":"Half-Life: Opposing Force",
+		"UsesCommonFolder":false
     }, 
     {
         "Engine":"HalfLife", 
         "AppId":60, 
         "GameFolder":"ricochet", 
         "GameFolderExtended":"ricochet", 
-        "GameName":"Ricochet"
+        "GameName":"Ricochet",
+		"UsesCommonFolder":false
     }, 
     {
         "Engine":"HalfLife", 
         "AppId":70, 
         "GameFolder":"valve", 
         "GameFolderExtended":"half-life", 
-        "GameName":"Half-Life"
+        "GameName":"Half-Life",
+		"UsesCommonFolder":false
     }, 
     {
         "Engine":"HalfLife", 
         "AppId":80, 
         "GameFolder":"czero", 
         "GameFolderExtended":"condition zero", 
-        "GameName":"Counter-Strike: Condition Zero"
+        "GameName":"Counter-Strike: Condition Zero",
+		"UsesCommonFolder":false
     }, 
     {
         "Engine":"HalfLife", 
         "AppId":100, 
         "GameFolder":"czerodeleted", 
         "GameFolderExtended":"condition zero deleted scenes", 
-        "GameName":"Counter-Strike: Condition Zero Deleted Scenes"
+        "GameName":"Counter-Strike: Condition Zero Deleted Scenes",
+		"UsesCommonFolder":false
     }, 
     {
         "Engine":"HalfLife", 
         "AppId":130, 
         "GameFolder":"bshift", 
         "GameFolderExtended":"half-life blue shift", 
-        "GameName":"Half-Life: Blue Shift"
+        "GameName":"Half-Life: Blue Shift",
+		"UsesCommonFolder":false
     }, 
     {
         "Engine":"Source", 
         "AppId":220, 
         "GameFolder":"hl2", 
         "GameFolderExtended":"half-life 2", 
-        "GameName":"Half-Life 2"
+        "GameName":"Half-Life 2",
+		"UsesCommonFolder":false
     }, 
     {
         "Engine":"Source", 
         "AppId":260, 
         "GameFolder":"cstrike_beta", 
         "GameFolderExtended":"counterstrike source beta", 
-        "GameName":"Counter-Strike: Source Beta"
+        "GameName":"Counter-Strike: Source Beta",
+		"UsesCommonFolder":false
     }, 	
     {
         "Engine":"Source", 
         "AppId":280, 
         "GameFolder":"hls", 
         "GameFolderExtended":"half-life source", 
-        "GameName":"Half-Life: Source"
+        "GameName":"Half-Life: Source",
+		"UsesCommonFolder":false
     }, 
     {
         "Engine":"Source", 
         "AppId":300, 
         "GameFolder":"dod", 
         "GameFolderExtended":"day of defeat source", 
-        "GameName":"Day of Defeat: Source"
+        "GameName":"Day of Defeat: Source",
+		"UsesCommonFolder":false
     }, 
     {
         "Engine":"Source", 
         "AppId":340, 
         "GameFolder":"lostcoast", 
         "GameFolderExtended":"half-life 2 lostcoast", 
-        "GameName":"Half-Life 2: Lost Coast"
+        "GameName":"Half-Life 2: Lost Coast",
+		"UsesCommonFolder":false
     }, 
     {
         "Engine":"Source", 
         "AppId":360, 
         "GameFolder":"hlsdm", 
         "GameFolderExtended":"half-life source deathmatch", 
-        "GameName":"Half-Life: Source Deathmatch"
+        "GameName":"Half-Life: Source Deathmatch",
+		"UsesCommonFolder":false
     }, 
     {
         "Engine":"Source", 
         "AppId":380, 
         "GameFolder":"hl2e1", 
         "GameFolderExtended":"half-life 2 episode one", 
-        "GameName":"Half-Life 2: Episode One"
+        "GameName":"Half-Life 2: Episode One",
+		"UsesCommonFolder":false
     }, 
     {
         "Engine":"Source", 
         "AppId":400, 
         "GameFolder":"portal", 
         "GameFolderExtended":"portal", 
-        "GameName":"Portal"
+        "GameName":"Portal",
+		"UsesCommonFolder":false
     }, 
     {
         "Engine":"Source", 
         "AppId":440, 
         "GameFolder":"tf", 
         "GameFolderExtended":"team fortress 2", 
-        "GameName":"Team Fortress 2"
+        "GameName":"Team Fortress 2",
+		"UsesCommonFolder":false
     }, 
     {
         "Engine":"Source", 
         "AppId":500, 
         "GameFolder":"left4dead", 
         "GameFolderExtended":"left 4 dead", 
-        "GameName":"Left 4 Dead"
+        "GameName":"Left 4 Dead",
+		"UsesCommonFolder":false
     }, 
     {
         "Engine":"Source", 
         "AppId":4000, 
         "GameFolder":"hl2gmod", 
         "GameFolderExtended":"garrysmod", 
-        "GameName":"Garry's Mod"
+        "GameName":"Garry's Mod",
+		"UsesCommonFolder":false
     }
 ]
