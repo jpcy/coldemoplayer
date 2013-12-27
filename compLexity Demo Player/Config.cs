@@ -231,8 +231,7 @@ namespace compLexity_Demo_Player
         /// <summary>
         /// Reads the program configuration from the configuration file, if it exists. Otherwise, default values and information from the registry are used.
         /// </summary>
-        /// <returns>True if the config file exists, False if it doesn't.</returns>
-        public static Boolean Read()
+        public static void Read()
         {
             ProgramDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\" + ProgramName;
             ProgramExeFullPath = Common.SanitisePath(Environment.GetCommandLineArgs()[0]);
@@ -245,7 +244,6 @@ namespace compLexity_Demo_Player
 #endif
 
             Settings = null;
-            Boolean result = true;
             String configFullPath = ProgramDataPath + "\\" + fileName;
 
             if (File.Exists(configFullPath))
@@ -271,11 +269,8 @@ namespace compLexity_Demo_Player
             if (Settings == null)
             {
                 Settings = new ProgramSettings();
-                result = false;
                 ReadFromRegistry();
             }
-
-            return result;
         }
 
         /// <summary>

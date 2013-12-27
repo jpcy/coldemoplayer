@@ -402,13 +402,6 @@ namespace compLexity_Demo_Player
 
             hasActivated = true;
 
-            // if running for the first time, prompt the user to setup their Steam account details
-            if (Program.FirstRun)
-            {
-                Common.Message(this, Config.ProgramName + " is running for the first time. Please ensure the detected Steam path and the selected Steam account folder are correct.");
-                ShowPreferencesWindow();
-            }
-
             // start auto update thread
             if (Config.Settings.AutoUpdate)
             {

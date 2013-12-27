@@ -21,15 +21,6 @@ namespace compLexity_Demo_Player
         static readonly String ipcPortName = "coldemoplayerchannel";
         static readonly String ipcServername = "coldemoplayerserver";
         static public IMainWindow MainWindowInterface { get; set; }
-        static public Boolean FirstRun
-        {
-            get
-            {
-                return firstRun;
-            }
-        }
-
-        static private Boolean firstRun = false;
 
         [STAThread]
         static void Main(String[] args)
@@ -37,7 +28,7 @@ namespace compLexity_Demo_Player
             // read config.xml
             try
             {
-                firstRun = !Config.Read();
+                Config.Read();
             }
             catch (Exception ex)
             {
