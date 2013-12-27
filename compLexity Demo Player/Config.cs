@@ -325,16 +325,24 @@ namespace compLexity_Demo_Player
             // check if SteamExe is valid (contains Steam.exe)
             if (File.Exists(Settings.SteamExeFullPath))
             {
-                // Find an account name (first folder in "SteamApps" that isn't "common" or "SourceMods")
-                // "common" created by peggle extreme, left 4 dead etc.
+                // Find an account name by enumerating subfolder names in "SteamApps"
+                // use "common" if it exists, otherwise use the first folder that isn't "sourcemods"
                 DirectoryInfo steamAppsDirInfo = new DirectoryInfo(Path.GetDirectoryName(Settings.SteamExeFullPath) + "\\SteamApps");
+                DirectoryInfo commonDirInfo = Common.FirstOrDefault(steamAppsDirInfo.GetDirectories(), di => di.Name.ToLower() == "common");
 
-                foreach (DirectoryInfo dirInfo in steamAppsDirInfo.GetDirectories())
+                if (commonDirInfo != null)
                 {
-                    if (dirInfo.Name.ToLower() != "common" && dirInfo.Name.ToLower() != "sourcemods")
+                    Settings.SteamAccountFolder = commonDirInfo.Name;
+                }
+                else
+                {
+                    foreach (DirectoryInfo dirInfo in steamAppsDirInfo.GetDirectories())
                     {
-                        Settings.SteamAccountFolder = dirInfo.Name;
-                        break;
+                        if (dirInfo.Name.ToLower() != "sourcemods")
+                        {
+                            Settings.SteamAccountFolder = dirInfo.Name;
+                            break;
+                        }
                     }
                 }
             }
