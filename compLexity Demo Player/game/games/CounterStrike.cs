@@ -26,6 +26,7 @@ namespace compLexity_Demo_Player.Games
             FolderExtended = "counter-strike";
             Name = "Counter-Strike";
             UsesCommonFolder = true;
+            ExecutableName = "hl.exe";
             ReadConfig();
         }
 

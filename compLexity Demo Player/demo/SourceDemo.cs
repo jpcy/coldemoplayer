@@ -50,6 +50,7 @@ namespace compLexity_Demo_Player
         }
 
         public Boolean Protocol15Hack { get; private set; }
+        public Boolean UnsupportedDemoProtocol { get; private set; }
         public Boolean UnsupportedNetworkProtocol { get; private set; }
         #endregion
 
@@ -62,6 +63,7 @@ namespace compLexity_Demo_Player
 
             playerList = new List<Player>();
             Protocol15Hack = false;
+            UnsupportedDemoProtocol = false;
             UnsupportedNetworkProtocol = false;
         }
 
@@ -79,9 +81,19 @@ namespace compLexity_Demo_Player
             {
                 String errorMessage = "Error reading demo file \"" + fileFullPath + "\".";
 
-                if (UnsupportedNetworkProtocol)
+                if (UnsupportedDemoProtocol || UnsupportedNetworkProtocol)
                 {
-                    errorMessage += String.Format("\n\nProbable cause for error: demo uses unsupported network protocol \"{0}\".", networkProtocol);
+                    errorMessage += String.Format("\n\nProbable cause(s) for error:\n");
+
+                    if (UnsupportedDemoProtocol)
+                    {
+                        errorMessage += String.Format("demo uses unsupported demo protocol \"{0}\"\n", demoProtocol);
+                    }
+
+                    if (UnsupportedDemoProtocol)
+                    {
+                        errorMessage += String.Format("demo uses unsupported network protocol \"{0}\"\n", networkProtocol);
+                    }
                 }
 
                 mainWindowInterface.Error(errorMessage, ex);
@@ -271,7 +283,8 @@ namespace compLexity_Demo_Player
 
             if (demoProtocol > 3)
             {
-                throw new ApplicationException(String.Format("Unsupported demo protocol \"{0}\", should be 3.", demoProtocol));
+                // the format of the rest of the header may have changed, but continue anyway since it's not critical information
+                UnsupportedDemoProtocol = true;
             }
 
             networkProtocol = br.ReadUInt32();
@@ -569,9 +582,19 @@ namespace compLexity_Demo_Player
             {
                 String errorMessage = "Error writing demo file \"" + fileFullPath + "\".";
 
-                if (UnsupportedNetworkProtocol)
+                if (UnsupportedDemoProtocol || UnsupportedNetworkProtocol)
                 {
-                    errorMessage += String.Format("\n\nProbable cause for error: demo uses unsupported network protocol \"{0}\".", networkProtocol);
+                    errorMessage += String.Format("\n\nProbable cause(s) for error:\n");
+
+                    if (UnsupportedDemoProtocol)
+                    {
+                        errorMessage += String.Format("demo uses unsupported demo protocol \"{0}\"\n", demoProtocol);
+                    }
+
+                    if (UnsupportedDemoProtocol)
+                    {
+                        errorMessage += String.Format("demo uses unsupported network protocol \"{0}\"\n", networkProtocol);
+                    }
                 }
 
                 writeProgressWindowInterface.Error(errorMessage, ex, false, null);
@@ -584,6 +607,41 @@ namespace compLexity_Demo_Player
 
         private void WritingThreadWorker(String destinationFileName)
         {
+            // don't know the demo format, just do a straight file copy
+            if (UnsupportedDemoProtocol)
+            {
+                using (FileStream destStream = File.Open(destinationFileName, FileMode.Create, FileAccess.Write, FileShare.None))
+                {
+                    using (FileStream sourceStream = File.OpenRead(fileFullPath))
+                    {
+                        Byte[] buffer = new Byte[1024 * 1024];
+                        Int32 percentRead = 0;
+
+                        while (true)
+                        {
+                            Int32 bytesRead = sourceStream.Read(buffer, 0, buffer.Length);
+
+                            if (bytesRead == 0)
+                                break;
+
+                            destStream.Write(buffer, 0, bytesRead);
+
+                            // calculate what percent of the file has been read
+                            Int32 oldPercentRead = percentRead;
+
+                            percentRead = (Int32)(sourceStream.Position / (Single)sourceStream.Length * 100.0f);
+
+                            if (percentRead != oldPercentRead)
+                            {
+                                writeProgressWindowInterface.UpdateProgress(percentRead);
+                            }
+                        }
+                    }
+                }
+
+                return;
+            }
+
             // create output file
             FileStream stream = File.Open(destinationFileName, FileMode.Create, FileAccess.Write, FileShare.None);
             BinaryWriter writer = new BinaryWriter(stream);

@@ -64,14 +64,21 @@ namespace compLexity_Demo_Player
             // verify that the game folder exists
             if (game.UsesCommonFolder)
             {
-                // if the user is using a custom Steam hl.exe path, use that to calculate the game path instead.
-                if (File.Exists(Config.Settings.SteamHlExeFullPath))
+                if (Demo.Engine == Demo.Engines.Source)
                 {
-                    gameFullPath = Path.GetDirectoryName(Config.Settings.SteamHlExeFullPath) + "\\" + Demo.GameFolderName;
+                    gameFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\common\\" + game.FolderExtended + "\\" + gameFolderName;
                 }
                 else
                 {
-                    gameFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\common\\Half-Life\\" + gameFolderName;
+                    // if the user is using a custom Steam hl.exe path, use that to calculate the game path instead.
+                    if (File.Exists(Config.Settings.SteamHlExeFullPath))
+                    {
+                        gameFullPath = Path.GetDirectoryName(Config.Settings.SteamHlExeFullPath) + "\\" + Demo.GameFolderName;
+                    }
+                    else
+                    {
+                        gameFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\common\\Half-Life\\" + gameFolderName;
+                    }
                 }
             }
             else
@@ -126,20 +133,34 @@ namespace compLexity_Demo_Player
             // even if HLAE is being used, still need to check that game isn't already running
             if (game.UsesCommonFolder)
             {
-                processExeFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\common\\Half-Life\\";                
+                if (Demo.Engine == Demo.Engines.Source)
+                {
+                    processExeFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\" + game.FolderExtended + "\\";  
+                }
+                else
+                {
+                    processExeFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\common\\Half-Life\\";
+                }
             }
             else
             {
                 processExeFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\" + Config.Settings.SteamAccountFolder + "\\" + game.FolderExtended + "\\";                
             }
 
-            if ((JoiningServer && ServerSourceEngine) || (!JoiningServer && Demo.Engine == Demo.Engines.Source))
+            if (JoiningServer)
             {
-                processExeFullPath += "hl2.exe";
+                if (ServerSourceEngine)
+                {
+                    processExeFullPath += "hl2.exe";
+                }
+                else
+                {
+                    processExeFullPath += "hl.exe";
+                }
             }
             else
             {
-                processExeFullPath += "hl.exe";
+                processExeFullPath += game.ExecutableName;
             }
 
             if (Common.FindProcess(Path.GetFileNameWithoutExtension(processExeFullPath), processExeFullPath) != null)
@@ -177,10 +198,17 @@ namespace compLexity_Demo_Player
                 launchParameters += "-nomaster +maxplayers 10 +sv_lan 1 +map " + mapName + " ";
             }
 
-            if (!JoiningServer && Demo.Engine == Demo.Engines.Source && Demo.GameFolderName == "tf")
+            if (!JoiningServer && Demo.Engine == Demo.Engines.Source)
             {
-                // skip the valve logo intro video, and show the console when loading the demo
-                launchParameters += "-novid +toggleconsole ";
+                // skip intro videos
+                // CS:GO quits unexpectedly if this is omitted
+                launchParameters += "-novid ";
+
+                if (Demo.GameFolderName == "tf")
+                {
+                    // show the console when loading the demo
+                    launchParameters += "+toggleconsole ";
+                }
             }
 
             launchParameters += "+exec " + Config.LaunchConfigFileName + " " + Config.Settings.SteamAdditionalLaunchParameters;

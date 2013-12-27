@@ -24,6 +24,7 @@ namespace compLexity_Demo_Player
         public String FolderExtended { get; protected set; }
         public String Name { get; protected set; }
         public Boolean UsesCommonFolder { get; protected set; }
+        public String ExecutableName { get; protected set; }
         public Boolean HasConfig { get; private set; }
         public Dictionary<UInt32, String> Maps { get; private set; }
         protected Dictionary<String, String> versions;
@@ -42,6 +43,7 @@ namespace compLexity_Demo_Player
             this.FolderExtended = sgi.GameFolderExtended;
             this.Name = sgi.GameName;
             this.UsesCommonFolder = sgi.UsesCommonFolder;
+            this.ExecutableName = sgi.ExecutableName;
         }
 
         protected void ReadConfig()

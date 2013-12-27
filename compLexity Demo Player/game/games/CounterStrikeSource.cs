@@ -15,6 +15,7 @@ namespace compLexity_Demo_Player.Games
             FolderExtended = "counter-strike source";
             Name = "Counter-Strike: Source";
             UsesCommonFolder = true;
+            ExecutableName = "hl2.exe";
         }
 
         public override bool CanAnalyse(Demo demo)

@@ -5,7 +5,8 @@
         "GameFolder":"tfc", 
         "GameFolderExtended":"team fortress classic", 
         "GameName":"Team Fortress Classic",
-		"UsesCommonFolder":false
+		"UsesCommonFolder":false,
+		"ExecutableName":"hl.exe"
     }, 
     {
         "Engine":"HalfLife", 
@@ -13,7 +14,8 @@
         "GameFolder":"dod", 
         "GameFolderExtended":"day of defeat", 
         "GameName":"Day of Defeat",
-		"UsesCommonFolder":false
+		"UsesCommonFolder":false,
+		"ExecutableName":"hl.exe"
     }, 
     {
         "Engine":"HalfLife", 
@@ -21,7 +23,8 @@
         "GameFolder":"dmc", 
         "GameFolderExtended":"deathmatch classic", 
         "GameName":"Deathmatch Classic",
-		"UsesCommonFolder":false
+		"UsesCommonFolder":false,
+		"ExecutableName":"hl.exe"
     }, 
     {
         "Engine":"HalfLife", 
@@ -29,7 +32,8 @@
         "GameFolder":"op4", 
         "GameFolderExtended":"opposing force", 
         "GameName":"Half-Life: Opposing Force",
-		"UsesCommonFolder":false
+		"UsesCommonFolder":false,
+		"ExecutableName":"hl.exe"
     }, 
     {
         "Engine":"HalfLife", 
@@ -37,7 +41,8 @@
         "GameFolder":"ricochet", 
         "GameFolderExtended":"ricochet", 
         "GameName":"Ricochet",
-		"UsesCommonFolder":false
+		"UsesCommonFolder":false,
+		"ExecutableName":"hl.exe"
     }, 
     {
         "Engine":"HalfLife", 
@@ -45,7 +50,8 @@
         "GameFolder":"valve", 
         "GameFolderExtended":"half-life", 
         "GameName":"Half-Life",
-		"UsesCommonFolder":false
+		"UsesCommonFolder":false,
+		"ExecutableName":"hl.exe"
     }, 
     {
         "Engine":"HalfLife", 
@@ -53,7 +59,8 @@
         "GameFolder":"czero", 
         "GameFolderExtended":"condition zero", 
         "GameName":"Counter-Strike: Condition Zero",
-		"UsesCommonFolder":false
+		"UsesCommonFolder":false,
+		"ExecutableName":"hl.exe"
     }, 
     {
         "Engine":"HalfLife", 
@@ -61,7 +68,8 @@
         "GameFolder":"czerodeleted", 
         "GameFolderExtended":"condition zero deleted scenes", 
         "GameName":"Counter-Strike: Condition Zero Deleted Scenes",
-		"UsesCommonFolder":false
+		"UsesCommonFolder":false,
+		"ExecutableName":"hl.exe"
     }, 
     {
         "Engine":"HalfLife", 
@@ -69,7 +77,8 @@
         "GameFolder":"bshift", 
         "GameFolderExtended":"half-life blue shift", 
         "GameName":"Half-Life: Blue Shift",
-		"UsesCommonFolder":false
+		"UsesCommonFolder":false,
+		"ExecutableName":"hl.exe"
     }, 
     {
         "Engine":"Source", 
@@ -77,7 +86,8 @@
         "GameFolder":"hl2", 
         "GameFolderExtended":"half-life 2", 
         "GameName":"Half-Life 2",
-		"UsesCommonFolder":false
+		"UsesCommonFolder":false,
+		"ExecutableName":"hl2.exe"
     }, 
     {
         "Engine":"Source", 
@@ -85,7 +95,8 @@
         "GameFolder":"cstrike_beta", 
         "GameFolderExtended":"counterstrike source beta", 
         "GameName":"Counter-Strike: Source Beta",
-		"UsesCommonFolder":false
+		"UsesCommonFolder":false,
+		"ExecutableName":"hl2.exe"
     }, 	
     {
         "Engine":"Source", 
@@ -93,7 +104,8 @@
         "GameFolder":"hls", 
         "GameFolderExtended":"half-life source", 
         "GameName":"Half-Life: Source",
-		"UsesCommonFolder":false
+		"UsesCommonFolder":false,
+		"ExecutableName":"hl2.exe"
     }, 
     {
         "Engine":"Source", 
@@ -101,7 +113,8 @@
         "GameFolder":"dod", 
         "GameFolderExtended":"day of defeat source", 
         "GameName":"Day of Defeat: Source",
-		"UsesCommonFolder":false
+		"UsesCommonFolder":false,
+		"ExecutableName":"hl2.exe"
     }, 
     {
         "Engine":"Source", 
@@ -109,7 +122,8 @@
         "GameFolder":"lostcoast", 
         "GameFolderExtended":"half-life 2 lostcoast", 
         "GameName":"Half-Life 2: Lost Coast",
-		"UsesCommonFolder":false
+		"UsesCommonFolder":false,
+		"ExecutableName":"hl2.exe"
     }, 
     {
         "Engine":"Source", 
@@ -117,7 +131,8 @@
         "GameFolder":"hlsdm", 
         "GameFolderExtended":"half-life source deathmatch", 
         "GameName":"Half-Life: Source Deathmatch",
-		"UsesCommonFolder":false
+		"UsesCommonFolder":false,
+		"ExecutableName":"hl2.exe"
     }, 
     {
         "Engine":"Source", 
@@ -125,7 +140,8 @@
         "GameFolder":"hl2e1", 
         "GameFolderExtended":"half-life 2 episode one", 
         "GameName":"Half-Life 2: Episode One",
-		"UsesCommonFolder":false
+		"UsesCommonFolder":false,
+		"ExecutableName":"hl2.exe"
     }, 
     {
         "Engine":"Source", 
@@ -133,7 +149,8 @@
         "GameFolder":"portal", 
         "GameFolderExtended":"portal", 
         "GameName":"Portal",
-		"UsesCommonFolder":false
+		"UsesCommonFolder":false,
+		"ExecutableName":"hl2.exe"
     }, 
     {
         "Engine":"Source", 
@@ -141,7 +158,8 @@
         "GameFolder":"tf", 
         "GameFolderExtended":"team fortress 2", 
         "GameName":"Team Fortress 2",
-		"UsesCommonFolder":false
+		"UsesCommonFolder":false,
+		"ExecutableName":"hl2.exe"
     }, 
     {
         "Engine":"Source", 
@@ -149,14 +167,25 @@
         "GameFolder":"left4dead", 
         "GameFolderExtended":"left 4 dead", 
         "GameName":"Left 4 Dead",
-		"UsesCommonFolder":false
+		"UsesCommonFolder":false,
+		"ExecutableName":"hl2.exe"
     }, 
+	{
+        "Engine":"Source", 
+        "AppId":730, 
+        "GameFolder":"csgo", 
+        "GameFolderExtended":"Counter-Strike Global Offensive", 
+        "GameName":"Counter-Strike: Global Offensive",
+		"UsesCommonFolder":true,
+		"ExecutableName":"csgo.exe"
+    },
     {
         "Engine":"Source", 
         "AppId":4000, 
         "GameFolder":"hl2gmod", 
         "GameFolderExtended":"garrysmod", 
         "GameName":"Garry's Mod",
-		"UsesCommonFolder":false
+		"UsesCommonFolder":false,
+		"ExecutableName":"hl2.exe"
     }
 ]
