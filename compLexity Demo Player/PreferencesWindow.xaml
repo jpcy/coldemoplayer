@@ -154,7 +154,6 @@
         <GroupBox Header="Miscellaneous">
             <StackPanel Margin="4">
                 <CheckBox Margin="0,0,0,4" Name="uiDemAssociateCheckBox" Checked="uiDemAssociateCheckBox_Checked" Unchecked="uiDemAssociateCheckBox_Unchecked">Associate with *.dem files</CheckBox>
-                <CheckBox Margin="0,0,0,4" Name="uiHlswAssociateCheckBox" Checked="uiHlswAssociateCheckBox_Checked" Unchecked="uiHlswAssociateCheckBox_Unchecked">Associate with the HLSW protocol</CheckBox>
                 <CheckBox Margin="0,0,0,4" Name="uiAutoUpdateCheckBox">Check for updates on startup</CheckBox>
                 <CheckBox Margin="0,0,0,8" Name="uiMinimizeToTray">Minimize to system tray</CheckBox>
                 <Grid>

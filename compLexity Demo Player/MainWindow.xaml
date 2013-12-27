@@ -26,9 +26,6 @@
                 <MenuItem Header="Steam _Map Pool..." Name="uiMapPoolMenuItem" Click="uiMapPoolMenuItem_Click" />
                 <MenuItem Header="Restore Window State to _Default" Name="uiRestoreWindowMenuItem" Click="uiRestoreWindowMenuItem_Click" />
             </MenuItem>
-            <MenuItem Header="_Tools">
-                <MenuItem Header="HLTV/SourceTV Server _Browser..." Name="uiServerBrowserMenuItem" Click="uiServerBrowserMenuItem_Click" />
-            </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="_Readme" Name="uiReadmeMenuItem" Click="uiReadmeMenuItem_Click" />
                 <MenuItem Header="_View Error and Warning logs" Name="uiViewLogs" Click="uiViewLogs_Click" />

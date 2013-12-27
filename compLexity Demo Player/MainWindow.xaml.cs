@@ -90,12 +90,10 @@ namespace compLexity_Demo_Player
 
         private Boolean hasActivated = false;
         private Boolean canOpenDemo = true;
-        private Boolean serverWindowOpen = false;
         private Launcher launcher;
         private UpdateCheck updateCheck = null;
         private WindowState lastWindowState; // used for "minimize to tray" restore
         private ObservableCollection<PlayerListViewData> playerCollection;
-        private Server_Browser.MainWindow serverBrowserWindow;
 
         public MainWindow()
         {
@@ -262,42 +260,6 @@ namespace compLexity_Demo_Player
             }
         }
 
-        private void ShowServerBrowserWindow()
-        {
-            if (serverBrowserWindow == null || !serverBrowserWindow.IsActive)
-            {
-                serverBrowserWindow = new Server_Browser.MainWindow(new Procedure(delegate
-                {
-                    // Has the server browser window requested that the program be closed?
-                    if (serverBrowserWindow.CloseProgram == true)
-                    {
-                        Close();
-                        return;
-                    }
-
-                    Show();
-                    canOpenDemo = true;
-                    serverWindowOpen = false;
-                }));
-            }
-
-            try
-            {
-                canOpenDemo = false;
-                serverWindowOpen = true;
-                Hide();
-                serverBrowserWindow.Show();
-            }
-            catch (Exception ex)
-            {
-                serverBrowserWindow.Close();
-                Show();
-                canOpenDemo = true;
-                serverWindowOpen = false;
-                Common.Message(this, "Server Browser window error.", ex, MessageWindow.Flags.Error);
-            }
-        }
-
         #region Tray
         private void MinimiseToTray()
         {
@@ -408,28 +370,18 @@ namespace compLexity_Demo_Player
                 updateCheck = new UpdateCheck((IUpdateCheck)this);
             }
 
-            // check for a file/server address in the command line arguments (file/protocol association)
+            // check for a filename in the command line arguments (file association)
             String[] commandLineArgs = Environment.GetCommandLineArgs();
 
             if (commandLineArgs.Length > 1)
             {
-                if (commandLineArgs[1].StartsWith("hlsw://"))
+                String fullPath = System.IO.Path.GetFullPath(commandLineArgs[1]);
+
+                if (System.IO.File.Exists(fullPath))
                 {
-                    if (OpenServer(commandLineArgs[1]))
+                    if (OpenDemo(fullPath))
                     {
                         return; // stop now, don't go to last folder/file
-                    }
-                }
-                else
-                {
-                    String fullPath = System.IO.Path.GetFullPath(commandLineArgs[1]);
-
-                    if (System.IO.File.Exists(fullPath))
-                    {
-                        if (OpenDemo(fullPath))
-                        {
-                            return; // stop now, don't go to last folder/file
-                        }
                     }
                 }
             }
@@ -553,11 +505,6 @@ namespace compLexity_Demo_Player
         private void uiPreferencesMenuItem_Click(object sender, RoutedEventArgs e)
         {
             ShowPreferencesWindow();
-        }
-
-        private void uiServerBrowserMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            ShowServerBrowserWindow();
         }
 
         private void uiMapPoolMenuItem_Click(object sender, RoutedEventArgs e)

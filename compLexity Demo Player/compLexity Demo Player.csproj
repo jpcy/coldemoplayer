@@ -121,14 +121,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="server browser\MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="server browser\AddServerWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="UpdateCheckWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -210,18 +202,6 @@
       <DependentUpon>ProgressWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ProgressWindowInterface.cs" />
-    <Compile Include="server browser\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="server browser\MainWindowInterface.cs" />
-    <Compile Include="server browser\Player.cs" />
-    <Compile Include="server browser\server collection\Favourites.cs" />
-    <Compile Include="server browser\server collection\ServerCollection.cs" />
-    <Compile Include="server browser\AddServerWindow.xaml.cs">
-      <DependentUpon>AddServerWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="server browser\Server.cs" />
-    <Compile Include="server browser\TimedUdpClient.cs" />
     <Compile Include="SystemTrayIcon.cs" />
     <Compile Include="UpdateCheckWindow.xaml.cs">
       <DependentUpon>UpdateCheckWindow.xaml</DependentUpon>
@@ -330,23 +310,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="data\accept.png" />
-    <Resource Include="data\add.png" />
-    <Resource Include="data\connect.png" />
-    <Resource Include="data\download.png" />
     <Resource Include="data\error.png" />
-    <Resource Include="data\favourite.png" />
-    <Resource Include="data\refresh.png" />
-    <Resource Include="data\remove.png" />
-    <Resource Include="data\status_failed.png" />
-    <Resource Include="data\status_idle.png" />
-    <Resource Include="data\status_querying.png" />
-    <Resource Include="data\status_succeeded.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="data\trim.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="data\floppy.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="data\folder.png" />

@@ -46,7 +46,7 @@ namespace compLexity_Demo_Player
 
                 if (args.Length > 0)
                 {
-                    if (args[0].StartsWith("hlsw://") || File.Exists(args[0]))
+                    if (File.Exists(args[0]))
                     {
                         // send command line parameter to existing process
                         try
@@ -137,25 +137,12 @@ namespace compLexity_Demo_Player
             RemotingConfiguration.RegisterWellKnownClientType(typeof(Ipc), "ipc://" + ipcPortName + "/" + ipcServername);
 
             Ipc ipc = new Ipc();
-
-            if (arg.StartsWith("hlsw://"))
-            {
-                ipc.OpenServer(arg);
-            }
-            else
-            {
-                ipc.OpenFile(arg);
-            }
+            ipc.OpenFile(arg);
         }
 
         public static void OpenFile(String fileName)
         {
             MainWindowInterface.OpenDemo(fileName);
-        }
-
-        public static void OpenServer(String hlswAddress)
-        {
-            MainWindowInterface.OpenServer(hlswAddress);
         }
     }
 
@@ -164,11 +151,6 @@ namespace compLexity_Demo_Player
         public void OpenFile(String fileName)
         {
             Program.OpenFile(fileName);
-        }
-
-        public void OpenServer(String hlswAddress)
-        {
-            Program.OpenServer(hlswAddress);
         }
     }
 }

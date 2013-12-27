@@ -79,12 +79,6 @@ namespace compLexity_Demo_Player
             }
 
             launcher.Demo = demo;
-
-            if (sourceEngine != null)
-            {
-                launcher.ServerSourceEngine = (Boolean)sourceEngine;
-            }
-
             return launcher;
         }
     }

@@ -17,34 +17,11 @@ namespace compLexity_Demo_Player
             }
 
             // verify there is steam app info for this server/demo
-            Game game = null;
-            String gameFolderName;
-
-            if (JoiningServer)
-            {
-                game = GameManager.Find((ServerSourceEngine ? Game.Engines.Source : Game.Engines.HalfLife), ServerGameFolderName);
-                gameFolderName = ServerGameFolderName;
-            }
-            else
-            {
-                game = GameManager.Find(Demo);
-                gameFolderName = Demo.GameFolderName;
-            }
+            Game game = GameManager.Find(Demo);
 
             if (game == null)
             {
-                String s = String.Format("No Steam information can be found for the game \"{0}\".", gameFolderName);
-
-                if (JoiningServer)
-                {
-                    s += " Cannot join the server.";
-                }
-                else
-                {
-                    s += " The demo cannot be played.";
-                }
-
-                throw new ApplicationException(s);
+                throw new ApplicationException(String.Format("No Steam information can be found for the game \"{0}\". The demo cannot be played.", Demo.GameFolderName));
             }
 
             // verify that the steam account folder exists
@@ -66,7 +43,7 @@ namespace compLexity_Demo_Player
             {
                 if (Demo.Engine == Demo.Engines.Source)
                 {
-                    gameFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\common\\" + game.FolderExtended + "\\" + gameFolderName;
+                    gameFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\common\\" + game.FolderExtended + "\\" + Demo.GameFolderName;
                 }
                 else
                 {
@@ -77,13 +54,13 @@ namespace compLexity_Demo_Player
                     }
                     else
                     {
-                        gameFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\common\\Half-Life\\" + gameFolderName;
+                        gameFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\common\\Half-Life\\" + Demo.GameFolderName;
                     }
                 }
             }
             else
             {
-                gameFullPath = steamAccountFullPath + "\\" + game.FolderExtended + "\\" + gameFolderName;
+                gameFullPath = steamAccountFullPath + "\\" + game.FolderExtended + "\\" + Demo.GameFolderName;
             }
 
             if (!Directory.Exists(gameFullPath))
@@ -119,16 +96,7 @@ namespace compLexity_Demo_Player
             }
 
             // verify that the game is not running
-            Game game = null;
-
-            if (JoiningServer)
-            {
-                game = GameManager.Find((ServerSourceEngine ? Game.Engines.Source : Game.Engines.HalfLife), ServerGameFolderName);
-            }
-            else
-            {
-                game = GameManager.Find(Demo);
-            }
+            Game game = GameManager.Find(Demo);
 
             // even if HLAE is being used, still need to check that game isn't already running
             if (game.UsesCommonFolder)
@@ -147,21 +115,7 @@ namespace compLexity_Demo_Player
                 processExeFullPath = Path.GetDirectoryName(Config.Settings.SteamExeFullPath) + "\\SteamApps\\" + Config.Settings.SteamAccountFolder + "\\" + game.FolderExtended + "\\";                
             }
 
-            if (JoiningServer)
-            {
-                if (ServerSourceEngine)
-                {
-                    processExeFullPath += "hl2.exe";
-                }
-                else
-                {
-                    processExeFullPath += "hl.exe";
-                }
-            }
-            else
-            {
-                processExeFullPath += game.ExecutableName;
-            }
+            processExeFullPath += game.ExecutableName;
 
             if (Common.FindProcess(Path.GetFileNameWithoutExtension(processExeFullPath), processExeFullPath) != null)
             {
@@ -176,29 +130,17 @@ namespace compLexity_Demo_Player
 
         protected override void LaunchProgram()
         {
-            Game game;
-            String mapName;
-
-            if (JoiningServer)
-            {
-                game = GameManager.Find((ServerSourceEngine ? Game.Engines.Source : Game.Engines.HalfLife), ServerGameFolderName);
-                mapName = ServerMapName;
-            }
-            else
-            {
-                game = GameManager.Find(Demo);
-                mapName = Demo.MapName;
-            }
+            Game game = GameManager.Find(Demo);
 
             // calculate launch parameters
             launchParameters = (UseHlae ? "" : "-applaunch " + game.AppId + " ");
 
-            if ((JoiningServer && Config.Settings.ServerBrowserStartListenServer && !ServerSourceEngine) || (!JoiningServer && (Config.Settings.PlaybackStartListenServer || Demo.GameFolderName == "tfc") && Demo.Engine != Demo.Engines.Source))
+            if ((Config.Settings.PlaybackStartListenServer || Demo.GameFolderName == "tfc") && Demo.Engine != Demo.Engines.Source)
             {
-                launchParameters += "-nomaster +maxplayers 10 +sv_lan 1 +map " + mapName + " ";
+                launchParameters += "-nomaster +maxplayers 10 +sv_lan 1 +map " + Demo.MapName + " ";
             }
 
-            if (!JoiningServer && Demo.Engine == Demo.Engines.Source)
+            if (Demo.Engine == Demo.Engines.Source)
             {
                 // skip intro videos
                 // CS:GO quits unexpectedly if this is omitted

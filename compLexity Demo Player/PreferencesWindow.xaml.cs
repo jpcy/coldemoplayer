@@ -93,7 +93,6 @@ namespace compLexity_Demo_Player
             uiCounterStrikeAdditionalLaunchParametersTextBox.Text = Config.Settings.CstrikeAdditionalLaunchParameters;
             uiHlaeExeTextBox.Text = Config.Settings.HlaeExeFullPath;
             uiDemAssociateCheckBox.IsChecked = Config.Settings.AssociateWithDemFiles;
-            uiHlswAssociateCheckBox.IsChecked = Config.Settings.AssociateWithHlswProtocol;
             uiAutoUpdateCheckBox.IsChecked = Config.Settings.AutoUpdate;
             uiMinimizeToTray.IsChecked = Config.Settings.MinimizeToTray;
 
@@ -247,27 +246,6 @@ namespace compLexity_Demo_Player
         private void uiDemAssociateCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
             Config.Settings.AssociateWithDemFiles = false;
-        }
-
-        private void uiHlswAssociateCheckBox_Checked(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                Config.AddHlswProtocolAssociation();
-            }
-            catch (UnauthorizedAccessException)
-            {
-                Common.Message(this, "Can't associate with the HLSW protocol, your Windows user account is not authorized to write registry keys. Try running this program as an administrator.");
-                uiHlswAssociateCheckBox.IsChecked = false;
-            }
-
-            Config.Settings.AssociateWithHlswProtocol = (Boolean)uiHlswAssociateCheckBox.IsChecked;
-        }
-
-        private void uiHlswAssociateCheckBox_Unchecked(object sender, RoutedEventArgs e)
-        {
-            Config.RemoveHlswProtocolAssociation();
-            Config.Settings.AssociateWithHlswProtocol = false;
         }
         #endregion
     }

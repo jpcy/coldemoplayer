@@ -10,7 +10,6 @@ namespace compLexity_Demo_Player
     public interface IMainWindow
     {
         Boolean OpenDemo(String fileName);
-        Boolean OpenServer(String hlswAddress);
         void Error(String errorMessage, Exception ex);
     }
 
@@ -36,37 +35,6 @@ namespace compLexity_Demo_Player
                 currentPath = path;
                 uiDemoListView.SetCurrentPath(path, System.IO.Path.GetFileNameWithoutExtension(fileName));
                 uiCurrentPathTextBox.Text = path;
-                return true;
-            };
-
-            if (Thread.CurrentThread != Dispatcher.Thread)
-            {
-                return (Boolean)Dispatcher.Invoke(DispatcherPriority.Normal, func);
-            }
-            else
-            {
-                return func();
-            }
-        }
-
-        public Boolean OpenServer(String hlswAddress)
-        {
-            Function<Boolean> func = delegate
-            {
-                if (!canOpenDemo && !serverWindowOpen)
-                {
-                    return false;
-                }
-
-                // Restore the window if the program is minimized to the tray.
-                if (!serverWindowOpen)
-                {
-                    RestoreFromTray();
-                }
-
-                ShowServerBrowserWindow();
-                String hlswProtocol = "hlsw://";
-                serverBrowserWindow.OpenServer(hlswAddress.Remove(0, hlswProtocol.Length).TrimEnd('/'));
                 return true;
             };
 

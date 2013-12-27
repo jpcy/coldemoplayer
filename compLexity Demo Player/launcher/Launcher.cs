@@ -17,14 +17,6 @@ namespace compLexity_Demo_Player
     {
         public class AbortLaunchException : Exception { }
 
-        // server
-        public Boolean JoiningServer { get; set; } // are we joining a server, not playing a demo?
-        public String ServerAddress { get; set; }
-        public String ServerMapName { get; set; }
-        public String ServerGameFolderName { get; set; }
-        public Boolean ServerSourceEngine { get; set; }
-
-        // demo
         public Boolean UseHlae { get; set; }
         public Demo Demo { get; set; }
 
@@ -51,11 +43,6 @@ namespace compLexity_Demo_Player
 
         protected void CheckMapVersion()
         {
-            if (JoiningServer)
-            {
-                return;
-            }
-
             // FIXME:
             // not really needed, just don't call this
             // remove me when source map checksum stuff is figured out
@@ -292,7 +279,7 @@ namespace compLexity_Demo_Player
         {
             String configFileFullPath = gameFullPath;
 
-            if ((JoiningServer && ServerSourceEngine) || (!JoiningServer && Demo.Engine == Demo.Engines.Source))
+            if (Demo.Engine == Demo.Engines.Source)
             {
                 configFileFullPath += "\\cfg";
             }
@@ -302,112 +289,94 @@ namespace compLexity_Demo_Player
 
             try
             {
-                if (JoiningServer)
+                if (Demo.Engine == Demo.Engines.Source)
                 {
+                    stream.WriteLine("alias +col_ff_slow \"demo_timescale 2\"");
+                    stream.WriteLine("alias -col_ff_slow \"demo_timescale 1\"");
+                    stream.WriteLine("alias +col_ff_fast \"demo_timescale 4\"");
+                    stream.WriteLine("alias -col_ff_fast \"demo_timescale 1\"");
+                    stream.WriteLine("alias +col_slowmo \"demo_timescale 0.25\"");
+                    stream.WriteLine("alias -col_slowmo \"demo_timescale 1\"");
+                    stream.WriteLine("alias col_pause demo_togglepause ");
+                }
+                else
+                {
+                    stream.WriteLine("alias +col_ff_slow \"host_framerate 0.01; alias col_pause col_pause1\"");
+                    stream.WriteLine("alias -col_ff_slow \"host_framerate 0\"");
+                    stream.WriteLine("alias +col_ff_fast \"host_framerate 0.1; alias col_pause col_pause1\"");
+                    stream.WriteLine("alias -col_ff_fast \"host_framerate 0\"");
+                    stream.WriteLine("alias +col_slowmo \"host_framerate 0.001; alias col_pause col_pause1\"");
+                    stream.WriteLine("alias -col_slowmo \"host_framerate 0\"");
+                    stream.WriteLine("alias col_pause1 \"host_framerate 0.000000001; alias col_pause col_pause2\"");
+                    stream.WriteLine("alias col_pause2 \"host_framerate 0; alias col_pause col_pause1\"");
+                    stream.WriteLine("alias col_pause col_pause1\n");
+
                     stream.WriteLine("alias wait10 \"wait; wait; wait; wait; wait; wait; wait; wait; wait; wait\"\n");
                     stream.WriteLine("brightness 2");
                     stream.WriteLine("gamma 3");
                     stream.WriteLine("wait10");
-                    stream.WriteLine("sv_voicecodec voice_speex");
-                    stream.WriteLine("sv_voicequality 5");
+
+                    if (Demo.Engine == Demo.Engines.HalfLifeSteam || ((HalfLifeDemo)Demo).ConvertNetworkProtocol())
+                    {
+                        stream.WriteLine("sv_voicecodec voice_speex");
+                        stream.WriteLine("sv_voicequality 5");
+                    }
+
                     stream.WriteLine("wait10");
                     stream.WriteLine("wait10");
                     stream.WriteLine("wait10");
                     stream.WriteLine("wait10");
                     stream.WriteLine("wait10");
-                    stream.WriteLine("connect " + ServerAddress);
+                }
+
+                String playbackType;
+
+                if (Demo.Engine != Demo.Engines.Source)
+                {
+                    playbackType = (Config.Settings.PlaybackType == ProgramSettings.Playback.Playdemo ? "playdemo" : "viewdemo");
                 }
                 else
                 {
-                    if (Demo.Engine == Demo.Engines.Source)
-                    {
-                        stream.WriteLine("alias +col_ff_slow \"demo_timescale 2\"");
-                        stream.WriteLine("alias -col_ff_slow \"demo_timescale 1\"");
-                        stream.WriteLine("alias +col_ff_fast \"demo_timescale 4\"");
-                        stream.WriteLine("alias -col_ff_fast \"demo_timescale 1\"");
-                        stream.WriteLine("alias +col_slowmo \"demo_timescale 0.25\"");
-                        stream.WriteLine("alias -col_slowmo \"demo_timescale 1\"");
-                        stream.WriteLine("alias col_pause demo_togglepause ");
-                    }
-                    else
-                    {
-                        stream.WriteLine("alias +col_ff_slow \"host_framerate 0.01; alias col_pause col_pause1\"");
-                        stream.WriteLine("alias -col_ff_slow \"host_framerate 0\"");
-                        stream.WriteLine("alias +col_ff_fast \"host_framerate 0.1; alias col_pause col_pause1\"");
-                        stream.WriteLine("alias -col_ff_fast \"host_framerate 0\"");
-                        stream.WriteLine("alias +col_slowmo \"host_framerate 0.001; alias col_pause col_pause1\"");
-                        stream.WriteLine("alias -col_slowmo \"host_framerate 0\"");
-                        stream.WriteLine("alias col_pause1 \"host_framerate 0.000000001; alias col_pause col_pause2\"");
-                        stream.WriteLine("alias col_pause2 \"host_framerate 0; alias col_pause col_pause1\"");
-                        stream.WriteLine("alias col_pause col_pause1\n");
-
-                        stream.WriteLine("alias wait10 \"wait; wait; wait; wait; wait; wait; wait; wait; wait; wait\"\n");
-                        stream.WriteLine("brightness 2");
-                        stream.WriteLine("gamma 3");
-                        stream.WriteLine("wait10");
-
-                        if (Demo.Engine == Demo.Engines.HalfLifeSteam || ((HalfLifeDemo)Demo).ConvertNetworkProtocol())
-                        {
-                            stream.WriteLine("sv_voicecodec voice_speex");
-                            stream.WriteLine("sv_voicequality 5");
-                        }
-
-                        stream.WriteLine("wait10");
-                        stream.WriteLine("wait10");
-                        stream.WriteLine("wait10");
-                        stream.WriteLine("wait10");
-                        stream.WriteLine("wait10");
-                    }
-
-                    String playbackType;
-
-                    if (Demo.Engine != Demo.Engines.Source)
-                    {
-                        playbackType = (Config.Settings.PlaybackType == ProgramSettings.Playback.Playdemo ? "playdemo" : "viewdemo");
-                    }
-                    else
-                    {
-                        playbackType = "playdemo";
-                    }
-
-                    stream.WriteLine("{0} {1}", playbackType, Config.LaunchDemoFileName);
-
-                    if (Demo.Engine != Demo.Engines.Source)
-                    {
-                        stream.WriteLine("wait10");
-                        stream.WriteLine("slot1");
-
-                        // TODO: remove this, figure out why the spec menu it's initalised correctly with old converted HLTV demos.
-                        if (Demo.Perspective == Demo.Perspectives.Hltv)
-                        {
-                            stream.WriteLine("wait10");
-                            stream.WriteLine("spec_menu 0");
-                            stream.WriteLine("wait10");
-                            stream.WriteLine("spec_mode 4");
-                            stream.WriteLine("wait10");
-                            stream.WriteLine("wait10");
-                            stream.WriteLine("wait10");
-                            stream.WriteLine("spec_menu 1");
-                            stream.WriteLine("wait10");
-                            stream.WriteLine("+attack");
-                        }
-                    }
-
-                    stream.WriteLine("echo \"\"");
-                    stream.WriteLine("echo \"==========================\"");
-                    stream.WriteLine("echo \"{0}\"", Config.ProgramName);
-                    stream.WriteLine("echo \"==========================\"");
-                    stream.WriteLine("echo \"Aliases:\"");
-                    stream.WriteLine("echo \"  +col_ff_slow (Fast Forward)\"");
-                    stream.WriteLine("echo \"  +col_ff_fast (Faster Fast Forward)\"");
-                    stream.WriteLine("echo \"  +col_slowmo (Slow Motion)\"");
-                    stream.WriteLine("echo \"  col_pause (Toggle Pause)\"");
-                    stream.WriteLine("echo \"\"");
-                    stream.WriteLine("echo \"Playing \'{0}\'...\"", Demo.Name);
-                    stream.WriteLine("echo \"  Duration: {0}\"", Common.DurationString(Demo.DurationInSeconds));
-                    stream.WriteLine("echo \"  Recorded by: {0}\"", Demo.RecorderName);
-                    stream.WriteLine("echo \"\"");
+                    playbackType = "playdemo";
                 }
+
+                stream.WriteLine("{0} {1}", playbackType, Config.LaunchDemoFileName);
+
+                if (Demo.Engine != Demo.Engines.Source)
+                {
+                    stream.WriteLine("wait10");
+                    stream.WriteLine("slot1");
+
+                    // TODO: remove this, figure out why the spec menu it's initalised correctly with old converted HLTV demos.
+                    if (Demo.Perspective == Demo.Perspectives.Hltv)
+                    {
+                        stream.WriteLine("wait10");
+                        stream.WriteLine("spec_menu 0");
+                        stream.WriteLine("wait10");
+                        stream.WriteLine("spec_mode 4");
+                        stream.WriteLine("wait10");
+                        stream.WriteLine("wait10");
+                        stream.WriteLine("wait10");
+                        stream.WriteLine("spec_menu 1");
+                        stream.WriteLine("wait10");
+                        stream.WriteLine("+attack");
+                    }
+                }
+
+                stream.WriteLine("echo \"\"");
+                stream.WriteLine("echo \"==========================\"");
+                stream.WriteLine("echo \"{0}\"", Config.ProgramName);
+                stream.WriteLine("echo \"==========================\"");
+                stream.WriteLine("echo \"Aliases:\"");
+                stream.WriteLine("echo \"  +col_ff_slow (Fast Forward)\"");
+                stream.WriteLine("echo \"  +col_ff_fast (Faster Fast Forward)\"");
+                stream.WriteLine("echo \"  +col_slowmo (Slow Motion)\"");
+                stream.WriteLine("echo \"  col_pause (Toggle Pause)\"");
+                stream.WriteLine("echo \"\"");
+                stream.WriteLine("echo \"Playing \'{0}\'...\"", Demo.Name);
+                stream.WriteLine("echo \"  Duration: {0}\"", Common.DurationString(Demo.DurationInSeconds));
+                stream.WriteLine("echo \"  Recorded by: {0}\"", Demo.RecorderName);
+                stream.WriteLine("echo \"\"");
             }
             finally
             {

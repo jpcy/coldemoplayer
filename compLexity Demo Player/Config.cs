@@ -57,9 +57,8 @@ namespace compLexity_Demo_Player
         // hlae
         public String HlaeExeFullPath { get; set; }
 
-        // file/protocol association
+        // file association
         public Boolean AssociateWithDemFiles { get; set; }
-        public Boolean AssociateWithHlswProtocol { get; set; }
 
         // playback
         public Playback PlaybackType { get; set; }
@@ -85,12 +84,6 @@ namespace compLexity_Demo_Player
         // game process priority
         public ProcessPriorityClass GameProcessPriority { get; set; }
 
-        // server browser
-        public System.Windows.WindowState ServerBrowserWindowState { get; set; }
-        public Boolean ServerBrowserStartListenServer { get; set; }
-        public Boolean ServerBrowserCloseWhenFinished { get; set; }
-        public String[] ServerBrowserFavourites { get; set; }
-
         public ProgramSettings()
         {
             UpdateUrl = String.Empty;
@@ -101,7 +94,6 @@ namespace compLexity_Demo_Player
             WindowHeight = 600.0;
             DemoListPaneHeight = 150.0;
             AssociateWithDemFiles = true;
-            AssociateWithHlswProtocol = false;
             PlaybackType = Playback.Playdemo;
             PlaybackProgramOldCs = PlaybackProgram.Steam;
             PlaybackRemoveShowscores = true;
@@ -116,9 +108,6 @@ namespace compLexity_Demo_Player
             LogMessageParsingErrors = false;
             MinimizeToTray = false;
             GameProcessPriority = ProcessPriorityClass.Normal;
-            ServerBrowserWindowState = System.Windows.WindowState.Normal;
-            ServerBrowserStartListenServer = false;
-            ServerBrowserCloseWhenFinished = false;
         }
     }
 
@@ -420,40 +409,6 @@ namespace compLexity_Demo_Player
                 SHChangeNotify(0x08000000, 0, p, p);
             }
 #endif
-        }
-
-        public static void AddHlswProtocolAssociation()
-        {
-            RemoveHlswProtocolAssociation();
-
-            // create hlsw entry
-            using (RegistryKey key = Registry.ClassesRoot.CreateSubKey("hlsw"))
-            {
-                key.SetValue("", "URL:HLSW Protocol");
-                key.SetValue("URL Protocol", "");
-
-                using (RegistryKey subkey = key.CreateSubKey("DefaultIcon"))
-                {
-                    subkey.SetValue("", ProgramExeFullPath);
-                }
-
-                using (RegistryKey subkey = key.CreateSubKey("Shell\\open\\command"))
-                {
-                    String s = ProgramExeFullPath + " \"%1\"";
-                    subkey.SetValue("", s);
-                }
-            }
-        }
-
-        public static void RemoveHlswProtocolAssociation()
-        {
-            using (RegistryKey key = Registry.ClassesRoot.OpenSubKey("hlsw", true))
-            {
-                if (key != null)
-                {
-                    Registry.ClassesRoot.DeleteSubKeyTree("hlsw");
-                }
-            }
         }
     }
 }
