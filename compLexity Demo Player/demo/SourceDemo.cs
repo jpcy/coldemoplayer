@@ -90,7 +90,7 @@ namespace compLexity_Demo_Player
                         errorMessage += String.Format("demo uses unsupported demo protocol \"{0}\"\n", demoProtocol);
                     }
 
-                    if (UnsupportedDemoProtocol)
+                    if (UnsupportedNetworkProtocol)
                     {
                         errorMessage += String.Format("demo uses unsupported network protocol \"{0}\"\n", networkProtocol);
                     }
@@ -591,7 +591,7 @@ namespace compLexity_Demo_Player
                         errorMessage += String.Format("demo uses unsupported demo protocol \"{0}\"\n", demoProtocol);
                     }
 
-                    if (UnsupportedDemoProtocol)
+                    if (UnsupportedNetworkProtocol)
                     {
                         errorMessage += String.Format("demo uses unsupported network protocol \"{0}\"\n", networkProtocol);
                     }
